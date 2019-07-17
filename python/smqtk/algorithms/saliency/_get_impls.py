@@ -5,7 +5,7 @@ from ._interface import (
     ImageSaliencyMapGenerator,
 )
 from smqtk.utils import plugin
-
+import os
 
 def get_saliency_blackbox_impls(reload_modules=False):
     """
