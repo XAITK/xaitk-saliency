@@ -11,7 +11,7 @@ class SaliencyBlackbox (SmqtkAlgorithm):
     """
 
     @classmethod
-    def from_iqr_session(cls, iqrs):
+    def from_iqr_session(cls, iqrs, descr_generator, base_elem):
         """
         Create an ``SaliencyBlackbox`` instance from an
         :class:`smqtk.iqr.IqrSession` instance.
@@ -22,6 +22,15 @@ class SaliencyBlackbox (SmqtkAlgorithm):
         :raises NotImplementedError:
             Construction from a ``IqrSession`` is not defined for this
             implementation.
+
+        :param smqtk.iqr.IqrSession iqrs:
+            An :py:class:`smqtk.iqr.IqrSession` instance to seed construction
+            if a blackbox instance.
+        :param descr_generator:
+            Descriptor generator instance.
+        :param base_elem:
+            A :py:class:`smqtk.representation.DataElement` representing the
+            data over which a saliency map may be generated.
 
         :return: A new instance of of a class implementing the
             ``SaliencyBlackbox`` class.
@@ -35,10 +44,11 @@ class SaliencyBlackbox (SmqtkAlgorithm):
     @abc.abstractmethod
     def transform(self, descriptors):
         """
-        Transform some descriptor element into a saliency scalar.
+        Transform some number of descriptor elements into a saliency scalar
+        values.
 
         :param collections.Iterable[smqtk.representation.DescriptorElement] descriptors:
-            Descriptor to get the saliency of.
+            Descriptors to get the saliency values of.
 
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
@@ -68,4 +78,41 @@ class ImageSaliencyAugmenter (SmqtkAlgorithm):
             Returned masks should be in the dimension format
             [index, height, width] with the boolean data type.
         :rtype: (numpy.ndarray, numpy.ndarray)
+        """
+
+
+class ImageSaliencyMapGenerator (SmqtkAlgorithm):
+    """
+    Interface for the method of generation of a saliency map given an image
+    augmentation and blackbox algorithms.
+    """
+
+    @abc.abstractmethod
+    def generate(self, image_mat, augmenter, descriptor_generator,
+                 blackbox):
+        """
+        Generate an image saliency heat-map matrix given a blackbox's behavior
+        over the descriptions of an augmented base image.
+
+        :param numpy.ndarray image_mat:
+            Numpy image matrix of the format [height, width [,channel]] that is
+            to be augmented.
+
+        :param ImageSaliencyAugmenter augmenter:
+            Augmentation algorithm following
+            the :py:class:`ImageSaliencyAugmenter` interface.
+
+        :param smqtk.algorithms.DescriptorGenerator descriptor_generator:
+            A descriptor generation algorithm following
+            the :py:class:`smqtk.algorithms.DescriptorGenerator` interface.
+
+        :param SaliencyBlackbox blackbox:
+            Blackbox algorithm implementation following
+            the :py:class:`SaliencyBlackbox` interface.
+
+        :return: A :py:class:`numpy.ndarray` matrix of the same [height, width]
+            shape as the input image matrix but of floating-point type within
+            the range of [0,1], where areas of higher value represent more
+            salient regions according to the given blackbox algorithm.
+        :rtype: numpy.ndarray[float]
         """
