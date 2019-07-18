@@ -16,12 +16,12 @@ __author__ = "bhavan.vasu@kitware.com"
 
 
 class Logit_SaliencyBlackbox (SaliencyBlackbox):
-    def __init__(self,ADJs,rel_index,descr_gen,base_image):
+    def __init__(self, ADJs, rel_index, descr_gen, base_image):
         
-        self.ADJs=ADJs
-        self.rel_index=rel_index
-        self.descr_gen=descr_gen
-        self.base_image=base_image
+        self.ADJs = ADJs
+        self.rel_index = rel_index
+        self.descr_gen = descr_gen
+        self.base_image = base_image
     """
     Blackbox function that produces some floating point scalar value for a
     given descriptor element.
@@ -40,7 +40,7 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
 
         
     @classmethod
-    def from_iqr_session(cls, iqrs,descr_gen,base_image): #same as sbsm
+    def from_iqr_session(cls, iqrs, descr_gen, base_image): #same as sbsm
         """
         Create an ``SaliencyBlackbox`` instance from an
         :class:`smqtk.iqr.IqrSession` instance.
@@ -58,12 +58,13 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
             pos = list(iqrs.positive_descriptors | iqrs.external_positive_descriptors)
             neg = list(iqrs.negative_descriptors | iqrs.external_negative_descriptors)
             ADJs = (pos, neg)
-            rel_index=plugin.from_plugin_config(plugin.to_plugin_config(iqrs.rel_index),get_relevancy_index_impls())
+            rel_index=plugin.from_plugin_config(plugin.to_plugin_config(iqrs.rel_index), get_relevancy_index_impls())
         except:#if iqrs and descriptor_generator is not usable    
             raise NotImplementedError("The ``from_iqr_session`` classmethod is "
                                   "not implemented for class ``{}``."
                                   .format(cls.__name__))
-        return Logit_SaliencyBlackbox(ADJs,rel_index,descr_gen,base_image)
+
+        return Logit_SaliencyBlackbox(ADJs, rel_index, descr_gen, base_image)
 
     def get_config(self):
         return {
@@ -97,13 +98,17 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         self.rel_index.build_index(rel_train_set)
         RI_scores=self.rel_index.rank(*self.ADJs) 
         diff = np.ones(len(descriptors_list))
-        import pdb
-        pdb.set_trace()
+        print(len(RI_scores))
+        print(len(descriptors_list))
         for i in range(len(descriptors_list)):
             diff[i]= RI_scores[rel_train_set[i]] - RI_scores[rel_train_set[-1]]
         return diff
 
 class Logit_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
+    """
+    Algorithm that yields a number of augmentations of an input image, as well
+    as preserved-area masks, used for use in saliency map generation.
+    """
     @classmethod
     def is_usable(cls):
         """
@@ -116,22 +121,66 @@ class Logit_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         #TODO:appropriate returns
         return euclidean_distances and np
     
-    def __init__(self,image_sizes):
-        self.image_size=image_sizes
-        self.org_dim=None
-        self.masks=self.generate_block_masks()
-        #self.masks=self.generate_block_masks_from_gridsize()
-    """
-    Algorithm that yields a number of augmentations of an input image, as well
-    as preserved-area masks, used for use in saliency map generation.
-    """
+    def __init__(self, image_sizes):
+        self.image_size = image_sizes
+        self.org_dim = None
+        self.masks = self.generate_block_masks()
+        #self.masks = self.generate_block_masks_from_gridsize()
+    
     @classmethod
     def get_config(cls,self):
         return {
             'image_size': self.image_size,
         }
 
-    def generate_block_masks(self,grid_size=20, stride=4, image_size=(224, 224)):
+    def generate_block_masks(self, window_size=50, stride=10, image_size=(224,224)):
+        """
+        Generating the sliding window style masks.
+        
+        :param window_size: the block window size (with value 0, other areas with value 1)
+        :type window_size: int
+        
+        :param stride: the sliding step
+        :type stride: int
+        
+        :param image_size: the mask size which should be the same to the image size
+        :type image_size: tuple
+        
+        :return: the sliding window style masks
+        :rtype: numpy array
+        """
+        rows = np.arange(0 + stride - window_size, image_size[0], stride)
+        cols = np.arange(0 + stride - window_size, image_size[1], stride)
+
+        mask_num = len(rows) * len(cols)
+        print('mask_num: {}'.format(mask_num))
+        masks = np.ones((mask_num, image_size[0], image_size[1]), dtype=np.float64)
+        i = 0
+        for r in rows:
+            for c in cols:
+                if r<0:
+                    r1 = 0
+                else:
+                    r1 = r
+                if r + window_size > image_size[0]:
+                    r2 = image_size[0]
+                else:
+                    r2 = r + window_size
+                if c<0:
+                    c1 = 0
+                else:
+                    c1 = c
+                if c + window_size > image_size[1]:
+                    c2 = image_size[1]
+                else:
+                    c2 = c + window_size
+                masks[i, r1:r2, c1:c2] = 0
+                i += 1
+
+        masks = masks.reshape(-1, *image_size, 1)
+        return masks
+
+    def generate_block_masks2(self, grid_size=45, stride=15, image_size=(224, 224)):
         """COmment about resize
         Generating the sliding window style masks
         :param grid_size: the block window size (with value 0, other areas with value 1)
@@ -156,15 +205,16 @@ class Logit_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
                     masks[i, r:r + grid_size, c:c + grid_size] = 0.0
                     i += 1
 
-            masks = masks.reshape(-1, *image_size)
+            masks = masks.reshape(-1, *image_size, 1)
             masks.tofile('block_mask_{}_{}.npy'.format(grid_size, stride))
         else:
             masks = np.fromfile('block_mask_{}_{}.npy'.format(grid_size, stride),
-                                dtype=np.float32).reshape(-1,  *image_size)
+                                dtype=np.float32).reshape(-1,  *image_size, 1)
+
         return masks
 
 
-    def generate_block_masks_from_gridsize(self,image_size=[224,224], grid_size=(15,15)): 
+    def generate_block_masks_from_gridsize(self, image_size=[224,224], grid_size=(15,15)): 
         """
         Generating the sliding window style masks.
      
@@ -190,25 +240,23 @@ class Logit_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
                 masks[i, r:r + window_size[0], c:c + window_size[1]] = 0.0
                 i += 1
          
-        masks = masks.reshape(-1, *image_size)
+        masks = masks.reshape(-1, *image_size, 1)
         return masks
 
-    def generate_masked_imgs(self,masks, img):
+    def generate_masked_imgs(self, masks, img):
         """
         Apply the N filters/masks onto one input image
         :param index: mask index
         :return: masked images
         """
         masked_imgs = []
-        self.org_dim=np.shape(img)
-        masked_img=copy.deepcopy(img)
-        for cnt,mask in enumerate(masks):
-            masked_img[:,:,0] = np.multiply(mask, img[:,:,0])
-            masked_img[:,:,1] = np.multiply(mask, img[:,:,1])
-            masked_img[:,:,2] = np.multiply(mask, img[:,:,2])
-            masked_imgs.append(Image.fromarray(masked_img))
+        self.org_dim = np.shape(img)
+        #masked_img = copy.deepcopy(img)
+        for mask in masks:
+            masked_img = np.multiply(mask, img, casting='unsafe')
+            #masked_imgs.append(masked_img)
+            masked_imgs.append(Image.fromarray(np.uint8(masked_img)))
         return masked_imgs
-    
     
     def augment(self, image_mat):
         """
@@ -225,8 +273,8 @@ class Logit_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
          
-        masked_images=self.generate_masked_imgs(self.masks,image_mat)
-        return (masked_images,self.masks)
+        masked_images = self.generate_masked_imgs(self.masks, image_mat)
+        return (masked_images, self.masks)
 
-SALIENCY_BLACKBOX_CLASS=Logit_SaliencyBlackbox
-IMG_SALIENCY_AUGMENTER_CLASS=Logit_ImageSaliencyAugmenter
+SALIENCY_BLACKBOX_CLASS = Logit_SaliencyBlackbox
+IMG_SALIENCY_AUGMENTER_CLASS = Logit_ImageSaliencyAugmenter
