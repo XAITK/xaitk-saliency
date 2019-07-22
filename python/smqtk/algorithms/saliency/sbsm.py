@@ -14,15 +14,19 @@ __author__ = "bhavan.vasu@kitware.com"
 
 class SBSM_SaliencyBlackbox (SaliencyBlackbox):
     
-    def __init__(self,query_f,descr_gen,base_image):
-        self.query_f=query_f
-        self.descr_gen=descr_gen
-        self.base_image=base_image
-
     """
     Blackbox function that produces some floating point scalar value for a
     given descriptor element.
     """
+
+    def __init__(self, query_f, descr_gen, base_image):
+        
+        self.query_f=query_f
+        
+        self.descr_gen=descr_gen
+        
+        self.base_image=base_image
+
     @classmethod
     def is_usable(cls):
         """
@@ -32,12 +36,12 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
-        #TODO:appropriate returns
-        return euclidean_distances and np
+        
+        return SaliencyBlackbox and euclidean_distances
 
         
     @classmethod
-    def from_iqr_session(cls, iqrs,descr_gen,base_image): 
+    def from_iqr_session(cls, iqrs, descr_gen, base_image): 
         """
         Create an ``SaliencyBlackbox`` instance from an
         :class:`smqtk.iqr.IqrSession` instance.
@@ -51,15 +55,19 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: SaliencyBlackbox
         """
         #Check if iqrs and descriptor_generator is usable
-        try:#ADD ASSERT
+        try:
+            assert iqrs
+            assert descr_gen.is_usable
             query_f=[ext_pos.vector() for ext_pos in iqrs.external_positive_descriptors]
-        except:#if iqrs and descriptor_generator is not usable    
+
+        except:
             raise NotImplementedError("The ``from_iqr_session`` classmethod is "
                                   "not implemented for class ``{}``."
                                   .format(cls.__name__))
         return SBSM_SaliencyBlackbox(query_f,descr_gen,base_image)
        
     def get_config(self):
+
         return {
             'ready': True,
         }
@@ -79,10 +87,8 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         (self.base_image).save(buff, format="png")
         de = DataMemoryElement(buff.getvalue(),
                                content_type='image/png')
-        uuid_bas=de.uuid()
-        
         uuid_to_base_desc=self.descr_gen.compute_descriptor(de)
-        #TODO: Expand to multiple queries
+        #TODO: Expand to multiple external positive and negative
         org_dis=abs(euclidean_distances(self.query_f[0].reshape(1, -1)
                                 ,(uuid_to_base_desc.vector()).reshape(1, -1)))
         descriptors_list=list(descriptors)
@@ -93,6 +99,11 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         return diff
 
 class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
+    """
+    Algorithm that yields a number of augmentations of an input image, as well
+    as preserved-area masks, used for use in saliency map generation.
+    """
+
     @classmethod
     def is_usable(cls):
         """
@@ -102,29 +113,30 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
-        #TODO:appropriate returns
-        return euclidean_distances and np
+        
+        return ImageSaliencyAugmenter and tqdm and np
     
-    def __init__(self,image_sizes):
-        self.image_size=image_sizes
-        self.org_dim=None
-        self.masks=self.generate_block_masks()
-        #self.masks=self.generate_block_masks_from_gridsize()
-    """
-    Algorithm that yields a number of augmentations of an input image, as well
-    as preserved-area masks, used for use in saliency map generation.
-    """
+    def __init__(self, window_size=20, stride=4):
+
+        self.window_size = window_size
+
+        self.stride = stride
+
+        self.masks = self.generate_block_masks(window_size=self.window_size,stride=self.stride)
+
     def get_config(self):
+
         return {
-            'grid_size': self.grid_size,
+            'window_size': self.window_size,
+            'stride': self.stride,
         }
 
 
-    def generate_block_masks(self,grid_size=20, stride=4, image_size=(224, 224)):
-        """COmment about resize
+    def generate_block_masks(self,window_size=20, stride=4, image_size=(224, 224)):
+        """The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks
-        :param grid_size: the block window size (with value 0, other areas with value 1)
-        :type grid_size: int
+        :param window_size: the block window size (with value 0, other areas with value 1)
+        :type window_size: int
         :param stride: the sliding step
         :type stride: int
         :param image_size: the mask size which should be the same to the image size
@@ -132,53 +144,31 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :return: the sliding window style masks
         :rtype: torch.cuda.Tensor
         """
-        assert (image_size[0]-grid_size)%stride==0  
-        if not os.path.isfile('block_mask_{}_{}.npy'.format(grid_size, stride)):
-            grid_num_r = ((image_size[0] - grid_size) // stride)+1
-            grid_num_c = ((image_size[1] - grid_size) // stride)+1
+        try:
+            
+            assert (image_size[0]-window_size)%stride==0  
+
+        except:
+     
+            self._log.debug("Change window size and stride to pass assert")
+
+        if not os.path.isfile('block_mask_{}_{}.npy'.format(window_size, stride)):
+            grid_num_r = ((image_size[0] - window_size) // stride)+1
+            grid_num_c = ((image_size[1] - window_size) // stride)+1
             mask_num = grid_num_r * grid_num_c
-            print("Number of masks",mask_num)
             masks = np.ones((mask_num, image_size[0], image_size[1]), dtype=np.float32)
             i = 0
-            for r in tqdm(np.arange(0, image_size[0] - grid_size+1, stride), total=grid_num_r, desc="Generating rows"):
-                for c in np.arange(0, image_size[1] - grid_size+1, stride):
-                    masks[i, r:r + grid_size, c:c + grid_size] = 0.0
+            for r in tqdm(np.arange(0, image_size[0] - window_size+1, stride), total=grid_num_r, desc="Generating rows"):
+                for c in np.arange(0, image_size[1] - window_size+1, stride):
+                    masks[i, r:r + window_size, c:c + window_size] = 0.0
                     i += 1
 
             masks = masks.reshape(-1, *image_size)
-            masks.tofile('block_mask_{}_{}.npy'.format(grid_size, stride))
+            masks.tofile('block_mask_{}_{}.npy'.format(window_size, stride))
         else:
-            masks = np.fromfile('block_mask_{}_{}.npy'.format(grid_size, stride),
+            self._log.debug("Loading masks from file block_mask_{}_{}.npy".format(window_size, stride))
+            masks = np.fromfile('block_mask_{}_{}.npy'.format(window_size, stride),
                                 dtype=np.float32).reshape(-1,  *image_size)
-        return masks
-
-    def generate_block_masks_from_gridsize(self,image_size=[224,224], grid_size=(15,15)):
-        """
-        Generating the sliding window style masks.
-     
-        :param image_size: the mask size which should be the same as the image size
-        :type image_size: tuple 
-    
-        :param grid_size: the number of rows and columns
-        :type grid_size: tuple of ints (default: (5, 5))
-    
-        :return: the sliding window style masks
-        :rtype: numpy array 
-        """
-        window_size = (image_size[0]//grid_size[0], image_size[1]//grid_size[1])
-        stride = window_size
-        grid_num_r = (image_size[0] - window_size[0]) // stride[0] + 1
-        grid_num_c = (image_size[1] - window_size[1]) // stride[1] + 1
-        mask_num = grid_num_r * grid_num_c
-        print('mask_num {}'.format(mask_num))
-        masks = np.ones((mask_num, image_size[0], image_size[1]), dtype=np.float32)
-        i = 0
-        for r in np.arange(0, image_size[0] - window_size[0] + 1, stride[0]):
-            for c in np.arange(0, image_size[1] - window_size[1] + 1, stride[1]):
-                masks[i, r:r + window_size[0], c:c + window_size[1]] = 0.0
-                i += 1
-
-        masks = masks.reshape(-1, *image_size)
         return masks
 
 
@@ -188,20 +178,21 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :param index: mask index
         :return: masked images
         """
+
+        if (img.ndim == 2):
+            channels = 1 
+
+        if (img.ndim == 3):
+            channels = img.shape[-1]
+
         masked_imgs = []
-        self.org_dim=np.shape(img)
         masked_img=copy.deepcopy(img)
         for cnt,mask in enumerate(masks):
-            masked_img[:,:,0] = np.multiply(mask, img[:,:,0])
-            masked_img[:,:,1] = np.multiply(mask, img[:,:,1])
-            masked_img[:,:,2] = np.multiply(mask, img[:,:,2])
+            for ind in range(channels):
+                masked_img[:,:,ind] = np.multiply(mask, img[:,:,ind])
             masked_imgs.append(Image.fromarray(masked_img))
         return masked_imgs
-    
-    def _get_smap_size(self):    
         
-        return self.org_dim[0],self.org_dim[1],self.org_dim[2]
-    
     def augment(self, image_mat):
         """
         :param numpy.ndarray image_mat:

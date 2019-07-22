@@ -65,7 +65,6 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         org_img=copy.deepcopy(base_image)
         base_image_PIL=base_image.resize((224,224) ,PIL.Image.BILINEAR)
         augs, masks = augmenter.augment(np.array(base_image_PIL))
-
         idx_to_uuid = []
         def iter_aug_img_data_elements():
             for a in augs:
