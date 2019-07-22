@@ -37,7 +37,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
 
         
     @classmethod
-    def from_iqr_session(cls, iqrs,descr_gen,base_image): #add descriptor_generator and base image
+    def from_iqr_session(cls, iqrs,descr_gen,base_image): 
         """
         Create an ``SaliencyBlackbox`` instance from an
         :class:`smqtk.iqr.IqrSession` instance.
@@ -74,24 +74,19 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: numpy.ndarray[float]
         """
         uuid_bas=[]
-        #TODO:remove iterator
-        def temp_ter_bas():
-            #for imgs in base_image:
-            buff = six.BytesIO()
-            (self.base_image).save(buff, format="png")
-            de = DataMemoryElement(buff.getvalue(),
+     
+        buff = six.BytesIO()
+        (self.base_image).save(buff, format="png")
+        de = DataMemoryElement(buff.getvalue(),
                                content_type='image/png')
-            uuid_bas.append(de.uuid())
-            yield de
+        uuid_bas=de.uuid()
         
-        uuid_to_base_desc=self.descr_gen.compute_descriptor_async(temp_ter_bas())
+        uuid_to_base_desc=self.descr_gen.compute_descriptor(de)
         #TODO: Expand to multiple queries
         org_dis=abs(euclidean_distances(self.query_f[0].reshape(1, -1)
-                                ,(uuid_to_base_desc[uuid_bas[0]].vector()).reshape(1, -1)))
+                                ,(uuid_to_base_desc.vector()).reshape(1, -1)))
         descriptors_list=list(descriptors)
         diff = np.ones(len(descriptors_list))
-        import pdb
-        #pdb.set_trace()
         for i in range(len(descriptors_list)):
             diff[i]=max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1),
                                                 self.query_f[0].reshape(1, -1)))-org_dis,0)

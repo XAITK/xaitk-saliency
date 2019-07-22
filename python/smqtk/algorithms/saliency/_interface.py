@@ -88,7 +88,7 @@ class ImageSaliencyMapGenerator (SmqtkAlgorithm):
     """
 
     @abc.abstractmethod
-    def generate(self, image_mat, augmenter, descriptor_generator,
+    def generate(self, base_image, augmenter, descriptor_generator,
                  blackbox):
         """
         Generate an image saliency heat-map matrix given a blackbox's behavior
