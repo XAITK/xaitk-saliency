@@ -142,7 +142,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :param image_size: the mask size which should be the same to the image size
         :type image_size: tuple (default: (224, 224))
         :return: the sliding window style masks
-        :rtype: torch.cuda.Tensor
+        :rtype: numpy.ndarray
         """
         try:
             
@@ -205,7 +205,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
             the input image matrix.
             Returned masks should be in the dimension format
             [index, height, width,channel] with the boolean data type.
-        :rtype: (numpy.ndarray, numpy.ndarray)
+        :rtype: (PIL.Image.array, numpy.ndarray)
         """
          
         masked_images=self.generate_masked_imgs(self.masks,image_mat)

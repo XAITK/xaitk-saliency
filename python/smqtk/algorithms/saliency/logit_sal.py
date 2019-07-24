@@ -216,7 +216,7 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
             the input image matrix.
             Returned masks should be in the dimension format
             [index, height, width,channel] with the boolean data type.
-        :rtype: PIL.Image
+        :rtype: PIL.Image.array
         """
          
         masked_images = self.generate_masked_imgs(self.masks, image_mat)

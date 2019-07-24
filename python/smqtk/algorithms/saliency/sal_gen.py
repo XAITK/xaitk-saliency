@@ -19,6 +19,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
     def __init__(self,threshold=0.2):
         
         self.thresh=threshold
+
    
     def get_config(self):
 
@@ -38,13 +39,13 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         #TODO:appropriate returns
         return plt and np
     
-    def generate(self,base_image, augmenter, descriptor_generator,
+    def generate(self, base_image, augmenter, descriptor_generator,
                  blackbox):
         """
         Generate an image saliency heat-map matrix given a blackbox's behavior
         over the descriptions of an augmented base image.
-        :param PIL Image image_mat:
-            PIL Image of the RGB format that is
+        :param PIL Image.array base_image:
+            PIL Image.array of the RGB format that is
             to be augmented.
         :param ImageSaliencyAugmenter augmenter:
             Augmentation algorithm following
@@ -86,7 +87,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
             :param org_img: Original image
             :type org_img: numpy.array
             :return: Overlayed image
-            :rtype: PIL Image
+            :rtype: PIL Image.array
             """
             plt.switch_backend('agg')
             sizes = np.shape(sa_map)
