@@ -93,7 +93,6 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
         """
-        uuid_bas=[]
         buff = six.BytesIO()
         (self.base_image).save(buff, format="png")
         de = DataMemoryElement(buff.getvalue(),
@@ -144,7 +143,8 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
         }
 
     def generate_block_masks(self, window_size=50, stride=20, image_size=(224,224)):
-        """
+
+        """The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks.
         
         :param window_size: the block window size (with value 0, other areas with value 1)
@@ -216,7 +216,7 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
             the input image matrix.
             Returned masks should be in the dimension format
             [index, height, width,channel] with the boolean data type.
-        :rtype: PIL.Image.array
+        :rtype: (PIL.Image.array, numpy.ndarray)
         """
          
         masked_images = self.generate_masked_imgs(self.masks, image_mat)

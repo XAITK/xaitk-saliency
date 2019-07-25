@@ -54,7 +54,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
             ``SaliencyBlackbox`` class.
         :rtype: SaliencyBlackbox
         """
-        #Check if iqrs and descriptor_generator is usable
+
         try:
             assert iqrs
             assert descr_gen.is_usable
@@ -81,7 +81,6 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
         """
-        uuid_bas=[]
      
         buff = six.BytesIO()
         (self.base_image).save(buff, format="png")
@@ -122,17 +121,19 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
 
         self.stride = stride
 
-        self.masks = self.generate_block_masks(window_size=self.window_size,stride=self.stride)
+        self.masks = self.generate_block_masks(self.window_size,self.stride)
 
     def get_config(self):
 
         return {
+
             'window_size': self.window_size,
+
             'stride': self.stride,
         }
 
 
-    def generate_block_masks(self,window_size=20, stride=4, image_size=(224, 224)):
+    def generate_block_masks(self, window_size, stride, image_size=(224, 224)):
         """The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks
         :param window_size: the block window size (with value 0, other areas with value 1)
@@ -145,7 +146,8 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :rtype: numpy.ndarray
         """
         try:
-            
+            #The augmenter only supports certain factors of window_size and stride
+            #for a more robust augmenter use Logit_ImageSaliencyAugmenter
             assert (image_size[0]-window_size)%stride==0  
 
         except:
@@ -172,7 +174,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         return masks
 
 
-    def generate_masked_imgs(self,masks, img):
+    def generate_masked_imgs(self, masks, img):
         """
         Apply the N filters/masks onto one input image
         :param index: mask index
@@ -190,14 +192,14 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         for cnt,mask in enumerate(masks):
             for ind in range(channels):
                 masked_img[:,:,ind] = np.multiply(mask, img[:,:,ind])
-            masked_imgs.append(Image.fromarray(masked_img))
+            masked_imgs.append(Image.fromarray(np.uint8(masked_img)))
         return masked_imgs
         
     def augment(self, image_mat):
         """
         :param numpy.ndarray image_mat:
             Image matrix to be augmented.
-        :return: A numpy arrays of augmented image matrices as well as masks
+        :return: A PIL.Image of augmented image matrices as well as numpy array of masks
             that indicate the regions in the augmented images that are
             unmodified with respect to the input image (preserved regions).
             Returned augmented images should be in the dimension format
