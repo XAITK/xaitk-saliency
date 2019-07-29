@@ -69,20 +69,6 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         plt.close()
         return im
 
-    def weighted_avg(self,scalar_vec,masks):
-        masks = masks.reshape(-1,224,224,1)
-        cur_filters = copy.deepcopy(masks[:,:,:,0])
-        count = masks.shape[0] - np.sum(cur_filters, axis=0)
-        #count = np.ones(count.shape)
-
-        for i in range(len(cur_filters)):
-            cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], a_min=0.0, a_max=None)
-        res_sa = np.sum(cur_filters, axis=0) / count
-
-        sa_max = np.max(res_sa)
-        res_sa = np.clip(res_sa, a_min=sa_max * self.thresh, a_max = None)
-        return res_sa
- 
     def generate(self, base_image, augmenter, descriptor_generator,
                  blackbox):
         """
@@ -106,11 +92,14 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
             salient regions according to the given blackbox algorithm.
         :rtype: PIL.Image
         """
+
         org_hw = np.shape(base_image)[0:2]
         base_image_resized = cv2.resize(base_image,(224,224),interpolation=cv2.INTER_NEAREST)
 
         augs, masks = augmenter.augment(base_image_resized)
+
         idx_to_uuid = []
+
         def iter_aug_img_data_elements():
             for a in augs:
                buff = six.BytesIO()
@@ -124,9 +113,16 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
 
         scalar_vec = blackbox.transform((uuid_to_desc[uuid] for uuid in idx_to_uuid))
 
-        final_sal_map = self.weighted_avg(scalar_vec,masks)
+        final_sal_map = np.average(1 - masks, axis=0, weights=scalar_vec)
+  
+        final_sal_map /= (1 - masks).mean(axis=0) 
+
+        final_sal_map = np.clip(final_sal_map, a_min=(np.max(final_sal_map)) * self.thresh, a_max = None)
+
         final_sal_map = cv2.resize(final_sal_map,(org_hw),interpolation=cv2.INTER_NEAREST)
+
         sal_map_ret = self.overlay_saliency_map(final_sal_map,base_image)
+
         return sal_map_ret
 
 IMG_SALIENCY_GENERATOR_CLASS=Logit_ImageSaliencyMapGenerator
