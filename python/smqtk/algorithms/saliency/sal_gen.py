@@ -20,8 +20,9 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
     """
     def __init__(self,threshold=0.2):
         
-        self.thresh=threshold
+        self.thresh = threshold
 
+        self.org_hw = None
    
     def get_config(self):
 
@@ -38,7 +39,6 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
-        #TODO:appropriate returns
         return plt and np
 
     def overlay_saliency_map(self,sa_map, org_img):
@@ -52,9 +52,8 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         :rtype: PIL Image
         """
         plt.switch_backend('agg')
-        sizes = np.shape(sa_map)
-        height = float(sizes[0])
-        width = float(sizes[1])
+        height = float(self.org_hw[0])
+        width = float(self.org_hw[1])
         fig = plt.figure(dpi=int(height))
         fig.set_size_inches((width / height), 1, forward=False)
         ax = plt.Axes(fig, [0., 0., 1., 1.])
@@ -93,7 +92,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         :rtype: PIL.Image
         """
 
-        org_hw = np.shape(base_image)[0:2]
+        self.org_hw = np.shape(base_image)[0:2]
         base_image_resized = cv2.resize(base_image,(224,224),interpolation=cv2.INTER_NEAREST)
 
         augs, masks = augmenter.augment(base_image_resized)
@@ -112,14 +111,14 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         uuid_to_desc=descriptor_generator.compute_descriptor_async(iter_aug_img_data_elements())
 
         scalar_vec = blackbox.transform((uuid_to_desc[uuid] for uuid in idx_to_uuid))
-
-        final_sal_map = np.average(1 - masks, axis=0, weights=scalar_vec)
+        masks = 1 - masks
+        final_sal_map = np.average(masks, axis=0, weights=scalar_vec)
   
-        final_sal_map /= (1 - masks).mean(axis=0) 
+        final_sal_map /= (masks).mean(axis=0) 
 
         final_sal_map = np.clip(final_sal_map, a_min=(np.max(final_sal_map)) * self.thresh, a_max = None)
 
-        final_sal_map = cv2.resize(final_sal_map,(org_hw),interpolation=cv2.INTER_NEAREST)
+        final_sal_map = cv2.resize(final_sal_map,(self.org_hw[1], self.org_hw[0]),interpolation=cv2.INTER_LINEAR)
 
         sal_map_ret = self.overlay_saliency_map(final_sal_map,base_image)
 
