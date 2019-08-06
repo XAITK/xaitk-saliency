@@ -106,8 +106,9 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         self.rel_index.build_index(rel_train_set)
         RI_scores=self.rel_index.rank(*self.ADJs) 
         diff = np.ones(len(descriptors_list))
+        base_RI = RI_scores[rel_train_set[-1]]
         for i in range(len(descriptors_list)):
-            diff[i]= RI_scores[rel_train_set[i]] - RI_scores[rel_train_set[-1]]
+            diff[i]= RI_scores[rel_train_set[i]] - base_RI
         return diff
 
 class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
@@ -187,7 +188,7 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
                 masks[i, r1:r2, c1:c2] = 0
                 i += 1
 
-        masks = masks.reshape(-1, *image_size, 1)
+        masks = masks.reshape(-1, *image_size)
         return masks
 
 
@@ -197,11 +198,20 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
         :param index: mask index
         :return: masked images
         """
+        if (img.ndim == 2):
+            channels = 1
+
+        if (img.ndim == 3):
+            channels = img.shape[-1]
+
         masked_imgs = []
-        for mask in masks:
-            masked_img = np.multiply(mask, img, casting='unsafe')
+        masked_img=copy.deepcopy(img)
+        for cnt,mask in enumerate(masks):
+            for ind in range(channels):
+                masked_img[:,:,ind] = np.multiply(mask, img[:,:,ind])
             masked_imgs.append(Image.fromarray(np.uint8(masked_img)))
         return masked_imgs
+
     
     def augment(self, image_mat):
         

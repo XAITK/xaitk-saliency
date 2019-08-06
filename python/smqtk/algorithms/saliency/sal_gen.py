@@ -27,7 +27,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
     def get_config(self):
 
         return {
-            'threshold': 0.2,
+            'threshold': self.thresh,
         }
 
     @classmethod
@@ -67,6 +67,19 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         im = PIL.Image.fromarray(np_data)
         plt.close()
         return im
+
+    def weighted_avg(self,scalar_vec,masks):
+        masks = masks.reshape(-1,224,224,1)
+        cur_filters = copy.deepcopy(masks[:,:,:,0])
+        count = masks.shape[0] - np.sum(cur_filters, axis=0)
+        count = np.ones(count.shape)
+
+        for i in range(len(cur_filters)):
+            cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], a_min=0.0, a_max=None)
+        res_sa = np.sum(cur_filters, axis=0) / count
+
+        res_sa = np.clip(res_sa, a_min=(np.max(res_sa)) * self.thresh, a_max = None)
+        return res_sa
 
     def generate(self, base_image, augmenter, descriptor_generator,
                  blackbox):
@@ -111,12 +124,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         uuid_to_desc=descriptor_generator.compute_descriptor_async(iter_aug_img_data_elements())
 
         scalar_vec = blackbox.transform((uuid_to_desc[uuid] for uuid in idx_to_uuid))
-        masks = 1 - masks
-        final_sal_map = np.average(masks, axis=0, weights=scalar_vec)
-  
-        final_sal_map /= (masks).mean(axis=0) 
-
-        final_sal_map = np.clip(final_sal_map, a_min=(np.max(final_sal_map)) * self.thresh, a_max = None)
+        final_sal_map = self.weighted_avg(scalar_vec,masks)
 
         final_sal_map = cv2.resize(final_sal_map,(self.org_hw[1], self.org_hw[0]),interpolation=cv2.INTER_LINEAR)
 
