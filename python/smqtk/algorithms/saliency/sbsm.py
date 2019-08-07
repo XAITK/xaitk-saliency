@@ -100,13 +100,13 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: numpy.ndarray[float]
         """
      
-        org_dis=abs(euclidean_distances(self.query_f[0].reshape(1, -1)
+        org_dis = abs(euclidean_distances(self.query_f[0].reshape(1, -1)
                                 ,(self.base_descr.vector()).reshape(1, -1)))
-        descriptors_list=list(descriptors)
+        descriptors_list = list(descriptors)
         diff = np.ones(len(descriptors_list))
         query_f_reshaped = self.query_f[0].reshape(1, -1)
         for i in range(len(descriptors_list)):
-            diff[i]=max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1), query_f_reshaped))-org_dis,0)
+            diff[i] = max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1), query_f_reshaped))-org_dis,0)
         return diff
 
 
