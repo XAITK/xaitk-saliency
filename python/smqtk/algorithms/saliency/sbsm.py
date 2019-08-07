@@ -1,6 +1,3 @@
-import numpy as np
-from tqdm import tqdm
-import copy
 from PIL import Image
 import os
 from sklearn.metrics.pairwise import euclidean_distances
@@ -23,7 +20,7 @@ except ImportError as ex:
 
 class SBSM_SaliencyBlackbox (SaliencyBlackbox):
     """
-    Blackbox function that produces some floating point scalar value for a given masked base image descriptor element that signifies the proximity between the query image and masked image descriptors, used for use in saliency map generation.
+    SBSM_SaliencyBlackbox function that yields some floating point scalar value for a given masked base image descriptor element that signifies the proximity between the query image and masked image descriptors, used by class implementations of 'ImageSaliencyMapGenerator'.
     """
 
     def __init__(self, query_f, base_descr):
@@ -116,7 +113,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
 class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
     """
     Algorithm that yields a number of augmentations of an input image, as well
-    as preserved-area masks, used for use in saliency map generation.
+    as preserved-area masks, used for use in saliency map generation. For a more robust augmenter that can work for different image_sizes use implementation class 'Logit_ImageSaliencyAugmenter'.
     """
 
     def __init__(self, window_size=20, stride=4):
@@ -164,7 +161,9 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         }
 
     def generate_block_masks(self, window_size, stride, image_size=(224, 224)):
-        """The Images are resized to 224x224 to enable re-use of masks
+        """
+        Generates sliding window type binary masks used in augment() to mask an image
+        The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks
         :param window_size: the block window size (with value 0, other areas with value 1)
         :type window_size: int
@@ -225,6 +224,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         
     def augment(self, image_mat):
         """
+        Takes in an image matrix and returns its augmented version
         :param numpy.ndarray image_mat:
             Image matrix to be augmented.
         :return: A PIL.Image of augmented image matrices as well as numpy array of masks
