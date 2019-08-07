@@ -77,7 +77,7 @@ class ImageSaliencyAugmenter (SmqtkAlgorithm):
 
             Returned masks should be in the dimension format
             [index, height, width] with the boolean data type.
-        :rtype: (numpy.ndarray, numpy.ndarray)
+        :rtype: (PIL.Image, numpy.ndarray)
         """
 
 

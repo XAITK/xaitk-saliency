@@ -9,20 +9,32 @@ from smqtk.algorithms import SmqtkAlgorithm
 from smqtk.algorithms.saliency import SaliencyBlackbox,ImageSaliencyAugmenter
 from smqtk.representation.data_element.memory_element import DataMemoryElement
 
+try:
+    import numpy as np
+    from tqdm import tqdm
+    import copy
+except ImportError as ex:
+    logging.getLogger(__name__).warning("Failed to import numpy/tqdm/copy module: %s",
+                                        str(ex))
+    np = None
+    tqdm = None
+    copy = None
+
+
 class SBSM_SaliencyBlackbox (SaliencyBlackbox):
-    
     """
-    Blackbox function that produces some floating point scalar value for a
-    given descriptor element.
-    :param query_f: Feature of query image
-    :param type: smqtk.representation.DescriptorElement
-    :param base_descr: Base image descriptor
-    :param type: smqtk.representation.DescriptorElement
-        """
+    Blackbox function that produces some floating point scalar value for a given masked base image descriptor element that signifies the proximity between the query image and masked image descriptors, used for use in saliency map generation.
+    """
+
     def __init__(self, query_f, base_descr):
-        
-        self.query_f = query_f
-        
+        """
+        :param query_f: Feature of query image
+        :param type: smqtk.representation.DescriptorElement
+        :param base_descr: Base image descriptor
+        :param type: smqtk.representation.DescriptorElement
+        """    
+
+        self.query_f = query_f        
         self.base_descr = base_descr
 
     @classmethod
@@ -34,26 +46,28 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
-        
-        return self.base_descr and self.query_f
-        
+
+        valid = six is not None
+        if not valid:
+            cls.get_logger().debug("six python module cannot be imported")
+        return valid
+                
     @classmethod
     def from_iqr_session(cls, iqrs, descr_gen, base_image): 
         """
-        Create an ``SaliencyBlackbox`` instance from an
-        :class:`smqtk.iqr.IqrSession` instance.
-        Not all implementations of ``SaliencyBlackbox`` implement
-        this method and may raise a ``NotImplementedError`` exception.
-        :raises NotImplementedError:
-            Construction from a ``IqrSession`` is not defined for this
-            implementation.
-        :return: A new instance of of a class implementing the
+        Create an ``SaliencyBlackbox`` instance from iqrs session, descriptor generator and base_image.
+        :param iqrs:`smqtk.iqr.IqrSession` instance.
+        :param type: smqtk.iqr.IqrSession
+        :param descr_gen: The descriptor generator used by smqtk.
+        :param type: smqtk.algorithms.DescriptorGenerator.
+        :param base_image: The Base image for which we need to calculate a saliency map.
+        :param type: PIL Image of the base image.  
+        :return: A new instance of a class implementing the
             ``SaliencyBlackbox`` class.
         :rtype: SaliencyBlackbox
         """
 
         assert iqrs
-        assert descr_gen.is_usable
         query_f=[ext_pos.vector() for ext_pos in iqrs.external_positive_descriptors]
         buff = six.BytesIO()
         (base_image).save(buff, format="png")
@@ -63,6 +77,16 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         return SBSM_SaliencyBlackbox(query_f, base_descr)
        
     def get_config(self):
+        """
+        Return a JSON-compliant dictionary that could be passed to this class's
+        ``from_config`` method to produce an instance with identical
+        configuration.
+        In the common case, this involves naming the keys of the dictionary
+        based on the initialization argument names as if it were to be passed
+        to the constructor via dictionary expansion.
+        :return: JSON type compliant configuration dictionary.
+        :rtype: dict
+        """
 
         return {
             'query_f': self.query_f,
@@ -88,39 +112,54 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
             diff[i]=max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1), query_f_reshaped))-org_dis,0)
         return diff
 
+
 class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
     """
     Algorithm that yields a number of augmentations of an input image, as well
     as preserved-area masks, used for use in saliency map generation.
-    param
     """
+
+    def __init__(self, window_size=20, stride=4):
+        """
+        :param window_size: the block window size (with value 0, other areas with value 1)
+        :type window_size: int
+        :param stride: the sliding step
+        :type stride: int
+        """
+
+        self.window_size = window_size
+        self.stride = stride
+        self.masks = self.generate_block_masks(self.window_size,self.stride)
 
     @classmethod
     def is_usable(cls):
         """
         Check whether this implementation is available for use.
-        Required valid presence of svm and svmutil modules
+        Required valid presence of tqdm and copy modules
         :return:
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
-        
-        return ImageSaliencyAugmenter and tqdm and np
-    
-    def __init__(self, window_size=20, stride=4):
 
-        self.window_size = window_size
-
-        self.stride = stride
-
-        self.masks = self.generate_block_masks(self.window_size,self.stride)
+        valid = (tqdm is not None) and (copy is not None)
+        if not valid:
+            cls.get_logger().debug("tqdm or copy python module cannot be imported")
+        return valid
 
     def get_config(self):
+        """
+        Return a JSON-compliant dictionary that could be passed to this class's
+        ``from_config`` method to produce an instance with identical
+        configuration.
+        In the common case, this involves naming the keys of the dictionary
+        based on the initialization argument names as if it were to be passed
+        to the constructor via dictionary expansion.
+        :return: JSON type compliant configuration dictionary.
+        :rtype: dict
+        """
 
         return {
-
             'window_size': self.window_size,
-
             'stride': self.stride,
         }
 
@@ -136,15 +175,13 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         :return: the sliding window style masks
         :rtype: numpy.ndarray
         """
+
         try:
             #The augmenter only supports certain factors of window_size and stride
             #for a more robust augmenter use Logit_ImageSaliencyAugmenter
-            assert (image_size[0]-window_size)%stride==0  
-
+            assert (image_size[0]-window_size)%stride==0 
         except:
-     
             self._log.debug("Change window size and stride to pass assert")
-    
         if not os.path.isfile('block_mask_{}_{}.npy'.format(window_size, stride)):
             grid_num_r = ((image_size[0] - window_size) // stride)+1
             grid_num_c = ((image_size[1] - window_size) // stride)+1
@@ -155,7 +192,6 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
                 for c in np.arange(0, image_size[1] - window_size+1, stride):
                     masks[i, r:r + window_size, c:c + window_size] = 0.0
                     i += 1
-
             masks = masks.reshape(-1, *image_size)
             masks.tofile('block_mask_{}_{}.npy'.format(window_size, stride))
         else:
@@ -164,22 +200,23 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
                                 dtype=np.float32).reshape(-1,  *image_size)
         return masks
 
-
     def generate_masked_imgs(self, masks, img):
         """
-        Apply the N filters/masks onto one input image
-        :param index: mask index
-        :return: masked images
+        Apply the masks onto one input image
+        :param masks: sliding window type masks in [1, Height, Weight, 1] format.
+        :param type: numpy.ndarray
+        :param img: Original base image
+        :param type: numpy.ndarray 
+        :return: List masked images
+        :rtype: List of PIL Images 
         """
 
         if (img.ndim == 2):
             channels = 1 
-
         if (img.ndim == 3):
-            channels = img.shape[-1]
-
+            channels = 3
         masked_imgs = []
-        masked_img=copy.deepcopy(img)
+        masked_img = copy.deepcopy(img)
         for cnt,mask in enumerate(masks):
             for ind in range(channels):
                 masked_img[:,:,ind] = np.multiply(mask, img[:,:,ind])
@@ -198,7 +235,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
             the input image matrix.
             Returned masks should be in the dimension format
             [index, height, width,channel] with the boolean data type.
-        :rtype: (PIL.Image.array, numpy.ndarray)
+        :rtype: (PIL.Image, numpy.ndarray)
         """
          
         masked_images=self.generate_masked_imgs(self.masks,image_mat)
