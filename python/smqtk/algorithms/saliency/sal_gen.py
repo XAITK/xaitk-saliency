@@ -78,7 +78,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
             cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], a_min=0.0, a_max=None)
         res_sa = np.sum(cur_filters, axis=0) / count
 
-        res_sa = np.clip(res_sa, a_min=(np.max(res_sa)) * self.thresh, a_max = None)
+        res_sa = np.clip(res_sa, a_min=((np.max(res_sa)) * self.thresh), a_max = None)
         return res_sa
 
     def generate(self, base_image, augmenter, descriptor_generator,
@@ -106,7 +106,7 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         """
 
         self.org_hw = np.shape(base_image)[0:2]
-        base_image_resized = cv2.resize(base_image,(224,224),interpolation=cv2.INTER_NEAREST)
+        base_image_resized = cv2.resize(base_image,(224,224),interpolation=cv2.INTER_LINEAR)
 
         augs, masks = augmenter.augment(base_image_resized)
 

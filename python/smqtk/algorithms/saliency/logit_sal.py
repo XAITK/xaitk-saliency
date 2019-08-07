@@ -12,23 +12,27 @@ from smqtk.algorithms.saliency import SaliencyBlackbox,ImageSaliencyAugmenter
 from smqtk.representation.data_element.memory_element import DataMemoryElement
 from smqtk.utils import plugin
     
-__author__ = "bhavan.vasu@kitware.com"
-
 
 class Logit_SaliencyBlackbox (SaliencyBlackbox):
-    def __init__(self, ADJs, rel_index, descr_gen, base_image):
+    def __init__(self, ADJs, rel_index, T_descr):
         """
         Blackbox function that produces some floating point scalar value for a
         given descriptor element.
+        :param ADJs: is a set of positive and negative adjudication descriptors :
+        :param type: set of DescriptorMemoryElemets
+        :param rel_index: Plugin implementation of the algorithms used to generate
+        relevance index used to rank images
+        :param type: A new instance of of a class implementing the
+            ``RelevancyIndex`` class.
+        :param T_descr: Base image feature descriptor  
+        :param type: smqtk.representation.DescriptorElement
         """
     
         self.ADJs = ADJs
     
         self.rel_index = rel_index
     
-        self.descr_gen = descr_gen
-     
-        self.base_image = base_image
+        self.T_descr = T_descr
     
     @classmethod
     def is_usable(cls):
@@ -57,52 +61,46 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
             ``SaliencyBlackbox`` class.
         :rtype: SaliencyBlackbox
         """
-        try:
-            assert iqrs
 
-            assert descr_gen.is_usable
+        assert iqrs
 
-            pos = list(iqrs.positive_descriptors | iqrs.external_positive_descriptors)
+        assert descr_gen.is_usable
 
-            neg = list(iqrs.negative_descriptors | iqrs.external_negative_descriptors)
+        pos = list(iqrs.positive_descriptors | iqrs.external_positive_descriptors)
 
-            ADJs = (pos, neg)
+        neg = list(iqrs.negative_descriptors | iqrs.external_negative_descriptors)
 
-            rel_index=plugin.from_plugin_config( plugin.to_plugin_config
+        ADJs = (pos, neg)
+        rel_index = plugin.from_plugin_config( plugin.to_plugin_config
             (iqrs.rel_index), get_relevancy_index_impls())
-
-        except:
-            raise NotImplementedError("The ``from_iqr_session`` classmethod is "
-                                  "not implemented for class ``{}``."
-                                  .format(cls.__name__))
-
-        return Logit_SaliencyBlackbox(ADJs, rel_index, descr_gen, base_image)
+        buff = six.BytesIO()
+        (base_image).save(buff, format="png")
+        de = DataMemoryElement(buff.getvalue(),
+                               content_type='image/png')
+        T_descr=descr_gen.compute_descriptor(de)
+        return Logit_SaliencyBlackbox(ADJs, rel_index, T_descr)
 
     def get_config(self):
         
         return {
-            'ready': True,
+
+            'ADJs': self.ADJs,
+            'rel_index': self.rel_index,
+            'T_descr': self.T_descr,
         }
 
     def transform(self, descriptors):
         """
         Transform some descriptor element into a saliency scalar.
-        :param collections.Iterable[smqtk.representation.DescriptorElement] descriptors:
-            Descriptor to get the saliency of.
-        :param type base image descriptor vector   
+        :param descriptors:Descriptor of augmentations to get their scalar value.
+        :param type Iterable[smqtk.representation.DescriptorElement]   
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
         """
-        buff = six.BytesIO()
-        (self.base_image).save(buff, format="png")
-        de = DataMemoryElement(buff.getvalue(),
-                               content_type='image/png')
         
-        #TODO: Expand to multiple queries
         descriptors_list=list(descriptors)
         rel_train_set=[single_descr for single_descr in descriptors_list]
-        T_descr=self.descr_gen.compute_descriptor(de)
-        rel_train_set.append(T_descr)
+        rel_train_set.append(self.T_descr)
         self.rel_index.build_index(rel_train_set)
         RI_scores=self.rel_index.rank(*self.ADJs) 
         diff = np.ones(len(descriptors_list))
@@ -188,7 +186,7 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
                 masks[i, r1:r2, c1:c2] = 0
                 i += 1
 
-        masks = masks.reshape(-1, *image_size)
+        masks = masks.reshape(-1, *image_size, 1)
         return masks
 
 
@@ -198,20 +196,11 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
         :param index: mask index
         :return: masked images
         """
-        if (img.ndim == 2):
-            channels = 1
-
-        if (img.ndim == 3):
-            channels = img.shape[-1]
-
         masked_imgs = []
-        masked_img=copy.deepcopy(img)
-        for cnt,mask in enumerate(masks):
-            for ind in range(channels):
-                masked_img[:,:,ind] = np.multiply(mask, img[:,:,ind])
+        for mask in masks:
+            masked_img = np.multiply(mask, img, casting='unsafe')
             masked_imgs.append(Image.fromarray(np.uint8(masked_img)))
         return masked_imgs
-
     
     def augment(self, image_mat):
         
