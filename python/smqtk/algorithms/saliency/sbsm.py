@@ -9,36 +9,33 @@ from smqtk.algorithms import SmqtkAlgorithm
 from smqtk.algorithms.saliency import SaliencyBlackbox,ImageSaliencyAugmenter
 from smqtk.representation.data_element.memory_element import DataMemoryElement
 
-__author__ = "bhavan.vasu@kitware.com"
-
-
 class SBSM_SaliencyBlackbox (SaliencyBlackbox):
     
     """
     Blackbox function that produces some floating point scalar value for a
     given descriptor element.
-    """
-
-    def __init__(self, query_f, descr_gen, base_image):
+    :param query_f: Feature of query image
+    :param type: smqtk.representation.DescriptorElement
+    :param base_descr: Base image descriptor
+    :param type: smqtk.representation.DescriptorElement
+        """
+    def __init__(self, query_f, base_descr):
         
-        self.query_f=query_f
+        self.query_f = query_f
         
-        self.descr_gen=descr_gen
-        
-        self.base_image=base_image
+        self.base_descr = base_descr
 
     @classmethod
     def is_usable(cls):
         """
         Check whether this implementation is available for use.
-        Required valid presence of svm and svmutil modules
+        Required valid presence of query image feature and base image descriptor
         :return:
             Boolean determination of whether this implementation is usable.
         :rtype: bool
         """
         
-        return SaliencyBlackbox and euclidean_distances
-
+        return self.base_descr and self.query_f
         
     @classmethod
     def from_iqr_session(cls, iqrs, descr_gen, base_image): 
@@ -55,21 +52,21 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: SaliencyBlackbox
         """
 
-        try:
-            assert iqrs
-            assert descr_gen.is_usable
-            query_f=[ext_pos.vector() for ext_pos in iqrs.external_positive_descriptors]
-
-        except:
-            raise NotImplementedError("The ``from_iqr_session`` classmethod is "
-                                  "not implemented for class ``{}``."
-                                  .format(cls.__name__))
-        return SBSM_SaliencyBlackbox(query_f,descr_gen,base_image)
+        assert iqrs
+        assert descr_gen.is_usable
+        query_f=[ext_pos.vector() for ext_pos in iqrs.external_positive_descriptors]
+        buff = six.BytesIO()
+        (base_image).save(buff, format="png")
+        de = DataMemoryElement(buff.getvalue(),
+                               content_type='image/png')
+        base_descr = descr_gen.compute_descriptor(de)
+        return SBSM_SaliencyBlackbox(query_f, base_descr)
        
     def get_config(self):
 
         return {
-            'ready': True,
+            'query_f': self.query_f,
+            'base_descr': self.base_descr,
         }
 
     def transform(self, descriptors):
@@ -82,25 +79,20 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: numpy.ndarray[float]
         """
      
-        buff = six.BytesIO()
-        (self.base_image).save(buff, format="png")
-        de = DataMemoryElement(buff.getvalue(),
-                               content_type='image/png')
-        uuid_to_base_desc=self.descr_gen.compute_descriptor(de)
-        #TODO: Expand to multiple external positive and negative
         org_dis=abs(euclidean_distances(self.query_f[0].reshape(1, -1)
-                                ,(uuid_to_base_desc.vector()).reshape(1, -1)))
+                                ,(self.base_descr.vector()).reshape(1, -1)))
         descriptors_list=list(descriptors)
         diff = np.ones(len(descriptors_list))
+        query_f_reshaped = self.query_f[0].reshape(1, -1)
         for i in range(len(descriptors_list)):
-            diff[i]=max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1),
-                                                self.query_f[0].reshape(1, -1)))-org_dis,0)
+            diff[i]=max(abs(euclidean_distances(descriptors_list[i].vector().reshape(1, -1), query_f_reshaped))-org_dis,0)
         return diff
 
 class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
     """
     Algorithm that yields a number of augmentations of an input image, as well
     as preserved-area masks, used for use in saliency map generation.
+    param
     """
 
     @classmethod
@@ -132,7 +124,6 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
             'stride': self.stride,
         }
 
-
     def generate_block_masks(self, window_size, stride, image_size=(224, 224)):
         """The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks
@@ -153,7 +144,7 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         except:
      
             self._log.debug("Change window size and stride to pass assert")
-
+    
         if not os.path.isfile('block_mask_{}_{}.npy'.format(window_size, stride)):
             grid_num_r = ((image_size[0] - window_size) // stride)+1
             grid_num_c = ((image_size[1] - window_size) // stride)+1
