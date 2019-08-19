@@ -13,22 +13,30 @@ from smqtk.utils import plugin
     
 class Logit_SaliencyBlackbox (SaliencyBlackbox):
     """
-    Logit_SaliencyBlackbox function yields some floating point scalar value for a given masked base image descriptor element that signifies the difference between the confidence value of the query image and masked image descriptors, used by class implementations of 'ImageSaliencyMapGenerator'.
+    Logit_SaliencyBlackbox function yields some floating point scalar value
+    for a given masked base image descriptor element that signifies the 
+    difference between the confidence value of the query image and masked
+    image descriptors, used by class implementations of
+    'ImageSaliencyMapGenerator'.
     """
 
-    def __init__(self, ADJs, rel_index, T_descr):
+    def __init__(self, pos_descriptors, neg_descriptors, rel_index, T_descr):
         """
-        :param ADJs: is a set of positive and negative adjudications.
-        :param type: set of (smqtk.representation.DescriptorMemoryElemets)
-        :param rel_index: Plugin implementation of the algorithms used to generate
-        relevance index used to rank images
+        :param pos_descriptors: is a set of positive descriptors.
+        :param type: list[smqtk.representation.DescriptorMemoryElement]
+        :param neg_descriptors: is a set of negative descriptors.
+        :param type: list[smqtk.representation.DescriptorMemoryElement]
+        :param rel_index: Plugin implementation of the algorithms used to 
+        generate relevance index used to rank images
         :param type: A new instance of a class implementing the
             ``RelevancyIndex`` class.
         :param T_descr: Base image feature descriptor  
         :param type: smqtk.representation.DescriptorElement
         """
     
-        self.ADJs = ADJs 
+        self.pos_de = pos_descriptors
+        self.neg_de =  neg_descriptors
+        self.ADJs = (self.pos_de, self.neg_de)
         self.rel_index = rel_index
         self.T_descr = T_descr
     
@@ -36,10 +44,9 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
     def is_usable(self):
         """
         Check whether this implementation is available for use.
-        Required valid presence of Ajudications and a new instance of a class implementing the
-            ``RelevancyIndex`` class.
-        :return:
-            Boolean determination of whether this implementation is usable.
+        Required valid presence of Ajudications and a new instance of 
+        a class implementing the ``RelevancyIndex`` class.
+        :return: Boolean determination of whether implementation is usable.
         :rtype: bool
         """
 
@@ -49,12 +56,14 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
     @classmethod
     def from_iqr_session(cls, iqrs, descr_gen, base_image): 
         """
-        Create an ``SaliencyBlackbox`` instance from iqrs session, descriptor generator and base_image.
+        Create an ``SaliencyBlackbox`` instance from iqrs session, descriptor
+        generator and base_image.
         :param iqrs:`smqtk.iqr.IqrSession` instance.
         :param type: smqtk.iqr.IqrSession
         :param descr_gen: The descriptor generator used by smqtk.
         :param type: smqtk.algorithms.DescriptorGenerator.
-        :param base_image: The Base image for which we need to calculate a saliency map.
+        :param base_image: The Base image for which we need to calculate 
+        a saliency map.
         :param type: PIL Image of the base image.  
         :return: A new instance of a class implementing the
             ``SaliencyBlackbox`` class.
@@ -62,22 +71,25 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         """
 
         assert iqrs
-        pos = list(iqrs.positive_descriptors | iqrs.external_positive_descriptors)
-        neg = list(iqrs.negative_descriptors | iqrs.external_negative_descriptors)
-        ADJs = (pos, neg)
-        rel_index = plugin.from_plugin_config( plugin.to_plugin_config(iqrs.rel_index), get_relevancy_index_impls())
+        pos = list(iqrs.positive_descriptors |\
+          iqrs.external_positive_descriptors)
+        neg = list(iqrs.negative_descriptors |\
+          iqrs.external_negative_descriptors)
+        rel_index = plugin.from_plugin_config\
+         (plugin.to_plugin_config(iqrs.rel_index),\
+          get_relevancy_index_impls())
         buff = six.BytesIO()
-        (base_image).save(buff, format="png")
+        base_image.save(buff, format="bmp")
         de = DataMemoryElement(buff.getvalue(),
-                               content_type='image/png')
+                               content_type='image/bmp')
         T_descr=descr_gen.compute_descriptor(de)
-        return Logit_SaliencyBlackbox(ADJs, rel_index, T_descr)
+        return Logit_SaliencyBlackbox(pos, neg, rel_index, T_descr)
 
     def get_config(self):
         """
-        Return a JSON-compliant dictionary that could be passed to this class's
-        ``from_config`` method to produce an instance with identical
-        configuration.
+        Returns a JSON-compliant dictionary that could be passed to 
+        the class's ``from_config`` method to produce an instance 
+        with identical configuration.
         In the common case, this involves naming the keys of the dictionary
         based on the initialization argument names as if it were to be passed
         to the constructor via dictionary expansion.
@@ -86,7 +98,8 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         """
         
         return {
-            'ADJs': self.ADJs,
+            'pos_descriptors': self.pos_de,
+            'neg_descriptors': self.neg_de,
             'rel_index': self.rel_index,
             'T_descr': self.T_descr,
         }
@@ -94,7 +107,8 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
     def transform(self, descriptors):
         """
         Transform some descriptor element into a saliency scalar.
-        :param descriptors:Descriptor of augmentations to get their scalar value.
+        :param descriptors:Descriptor of augmentations to get
+         their scalar value.
         :param type Iterable[smqtk.representation.DescriptorElement]   
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
@@ -114,13 +128,15 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
 
 class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
     """
-    Robust Augmenter that yields a number of augmentations of an input image, as well
-    as preserved-area masks, used for use in saliency map generation. 
+    Robust Augmenter that yields a number of augmentations 
+    of an input image, as well as preserved-area masks,
+    used for use in saliency map generation. 
     """
 
     def __init__(self, window_size=50, stride=20):
         """
-        :param window_size: the block window size (with value 0, other areas with value 1)
+        :param window_size: the block window size 
+        (with value 0, other areas with value 1)
         :type window_size: int
         :param stride: the sliding step
         :type stride: int
@@ -128,7 +144,8 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
 
         self.window_size = window_size
         self.stride = stride
-        self.masks = self.generate_block_masks(window_size=window_size, stride=stride)
+        self.masks = self.generate_block_masks(window_size=window_size,\
+        stride=stride)
 
     @classmethod
     def is_usable(cls):
@@ -146,9 +163,9 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
     @classmethod
     def get_config(self):
         """
-        Return a JSON-compliant dictionary that could be passed to this class's
-        ``from_config`` method to produce an instance with identical
-        configuration.
+        Return a JSON-compliant dictionary that could be passed to 
+        this class's ``from_config`` method to produce an 
+        instance with identical configuration.
         In the common case, this involves naming the keys of the dictionary
         based on the initialization argument names as if it were to be passed
         to the constructor via dictionary expansion.
@@ -163,14 +180,16 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
 
     def generate_block_masks(self, window_size, stride, image_size=(224,224)):
         """
-        Generates sliding window type binary masks used in augment() to mask an image
-        The Images are resized to 224x224 to enable re-use of masks
-        Generating the sliding window style masks.
-        :param window_size: the block window size (with value 0, other areas with value 1)
+        Generates sliding window type binary masks used in augment() to 
+        mask an image. The Images are resized to 224x224 to 
+        enable re-use of masks Generating the sliding window style masks.
+        :param window_size: the block window size 
+        (with value 0, other areas with value 1)
         :type window_size: int
         :param stride: the sliding step
         :type stride: int
-        :param image_size: the mask size which should be the same to the image size
+        :param image_size: the mask size which should be the 
+        same to the image size
         :type image_size: tuple
         :return: the sliding window style masks
         :rtype: numpy.ndarray
@@ -181,7 +200,8 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
 
         mask_num = len(rows) * len(cols)
         self._log.debug('mask_num: {}'.format(mask_num))
-        masks = np.ones((mask_num, image_size[0], image_size[1]), dtype=np.float64)
+        masks = np.ones((mask_num, image_size[0], image_size[1])\
+                                              , dtype=np.float64)
         i = 0
         for r in rows:
             for c in cols:
@@ -210,7 +230,8 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
     def generate_masked_imgs(self, masks, img):
         """
         Apply the masks onto one input image
-        :param masks: sliding window type masks in [1, Height, Weight, 1] format.
+        :param masks: sliding window type masks in 
+        [1, Height, Weight, 1] format.
         :param type: numpy.ndarray
         :param img: Original base image
         :param type: numpy.ndarray 

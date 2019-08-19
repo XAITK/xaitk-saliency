@@ -9,7 +9,8 @@ import copy
 from smqtk.algorithms.saliency import ImageSaliencyMapGenerator
 from smqtk.algorithms.descriptor_generator import DescriptorGenerator
 from smqtk.representation.data_element.file_element import DataFileElement
-from smqtk.representation.data_element.memory_element import DataMemoryElement
+from smqtk.representation.data_element.memory_element \
+      import DataMemoryElement
 from skimage.transform import resize
 
 
@@ -62,7 +63,8 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         ax.imshow(org_img)
         ax.imshow(sa_map, cmap='jet', alpha=0.5)
         fig.canvas.draw()
-        np_data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+        np_data = np.fromstring(fig.canvas.tostring_rgb(), \
+           dtype=np.uint8, sep='')
         np_data = np_data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         im = PIL.Image.fromarray(np_data)
         plt.close()
@@ -75,10 +77,12 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         count = np.ones(count.shape)
 
         for i in range(len(cur_filters)):
-            cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], a_min=0.0, a_max=None)
+            cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], \
+                       a_min=0.0, a_max=None)
         res_sa = np.sum(cur_filters, axis=0) / count
 
-        res_sa = np.clip(res_sa, a_min=((np.max(res_sa)) * self.thresh), a_max = None)
+        res_sa = np.clip(res_sa, a_min=((np.max(res_sa)) * self.thresh), \
+                    a_max = None)
         return res_sa
 
     def generate(self, base_image, augmenter, descriptor_generator,
@@ -106,30 +110,26 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         """
 
         self.org_hw = np.shape(base_image)[0:2]
-        base_image_resized = cv2.resize(base_image,(224,224),interpolation=cv2.INTER_LINEAR)
-
+        base_image_resized = cv2.resize(base_image,(224,224) \
+                     ,interpolation=cv2.INTER_LINEAR)
         augs, masks = augmenter.augment(base_image_resized)
-
         idx_to_uuid = []
-
         def iter_aug_img_data_elements():
             for a in augs:
                buff = six.BytesIO()
-               (a).save(buff, format="png")
+               (a).save(buff, format="bmp")
                de = DataMemoryElement(buff.getvalue(),
-                                   content_type='image/png')
+                                   content_type='image/bmp')
                idx_to_uuid.append(de.uuid())
                yield de
-
-        uuid_to_desc=descriptor_generator.compute_descriptor_async(iter_aug_img_data_elements())
-
-        scalar_vec = blackbox.transform((uuid_to_desc[uuid] for uuid in idx_to_uuid))
+        uuid_to_desc = descriptor_generator.compute_descriptor_async \
+                    (iter_aug_img_data_elements())
+        scalar_vec = blackbox.transform( \
+                     (uuid_to_desc[uuid] for uuid in idx_to_uuid))
         final_sal_map = self.weighted_avg(scalar_vec,masks)
-
-        final_sal_map = cv2.resize(final_sal_map,(self.org_hw[1], self.org_hw[0]),interpolation=cv2.INTER_LINEAR)
-
+        final_sal_map = cv2.resize(final_sal_map, \
+         (self.org_hw[1], self.org_hw[0]),interpolation=cv2.INTER_LINEAR)
         sal_map_ret = self.overlay_saliency_map(final_sal_map,base_image)
-
         return sal_map_ret
 
 IMG_SALIENCY_GENERATOR_CLASS=Logit_ImageSaliencyMapGenerator
