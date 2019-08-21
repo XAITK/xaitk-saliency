@@ -28,10 +28,10 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
 
     def __init__(self, query_f, base_descr):
         """
-        :param query_f: Feature of query image
-        :param type: smqtk.representation.DescriptorElement
-        :param base_descr: Base image descriptor
-        :param type: smqtk.representation.DescriptorElement
+        :param smqtk.representation.DescriptorElement query_f:
+            Feature of query image.
+        :param smqtk.representation.DescriptorElement base_descr: 
+            Base image descriptor
         """    
 
         self.query_f = query_f        
@@ -58,13 +58,11 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         """
         Create an ``SaliencyBlackbox`` instance from iqrs session,
         descriptor generator and base_image.
-        :param iqrs:`smqtk.iqr.IqrSession` instance.
-        :param type: smqtk.iqr.IqrSession
-        :param descr_gen: The descriptor generator used by smqtk.
-        :param type: smqtk.algorithms.DescriptorGenerator.
-        :param base_image: The Base image for which we need to
+        :param smqtk.iqr.IqrSession iqrs:`smqtk.iqr.IqrSession` instance.
+        :param smqtk.algorithms.DescriptorGenerator descr_gen:
+           The descriptor generator used by smqtk.
+        :param PIL.Image base_image: The Base image for which we need to
         calculate a saliency map.
-        :param type: PIL Image of the base image.  
         :return: A new instance of a class implementing the
             ``SaliencyBlackbox`` class.
         :rtype: SaliencyBlackbox
@@ -72,7 +70,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
 
         assert iqrs
         if (len(iqrs.external_positive_descriptors)) != 1:
-            raise NotImplementedError("Saliency generation in class``{}`` "
+            raise ValueError("Saliency generation in class``{}`` "
                                   "only supports one query sample, but"
                                   "recieved more than 1 external positive."
                                   .format(cls.__name__))
@@ -106,9 +104,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         """
         Transform some descriptor element into a saliency scalar.
         :param collections.Iterable[smqtk.representation.DescriptorElement]
-        descriptors:
-        Descriptor to get the saliency of.
-        :param type base image descriptor vector   
+          descriptors: Descriptor to get the saliency of.
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
         """
@@ -135,11 +131,9 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
 
     def __init__(self, window_size=20, stride=4):
         """
-        :param window_size: the block window size 
+        :param int window_size: the block window size 
         (with value 0, other areas with value 1)
-        :type window_size: int
-        :param stride: the sliding step
-        :type stride: int
+        :param int stride: the sliding step
         """
 
         self.window_size = window_size
@@ -184,14 +178,11 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
         Generates sliding window type binary masks used in augment() to mask
         an image. The Images are resized to 224x224 to enable re-use of masks
         Generating the sliding window style masks
-        :param window_size: the block window size
+        :param int window_size: the block window size
           (with value 0, other areas with value 1)
-        :type window_size: int
-        :param stride: the sliding step
-        :type stride: int
-        :param image_size: the mask size which should
-          be the same to the image size
-        :type image_size: tuple (default: (224, 224))
+        :param int stride: the sliding step
+        :param tuple(default: (224, 224)) image_size:The mask size which should
+          be the same to the image size.
         :return: the sliding window style masks
         :rtype: numpy.ndarray
         """
@@ -223,12 +214,11 @@ class SBSM_ImageSaliencyAugmenter (ImageSaliencyAugmenter):
     def generate_masked_imgs(self, masks, img):
         """
         Apply the masks onto one input image
-        :param masks: sliding window type masks in [1, Height, Weight, 1] format.
-        :param type: numpy.ndarray
-        :param img: Original base image
-        :param type: numpy.ndarray 
+        :param numpy.ndarray masks: sliding window type 
+           masks in [1, Height, Weight, 1] format.
+        :param numpy.ndarray img: Original base image
         :return: List masked images
-        :rtype: List of PIL Images 
+        :rtype: list[PIL.Image] 
         """
 
         if (img.ndim == 2):

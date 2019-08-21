@@ -22,16 +22,16 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
 
     def __init__(self, pos_descriptors, neg_descriptors, rel_index, T_descr):
         """
-        :param pos_descriptors: is a set of positive descriptors.
-        :param type: list[smqtk.representation.DescriptorMemoryElement]
-        :param neg_descriptors: is a set of negative descriptors.
-        :param type: list[smqtk.representation.DescriptorMemoryElement]
+        :param list[smqtk.representation.DescriptorMemoryElement] 
+            pos_descriptors: is a set of positive descriptors.
+        :param list[smqtk.representation.DescriptorMemoryElement]
+               neg_descriptors: is a set of negative descriptors.
         :param rel_index: Plugin implementation of the algorithms used to 
         generate relevance index used to rank images
-        :param type: A new instance of a class implementing the
+        :type: A new instance of a class implementing the
             ``RelevancyIndex`` class.
-        :param T_descr: Base image feature descriptor  
-        :param type: smqtk.representation.DescriptorElement
+        :param smqtk.representation.DescriptorElement
+              T_descr: Base image feature descriptor  
         """
     
         self.pos_de = pos_descriptors
@@ -58,13 +58,11 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
         """
         Create an ``SaliencyBlackbox`` instance from iqrs session, descriptor
         generator and base_image.
-        :param iqrs:`smqtk.iqr.IqrSession` instance.
-        :param type: smqtk.iqr.IqrSession
-        :param descr_gen: The descriptor generator used by smqtk.
-        :param type: smqtk.algorithms.DescriptorGenerator.
-        :param base_image: The Base image for which we need to calculate 
-        a saliency map.
-        :param type: PIL Image of the base image.  
+        :param smqtk.iqr.IqrSession iqrs:`smqtk.iqr.IqrSession` instance.
+        :param smqtk.algorithms.DescriptorGenerator descr_gen:
+            The descriptor generator used by smqtk.
+        :param PIL.Image base_image: The Base image for which we 
+           need to calculate a saliency map.
         :return: A new instance of a class implementing the
             ``SaliencyBlackbox`` class.
         :rtype: SaliencyBlackbox
@@ -107,9 +105,8 @@ class Logit_SaliencyBlackbox (SaliencyBlackbox):
     def transform(self, descriptors):
         """
         Transform some descriptor element into a saliency scalar.
-        :param descriptors:Descriptor of augmentations to get
-         their scalar value.
-        :param type Iterable[smqtk.representation.DescriptorElement]   
+        :param Iterable[smqtk.representation.DescriptorElement] 
+           descriptors:Descriptor of augmentations to get their scalar value.
         :return: The saliency value for the given descriptor.
         :rtype: numpy.ndarray[float]
         """
@@ -135,11 +132,9 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
 
     def __init__(self, window_size=50, stride=20):
         """
-        :param window_size: the block window size 
+        :param int window_size: the block window size 
         (with value 0, other areas with value 1)
-        :type window_size: int
-        :param stride: the sliding step
-        :type stride: int
+        :param int stride: the sliding step
         """
 
         self.window_size = window_size
@@ -183,14 +178,11 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
         Generates sliding window type binary masks used in augment() to 
         mask an image. The Images are resized to 224x224 to 
         enable re-use of masks Generating the sliding window style masks.
-        :param window_size: the block window size 
+        :param int window_size: the block window size 
         (with value 0, other areas with value 1)
-        :type window_size: int
-        :param stride: the sliding step
-        :type stride: int
-        :param image_size: the mask size which should be the 
+        :param int stride: the sliding step
+        :param tuple image_size: the mask size which should be the 
         same to the image size
-        :type image_size: tuple
         :return: the sliding window style masks
         :rtype: numpy.ndarray
         """
@@ -230,11 +222,9 @@ class Logit_ImageSaliencyAugmenter(ImageSaliencyAugmenter):
     def generate_masked_imgs(self, masks, img):
         """
         Apply the masks onto one input image
-        :param masks: sliding window type masks in 
+        :param numpy.ndarray masks: sliding window type masks in 
         [1, Height, Weight, 1] format.
-        :param type: numpy.ndarray
-        :param img: Original base image
-        :param type: numpy.ndarray 
+        :param numpy.ndarray img: Original base image
         :return: List masked images
         :rtype: List of PIL Images 
         """

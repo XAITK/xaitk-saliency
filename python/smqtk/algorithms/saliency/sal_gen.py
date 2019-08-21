@@ -45,12 +45,10 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
     def overlay_saliency_map(self,sa_map, org_img):
         """
         overlay the saliency map on top of original image
-        :param sa_map: saliency map
-        :type sa_map: numpy.array
-        :param org_img: Original image
-        :type org_img: numpy.array
+        :param numpy.array sa_map: saliency map
+        :param numpy.array org_img: Original image
         :return: Overlayed image
-        :rtype: PIL Image
+        :rtype: PIL.Image
         """
         plt.switch_backend('agg')
         height = float(self.org_hw[0])
