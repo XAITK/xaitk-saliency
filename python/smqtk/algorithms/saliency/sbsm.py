@@ -48,10 +48,7 @@ class SBSM_SaliencyBlackbox (SaliencyBlackbox):
         :rtype: bool
         """
 
-        valid = True
-        if not valid:
-            cls.get_logger().debug("six python module cannot be imported")
-        return valid
+        return True
                 
     @classmethod
     def from_iqr_session(cls, iqrs, descr_gen, base_image): 
