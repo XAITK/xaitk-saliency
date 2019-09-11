@@ -1,7 +1,9 @@
 from ._interface import ImageSaliencyAugmenter, ImageSaliencyMapGenerator
 
+import six
 import numpy as np
 from skimage.transform import resize
+from smqtk.representation.data_element.memory_element import DataMemoryElement
 
 
 class RISEAugmenter (ImageSaliencyAugmenter):
@@ -30,7 +32,7 @@ class RISEAugmenter (ImageSaliencyAugmenter):
 
         masks = np.empty((N, *input_size))
 
-        for i in tqdm(range(N), desc='Generating masks'):
+        for i in range(N):
             # Random shifts
             x = np.random.randint(0, cell_size[0])
             y = np.random.randint(0, cell_size[1])
@@ -38,6 +40,7 @@ class RISEAugmenter (ImageSaliencyAugmenter):
             masks[i, :, :] = resize(grid[i], up_size, order=1, mode='reflect',
                                     anti_aliasing=False)[x:x + input_size[0], y:y + input_size[1]]
         self.masks = masks.reshape(-1, *input_size, 1)
+        self.input_size = input_size
     
     def augment(self, image_mat):
         """
@@ -63,7 +66,7 @@ class RISEAugmenter (ImageSaliencyAugmenter):
             
         
 class RISEGenerator (ImageSaliencyMapGenerator):
-    def generate(self, base_image, augmenter, descriptor_generator,
+    def generate(self, image_mat, augmenter, descriptor_generator,
                  blackbox):
         """
         Generate an image saliency heat-map matrix given a blackbox's behavior
@@ -91,21 +94,30 @@ class RISEGenerator (ImageSaliencyMapGenerator):
             salient regions according to the given blackbox algorithm.
         :rtype: numpy.ndarray[float]
         """
-        # augmenter = RISEAugmenter(1000, 10, 0.5, (224, 224))
-        masked_images, masks = augmenter.augment(base_image)
         
-        scores = np.zeros(masked_images.shape[0])
-        # Performance-critical part since we run the model on a large number of images.
-        # Should be well-optimized, and should be done in batches if possible.
-        for i, masked_image in enumerate(masked_images):
-            desc = descriptor_generator.compute_descriptor(masked_image)
-            score = blackbox.transform(desc)
-            scores[i] = score
+        resized_img = resize(image_mat, augmenter.input_size, order=1)
+        masked_images, masks = augmenter.augment(resized_img)
+        
+        idx_to_uuid = []
+        def iter_aug_img_data_elements():
+            for a in masked_images:
+                buff = six.BytesIO()
+                (a).save(buff, format="bmp")
+                de = DataMemoryElement(buff.getvalue(),
+                                       content_type='image/bmp')
+                idx_to_uuid.append(de.uuid())
+                yield de
+
+        uuid_to_desc = descriptor_generator.compute_descriptor_async(iter_aug_img_data_elements())
+        scores = blackbox.transform((uuid_to_desc[uuid] for uuid in idx_to_uuid))
+        
         # Compute a weighted average of masks w.r.t. the scores
         saliency_map = np.average(masks, axis=0, weights=scores)
         saliency_map = np.squeeze(saliency_map)
         # Normalize
         saliency_map /= masks.mean(axis=0)
+        # Resize back to the original image shape
+        saleincy_map = resize(saliency_map, image_mat.shape, order=1)
         
         # At this point the saliency map will be in some range [a, b], 0 <= a <= b <= 1.
         # The absolute values characterize the average score of the masked image and 
