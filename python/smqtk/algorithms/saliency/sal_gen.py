@@ -72,7 +72,6 @@ class Logit_ImageSaliencyMapGenerator(ImageSaliencyMapGenerator):
         masks = masks.reshape(-1,224,224,1)
         cur_filters = copy.deepcopy(masks[:,:,:,0])
         count = masks.shape[0] - np.sum(cur_filters, axis=0)
-        count = np.ones(count.shape)
 
         for i in range(len(cur_filters)):
             cur_filters[i] = (1.0 - cur_filters[i]) * np.clip(scalar_vec[i], \
