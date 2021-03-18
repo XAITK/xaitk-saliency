@@ -7,6 +7,7 @@ from smqtk.representation.data_element.memory_element import DataMemoryElement
 
 
 class RISEAugmenter (ImageSaliencyAugmenter):
+
     def __init__(self, N, s, p1, input_size):
         """
         Generate a set of random masks to apply to the image.
@@ -21,6 +22,10 @@ class RISEAugmenter (ImageSaliencyAugmenter):
             Size of the model's input. Smaller masks are upsampled to this resolution
             to be applied to (multiplied with) the input later. E.g. (224, 224)
         """
+
+        self.N = N
+        self.s = s
+        self.p1 = p1
         # Size of each grid cell after upsampling
         cell_size = np.ceil(np.array(input_size) / s)
         # Upscale factor
@@ -41,7 +46,40 @@ class RISEAugmenter (ImageSaliencyAugmenter):
                                     anti_aliasing=False)[x:x + input_size[0], y:y + input_size[1]]
         self.masks = masks.reshape(-1, *input_size, 1)
         self.input_size = input_size
-    
+
+
+    @classmethod
+    def is_usable(cls):
+        """
+        Check whether this implementation is available for use.
+        Required valid presence of the six and numpy libraries
+        :return:
+            Boolean determination of whether this implementation is usable.
+        :rtype: bool
+        """
+
+        return six and np
+
+
+    def get_config(self):
+        """
+        Return a JSON-compliant dictionary that could be passed to this
+        class's ``from_config`` method to produce an instance with identical
+        configuration.
+        In the common case, this involves naming the keys of the dictionary
+        based on the initialization argument names as if it were to be passed
+        to the constructor via dictionary expansion.
+        :return: JSON type compliant configuration dictionary.
+        :rtype: dict
+        """
+
+        return {
+            'N': self.N,
+            's': self.s,
+            'p1': self.p1,
+            'input_size': self.input_size,
+        }
+
     def augment(self, image_mat):
         """
         :param numpy.ndarray image_mat:
@@ -59,13 +97,55 @@ class RISEAugmenter (ImageSaliencyAugmenter):
             [index, height, width] with the boolean data type.
         :rtype: (numpy.ndarray, numpy.ndarray)
         """
+
         # If image is grayscale
         if len(image_mat.shape) == 2:
             image_mat = np.expand_dims(image_mat, 2).repeat(3, axis=2)
         return self.masks * image_mat, self.masks
-            
-        
+
+
 class RISEGenerator (ImageSaliencyMapGenerator):
+
+    def __init__(self, input_size):
+        """
+        Interface for randomized input sampling based explanations for blackbox models
+        https://arxiv.org/abs/1806.07421
+        """
+
+        self.org_hw = input_size
+
+
+    @classmethod
+    def is_usable(cls):
+        """
+        Check whether this implementation is available for use.
+        Required valid presence of query image feature
+        and base image descriptor
+        :return:
+            Boolean determination of whether this implementation is usable.
+        :rtype: bool
+        """
+
+        return resize and np
+
+
+    def get_config(self):
+        """
+        Return a JSON-compliant dictionary that could be passed to this
+        class's ``from_config`` method to produce an instance with identical
+        configuration.
+        In the common case, this involves naming the keys of the dictionary
+        based on the initialization argument names as if it were to be passed
+        to the constructor via dictionary expansion.
+        :return: JSON type compliant configuration dictionary.
+        :rtype: dict
+        """
+
+        return {
+            'input_size': self.org_hw
+        }
+
+
     def generate(self, image_mat, augmenter, descriptor_generator,
                  blackbox):
         """
@@ -95,7 +175,7 @@ class RISEGenerator (ImageSaliencyMapGenerator):
         :rtype: numpy.ndarray[float]
         """
         
-        resized_img = resize(image_mat, augmenter.input_size, order=1)
+        resized_img = resize(image_mat, self.org_hw, order=1)
         masked_images, masks = augmenter.augment(resized_img)
         
         idx_to_uuid = []
@@ -117,7 +197,7 @@ class RISEGenerator (ImageSaliencyMapGenerator):
         # Normalize
         saliency_map /= masks.mean(axis=0)
         # Resize back to the original image shape
-        saleincy_map = resize(saliency_map, image_mat.shape, order=1)
+        saliency_map = resize(saliency_map, image_mat.shape, order=1)
         
         # At this point the saliency map will be in some range [a, b], 0 <= a <= b <= 1.
         # The absolute values characterize the average score of the masked image and 
