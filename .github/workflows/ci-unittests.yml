@@ -1,0 +1,122 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI Unittests
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# NOTE: Github actions does not support anchors apparently. Forgive duplication of job
+#       steps.
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: python:3.7
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v2
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.7-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Lint with Flake8
+        run: poetry run flake8
+
+  typecheck:
+    runs-on: ubuntu-latest
+    container: python:3.7
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v2
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.7-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Typecheck with MyPy
+        run: poetry run mypy
+
+  unittests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+        # Extras for included, optional plugin support (space-separated lists)
+        opt-extra: [
+            "",  # no extras
+        ]
+      # We want all python versions tested even if one of them happens to fail
+      fail-fast: false
+
+    container: python:${{ matrix.python-version }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v2
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-${{ matrix.opt-extra }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Optionally install additional requirements
+        env:
+          OPT_EXTRA: ${{ matrix.opt-extra }}
+        run: |
+          if [[ -n "$OPT_EXTRA" ]]
+          then
+            poetry install --extras "$OPT_EXTRA"
+          fi
+      - name: Run Unittests
+        run: poetry run pytest --cov=xaitk_saliency
