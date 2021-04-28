@@ -1,0 +1,71 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+###############################################################################
+[tool.poetry]
+name = "xaitk_saliency"
+# REMEMBER: `distutils.version.*Version` types can be used to compare versions
+# from strings like this.
+# This package prefers to use the strict numbering standard when possible.
+version = "0.1.0"
+description = """\
+    Visual saliency map generation interfaces and baseline implementations \
+    for explainable AI."""
+license = "BSD-3-Clause"
+authors = ["Kitware, Inc. <xaitk@kitware.com>"]
+readme = "README.md"
+repository = "https://github.com/XAITK/xaitk-saliency"
+documentation = "https://xaitk-saliency.readthedocs.io/"
+classifiers = [
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Unix',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+smqtk-core = "^0.17.0"
+smqtk-dataprovider = "^0.15.0"
+smqtk-descriptors = "^0.15.0"
+
+[tool.poetry.dev-dependencies]
+# CI
+flake8 = "^3.9.0"
+flake8-mutable = "^1.2.0"
+mypy = "^0.812"
+# Docs
+# - Also see: `docs/readthedocs-reqs.txt` for use by RTD
+Sphinx = "^3.5.3"
+sphinx-rtd-theme = "^0.5.1"
+sphinx-prompt = "^1.4.0"
+livereload = "^2.6.3"
+# Testing
+coverage = "^5.5"
+pytest = "^6.2.2"
+pytest-cov = "^2.11.1"
+# Utility
+ipython = "^7.22.0"
+
+###############################################################################
+[tool.pytest.ini_options]
+addopts = [
+    "-lv",                  # Show local in trace-backs.
+    "--doctest-modules",    # Increased verbosity.
+    "--tb=long",            # Trace-back print mode.
+]
+testpaths = [
+    "tests",
+    "xaitk_saliency",
+]
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "IGNORE_EXCEPTION_DETAIL",
+]
