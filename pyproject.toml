@@ -32,9 +32,14 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
+matplotlib = "^3.4.1"
+opencv-python-headless = "^4.5.1"
+scikit-image = "^0.18.1"
+scikit-learn = "^0.24.2"
 smqtk-core = "^0.17.0"
 smqtk-dataprovider = "^0.15.0"
 smqtk-descriptors = "^0.15.0"
+tqdm = "^4.60.0"
 
 [tool.poetry.dev-dependencies]
 # CI
