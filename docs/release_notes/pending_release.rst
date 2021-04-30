@@ -1,5 +1,5 @@
-SMQTK-Core Pending Release Notes
-================================
+XAITK-Saliency Pending Release Notes
+====================================
 
 
 Updates / New Features
