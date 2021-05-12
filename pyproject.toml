@@ -34,6 +34,7 @@ classifiers = [
 python = "^3.7"
 matplotlib = "^3.4.1"
 opencv-python-headless = "^4.5.1"
+Pillow = "^8.2.0"
 scikit-image = "^0.18.1"
 scikit-learn = "^0.24.2"
 smqtk-core = "^0.17.0"
@@ -59,12 +60,17 @@ pytest-cov = "^2.11.1"
 # Utility
 ipython = "^7.22.0"
 
+[tool.poetry.plugins."smqtk_plugins"]
+# Add implementation sub-module exposure here.
+
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [
     "-lv",                  # Show local in trace-backs.
     "--doctest-modules",    # Increased verbosity.
     "--tb=long",            # Trace-back print mode.
+    "--cov=xaitk_saliency", # Cover our package specifically
+    "--cov-report=term",    # Coverage report to terminal
 ]
 testpaths = [
     "tests",
