@@ -65,6 +65,8 @@ addopts = [
     "-lv",                  # Show local in trace-backs.
     "--doctest-modules",    # Increased verbosity.
     "--tb=long",            # Trace-back print mode.
+    "--cov=xaitk_saliency", # Cover our package specifically
+    "--cov-report=term",    # Coverage report to terminal
 ]
 testpaths = [
     "tests",
