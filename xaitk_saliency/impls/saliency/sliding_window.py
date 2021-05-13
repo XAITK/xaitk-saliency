@@ -1,11 +1,10 @@
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, List
 
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.utils.masking import generate_masked_images
 
 import numpy as np
 import PIL.Image
-
 
 class SlidingWindow(PerturbImage):
     """
@@ -24,6 +23,10 @@ class SlidingWindow(PerturbImage):
         self.window_size = window_size
         self.stride = stride
     
+    def get_config(self):
+        return {"window_size": self.window_size,
+               "stride": self.stride}
+
     def generate_block_masks(
         self,
         window_size: int,
@@ -45,7 +48,6 @@ class SlidingWindow(PerturbImage):
         cols = np.arange(0 + stride - window_size, image_size[1], stride)
 
         mask_num = len(rows) * len(cols)
-        LOG.debug('mask_num: {}'.format(mask_num))
         masks = np.ones((mask_num, image_size[0], image_size[1]),
                         dtype=np.float64)
         i = 0
@@ -73,7 +75,6 @@ class SlidingWindow(PerturbImage):
         masks = masks.reshape(mask_shape)
         return masks
     
-    @abc.abstractmethod
     def perturb(
         self,
         ref_image: PIL.Image.Image
@@ -103,10 +104,9 @@ class SlidingWindow(PerturbImage):
         :return: Tuple of perturbed images and the window masks detailing perturbation
             areas.
         """
-        
-        self.window_size = window_size
-        self.stride = stride
-        self.masks = self.generate_block_masks(self.window_size, self.stride, ref_image.size)
+        img_dims = ref_image.size
+        self.masks = self.generate_block_masks(self.window_size, \
+                                               self.stride, img_dims)
         masked_images = generate_masked_images(self.masks, ref_image)
         return masked_images, self.masks
         
