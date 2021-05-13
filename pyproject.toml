@@ -61,6 +61,8 @@ pytest-cov = "^2.11.1"
 ipython = "^7.22.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
+"fsal" = "xaitk_saliency.impls.saliency.fsal"
+"sliding_window" = "xaitk_saliency.impls.saliency.sliding_window"
 # Add implementation sub-module exposure here.
 "impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.occlusion"
 

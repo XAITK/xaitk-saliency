@@ -102,8 +102,8 @@ def weight_regions_by_scalar(
 
     :return: A numpy array representing the weighted heatmap.
     """
-    final_heatmap = np.empty((masks[0].shape))
+    heatmap = np.empty((masks.shape[-2:]))
     for val, region in zip(scalar_vec, masks):
-        heatmap += (region * val)
+        heatmap += ((1 - region) * val)
     normalized_heatmap = heatmap / len(scalar_vec)
     return normalized_heatmap

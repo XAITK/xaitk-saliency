@@ -1,5 +1,9 @@
 from xaitk_saliency import ImageClassifierSaliencyMapGenerator
-from utils import weight_regions_by_scalar
+from xaitk_saliency.utils.masking import (
+    generate_masked_images,
+    weight_regions_by_scalar
+)
+import numpy as np
 
 
 class Fsal (ImageClassifierSaliencyMapGenerator):
@@ -13,7 +17,6 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
     `PerturbImage` implementation.
     """
 
-    @abc.abstractmethod
     def generate(
             self,
             image_conf: np.ndarray,
@@ -45,9 +48,13 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
             values.
         """
 
-        sal = np.empty((len(image_conf), perturbed_masks.shape))
+        sal = np.empty((len(image_conf), *perturbed_masks.shape[-2:]))
         for i, base_conf in enumerate(image_conf):
+            diff = np.empty(len(perturbed_conf[:, i]))
             for j in range(len(perturbed_conf[:, i])):
                 diff[i]= perturbed_conf[j, i] - base_conf
             sal[i] = weight_regions_by_scalar(diff, perturbed_masks)
         return sal
+
+    def get_config(self):
+        return {}
