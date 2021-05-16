@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import numpy as np
 import PIL.Image
-
+from sklearn.preprocessing import minmax_scale
 
 def generate_block_masks(
     window_size: Tuple[int, int],
@@ -102,8 +102,15 @@ def weight_regions_by_scalar(
 
     :return: A numpy array representing the weighted heatmap.
     """
-    heatmap = np.empty((masks.shape[-2:]))
-    for val, region in zip(scalar_vec, masks):
-        heatmap += ((1 - region) * val)
+
+    # Creating an empty heatmap for aggregating weighted matrices
+    heatmap = np.zeros((masks.shape[-2:]))
+
+    # Iterating through perturbation mask and respective weight
+    for weight, prtb_region in zip(scalar_vec, masks):
+        heatmap += ((1 - prtb_region) * weight)
+
     normalized_heatmap = heatmap / len(scalar_vec)
-    return normalized_heatmap
+    final_heatmap = minmax_scale(normalized_heatmap.ravel(), \
+                                 feature_range=(0,1)).reshape(heatmap.shape)
+    return final_heatmap
