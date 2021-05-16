@@ -48,12 +48,19 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
             values.
         """
 
+        # Creating an emtpy array of length nClasses and shape H X W
         sal = np.empty((len(image_conf), *perturbed_masks.shape[-2:]))
-        for i, base_conf in enumerate(image_conf):
+
+        # Iterating through each class confidence and compare it with
+        # its perturbed twin
+        for i, base_class_conf in enumerate(image_conf):
             diff = np.empty(len(perturbed_conf[:, i]))
             for j in range(len(perturbed_conf[:, i])):
-                diff[i]= perturbed_conf[j, i] - base_conf
+                diff[j]= base_class_conf - perturbed_conf[j][i]
+
+            # Weighting perturbed regions with respective difference in confidence
             sal[i] = weight_regions_by_scalar(diff, perturbed_masks)
+
         return sal
 
     def get_config(self):
