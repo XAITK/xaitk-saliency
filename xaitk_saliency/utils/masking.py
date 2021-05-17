@@ -4,6 +4,7 @@ import numpy as np
 import PIL.Image
 from sklearn.preprocessing import minmax_scale
 
+
 def generate_block_masks(
     window_size: Tuple[int, int],
     stride: Tuple[int, int],
@@ -84,6 +85,7 @@ def generate_masked_images(
         masked_imgs.append(PIL.Image.fromarray(np.uint8(masked_img)))
     return masked_imgs
 
+
 def weight_regions_by_scalar(
     scalar_vec: np.ndarray,
     masks: np.ndarray) -> np.ndarray:
@@ -111,6 +113,6 @@ def weight_regions_by_scalar(
         heatmap += ((1 - prtb_region) * weight)
 
     normalized_heatmap = heatmap / len(scalar_vec)
-    final_heatmap = minmax_scale(normalized_heatmap.ravel(), \
-                                 feature_range=(0,1)).reshape(heatmap.shape)
+    final_heatmap = minmax_scale(normalized_heatmap.ravel(),
+                                 feature_range=(0, 1)).reshape(heatmap.shape)
     return final_heatmap

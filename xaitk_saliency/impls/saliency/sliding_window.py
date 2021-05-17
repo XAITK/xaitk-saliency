@@ -1,4 +1,4 @@
-from typing import Iterable, Tuple, List
+from typing import Tuple, List
 
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.utils.masking import generate_masked_images
@@ -6,42 +6,41 @@ from xaitk_saliency.utils.masking import generate_masked_images
 import numpy as np
 import PIL.Image
 
+
 class SlidingWindow(PerturbImage):
     """
-    Implementation of a sliding window based perturbation taking a reference 
-    image and generating some number perturbations of the image along with 
-    paired mask matrices indicating where perturbations have occurred and 
+    Implementation of a sliding window based perturbation taking a reference
+    image and generating some number perturbations of the image along with
+    paired mask matrices indicating where perturbations have occurred and
     to what amount.
-    
+
     The resolution of perturbation is dependant upon the window size and 
     stride of the sliding window.
     """
     
     def __init__(self,
-                window_size,
-                stride):
+                 window_size: int,
+                 stride: int) -> "PerturbImage":
         self.window_size = window_size
         self.stride = stride
-    
+
     def get_config(self):
         return {"window_size": self.window_size,
-               "stride": self.stride}
+                "stride": self.stride}
 
     def generate_block_masks(
         self,
         window_size: int,
         stride: int,
-        image_size: Tuple[int, int] = (224, 224)
-    ) -> np.ndarray:
+        image_size: Tuple[int, int] = (224, 224)) -> np.ndarray:
         """
         Generates sliding window type binary masks used in augment() to
-        mask an image. 
+        mask an image.
         :param window_size: the block window size (with value 0, other areas
             with value 1)
         :param stride: the sliding step
-        :param image_size: the mask size which should be the same to the image
-            size
-            
+        :param image_size: the mask size which should be the same to the image size
+
         :return: the sliding window style masks with values ranging between [0, 1].
         """
         rows = np.arange(0 + stride - window_size, image_size[0], stride)
@@ -74,7 +73,7 @@ class SlidingWindow(PerturbImage):
         mask_shape = [-1] + [*image_size] + [1]
         masks = masks.reshape(mask_shape)
         return masks
-    
+
     def perturb(
         self,
         ref_image: PIL.Image.Image
@@ -95,7 +94,7 @@ class SlidingWindow(PerturbImage):
         indicate areas of the image that are *unperturbed*.
         Note that output mask matrices *may be* of a floating-point type in
         order to allow for fractional perturbation. 
-        
+
         The resolution of masking is controlled by the window_size and stride
         of siding window.
 
@@ -105,15 +104,15 @@ class SlidingWindow(PerturbImage):
             areas.
         """
         img_dims = ref_image.size
-        self.masks = self.generate_block_masks(self.window_size, \
+        self.masks = self.generate_block_masks(self.window_size,
                                                self.stride, img_dims)
         masked_images = generate_masked_images(self.masks, ref_image)
         return masked_images, self.masks
-        
+
     def __call__(
         self,
         ref_image: PIL.Image.Image
-    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+        ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
         """
         Alias for :meth:`.PerturbImage.perturb`.
         """

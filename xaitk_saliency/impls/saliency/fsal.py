@@ -1,8 +1,6 @@
 from xaitk_saliency import ImageClassifierSaliencyMapGenerator
-from xaitk_saliency.utils.masking import (
-    generate_masked_images,
-    weight_regions_by_scalar
-)
+from xaitk_saliency.utils.masking import weight_regions_by_scalar
+
 import numpy as np
 
 
@@ -13,7 +11,7 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
     require a sequence of per-class confidences predicted on the
     reference image, a number of per-class confidences as predicted
     on perturbed images, as well as the masks of the reference image
-    perturbations (as would be output from a 
+    perturbations (as would be output from a
     `PerturbImage` implementation.
     """
 
@@ -22,7 +20,7 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
             image_conf: np.ndarray,
             perturbed_conf: np.ndarray,
             perturbed_masks: np.ndarray,
-        ) -> np.ndarray:
+            ) -> np.ndarray:
         """
         Generate an image saliency heat-map matrix given a the original classifier
         confidence on image, confidences on pertrubed images and finally the masks
@@ -44,7 +42,7 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
             :py:class:`numpy.ndarray` matrix of the shape [nClasses, height, width]
             shape as the input image matrix but of floating-point type within
             the range of [0,1], where areas of higher value represent more
-            salient regions according to the classifier that generated confidence 
+            salient regions according to the classifier that generated confidence
             values.
         """
 
@@ -63,5 +61,5 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
 
         return sal
 
-    def get_config(self):
+    def get_config(self) -> dict:
         return {}
