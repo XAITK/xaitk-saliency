@@ -24,7 +24,7 @@ class SlidingWindow(PerturbImage):
         self.window_size = window_size
         self.stride = stride
 
-    def get_config(self):
+    def get_config(self) -> dict:
         return {"window_size": self.window_size,
                 "stride": self.stride}
 
