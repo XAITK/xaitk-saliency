@@ -19,15 +19,15 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
             self,
             image_conf: np.ndarray,
             perturbed_conf: np.ndarray,
-            perturbed_masks: np.ndarray,
-            ) -> np.ndarray:
+            perturbed_masks: np.ndarray
+    ) -> np.ndarray:
         """
         Generate an image saliency heat-map matrix given a the original classifier
         confidence on image, confidences on pertrubed images and finally the masks
         used to pertrube the image.
 
         :param image_conf:
-            Numpy Original classifier confidence on Image for all classes 
+            Numpy Original classifier confidence on Image for all classes
             that require saliency map generation: [nClasses], float, [0, 1] range
         :param perturbed_conf:
             Numpy Classifier confidences on pertrubed version of Image
@@ -54,7 +54,7 @@ class Fsal (ImageClassifierSaliencyMapGenerator):
         for i, base_class_conf in enumerate(image_conf):
             diff = np.empty(len(perturbed_conf[:, i]))
             for j in range(len(perturbed_conf[:, i])):
-                diff[j]= base_class_conf - perturbed_conf[j][i]
+                diff[j] = base_class_conf - perturbed_conf[j][i]
 
             # Weighting perturbed regions with respective difference in confidence
             sal[i] = weight_regions_by_scalar(diff, perturbed_masks)

@@ -14,13 +14,13 @@ class SlidingWindow(PerturbImage):
     paired mask matrices indicating where perturbations have occurred and
     to what amount.
 
-    The resolution of perturbation is dependant upon the window size and 
+    The resolution of perturbation is dependant upon the window size and
     stride of the sliding window.
     """
-    
+
     def __init__(self,
                  window_size: int,
-                 stride: int) -> "PerturbImage":
+                 stride: int) -> None:
         self.window_size = window_size
         self.stride = stride
 
@@ -32,7 +32,8 @@ class SlidingWindow(PerturbImage):
         self,
         window_size: int,
         stride: int,
-        image_size: Tuple[int, int] = (224, 224)) -> np.ndarray:
+        image_size: Tuple[int, int]
+    ) -> np.ndarray:
         """
         Generates sliding window type binary masks used in augment() to
         mask an image.
@@ -93,7 +94,7 @@ class SlidingWindow(PerturbImage):
         Values should be in the [0, 1] range, where a value closer to 1.0
         indicate areas of the image that are *unperturbed*.
         Note that output mask matrices *may be* of a floating-point type in
-        order to allow for fractional perturbation. 
+        order to allow for fractional perturbation.
 
         The resolution of masking is controlled by the window_size and stride
         of siding window.
@@ -112,7 +113,7 @@ class SlidingWindow(PerturbImage):
     def __call__(
         self,
         ref_image: PIL.Image.Image
-        ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
         """
         Alias for :meth:`.PerturbImage.perturb`.
         """

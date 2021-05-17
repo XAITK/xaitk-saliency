@@ -88,7 +88,8 @@ def generate_masked_images(
 
 def weight_regions_by_scalar(
     scalar_vec: np.ndarray,
-    masks: np.ndarray) -> np.ndarray:
+    masks: np.ndarray
+) -> np.ndarray:
     """
     Weight some binary masks reguib with its respective vector in scalar_vec.
 
