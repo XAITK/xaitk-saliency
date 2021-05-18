@@ -26,6 +26,9 @@ class PerturbImage (Plugfigurable):
 
         Output images should have the same shape as the input reference image,
         including channels.
+        The output masks array should be of the shape `[nOutputs, H, W]`, where
+        `nOutputs` is the same number of output image perturbations, and `H`
+        and `W` are the pixel height and width of the input and output images.
 
         Output mask matrices should be congruent in length to the number of
         perturbed images output, as well as share the same height and width
