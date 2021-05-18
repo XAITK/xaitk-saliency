@@ -110,6 +110,6 @@ def weight_regions_by_scalar(
     heatmap = ((1 - np.transpose(masks))[:, :, :, newaxis] * scalar_vec)
 
     # Computing average scores across all perturbations for nClasses
-    final_heatmap = heatmap.sum(axis = 2)/len(scalar_vec)
+    final_heatmap = heatmap.sum(axis=2) / len(scalar_vec)
 
     return np.transpose(final_heatmap)
