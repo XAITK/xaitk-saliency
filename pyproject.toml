@@ -62,6 +62,7 @@ ipython = "^7.22.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
 # Add implementation sub-module exposure here.
+"impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.occlusion"
 
 ###############################################################################
 [tool.pytest.ini_options]
