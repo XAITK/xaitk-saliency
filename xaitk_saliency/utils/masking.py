@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import numpy as np
 import PIL.Image
-from sklearn.preprocessing import minmax_scale
+from numpy import newaxis
 
 
 def generate_block_masks(
@@ -100,20 +100,16 @@ def weight_regions_by_scalar(
     preserved. E.g. a 0 in the mask will translate to blacking out the
     corresponding location in the source image.
 
-    :param scalar_vec: Weights for image regions in masks.
+    :param scalar_vec: Weights for image regions for nClasses and shape
+                       [nMasks, nClasses]
     :param masks: Mask array in the [nMasks, Height, Weight] shape format.
 
     :return: A numpy array representing the weighted heatmap.
     """
 
-    # Creating an empty heatmap for aggregating weighted matrices
-    heatmap = np.zeros((masks.shape[-2:]))
+    heatmap = ((1 - np.transpose(masks))[:, :, :, newaxis] * scalar_vec)
 
-    # Iterating through perturbation mask and respective weight
-    for weight, prtb_region in zip(scalar_vec, masks):
-        heatmap += ((1 - prtb_region) * weight)
+    # Computing average scores across all perturbations for nClasses
+    final_heatmap = heatmap.sum(axis = 2) / len(scalar_vec)
 
-    normalized_heatmap = heatmap / len(scalar_vec)
-    final_heatmap = minmax_scale(normalized_heatmap.ravel(),
-                                 feature_range=(0, 1)).reshape(heatmap.shape)
-    return final_heatmap
+    return np.transpose(final_heatmap)
