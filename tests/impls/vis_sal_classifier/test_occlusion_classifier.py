@@ -15,7 +15,7 @@ class TestOcclusionBasedScoring (TestCase):
         impl = OcclusionScoring()
         assert impl.is_usable() and isinstance(impl, ImageClassifierSaliencyMapGenerator)
 
-# Below test case does pass but we should have more discussion 
+# Below test case does pass but we should have more discussion
 # regarding support for this
 
 #     def test_multiple_images(self) -> None:
