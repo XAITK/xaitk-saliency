@@ -91,7 +91,7 @@ def weight_regions_by_scalar(
     masks: np.ndarray
 ) -> np.ndarray:
     """
-    Weight some binary masks reguib with its respective vector in scalar_vec.
+    Weight some binary masks region with its respective vector in scalar_vec.
 
     We expect the "masks" matrices and the image to be the same height and
     width, and be valued in the [0, 1] floating-point range. The length
