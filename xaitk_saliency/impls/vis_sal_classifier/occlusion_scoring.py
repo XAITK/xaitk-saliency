@@ -22,6 +22,22 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
             perturbed_masks: np.ndarray
     ) -> np.ndarray:
 
+        if  not (perturbed_masks[0][0][0] in [0, 1]):
+            raise ValueError("Image perturbation mask must be of",
+                             "type integer and binary valued.")
+
+        try:
+            assert len(image_conf) == len(perturbed_conf[0])
+        except AssertionError:
+            raise ValueError("Number of classses in original image and",
+                             " perturbed image do not match.")
+
+        try:
+            assert len(perturbed_conf) == len(perturbed_masks)
+        except AssertionError:
+            raise ValueError("Number of perturbation masks and respective", 
+            "confidence lengths do not match.")
+            
         # Iterating through each class confidence and compare it with
         # its perturbed twin
         diff = image_conf - perturbed_conf
