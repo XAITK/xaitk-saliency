@@ -65,8 +65,8 @@ class ImageClassifierSaliencyMapGenerator(Plugfigurable):
             Perturbation masks over the reference image.
             This should be parallel in association to the classification
             results input into the `perturbed_conf` parameter.
-            This should have a shape `[nMasks x H x W]`, be float-typed and
-            with values in the [0,1] range.
+            This should have a shape `[nMasks x H x W]`, be integers and
+            with values either [0,1].
 
         :return: Generated visual saliency heat-map for each input class as a
             float-type `numpy.ndarray` of shape `[nClasses x H x W]`.

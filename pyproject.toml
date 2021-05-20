@@ -61,10 +61,9 @@ pytest-cov = "^2.11.1"
 ipython = "^7.22.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
-"xaitk_saliency.impls.saliency.vis_sal_classifier.occlusion_scoring" = "xaitk_saliency.impls.saliency.vis_sal_classifier.occlusion_scoring"
-"xaitk_saliency.impls.saliency.perturber.sliding_window" = "xaitk_saliency.impls.saliency.perturber.sliding_window"
-# Add implementation sub-module exposure here.
+"xaitk_saliency.impls.vis_sal_classifier.occlusion_scoring" = "xaitk_saliency.impls.vis_sal_classifier.occlusion_scoring"
 "impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.occlusion"
+# Add implementation sub-module exposure here.
 
 ###############################################################################
 [tool.pytest.ini_options]
