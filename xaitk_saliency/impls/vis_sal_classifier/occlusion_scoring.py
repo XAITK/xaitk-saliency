@@ -2,6 +2,7 @@ from xaitk_saliency import ImageClassifierSaliencyMapGenerator
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
+import warnings
 
 
 class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
@@ -13,6 +14,12 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
     on perturbed images, as well as the masks of the reference image
     perturbations (as would be output from a
     `PerturbImage` implementation.
+
+    The perturbation masks used by the following implementation are
+    expected to be of type integer. Masks containing values of type
+    float are rounded to the nearest value and binarized
+    with value 1 replacing values greater than or equal to half of
+    the maximum value in mask after rounding while 0 replaces the rest.
     """
 
     def generate(
@@ -22,19 +29,22 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
             perturbed_masks: np.ndarray
     ) -> np.ndarray:
 
-        if not (perturbed_masks[0][0][0] in [0, 1]):
-            raise ValueError("Image perturbation mask must be of",
-                             "type integer and binary valued.")
+        if isinstance(perturbed_masks[0][0][0], float):
+            # Roundoff when perturbation mask value is of type float
+            perturbed_masks = np.round(perturbed_masks)
+            # Compute binary midpoint for setting threshold
+            binary_midpoint = (np.max(perturbed_masks))/2
+            # Binarizing mask values to be of type int and range [0, 1]
+            perturbed_masks = np.where(perturbed_masks > binary_midpoint, \
+                                       1, 0)
+            warnings.warn("Image perturbation mask must be of type integer,"
+                          "masks are rounded and binarized.", UserWarning)
 
-        try:
-            assert len(image_conf) == len(perturbed_conf[0])
-        except AssertionError:
+        if len(image_conf) != len(perturbed_conf[0]):
             raise ValueError("Number of classses in original image and",
                              " perturbed image do not match.")
 
-        try:
-            assert len(perturbed_conf) == len(perturbed_masks)
-        except AssertionError:
+        if len(perturbed_conf) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective",
                              "confidence lengths do not match.")
 
