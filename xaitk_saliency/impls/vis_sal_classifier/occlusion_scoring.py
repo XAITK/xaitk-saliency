@@ -29,7 +29,7 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
             perturbed_masks: np.ndarray
     ) -> np.ndarray:
 
-        if perturbed_masks.dtype == float:
+        if perturbed_masks.dtype != bool:
             # Roundoff when perturbation mask value is of type float
             perturbed_masks = np.round(perturbed_masks)
             # Compute binary midpoint for setting threshold
