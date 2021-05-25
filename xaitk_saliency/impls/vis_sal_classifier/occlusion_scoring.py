@@ -29,14 +29,13 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
             perturbed_masks: np.ndarray
     ) -> np.ndarray:
 
-        if isinstance(perturbed_masks[0][0][0], float):
+        if perturbed_masks.dtype == float:
             # Roundoff when perturbation mask value is of type float
             perturbed_masks = np.round(perturbed_masks)
             # Compute binary midpoint for setting threshold
             binary_midpoint = (np.max(perturbed_masks))/2
             # Binarizing mask values to be of type int and range [0, 1]
-            perturbed_masks = np.where(perturbed_masks > binary_midpoint,
-                                       1, 0)
+            perturbed_masks = perturbed_masks > binary_midpoint
             warnings.warn("Image perturbation mask must be of type integer,"
                           "masks are rounded and binarized.", UserWarning)
 

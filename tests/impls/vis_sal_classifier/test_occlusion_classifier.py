@@ -20,6 +20,7 @@ class TestOcclusionBasedScoring (TestCase):
         Test basic scoring with a single class for broadcasting sanity check.
         """
         impl = OcclusionScoring()
+        np.random.seed(2)
         # Three Pertrubation masks of height and width 10px for 1 class
         image_confs_1_class_ = np.random.rand(1)
 
@@ -46,6 +47,7 @@ class TestOcclusionBasedScoring (TestCase):
         Test scoring for n classes.
         """
         impl = OcclusionScoring()
+        np.random.seed(2)
         # Three Pertrubation masks of height and width 10px for 20 classes
         image_confs_1_class_ = np.random.rand(20)
         pertb_confs_1_class_ = np.random.rand(3, 20)
