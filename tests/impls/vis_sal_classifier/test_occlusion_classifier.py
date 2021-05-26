@@ -40,7 +40,7 @@ class TestOcclusionBasedScoring (TestCase):
         pertb_confs_1_class_ = np.array([[0.3], [0.6], [0.12], [0.18], [0.36], [0.42]])
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, EXPECTED_MASKS_4x6)
         standard_sal = np.load('tests/data/OccScorSal.npy')
-        assert sal.shape == (1, 4, 6) and np.sum(sal) == 1.08 and np.array_equal(standard_sal, sal)
+        assert sal.shape == (1, 4, 6) and np.sum(sal) == 13.5 and np.array_equal(standard_sal, sal)
 
     def test_nclass_scores(self) -> None:
         """

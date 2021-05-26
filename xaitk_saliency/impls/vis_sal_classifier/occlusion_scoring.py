@@ -3,6 +3,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 import warnings
+from sklearn.preprocessing import minmax_scale
 
 
 class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
@@ -29,16 +30,6 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
             perturbed_masks: np.ndarray
     ) -> np.ndarray:
 
-        if perturbed_masks.dtype != bool:
-            # Roundoff when perturbation mask value is of type float
-            perturbed_masks = np.round(perturbed_masks)
-            # Compute binary midpoint for setting threshold
-            binary_midpoint = (np.max(perturbed_masks))/2
-            # Binarizing mask values to be of type int and range [0, 1]
-            perturbed_masks = perturbed_masks > binary_midpoint
-            warnings.warn("Image perturbation mask must be of type integer,"
-                          "masks are rounded and binarized.", UserWarning)
-
         if len(image_conf) != len(perturbed_conf[0]):
             raise ValueError("Number of classses in original image and",
                              " perturbed image do not match.")
@@ -53,6 +44,9 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
 
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
+
+        # Normalize final saliency map in range [0, 1]
+        sal = minmax_scale(sal.ravel(), feature_range=(0, 1)).reshape(sal.shape)
 
         return sal
 
