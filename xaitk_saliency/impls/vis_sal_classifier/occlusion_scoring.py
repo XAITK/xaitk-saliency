@@ -2,7 +2,6 @@ from xaitk_saliency import ImageClassifierSaliencyMapGenerator
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
-import warnings
 from sklearn.preprocessing import minmax_scale
 
 
