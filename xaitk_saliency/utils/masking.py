@@ -2,7 +2,6 @@ from typing import List, Tuple
 
 import numpy as np
 import PIL.Image
-from numpy import newaxis
 
 
 def generate_block_masks(
