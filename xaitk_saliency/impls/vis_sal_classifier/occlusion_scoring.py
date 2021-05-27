@@ -3,7 +3,6 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import minmax_scale
-import warnings
 
 
 class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
