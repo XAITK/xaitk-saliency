@@ -106,10 +106,13 @@ def weight_regions_by_scalar(
 
     :return: A numpy array representing the weighted heatmap.
     """
+    # Weighting each perturbed region with its respective score in vector.
+    heatmap = (np.expand_dims(np.transpose(1 - masks), axis=3) * scalar_vec)
 
-    heatmap = ((1 - np.transpose(masks))[..., newaxis] * scalar_vec)
+    # Aggregate scores across all perturbed regions.
+    sal_across_masks = np.transpose(heatmap.sum(axis=2))
 
-    # Computing average scores across all perturbations for nClasses
-    final_heatmap = heatmap.sum(axis=2) / len(scalar_vec)
+    # Compute final saliency map by normalizing with sampling factor.
+    final_heatmap = sal_across_masks/masks.sum(axis=0)
 
-    return np.transpose(final_heatmap)
+    return final_heatmap

@@ -3,6 +3,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import minmax_scale
+import warnings
 
 
 class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
@@ -44,6 +45,8 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
+        # Converting nan values to zero.
+        sal = np.nan_to_num(sal)
         # Normalize final saliency map in range [0, 1]
         sal = minmax_scale(sal.ravel(), feature_range=(0, 1)).reshape(sal.shape)
 
