@@ -112,6 +112,6 @@ def weight_regions_by_scalar(
     sal_across_masks = np.transpose(heatmap.sum(axis=2))
 
     # Compute final saliency map by normalizing with sampling factor.
-    final_heatmap = sal_across_masks/masks.sum(axis=0)
+    final_heatmap = sal_across_masks/(1 - masks).sum(axis=0)
 
     return final_heatmap
