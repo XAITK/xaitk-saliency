@@ -16,46 +16,42 @@ class TestRISEPerturbation (TestCase):
         ex_N = 1000
         ex_s = 8
         ex_p1 = 0.5
-        ex_input_size = (224, 224)
-        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1, input_size=ex_input_size)
+        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1)
         assert impl.N == ex_N
         assert impl.s == ex_s
         assert impl.p1 == ex_p1
-        assert impl.input_size == ex_input_size
 
     def test_standard_config(self) -> None:
         ex_N = 1000
         ex_s = 8
         ex_p1 = 0.5
-        ex_input_size = (224, 224)
-        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1, input_size=ex_input_size)
+        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1)
         for inst in configuration_test_helper(impl):
             assert inst.N == ex_N
             assert inst.s == ex_s
             assert inst.p1 == ex_p1
-            assert inst.input_size == ex_input_size
 
     def test_if_random(self) -> None:
         """
         Test that the perturbations are randomized
         """
-        impl1 = RISEPertubation(N=1000, s=8, p1=0.5, input_size=(224, 224))
-        impl2 = RISEPertubation(N=1000, s=8, p1=0.5, input_size=(224, 224))
-        assert not np.array_equal(impl1.masks, impl2.masks)
+        impl1 = RISEPertubation(N=1000, s=8, p1=0.5)
+        impl2 = RISEPertubation(N=1000, s=8, p1=0.5)
+        assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
         """
         Test that passing a seed generates equivalent masks
         """
-        impl1 = RISEPertubation(N=1000, s=8, p1=0.5, input_size=(224, 224), seed=42)
-        impl2 = RISEPertubation(N=1000, s=8, p1=0.5, input_size=(224, 224), seed=42)
-        assert np.array_equal(impl1.masks, impl2.masks)
+        impl1 = RISEPertubation(N=1000, s=8, p1=0.5, seed=42)
+        impl2 = RISEPertubation(N=1000, s=8, p1=0.5, seed=42)
+        assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         """
-        impl = RISEPertubation(N=2, s=2, p1=0.5, input_size=(4, 6), seed=42)
+        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42)
         # Image is slightly wide, should be occluded 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((4, 6), fill_value=255, dtype=np.uint8)
@@ -74,7 +70,7 @@ class TestRISEPerturbation (TestCase):
         """
         Test basic perturbation on a known image with even windowing + stride.
         """
-        impl = RISEPertubation(N=2, s=2, p1=0.5, input_size=(4, 6), seed=42)
+        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42)
         # Image is slightly wide, should be occluded 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
@@ -97,20 +93,20 @@ class TestRISEPerturbation (TestCase):
     def test_perturb_4channel(self) -> None:
         pass
 
-    def test_idempotent(self) -> None:
+    def test_multiple_image_sizes(self) -> None:
         """
-        Test that the results of perturbation are idempotent
+        Test that once we initialize a RISEPerturbation we can call it on
+        images of varying sizes
         """
-        impl = RISEPertubation(N=2, s=2, p1=0.5, input_size=(4, 6), seed=42)
-        # Image is slightly wide, should be occluded 6-ways.
-        white_image = PIL.Image.fromarray(
+        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42)
+        white_image_small = PIL.Image.fromarray(
             np.full((4, 6), fill_value=255, dtype=np.uint8)
         )
-        pert_imgs_1, pert_masks_1 = impl.perturb(white_image)
-        pert_imgs_2, pert_masks_2 = impl.perturb(white_image)
-        for i, img in enumerate(pert_imgs_1):
-            assert np.array_equal(img, pert_imgs_2[i])
-        assert np.array_equal(pert_masks_1, pert_masks_2)
+        white_image_large = PIL.Image.fromarray(
+            np.full((41, 26), fill_value=255, dtype=np.uint8)
+        )
+        _, _ = impl.perturb(white_image_small)
+        _, _ = impl.perturb(white_image_large)
 
 
 # Common expected masks for 4x6 tests
