@@ -5,7 +5,7 @@ Provide interfaces that convey a standard API for generating visual saliency
 map generation.
 
 ## Documentation
-https://xaitk-saliency.readthedocs.io/en/stable/
+https://xaitk-saliency.readthedocs.io/en/latest/
 
 You can also build the sphinx documentation locally for the most up-to-date
 reference:
