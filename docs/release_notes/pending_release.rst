@@ -11,8 +11,11 @@ Interfaces
 
 
 Implementations
+
 * Add new occlusion based classifier scoring in accordance to the v0.1 API draft for ImageClassifierSaliencyMapGenerator.
 
 
 Fixes
 -----
+
+* Update Read the Docs documentation link in README
