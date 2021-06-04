@@ -90,9 +90,6 @@ class TestRISEPerturbation (TestCase):
             )
             assert np.allclose(img, expected_img)
 
-    def test_perturb_4channel(self) -> None:
-        pass
-
     def test_multiple_image_sizes(self) -> None:
         """
         Test that once we initialize a RISEPerturbation we can call it on
@@ -105,8 +102,15 @@ class TestRISEPerturbation (TestCase):
         white_image_large = PIL.Image.fromarray(
             np.full((41, 26), fill_value=255, dtype=np.uint8)
         )
-        _, _ = impl.perturb(white_image_small)
-        _, _ = impl.perturb(white_image_large)
+        pert_imgs_small, pert_masks_small = impl.perturb(white_image_small)
+        assert pert_imgs_small[0].size == white_image_small.size
+        assert pert_masks_small.shape[1] == white_image_small.height
+        assert pert_masks_small.shape[2] == white_image_small.width
+
+        pert_imgs_large, pert_masks_large = impl.perturb(white_image_large)
+        assert pert_imgs_large[0].size == white_image_large.size
+        assert pert_masks_large.shape[1] == white_image_large.height
+        assert pert_masks_large.shape[2] == white_image_large.width
 
 
 # Common expected masks for 4x6 tests
