@@ -40,7 +40,7 @@ class RISEPertubation (PerturbImage):
         N: int,
         s: int,
         p1: float,
-        seed: Optional[float] = None
+        seed: Optional[int] = None
     ):
         """
         Generate a set of random binary masks
