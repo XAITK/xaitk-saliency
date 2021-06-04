@@ -1,10 +1,10 @@
-from typing import Dict, Any, Iterable, Tuple, List
+from typing import Any, Dict, Generator, Tuple
 
 import PIL.Image
 import numpy as np
+from smqtk_descriptors.utils import parallel_map
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
-from xaitk_saliency.utils.masking import generate_block_masks
 
 
 class SlidingWindowPerturb (PerturbImage):
@@ -40,36 +40,76 @@ class SlidingWindowPerturb (PerturbImage):
         `(height, width)`.
     :param stride: The sliding window striding step as a tuple with format
         `(height_step, width_step)`.
+    :param threads: The number of threads to utilize when generating images and
+        masks.
     """
 
     def __init__(
         self,
         window_size: Tuple[int, int] = (50, 50),
         stride: Tuple[int, int] = (20, 20),
+        threads: int = 4,
     ):
         self.window_size: Tuple[int, int] = (int(window_size[0]), int(window_size[1]))
         self.stride: Tuple[int, int] = (int(stride[0]), int(stride[1]))
+        self.threads = threads
 
     def perturb(
         self,
         ref_image: PIL.Image.Image
-    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
+        # Yielding version 2 -- parallel
         ref_mat = np.asarray(ref_image)
-        masks = mask_lhs = generate_block_masks(
-            self.window_size,
-            self.stride,
-            ref_image.size[::-1],
-        )
+        # Record appropriate access for multiplication against image based on
+        # channel-axis presence.
+        s: Tuple = (...,)
         if ref_mat.ndim > 2:
-            mask_lhs = masks[..., None]  # add channel axis for multiplication
-        masked_images: Iterable[np.ndarray] = (
-            (mask_lhs * ref_mat).astype(ref_mat.dtype)
-        )
-        masked_images_pil = [
-            PIL.Image.fromarray(mi, mode=ref_image.mode)
-            for mi in masked_images
-        ]
-        return masked_images_pil, masks
+            s = (..., None)  # add channel axis for multiplication
+        # In-line mask streaming
+        win_h, win_w = self.window_size
+        stride_h, stride_w = self.stride
+        img_size = ref_mat.shape[:2]
+        img_h, img_w = img_size
+        rows = np.arange(0 + stride_h - win_h, img_h, stride_h)
+        cols = np.arange(0 + stride_w - win_w, img_w, stride_w)
+        # track functions to reduce repeated module access.
+        np_ones = np.ones
+        image_from_array = PIL.Image.fromarray
+        ref_mode = ref_image.mode
+
+        def work_func(r: int, c: int) -> Tuple[PIL.Image.Image, np.ndarray]:
+            # use of np.clip function here is more costly than min/max use.
+            r1 = max(0, r)
+            r2 = min(r + win_h, img_h)
+            c1 = max(0, c)
+            c2 = min(c + win_w, img_w)
+            rs = slice(r1, r2)
+            cs = slice(c1, c2)
+            mask = np_ones(img_size, dtype=bool)
+            mask[rs, cs] = False
+
+            # !!! This is the majority cost
+            # Attempted a batched version of the below operation. It was
+            # actually quite a bit slower (~2x slower).
+            img_m = mask[s] * ref_mat
+            img_p = image_from_array(img_m, mode=ref_mode)
+            return img_p, mask
+
+        rows_m = np.repeat(rows, len(cols))
+        cols_m = np.tile(cols, len(rows))
+        threads = self.threads
+        if threads <= 1:
+            for r, c in zip(rows_m, cols_m):
+                yield work_func(r, c)
+        else:
+            for img, m in parallel_map(
+                work_func, rows_m, cols_m,
+                # kwargs here should be constructor params. Maybe always threading
+                # though.
+                cores=self.threads,
+                use_multiprocessing=False,
+            ):
+                yield img, m
 
     @classmethod
     def get_default_config(cls) -> Dict[str, Any]:
@@ -85,4 +125,5 @@ class SlidingWindowPerturb (PerturbImage):
         return {
             "window_size": list(self.window_size),
             "stride": list(self.stride),
+            "threads": self.threads,
         }

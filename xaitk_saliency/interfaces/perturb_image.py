@@ -1,5 +1,5 @@
 import abc
-from typing import List, Tuple
+from typing import Generator, Tuple
 
 import numpy as np
 import PIL.Image
@@ -19,37 +19,36 @@ class PerturbImage (Plugfigurable):
     def perturb(
         self,
         ref_image: PIL.Image.Image
-    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
         """
         Transform an input reference image into a number of perturbed
         variations along with mask matrices indicating the perturbed regions.
 
+        The quantity of perturbed images and mask matrices will naturally be
+        congruent as they are yielded in pairs.
+
         Output images should have the same shape as the input reference image,
         including channels.
-        The output masks array should be of the shape `[nOutputs, H, W]`, where
-        `nOutputs` is the same number of output image perturbations, and `H`
-        and `W` are the pixel height and width of the input and output images.
 
-        Output mask matrices should be congruent in length to the number of
-        perturbed images output, as well as share the same height and width
-        dimensions.
+        Output mask matrices should be 2-dimensional and also share the same
+        height and width to the reference and perturbed images.
         These masks should indicate the regions in the corresponding perturbed
-        image that has been modified.
+        image that have been modified.
         Values should be in the [0, 1] range, where a value closer to 1.0
-        indicate areas of the image that are *unperturbed*.
-        Note that output mask matrices *may be* of a floating-point type in
-        order to allow for fractional perturbation.
+        indicates areas of the image that are unperturbed.
+        Note that output mask matrices may be of a floating-point type in order
+        to allow for fractional perturbation.
 
         :param ref_image:
             Reference image to generate perturbations from.
-        :return: Tuple of perturbed images and the masks detailing perturbation
-            areas.
+        :return: Single-pass forward-iterator yielding perturbed image and
+            perturbation mask pairs.
         """
 
     def __call__(
         self,
         ref_image: PIL.Image.Image
-    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
         """
         Alias for :meth:`.PerturbImage.perturb`.
         """
