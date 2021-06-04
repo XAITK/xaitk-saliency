@@ -6,11 +6,18 @@ from skimage.transform import resize
 
 
 class RISEPertubation (PerturbImage):
+    """
+    Based on Petsiuk et. al: http://bmvc2018.org/contents/papers/1064.pdf
+
+    Implementation is borrowed from the original authors:
+    https://github.com/eclique/RISE/blob/master/explanations.py
+    """
+
     def _generate_masks(self, input_size: Tuple[int, int]) -> np.ndarray:
         """
         Randomly crop, upscale, and interpolate binary masks to generate a set
         of random masks to apply to the image.
-        :param (int, int) input_size:
+        :param input_size:
             Size of the model's input as (rows, cols). Binary masks are upsampled to
             this resolution to be applied to (multiplied with) the input later.
             E.g. (224, 224).
@@ -26,7 +33,6 @@ class RISEPertubation (PerturbImage):
             # Linear upsampling and random cropping
             masks[i, :, :] = resize(self.grid[i], up_size, order=1, mode='reflect',
                                     anti_aliasing=False)[x:x + input_size[0], y:y + input_size[1]]
-        # Reshape brings this to: (N, input_size[0], input_size[1], 1)
         return masks
 
     def __init__(
@@ -38,14 +44,14 @@ class RISEPertubation (PerturbImage):
     ):
         """
         Generate a set of random binary masks
-        :param int N:
+        :param N:
             Number of random masks used in the algorithm. E.g. 1000.
-        :param int s:
+        :param s:
             Spatial resolution of the small masking grid. E.g. 8.
-        :param float p1:
-            Probability of the grid cell being set to 1 (otherwise 0). E.g. 0.5.
             Assumes square grid.
-        :param Optional[float] seed:
+        :param p1:
+            Probability of the grid cell being set to 1 (otherwise 0). E.g. 0.5.
+        :param seed:
             A seed to pass into the constructed random number generator to allow
             for reproducibility
         """
