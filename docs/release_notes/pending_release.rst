@@ -18,6 +18,10 @@ Interfaces
   * Added to doc-strings to expand on detail around saliency heatmap return
     value range and meaning.
 
+  * Updated image perturbation interface to function in a streaming iterator
+    fashion instead of in-bulk as a means of performance optimization as well
+    as to allow it to function on larger image sizes and larger perturbation
+    quantities at the same time.
 
 Implementations
 
