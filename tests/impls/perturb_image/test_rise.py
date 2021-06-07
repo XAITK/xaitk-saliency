@@ -103,11 +103,13 @@ class TestRISEPerturbation (TestCase):
             np.full((41, 26), fill_value=255, dtype=np.uint8)
         )
         pert_imgs_small, pert_masks_small = impl.perturb(white_image_small)
+        assert len(pert_imgs_small) == pert_masks_small.shape[0] == 2
         assert pert_imgs_small[0].size == white_image_small.size
         assert pert_masks_small.shape[1] == white_image_small.height
         assert pert_masks_small.shape[2] == white_image_small.width
 
         pert_imgs_large, pert_masks_large = impl.perturb(white_image_large)
+        assert len(pert_imgs_large) == pert_masks_large.shape[0] == 2
         assert pert_imgs_large[0].size == white_image_large.size
         assert pert_masks_large.shape[1] == white_image_large.height
         assert pert_masks_large.shape[2] == white_image_large.width
