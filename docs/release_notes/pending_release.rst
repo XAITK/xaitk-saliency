@@ -22,7 +22,18 @@ Interfaces
 Implementations
 
 * Add new occlusion based classifier scoring in accordance to the v0.1 API draft for ImageClassifierSaliencyMapGenerator.
+
 * Add new RISE based perturbation algorithm in accordance to the v0.1 API draft for PerturbImage
+
+* Remove old "stub" implementations in transitioning to the new API draft
+
+  * Removed "ImageSaliencyMapGenerator" interface class.
+
+  * Removed "LogitImageSaliencyAugmenter" implementation class.
+
+  * Removed "LogitImageSaliencyMapGenerator" implementation class.
+
+  * Removed old RISE implementation classes.
 
 
 Fixes
