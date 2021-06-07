@@ -28,6 +28,14 @@ class SlidingWindowPerturb (PerturbImage):
         ...      [[255, 255, 255], [255, 255, 255]]]
         ... )
 
+    Due to the geometry of sliding windows, if the stride given does not evenly
+    divide the window size along the applicable axis, then the result plane of
+    values when summing the generated masks will not be even.
+
+    Relatedly, if the stride is set to be larger than the window size, the
+    resulting plane of summed values will also not be even, as there be
+    increasingly long valleys of unperturbed space between masked regions.
+
     :param window_size: The block window size as a tuple with format
         `(height, width)`.
     :param stride: The sliding window striding step as a tuple with format
