@@ -4,6 +4,7 @@ import PIL.Image
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
+from xaitk_saliency import PerturbImage
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindowPerturb
 
 
@@ -26,6 +27,13 @@ class TestOcclusionBasedPerturb (TestCase):
         impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s)
         assert impl.window_size == ex_w
         assert impl.stride == ex_s
+
+    def test_plugin_find(self) -> None:
+        """
+        This implementation has no optional plugins so it should be found and
+        exposed by the super-type's impl getter.
+        """
+        assert SlidingWindowPerturb in PerturbImage.get_impls()
 
     def test_standard_config(self) -> None:
         ex_w = (777, 776)
