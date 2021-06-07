@@ -15,6 +15,9 @@ Interfaces
 
 * Add new interfaces in accordance to the v0.1 API draft.
 
+  * Added to doc-strings to expand on detail around saliency heatmap return
+    value range and meaning.
+
 
 Implementations
 

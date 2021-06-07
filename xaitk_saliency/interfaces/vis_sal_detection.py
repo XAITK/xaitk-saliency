@@ -48,6 +48,23 @@ class ImageDetectionSaliencyMapGenerator (Plugfigurable):
         detections, which is why below we formulate the shape of perturbed
         image detects with `nProps` instead of `nDets`.
 
+        Perturbation mask input into the `perturbed_masks` parameter here is
+        equivalent to the perturbation mask output from a
+        :meth:`xaitk_saliency.interfaces.perturb_image.PerturbImage.perturb`
+        method implementation.
+        These should have the shape `[nMasks x H x W]`, and values in range
+        [0, 1], where a value closer to 1 indicate areas of the image that
+        are *unperturbed*.
+        Note the type of values in masks can be either integer, floating point
+        or boolean within the above range definition.
+        Implementations are responsible for handling these expected variations.
+
+        Generated saliency heat-map matrices should be floating-point typed and
+        be composed of values in the [0,1] range.
+        Values of the saliency heat-maps with values closer to 1.0 represent
+        more salient regions according to the classifier that generated input
+        confidence values.
+
         :param ref_dets:
             Detections, objectness and class scores on a reference image as a
             float-typed array with shape `[nDets x (4+1+nClasses)]`.
@@ -57,8 +74,12 @@ class ImageDetectionSaliencyMapGenerator (Plugfigurable):
             We expect this to be a float-types array with shape
             `[nMasks x nProps x (4+1+nClasses)]`.
         :param perturb_masks:
-            Perturbation masks of the reference image as a float-typed array
-            with shape `[nMasks x H x W]`.
+            Perturbation masks `numpy.ndarray` over the reference image.
+            This should be parallel in association to the detection
+            propositions input into the `perturbed_dets` parameter.
+            This should have a shape `[nMasks x H x W]`, and values in range
+            [0, 1], where a value closer to 1 indicate areas of the image that
+            are *unperturbed*.
         :return:
             A visual saliency heat-map matrix describing each input reference
             detection. These will be float-typed arrays with shape
