@@ -39,6 +39,18 @@ class ImageSimilaritySaliencyMapGenerator (Plugfigurable):
         :meth:`xaitk_saliency.interfaces.perturb_image.PerturbImage.perturb`
         method implementation.
         We expect perturbations to be relative to the second reference image.
+        These should have the shape `[nMasks x H x W]`, and values in range
+        [0, 1], where a value closer to 1 indicate areas of the image that
+        are *unperturbed*.
+        Note the type of values in masks can be either integer, floating point
+        or boolean within the above range definition.
+        Implementations are responsible for handling these expected variations.
+
+        Generated saliency heat-map matrices should be floating-point typed and
+        be composed of values in the [0,1] range.
+        Values of the saliency heat-maps with values closer to 1.0 represent
+        more salient regions according to the classifier that generated input
+        confidence values.
 
         :param ref_descr_1:
             First image reference float feature-vector, shape `[nFeats]`
@@ -48,8 +60,12 @@ class ImageSimilaritySaliencyMapGenerator (Plugfigurable):
             Feature vectors of second reference image perturbations, float
             typed of shape `[nMasks x nFeats]`.
         :param perturbed_masks:
-            Perturbation masks `numpy.ndarray`, float-typed with shape
-            `[nMasks x H x W]` in the [0,1] range.
+            Perturbation masks `numpy.ndarray` over the second reference image.
+            This should bbe parallel in association to the `perturbed_descrs`
+            parameter.
+            This should have a shape `[nMasks x H x W]`, and values in range
+            [0, 1], where a value closer to 1 indicate areas of the image that
+            are *unperturbed*.
         :return: Generated saliency heat-map as a float-typed `numpy.ndarray`
             with shape `[H x W]`.
         """

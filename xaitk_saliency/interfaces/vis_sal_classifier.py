@@ -42,6 +42,12 @@ class ImageClassifierSaliencyMapGenerator(Plugfigurable):
         equivalent to the perturbation mask output from a
         :meth:`xaitk_saliency.interfaces.perturb_image.PerturbImage.perturb`
         method implementation.
+        These should have the shape `[nMasks x H x W]`, and values in range
+        [0, 1], where a value closer to 1 indicate areas of the image that
+        are *unperturbed*.
+        Note the type of values in masks can be either integer, floating point
+        or boolean within the above range definition.
+        Implementations are responsible for handling these expected variations.
 
         Generated saliency heat-map matrices should be floating-point typed and
         be composed of values in the [0,1] range.
@@ -62,16 +68,12 @@ class ImageClassifierSaliencyMapGenerator(Plugfigurable):
             This should have a shape `[nMasks x nClasses]`, be float-typed and
             with values in the [0,1] range.
         :param perturbed_masks:
-            Perturbation masks over the reference image.
+            Perturbation masks `numpy.ndarray` over the reference image.
             This should be parallel in association to the classification
             results input into the `perturbed_conf` parameter.
             This should have a shape `[nMasks x H x W]`, and values in range
             [0, 1], where a value closer to 1 indicate areas of the image that
             are *unperturbed*.
-
-            Note the type of values in masks can be either integer,
-            floating point or boolean. Implementations are responsible for supporting
-            all three formats of the mask.
 
         :return: Generated visual saliency heat-map for each input class as a
             float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
