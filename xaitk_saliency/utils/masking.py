@@ -49,6 +49,10 @@ def weight_regions_by_scalar(
     :param masks: Mask array in the [nMasks, Height, Weight] shape format.
 
     :return: A numpy array representing the weighted heatmap.
+
+    Note masks can have pixel regions that are never masked raising a
+    warning for divide by zero. A 'NaN' value is present in all such positions
+    of the final_heatmap.
     """
     # Weighting each perturbed region with its respective score in vector.
     heatmap = (np.expand_dims(np.transpose(1 - masks), axis=3) * scalar_vec)
