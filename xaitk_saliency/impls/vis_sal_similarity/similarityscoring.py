@@ -3,7 +3,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import minmax_scale
-from sklearn.metrics.pairwise import euclidean_distances
+import scipy
 
 
 class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
@@ -21,7 +21,21 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     float are rounded to the nearest value and binarized
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
+
+    param proximity_metric: The type of comparision metric to be used
+        to determine proximity in feature space. The following
+        metrics are currently supported.
+
+        ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
+        ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
+        ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’, ‘rogerstanimoto’,
+        ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’,
+        ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
     """
+
+    def __init__(self,
+                proximity_metric='euclidean'):
+        self.proximity_metric = proximity_metric
 
     def generate(
         self,
@@ -32,10 +46,14 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     ) -> np.ndarray:
 
         # Computing original proximity between image1 and image2 feature vectors.
-        original_proximity = euclidean_distances(ref_descr_1.reshape(1, -1), ref_descr_2.reshape(1, -1))
+        original_proximity = scipy.spatial.distance.cdist(ref_descr_1.reshape(1, -1),
+                                                          ref_descr_2.reshape(1, -1),
+                                                          metric=self.proximity_metric)
 
         # Computing proximity between original image1 and perturbed image2 feature vectors.
-        perturbed_proximity = euclidean_distances(ref_descr_1.reshape(1, -1), perturbed_descrs)[0]
+        perturbed_proximity = scipy.spatial.distance.cdist(ref_descr_1.reshape(1, -1),
+                                                          perturbed_descrs,
+                                                          metric=self.proximity_metric)[0]
 
         if len(perturbed_proximity) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective",
@@ -43,9 +61,9 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
 
         # Iterating through each distance and compare it with
         # its perturbed twin
-        diff_abs = abs(perturbed_proximity - original_proximity)
+        diff_abs = perturbed_proximity - original_proximity
 
-        diff = np.transpose(np.clip(diff_abs, a_min=0, a_max=np.max(diff_abs)))
+        diff = np.transpose(np.clip(diff_abs, 0, None))
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
@@ -57,4 +75,6 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         return sal
 
     def get_config(self) -> dict:
-        return {}
+        return {
+            "proximity_metric":self.proximity_metric
+        }
