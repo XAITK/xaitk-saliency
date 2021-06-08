@@ -33,9 +33,11 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
     """
 
-    def __init__(self,
-                proximity_metric='euclidean'):
-        self.proximity_metric = proximity_metric
+    def __init__(
+        self,
+        proximity_metric: str ='euclidean'
+    ):
+        self.proximity_metric: str = proximity_metric
 
     def generate(
         self,
@@ -46,14 +48,18 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     ) -> np.ndarray:
 
         # Computing original proximity between image1 and image2 feature vectors.
-        original_proximity = scipy.spatial.distance.cdist(ref_descr_1.reshape(1, -1),
-                                                          ref_descr_2.reshape(1, -1),
-                                                          metric=self.proximity_metric)
+        original_proximity = scipy.spatial.distance.cdist(
+            ref_descr_1.reshape(1, -1),
+            ref_descr_2.reshape(1, -1),
+            metric=self.proximity_metric
+        )
 
         # Computing proximity between original image1 and perturbed image2 feature vectors.
-        perturbed_proximity = scipy.spatial.distance.cdist(ref_descr_1.reshape(1, -1),
-                                                          perturbed_descrs,
-                                                          metric=self.proximity_metric)[0]
+        perturbed_proximity = scipy.spatial.distance.cdist(
+            ref_descr_1.reshape(1, -1),
+            perturbed_descrs,
+            metric=self.proximity_metric
+        )[0]
 
         if len(perturbed_proximity) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective",
@@ -76,5 +82,5 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
 
     def get_config(self) -> dict:
         return {
-            "proximity_metric":self.proximity_metric
+            "proximity_metric": self.proximity_metric,
         }
