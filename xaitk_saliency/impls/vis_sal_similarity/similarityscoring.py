@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.preprocessing import minmax_scale
 from sklearn.metrics.pairwise import euclidean_distances
 
+
 class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     """
     This saliency implementation transforms proximity in feature
@@ -30,10 +31,11 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
 
+        # Computing original proximity between image1 and image2 feature vectors.
         original_proximity = euclidean_distances(ref_descr_1.reshape(1, -1), ref_descr_2.reshape(1, -1))
 
-        #perturbed_conf = euclidean_distances(ref_descr_1, perturbed_descrs)
-        perturbed_proximity = euclidean_distances(ref_descr_1.reshape(1, -1) , perturbed_descrs)[0]
+        # Computing proximity between original image1 and perturbed image2 feature vectors.
+        perturbed_proximity = euclidean_distances(ref_descr_1.reshape(1, -1), perturbed_descrs)[0]
 
         if len(perturbed_proximity) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective",
@@ -43,7 +45,7 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         # its perturbed twin
         diff_abs = abs(perturbed_proximity - original_proximity)
 
-        diff = np.transpose(np.clip(diff_abs, a_min=0,a_max=np.max(diff_abs)))
+        diff = np.transpose(np.clip(diff_abs, a_min=0, a_max=np.max(diff_abs)))
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
