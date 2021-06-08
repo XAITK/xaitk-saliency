@@ -7,10 +7,10 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     """
-    This saliency implementation transforms black-box
-    image classification scores into saliency heatmaps. This should
-    require a sequence of per-class confidences predicted on the
-    reference image, a number of per-class confidences as predicted
+    This saliency implementation transforms proximity in feature
+    space into saliency heatmaps. This should
+    require a sequence of feature vectors of the query and
+    reference image, a number of feature vectors as predicted
     on perturbed images, as well as the masks of the reference image
     perturbations (as would be output from a
     `PerturbImage` implementation.
