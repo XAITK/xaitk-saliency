@@ -49,10 +49,6 @@ def weight_regions_by_scalar(
     :param masks: Mask array in the [nMasks, Height, Weight] shape format.
 
     :return: A numpy array representing the weighted heatmap.
-
-    Note masks can have pixel regions that are never masked raising a
-    warning for divide by zero. A 'NaN' value is present in all such positions
-    of the final_heatmap.
     """
     # Weighting each perturbed region with its respective score in vector.
     heatmap = (np.expand_dims(np.transpose(1 - masks), axis=3) * scalar_vec)
@@ -60,7 +56,10 @@ def weight_regions_by_scalar(
     # Aggregate scores across all perturbed regions.
     sal_across_masks = np.transpose(heatmap.sum(axis=2))
 
-    # Compute final saliency map by normalizing with sampling factor.
-    final_heatmap = sal_across_masks/(1 - masks).sum(axis=0)
+    # Removing regions that are never masked to avoid a dividebyzero warning
+    mask_sum = (1 - masks).sum(axis=0)
+    mask_sum[mask_sum == 0] = 1.
 
+    # Compute final saliency map by normalizing with sampling factor.
+    final_heatmap = sal_across_masks/mask_sum
     return final_heatmap

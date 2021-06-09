@@ -22,9 +22,10 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
 
-    param proximity_metric: The type of comparision metric to be used
-        to determine proximity in feature space. The following
-        metrics are currently supported.
+    param proximity_metric: The type of comparision metric used
+        to determine proximity in feature space. The type of comparision
+        metric supported is restricted by scipy's cdist() function. The
+        following metrics are supported in scipy.
 
         ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
         ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
@@ -37,7 +38,14 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         self,
         proximity_metric: str = 'euclidean'
     ):
-        self.proximity_metric: str = proximity_metric
+
+        try:
+            # Attempting to use chosen comparision metric
+            cdist([[1], [1]], [[1], [1]], proximity_metric)
+            self.proximity_metric: str = proximity_metric
+        except ValueError:
+            raise ValueError("Chosen comparision metric not supported or",
+                             "may not be available in scipy")
 
     def generate(
         self,
