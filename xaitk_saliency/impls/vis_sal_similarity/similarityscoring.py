@@ -47,6 +47,14 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
 
+        if len(perturbed_descrs) != len(perturbed_masks):
+            raise ValueError("Number of perturbation masks and respective",
+                             "feature vector do not match.")
+
+        if len(ref_descr_1) != len(ref_descr_2):
+            raise ValueError("Length of feature vector between",
+                             "two images do not match.")
+
         # Computing original proximity between image1 and image2 feature vectors.
         original_proximity = cdist(
             ref_descr_1.reshape(1, -1),
@@ -60,10 +68,6 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
             perturbed_descrs,
             metric=self.proximity_metric
         )[0]
-
-        if len(perturbed_proximity) != len(perturbed_masks):
-            raise ValueError("Number of perturbation masks and respective",
-                             "confidence lengths do not match.")
 
         # Iterating through each distance and compare it with
         # its perturbed twin
