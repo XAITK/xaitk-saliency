@@ -5,6 +5,7 @@ import os
 
 from xaitk_saliency.impls.vis_sal_similarity.similarityscoring import SimilarityScoring
 from xaitk_saliency import ImageSimilaritySaliencyMapGenerator
+from smqtk_core.configuration import configuration_test_helper
 from tests import DATA_DIR
 
 
@@ -29,7 +30,8 @@ class TestSimilarityScoring (TestCase):
         Test get_config() functionality.
         """
         impl = SimilarityScoring('hamming')
-        assert impl.get_config() == {'proximity_metric': 'hamming'}
+        for i in configuration_test_helper(impl):
+            assert i.proximity_metric == 'hamming'
 
     def test_metric_args(self) -> None:
         """
