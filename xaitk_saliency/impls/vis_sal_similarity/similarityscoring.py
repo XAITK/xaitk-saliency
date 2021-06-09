@@ -3,7 +3,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import minmax_scale
-import scipy
+from scipy.spatial.distance import cdist
 
 
 class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
@@ -35,7 +35,7 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
 
     def __init__(
         self,
-        proximity_metric: str ='euclidean'
+        proximity_metric: str = 'euclidean'
     ):
         self.proximity_metric: str = proximity_metric
 
@@ -48,14 +48,14 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     ) -> np.ndarray:
 
         # Computing original proximity between image1 and image2 feature vectors.
-        original_proximity = scipy.spatial.distance.cdist(
+        original_proximity = cdist(
             ref_descr_1.reshape(1, -1),
             ref_descr_2.reshape(1, -1),
             metric=self.proximity_metric
         )
 
         # Computing proximity between original image1 and perturbed image2 feature vectors.
-        perturbed_proximity = scipy.spatial.distance.cdist(
+        perturbed_proximity = cdist(
             ref_descr_1.reshape(1, -1),
             perturbed_descrs,
             metric=self.proximity_metric
@@ -67,9 +67,9 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
 
         # Iterating through each distance and compare it with
         # its perturbed twin
-        diff_abs = perturbed_proximity - original_proximity
+        diff = perturbed_proximity - original_proximity
 
-        diff = np.transpose(np.clip(diff_abs, 0, None))
+        diff = np.transpose(np.clip(diff, 0, None))
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
