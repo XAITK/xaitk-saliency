@@ -5,6 +5,10 @@ XAITK-Saliency Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Added properties file for SonarQube scans.
+
 Documentation
 
 * Updated the "Occlusion Saliency" notebook to flow smoother and include
