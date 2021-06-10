@@ -27,7 +27,7 @@ class TestSimilarityScoring (TestCase):
 
     def test_get_config(self) -> None:
         """
-        Test get_config() functionality.
+        Test expected configuation behavior.
         """
         impl = SimilarityScoring('hamming')
         for i in configuration_test_helper(impl):

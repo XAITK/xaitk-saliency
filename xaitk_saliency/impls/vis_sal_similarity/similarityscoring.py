@@ -85,8 +85,6 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
-        # Converting nan values to zero.
-        sal = np.nan_to_num(sal)
         # Normalize final saliency map in range [0, 1]
         sal = minmax_scale(sal.ravel(), feature_range=(0, 1)).reshape(sal.shape)
 
