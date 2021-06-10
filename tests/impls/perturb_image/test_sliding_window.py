@@ -38,10 +38,12 @@ class TestOcclusionBasedPerturb (TestCase):
     def test_standard_config(self) -> None:
         ex_w = (777, 776)
         ex_s = (444, 445)
-        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s)
+        ex_threads = 86
+        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s, threads=ex_threads)
         for inst in configuration_test_helper(impl):
             assert inst.window_size == ex_w
             assert inst.stride == ex_s
+            assert inst.threads == ex_threads
 
     def test_perturb_1channel(self) -> None:
         """
@@ -53,56 +55,17 @@ class TestOcclusionBasedPerturb (TestCase):
             np.full((4, 6), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "L"
-        pert_imgs, pert_masks = impl.perturb(white_image)
-        assert len(pert_imgs) == 6
-        assert len(pert_masks) == 6
-        assert np.allclose(pert_masks, EXPECTED_MASKS_4x6)
-        # Output image modes should match input
-        for i, img in enumerate(pert_imgs):
+        expected_perturbed_images = list(map(
+            PIL.Image.fromarray,
+            (EXPECTED_MASKS_4x6 * 255).astype(np.uint8)
+        ))
+        total_perts = []
+        for i, (img, mask) in enumerate(impl.perturb(white_image)):
             assert img.mode == "L"
-        # Test for expected output perturbed image content
-        assert np.allclose(
-            np.asarray(pert_imgs[0]),
-            np.vstack([
-                np.hstack([BLACK_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[1]),
-            np.vstack([
-                np.hstack([WHITE_2x2_L, BLACK_2x2_L, WHITE_2x2_L]),
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[2]),
-            np.vstack([
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, BLACK_2x2_L]),
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[3]),
-            np.vstack([
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-                np.hstack([BLACK_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[4]),
-            np.vstack([
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-                np.hstack([WHITE_2x2_L, BLACK_2x2_L, WHITE_2x2_L]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[5]),
-            np.vstack([
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, WHITE_2x2_L]),
-                np.hstack([WHITE_2x2_L, WHITE_2x2_L, BLACK_2x2_L]),
-            ])
-        )
+            assert img == expected_perturbed_images[i]
+            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
+            total_perts.append(img)
+        assert len(total_perts) == 6
 
     def test_perturb_3channel(self) -> None:
         """
@@ -114,56 +77,17 @@ class TestOcclusionBasedPerturb (TestCase):
             np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGB"
-        pert_imgs, pert_masks = impl.perturb(white_image)
-        assert len(pert_imgs) == 6
-        assert len(pert_masks) == 6
-        assert np.allclose(pert_masks, EXPECTED_MASKS_4x6)
-        # Output image modes should match input
-        for i, img in enumerate(pert_imgs):
+        expected_perturbed_images = list(map(
+            PIL.Image.fromarray,
+            np.repeat(np.uint8(EXPECTED_MASKS_4x6 * 255), 3).reshape((6, 4, 6, 3))
+        ))
+        total_perts = []
+        for i, (img, mask) in enumerate(impl.perturb(white_image)):
             assert img.mode == "RGB"
-        # Test for expected output perturbed image content
-        assert np.allclose(
-            np.asarray(pert_imgs[0]),
-            np.vstack([
-                np.hstack([BLACK_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[1]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGB, BLACK_2x2_RGB, WHITE_2x2_RGB]),
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[2]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, BLACK_2x2_RGB]),
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[3]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-                np.hstack([BLACK_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[4]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-                np.hstack([WHITE_2x2_RGB, BLACK_2x2_RGB, WHITE_2x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[5]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, WHITE_2x2_RGB]),
-                np.hstack([WHITE_2x2_RGB, WHITE_2x2_RGB, BLACK_2x2_RGB]),
-            ])
-        )
+            assert img == expected_perturbed_images[i]
+            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
+            total_perts.append(img)
+        assert len(total_perts) == 6
 
     def test_perturb_3channel_nonsquare(self) -> None:
         """
@@ -176,56 +100,17 @@ class TestOcclusionBasedPerturb (TestCase):
             np.full((6, 6, 3), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGB"
-        pert_imgs, pert_masks = impl.perturb(white_image)
-        assert len(pert_imgs) == 6
-        assert len(pert_masks) == 6
-        assert np.allclose(pert_masks, EXPECTED_MASKS_6x6_rect)
-        # Output image modes should match input
-        for i, img in enumerate(pert_imgs):
+        expected_perturbed_images = list(map(
+            PIL.Image.fromarray,
+            np.repeat(np.uint8(EXPECTED_MASKS_6x6_rect * 255), 3).reshape((6, 6, 6, 3))
+        ))
+        total_perts = []
+        for i, (img, mask) in enumerate(impl.perturb(white_image)):
             assert img.mode == "RGB"
-        # Test for expected output perturbed image content
-        assert np.allclose(
-            np.asarray(pert_imgs[0]),
-            np.vstack([
-                np.hstack([BLACK_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[1]),
-            np.vstack([
-                np.hstack([WHITE_3x2_RGB, BLACK_3x2_RGB, WHITE_3x2_RGB]),
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[2]),
-            np.vstack([
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, BLACK_3x2_RGB]),
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[3]),
-            np.vstack([
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-                np.hstack([BLACK_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[4]),
-            np.vstack([
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-                np.hstack([WHITE_3x2_RGB, BLACK_3x2_RGB, WHITE_3x2_RGB]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[5]),
-            np.vstack([
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, WHITE_3x2_RGB]),
-                np.hstack([WHITE_3x2_RGB, WHITE_3x2_RGB, BLACK_3x2_RGB]),
-            ])
-        )
+            assert img == expected_perturbed_images[i]
+            assert np.allclose(mask, EXPECTED_MASKS_6x6_rect[i])
+            total_perts.append(img)
+        assert len(total_perts) == 6
 
     def test_perturb_4channel(self) -> None:
         """
@@ -237,56 +122,17 @@ class TestOcclusionBasedPerturb (TestCase):
             np.full((4, 6, 4), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGBA"
-        pert_imgs, pert_masks = impl.perturb(white_image)
-        assert len(pert_imgs) == 6
-        assert len(pert_masks) == 6
-        assert np.allclose(pert_masks, EXPECTED_MASKS_4x6)
-        # Output image modes should match input
-        for i, img in enumerate(pert_imgs):
+        expected_perturbed_images = list(map(
+            PIL.Image.fromarray,
+            np.repeat(np.uint8(EXPECTED_MASKS_4x6 * 255), 4).reshape((6, 4, 6, 4))
+        ))
+        total_perts = []
+        for i, (img, mask) in enumerate(impl.perturb(white_image)):
             assert img.mode == "RGBA"
-        # Test for expected output perturbed image content
-        assert np.allclose(
-            np.asarray(pert_imgs[0]),
-            np.vstack([
-                np.hstack([BLACK_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[1]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGBA, BLACK_2x2_RGBA, WHITE_2x2_RGBA]),
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[2]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, BLACK_2x2_RGBA]),
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[3]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-                np.hstack([BLACK_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[4]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-                np.hstack([WHITE_2x2_RGBA, BLACK_2x2_RGBA, WHITE_2x2_RGBA]),
-            ])
-        )
-        assert np.allclose(
-            np.asarray(pert_imgs[5]),
-            np.vstack([
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, WHITE_2x2_RGBA]),
-                np.hstack([WHITE_2x2_RGBA, WHITE_2x2_RGBA, BLACK_2x2_RGBA]),
-            ])
-        )
+            assert img == expected_perturbed_images[i]
+            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
+            total_perts.append(img)
+        assert len(total_perts) == 6
 
 
 # Common expected masks for 4x6 tests
@@ -354,39 +200,3 @@ EXPECTED_MASKS_6x6_rect = np.array([
      [1, 1, 1, 1, 0, 0],
      [1, 1, 1, 1, 0, 0]],
 ], dtype=bool)
-
-WHITE_2x2_L = np.array([
-    [255, 255],
-    [255, 255],
-])
-WHITE_2x2_RGB = np.array([
-    [[255, 255, 255], [255, 255, 255]],
-    [[255, 255, 255], [255, 255, 255]],
-])
-WHITE_3x2_RGB = np.array([
-    [[255, 255, 255], [255, 255, 255]],
-    [[255, 255, 255], [255, 255, 255]],
-    [[255, 255, 255], [255, 255, 255]],
-])
-WHITE_2x2_RGBA = np.array([
-    [[255, 255, 255, 255], [255, 255, 255, 255]],
-    [[255, 255, 255, 255], [255, 255, 255, 255]],
-])
-
-BLACK_2x2_L = np.array([
-    [0, 0],
-    [0, 0]
-])
-BLACK_2x2_RGB = np.array([
-    [[0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [0, 0, 0]]
-])
-BLACK_3x2_RGB = np.array([
-    [[0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [0, 0, 0]]
-])
-BLACK_2x2_RGBA = np.array([
-    [[0, 0, 0, 0], [0, 0, 0, 0]],
-    [[0, 0, 0, 0], [0, 0, 0, 0]]
-])

@@ -1,5 +1,5 @@
 import gc
-from typing import Dict, Any, Tuple, List
+from typing import Dict, Any, Generator, Tuple
 import unittest.mock as mock
 
 import PIL.Image
@@ -10,7 +10,10 @@ from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 class StubImpl (PerturbImage):
 
-    def perturb(self, ref_image: PIL.Image.Image) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+    def perturb(
+        self,
+        ref_image: PIL.Image.Image
+    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
         pass
 
     def get_config(self) -> Dict[str, Any]:
