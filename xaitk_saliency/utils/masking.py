@@ -1,62 +1,7 @@
-from typing import List, Tuple
+from typing import List
 
 import numpy as np
 import PIL.Image
-
-
-def generate_block_masks(
-    window_size: Tuple[int, int],
-    stride: Tuple[int, int],
-    image_size: Tuple[int, int],
-) -> np.ndarray:
-    """
-    Generates a number of mask images with each masking a distinct square area
-    within an input image shape.
-
-    An amount of masks generated will be equal to the number of full
-    `window_size x window_size` blocks we can fit into the given shape with the
-    given stride.
-    If the input shape is not evenly divisible by window size and stride then
-    there may be pixels on teh right and bottom that are never masked.
-
-    :param window_size: the block window size as a tuple with format
-        `(height, width)`.
-    :param stride: the sliding step as a tuple with format
-        `(height_step, width_step`.
-    :param image_size: The mask size to be output, which should be the same to
-        the image size we are creating masks for.
-
-    :return: the sliding window style masks
-    """
-    win_h, win_w = window_size
-    st_h, st_w = stride
-    rows = np.arange(0 + st_h - win_h, image_size[0], st_h)
-    cols = np.arange(0 + st_w - win_w, image_size[1], st_w)
-
-    mask_num = len(rows) * len(cols)
-    masks = np.ones((mask_num, image_size[0], image_size[1]), dtype=bool)
-    i = 0
-    for r in rows:
-        for c in cols:
-            if r < 0:
-                r1 = 0
-            else:
-                r1 = r
-            if r + win_h > image_size[0]:
-                r2 = image_size[0]
-            else:
-                r2 = r + win_h
-            if c < 0:
-                c1 = 0
-            else:
-                c1 = c
-            if c + win_w > image_size[1]:
-                c2 = image_size[1]
-            else:
-                c2 = c + win_w
-            masks[i, r1:r2, c1:c2] = 0
-            i += 1
-    return masks
 
 
 def generate_masked_images(

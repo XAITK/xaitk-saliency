@@ -1,8 +1,10 @@
-from xaitk_saliency.interfaces.perturb_image import PerturbImage
 import PIL.Image
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Optional, Tuple, Dict, Any, Generator
 import numpy as np
 from skimage.transform import resize
+from smqtk_descriptors.utils import parallel_map
+
+from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 
 class RISEPertubation (PerturbImage):
@@ -13,34 +15,13 @@ class RISEPertubation (PerturbImage):
     https://github.com/eclique/RISE/blob/master/explanations.py
     """
 
-    def _generate_masks(self, input_size: Tuple[int, int]) -> np.ndarray:
-        """
-        Randomly crop, upscale, and interpolate binary masks to generate a set
-        of random masks to apply to the image.
-        :param input_size:
-            Size of the model's input as (rows, cols). Binary masks are upsampled to
-            this resolution to be applied to (multiplied with) the input later.
-            E.g. (224, 224).
-        """
-        masks = np.empty((self.N, *input_size))
-        cell_size = np.ceil(np.array(input_size) / self.s)
-        # Upscale factor
-        up_size = (self.s + 1) * cell_size
-        for i in range(self.N):
-            # Random shifts
-            x = self.rng.integers(0, cell_size[0])
-            y = self.rng.integers(0, cell_size[1])
-            # Linear upsampling and random cropping
-            masks[i, :, :] = resize(self.grid[i], up_size, order=1, mode='reflect',
-                                    anti_aliasing=False)[x:x + input_size[0], y:y + input_size[1]]
-        return masks
-
     def __init__(
         self,
         N: int,
         s: int,
         p1: float,
-        seed: Optional[int] = None
+        seed: Optional[int] = None,
+        threads: Optional[int] = 4,
     ):
         """
         Generate a set of random binary masks
@@ -54,43 +35,71 @@ class RISEPertubation (PerturbImage):
         :param seed:
             A seed to pass into the constructed random number generator to allow
             for reproducibility
+        :param threads: The number of threads to utilize when generating images and
+            masks. If this is <=0 or None, no threading is used and processing
+            is performed in-line serially.
         """
-        self.rng = np.random.default_rng(seed)
         self.N = N
         self.s = s
         self.p1 = p1
         self.seed = seed
+        self.threads = threads
 
         # Generate a set of random grids of small resolution
-        grid = self.rng.random((N, s, s)) < p1
+        grid = np.random.default_rng(seed).random((N, s, s)) < p1
         grid = grid.astype('float32')
 
         self.grid = grid
 
     def perturb(
         self,
-        ref_image: PIL.Image.Image,
-    ) -> Tuple[List[PIL.Image.Image], np.ndarray]:
+        ref_image: PIL.Image.Image
+    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
+        image_from_array = PIL.Image.fromarray
         ref_mat = np.asarray(ref_image)
+        ref_mode = ref_image.mode
         input_size = (ref_image.height, ref_image.width)
-        masks = self._generate_masks(input_size=input_size)
-        mask_lhs = masks
+        mul_slice: Tuple = (...,)
         if ref_mat.ndim > 2:
-            mask_lhs = masks.reshape(-1, *input_size, 1)
-        masked_images = (mask_lhs * ref_mat).astype(ref_mat.dtype)
-        masked_images_pil = [
-            PIL.Image.fromarray(
-                m,
-                mode=ref_image.mode
-            )
-            for m in masked_images
-        ]
-        return masked_images_pil, masks
+            mul_slice = (..., None)  # add channel axis for multiplication
+
+        grid = self.grid
+        num_masks = self.N
+        s = self.s
+
+        shift_rng = np.random.default_rng(self.seed)
+        cell_size = np.ceil(np.array(input_size) / s)
+        up_size = (s + 1) * cell_size
+
+        def work_func(i_: int) -> Tuple[PIL.Image.Image, np.ndarray]:
+            # Random shifts
+            x = shift_rng.integers(0, cell_size[0])
+            y = shift_rng.integers(0, cell_size[1])
+            mask = resize(
+                grid[i_], up_size, order=1, mode='reflect', anti_aliasing=False
+            )[x:x + input_size[0], y:y + input_size[1]]
+            # probably the majority cost? TODO: Test performance cost
+            img_m = (mask[mul_slice] * ref_mat).astype(ref_mat.dtype)
+            img_p = image_from_array(img_m, mode=ref_mode)
+            return img_p, mask
+
+        threads = self.threads
+        if threads is None or threads <= 0:
+            for i in range(num_masks):
+                yield work_func(i)
+        else:
+            for img, m in parallel_map(
+                work_func, range(num_masks),
+                cores=self.threads,
+                use_multiprocessing=False,
+            ):
+                yield img, m
 
     def get_config(self) -> Dict[str, Any]:
         return {
             "N": self.N,
             "s": self.s,
             "p1": self.p1,
-            "seed": self.seed
+            "seed": self.seed,
+            "threads": self.threads,
         }
