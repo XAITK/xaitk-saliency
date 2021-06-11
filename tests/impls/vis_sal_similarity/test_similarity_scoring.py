@@ -6,7 +6,7 @@ import os
 from xaitk_saliency.impls.vis_sal_similarity.similarityscoring import SimilarityScoring
 from xaitk_saliency import ImageSimilaritySaliencyMapGenerator
 from smqtk_core.configuration import configuration_test_helper
-from tests import DATA_DIR
+from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
 
 class TestSimilarityScoring (TestCase):
@@ -78,32 +78,3 @@ class TestSimilarityScoring (TestCase):
         pertb_mask = np.random.randint(low=0, high=2, size=(15, 10, 10), dtype='int')
         sal = impl.generate(image1_feats, image2_feats, pertb_feats, pertb_mask)
         assert sal.shape == (1, 10, 10)
-
-
-# Common expected masks for 4x6 tests
-EXPECTED_MASKS_4x6 = np.array([
-    [[0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0]],
-], dtype=np.uint8)

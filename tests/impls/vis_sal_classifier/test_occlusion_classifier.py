@@ -5,7 +5,7 @@ import os
 
 from xaitk_saliency.impls.vis_sal_classifier.occlusion_scoring import OcclusionScoring
 from xaitk_saliency import ImageClassifierSaliencyMapGenerator
-from tests import DATA_DIR
+from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
 
 class TestOcclusionBasedScoring (TestCase):
@@ -55,32 +55,3 @@ class TestOcclusionBasedScoring (TestCase):
         mask_confs_1_class_ = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
         assert sal.shape == (20, 10, 10)
-
-
-# Common expected masks for 4x6 tests
-EXPECTED_MASKS_4x6 = np.array([
-    [[0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0]],
-], dtype=np.uint8)
