@@ -9,6 +9,9 @@ CI
 
 * Added properties file for SonarQube scans.
 
+* Add job to GitHub actions workflow to run and submit SonarCloud scan assuming
+  the ``SONAR_TOKEN`` secret is available for the runner.
+
 Documentation
 
 * Updated the "Occlusion Saliency" notebook to flow smoother and include
