@@ -126,6 +126,13 @@ jobs:
           name: test-coverage-${{ matrix.python-version }}-${{ matrix.opt-extra }}
           path: coverage.xml
 
+  debug_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: debugging variable values
+        run: |
+          echo "Value of github.repository: ${{ github.repository }}"
+
   # For analysis of codebase and submission to sonarcloud.io.
   sonarcloud:
     # Only run this when under the umbrella of the organization repository
