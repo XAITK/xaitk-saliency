@@ -15,6 +15,9 @@ Documentation
   un-commentable RISE perturbation algorithm option. The narrative has
   been more explicitly tuned to follow an "application" narrative.
 
+* Add miscellaneous documentation on how to run a local SonarQube scan and
+  experimental documentation on setting up scanning as a CI workflow job.
+
 Interfaces
 
 * Add new interfaces in accordance to the v0.1 API draft.
