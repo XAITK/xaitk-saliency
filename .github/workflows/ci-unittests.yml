@@ -119,4 +119,39 @@ jobs:
             poetry install --extras "$OPT_EXTRA"
           fi
       - name: Run Unittests
-        run: poetry run pytest --cov=xaitk_saliency
+        run: poetry run pytest
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-coverage-${{ matrix.python-version }}-${{ matrix.opt-extra }}
+          path: coverage.xml
+
+  # For analysis of codebase and submission to sonarcloud.io.
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    # Requires coverage info generated from a previous unit-test run.
+    needs: unittests
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Pull coverage XML from test run
+        uses: actions/download-artifact@v2
+        with:
+          # Just one version of the coverage. Sonar can't merge a matrix of
+          # coverages yet (2021-06).
+          name: test-coverage-3.7-
+      - name: Munge coverage.xml source path for SonarCloud container use
+        # Bridge the gap between what pytest-cov outputs and SonarCloud repo
+        # source directory assumptions of "/github/workspace/".
+        # We check that the coverage source line is as expected before sed call.
+        run: |
+          grep -E '^\s*<source>.*</source>$' coverage.xml
+          sed -Ei 's|^(\s*)<source>.*</source>|\1<source>/github/workspace/xaitk_saliency</source>|g' coverage.xml
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
