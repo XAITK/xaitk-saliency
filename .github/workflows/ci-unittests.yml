@@ -119,4 +119,11 @@ jobs:
             poetry install --extras "$OPT_EXTRA"
           fi
       - name: Run Unittests
-        run: poetry run pytest --cov=xaitk_saliency
+        run: poetry run pytest
+
+      - name: CodeCov report submission
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          files: coverage.xml
+          flags: unittests
