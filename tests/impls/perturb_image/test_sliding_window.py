@@ -6,6 +6,7 @@ from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindowPerturb
+from tests import EXPECTED_MASKS_4x6
 
 
 class TestOcclusionBasedPerturb (TestCase):
@@ -135,33 +136,7 @@ class TestOcclusionBasedPerturb (TestCase):
         assert len(total_perts) == 6
 
 
-# Common expected masks for 4x6 tests
-EXPECTED_MASKS_4x6 = np.array([
-    [[0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0]],
-], dtype=bool)
+# Common expected masks for 6x6 tests
 EXPECTED_MASKS_6x6_rect = np.array([
     [[0, 0, 1, 1, 1, 1],
      [0, 0, 1, 1, 1, 1],

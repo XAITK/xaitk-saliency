@@ -29,6 +29,8 @@ Implementations
 
 * Add new RISE based perturbation algorithm in accordance to the v0.1 API draft for PerturbImage
 
+* Add new similarity based scoring algorithm in accordance to the v0.1 API draft for ImageSimilaritySaliencyMapGenerator
+
 * Remove old "stub" implementations in transitioning to the new API draft
 
   * Removed "ImageSaliencyMapGenerator" interface class.
