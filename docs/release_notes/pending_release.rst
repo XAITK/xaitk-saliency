@@ -55,3 +55,5 @@ Fixes
 -----
 
 * Update Read the Docs documentation link in README
+
+* Address various "code smells" as reported by SonarQube/SonarCloud.
