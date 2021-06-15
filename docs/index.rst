@@ -12,6 +12,7 @@ Welcome to xaitk-saliency's documentation!
 
    installation
    releasing
+   miscelaneous
 
 
 Indices and tables

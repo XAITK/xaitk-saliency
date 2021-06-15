@@ -5,11 +5,18 @@ XAITK-Saliency Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Added properties file for SonarQube scans.
+
 Documentation
 
 * Updated the "Occlusion Saliency" notebook to flow smoother and include
   un-commentable RISE perturbation algorithm option. The narrative has
   been more explicitly tuned to follow an "application" narrative.
+
+* Add miscellaneous documentation on how to run a local SonarQube scan and
+  experimental documentation on setting up scanning as a CI workflow job.
 
 Interfaces
 
