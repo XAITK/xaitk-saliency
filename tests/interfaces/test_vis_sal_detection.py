@@ -14,10 +14,10 @@ class StubImpl (ImageDetectionSaliencyMapGenerator):
         perturbed_dets: np.ndarray,
         perturb_masks: np.ndarray,
     ) -> np.ndarray:
-        pass
+        """ Stub impl """
 
     def get_config(self) -> Dict[str, Any]:
-        pass
+        """ Stub impl """
 
 
 def teardown_module() -> None:
