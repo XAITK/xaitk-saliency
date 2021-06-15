@@ -14,10 +14,10 @@ class StubImpl (PerturbImage):
         self,
         ref_image: PIL.Image.Image
     ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
-        pass
+        """ Stub impl. """
 
     def get_config(self) -> Dict[str, Any]:
-        pass
+        """ Stub impl. """
 
 
 def teardown_module() -> None:

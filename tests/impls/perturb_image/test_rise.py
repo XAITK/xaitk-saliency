@@ -13,21 +13,21 @@ class TestRISEPerturbation (TestCase):
         """
         Test that constructor values pass.
         """
-        ex_N = 1000
+        ex_n = 1000
         ex_s = 8
         ex_p1 = 0.5
-        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1)
-        assert impl.N == ex_N
+        impl = RISEPertubation(n=ex_n, s=ex_s, p1=ex_p1)
+        assert impl.n == ex_n
         assert impl.s == ex_s
         assert impl.p1 == ex_p1
 
     def test_standard_config(self) -> None:
-        ex_N = 1000
+        ex_n = 1000
         ex_s = 8
         ex_p1 = 0.5
-        impl = RISEPertubation(N=ex_N, s=ex_s, p1=ex_p1)
+        impl = RISEPertubation(n=ex_n, s=ex_s, p1=ex_p1)
         for inst in configuration_test_helper(impl):
-            assert inst.N == ex_N
+            assert inst.n == ex_n
             assert inst.s == ex_s
             assert inst.p1 == ex_p1
 
@@ -35,16 +35,16 @@ class TestRISEPerturbation (TestCase):
         """
         Test that the perturbations are randomized
         """
-        impl1 = RISEPertubation(N=1000, s=8, p1=0.5)
-        impl2 = RISEPertubation(N=1000, s=8, p1=0.5)
+        impl1 = RISEPertubation(n=1000, s=8, p1=0.5)
+        impl2 = RISEPertubation(n=1000, s=8, p1=0.5)
         assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
         """
         Test that passing a seed generates equivalent masks
         """
-        impl1 = RISEPertubation(N=1000, s=8, p1=0.5, seed=42)
-        impl2 = RISEPertubation(N=1000, s=8, p1=0.5, seed=42)
+        impl1 = RISEPertubation(n=1000, s=8, p1=0.5, seed=42)
+        impl2 = RISEPertubation(n=1000, s=8, p1=0.5, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self) -> None:
@@ -58,7 +58,7 @@ class TestRISEPerturbation (TestCase):
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
-        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
 
         expected_perturbed_images = list(map(
             PIL.Image.fromarray,
@@ -87,7 +87,7 @@ class TestRISEPerturbation (TestCase):
         # results. When greater than 1 idempotency cannot be guaranteed due to
         # thread interleaving.
         # Also of course seeding otherwise random will do its random things.
-        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
 
         imgs1, masks1 = zip(*impl.perturb(white_image))
         imgs2, masks2 = zip(*impl.perturb(white_image))
@@ -107,7 +107,7 @@ class TestRISEPerturbation (TestCase):
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
-        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
 
         expected_perturbed_images = list(map(
             PIL.Image.fromarray,
@@ -128,7 +128,7 @@ class TestRISEPerturbation (TestCase):
         Test that once we initialize a RISEPerturbation we can call it on
         images of varying sizes
         """
-        impl = RISEPertubation(N=2, s=2, p1=0.5, seed=42)
+        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42)
         white_image_small = PIL.Image.fromarray(
             np.full((4, 6), fill_value=255, dtype=np.uint8)
         )

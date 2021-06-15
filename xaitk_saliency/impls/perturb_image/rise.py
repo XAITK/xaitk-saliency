@@ -17,7 +17,7 @@ class RISEPertubation (PerturbImage):
 
     def __init__(
         self,
-        N: int,
+        n: int,
         s: int,
         p1: float,
         seed: Optional[int] = None,
@@ -25,7 +25,7 @@ class RISEPertubation (PerturbImage):
     ):
         """
         Generate a set of random binary masks
-        :param N:
+        :param n:
             Number of random masks used in the algorithm. E.g. 1000.
         :param s:
             Spatial resolution of the small masking grid. E.g. 8.
@@ -39,14 +39,14 @@ class RISEPertubation (PerturbImage):
             masks. If this is <=0 or None, no threading is used and processing
             is performed in-line serially.
         """
-        self.N = N
+        self.n = n
         self.s = s
         self.p1 = p1
         self.seed = seed
         self.threads = threads
 
         # Generate a set of random grids of small resolution
-        grid = np.random.default_rng(seed).random((N, s, s)) < p1
+        grid = np.random.default_rng(seed).random((n, s, s)) < p1
         grid = grid.astype('float32')
 
         self.grid = grid
@@ -64,7 +64,7 @@ class RISEPertubation (PerturbImage):
             mul_slice = (..., None)  # add channel axis for multiplication
 
         grid = self.grid
-        num_masks = self.N
+        num_masks = self.n
         s = self.s
 
         shift_rng = np.random.default_rng(self.seed)
@@ -97,7 +97,7 @@ class RISEPertubation (PerturbImage):
 
     def get_config(self) -> Dict[str, Any]:
         return {
-            "N": self.N,
+            "n": self.n,
             "s": self.s,
             "p1": self.p1,
             "seed": self.seed,
