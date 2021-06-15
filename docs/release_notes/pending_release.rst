@@ -9,6 +9,8 @@ CI
 
 * Added properties file for SonarQube scans.
 
+* Add CodeCov integration.
+
 Documentation
 
 * Updated the "Occlusion Saliency" notebook to flow smoother and include
