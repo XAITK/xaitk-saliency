@@ -76,6 +76,7 @@ addopts = [
     "--tb=long",            # Trace-back print mode.
     "--cov=xaitk_saliency", # Cover our package specifically
     "--cov-report=term",    # Coverage report to terminal
+    "--cov-report=xml:coverage.xml",
 ]
 testpaths = [
     "tests",
