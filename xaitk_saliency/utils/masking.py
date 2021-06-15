@@ -56,7 +56,10 @@ def weight_regions_by_scalar(
     # Aggregate scores across all perturbed regions.
     sal_across_masks = np.transpose(heatmap.sum(axis=2))
 
-    # Compute final saliency map by normalizing with sampling factor.
-    final_heatmap = sal_across_masks/(1 - masks).sum(axis=0)
+    # Removing regions that are never masked to avoid a dividebyzero warning
+    mask_sum = (1 - masks).sum(axis=0)
+    mask_sum[mask_sum == 0] = 1.
 
+    # Compute final saliency map by normalizing with sampling factor.
+    final_heatmap = sal_across_masks/mask_sum
     return final_heatmap
