@@ -12,6 +12,9 @@ Interfaces
   all known implementations, that part has been split out into a utility
   function.
 
+* Added support for positive and negative saliency values as output by the
+  saliency map generation interfaces.
+
 Utils
 
 * Masking
