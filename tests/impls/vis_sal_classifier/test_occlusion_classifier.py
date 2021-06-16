@@ -1,14 +1,14 @@
-from unittest import TestCase
+import os
 
 import numpy as np
-import os
+import pytest
 
 from xaitk_saliency.impls.vis_sal_classifier.occlusion_scoring import OcclusionScoring
 from xaitk_saliency import ImageClassifierSaliencyMapGenerator
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
 
-class TestOcclusionBasedScoring (TestCase):
+class TestOcclusionBasedScoring:
 
     def test_init_(self) -> None:
         """
@@ -16,6 +16,42 @@ class TestOcclusionBasedScoring (TestCase):
         """
         impl = OcclusionScoring()
         assert impl.is_usable() and isinstance(impl, ImageClassifierSaliencyMapGenerator)
+
+    def test_bad_alignment_confs(self) -> None:
+        """
+        Test that a mismatch of input ref-image and perturbed-image confidence
+        classes causes the expected exception.
+        """
+        test_ref_confs = np.ones([3])  # ONE MORE than pert conf mat.
+        test_pert_confs = np.ones((4, 2))
+        test_pert_masks = np.ones((4, 3, 3))
+
+        impl = OcclusionScoring()
+        with pytest.raises(
+            ValueError,
+            match=r"Number of classes in original image and perturbed image "
+                  r"do not match"
+        ):
+            impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
+
+    def test_bad_alignment_masks(self) -> None:
+        """
+        Test that the number of input perturbed image confidences and masks
+        match.
+        """
+
+        test_ref_confs = np.ones([2])
+        test_pert_confs = np.ones((4, 2))
+        # Different number of masks from confs
+        test_pert_masks = np.ones((7, 3, 3))
+
+        impl = OcclusionScoring()
+        with pytest.raises(
+            ValueError,
+            match=r"Number of perturbation masks and respective "
+                  r"confidence lengths do not match"
+        ):
+            impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
 
     def test_1class_scores(self) -> None:
         """
