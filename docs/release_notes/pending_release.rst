@@ -22,7 +22,7 @@ Documentation
 
 Interfaces
 
-* Add new interfaces in accordance to the v0.1 API draft.
+* Add new interfaces in accordance to the v0.2 API draft.
 
   * Added to doc-strings to expand on detail around saliency heatmap return
     value range and meaning.
@@ -32,23 +32,26 @@ Interfaces
     as to allow it to function on larger image sizes and larger perturbation
     quantities at the same time.
 
+* Removed old interface classes "ImageSaliencyMapGenerator", "SaliencyBlackbox"
+  and "ImageSaliencyAugmenter".
+
 Implementations
 
-* Add new occlusion based classifier scoring in accordance to the v0.1 API draft for ImageClassifierSaliencyMapGenerator.
+* Add new occlusion based classifier scoring in accordance to the v0.2 API draft for ImageClassifierSaliencyMapGenerator.
 
-* Add new RISE based perturbation algorithm in accordance to the v0.1 API draft for PerturbImage
+* Add new RISE based perturbation algorithm in accordance to the v0.2 API draft for PerturbImage
 
-* Add new similarity based scoring algorithm in accordance to the v0.1 API draft for ImageSimilaritySaliencyMapGenerator
+* Add new similarity based scoring algorithm in accordance to the v0.2 API draft for ImageSimilaritySaliencyMapGenerator
 
 * Remove old "stub" implementations in transitioning to the new API draft
-
-  * Removed "ImageSaliencyMapGenerator" interface class.
 
   * Removed "LogitImageSaliencyAugmenter" implementation class.
 
   * Removed "LogitImageSaliencyMapGenerator" implementation class.
 
   * Removed old RISE implementation classes.
+
+  * Removed old SBSM implementation classes.
 
 
 Fixes
