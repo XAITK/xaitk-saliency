@@ -32,6 +32,9 @@ Interfaces
     as to allow it to function on larger image sizes and larger perturbation
     quantities at the same time.
 
+* Removed old interface classes "ImageSaliencyMapGenerator", "SaliencyBlackbox"
+  and "ImageSaliencyAugmenter".
+
 Implementations
 
 * Add new occlusion based classifier scoring in accordance to the v0.1 API draft for ImageClassifierSaliencyMapGenerator.
@@ -42,13 +45,13 @@ Implementations
 
 * Remove old "stub" implementations in transitioning to the new API draft
 
-  * Removed "ImageSaliencyMapGenerator" interface class.
-
   * Removed "LogitImageSaliencyAugmenter" implementation class.
 
   * Removed "LogitImageSaliencyMapGenerator" implementation class.
 
   * Removed old RISE implementation classes.
+
+  * Removed old SBSM implementation classes.
 
 
 Fixes
