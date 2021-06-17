@@ -78,7 +78,7 @@ class RISEPertubation (PerturbImage):
             mask = resize(
                 grid[i_], up_size, order=1, mode='reflect', anti_aliasing=False
             )[x:x + input_size[0], y:y + input_size[1]]
-            # probably the majority cost? TODO: Test performance cost
+            # probably the majority cost like in sliding window impl.
             img_m = (mask[mul_slice] * ref_mat).astype(ref_mat.dtype)
             img_p = image_from_array(img_m, mode=ref_mode)
             return img_p, mask
