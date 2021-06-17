@@ -1,5 +1,7 @@
-XAITK-Saliency Pending Release Notes
-====================================
+v0.2.0
+======
+This initial alpha release introduces the xaitk-saliency toolkit for computing
+visual saliency heat-maps for input imagery over based on black-box operations.
 
 
 Updates / New Features
