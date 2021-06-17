@@ -36,6 +36,9 @@ As such, patch releases should only ever be based on an existing release point.
    c. Add a reference to the new release notes RST file in
       ``docs/release_notes.rst``.
 
+   d. In a separate commit, add back a blank pending release notes file stub.
+      See `Stub Pending Notes File`_.
+
 2. Create a pull/merge request for this branch with master as the merge target.
    This is to ensure that everything passes CI testing before making the
    release. If there is an issue then branches should be made and merged into
@@ -57,7 +60,7 @@ and functionalities.
    ``release-[major,minor]-{NEW_VERSION}``.
 
    a. Increment patch value in  ``pyproject.toml`` file's ``version`` attribute
-      under the `[too.poetry]` section.
+      under the `[tool.poetry]` section.
 
       * See `Poetry's version command`_ for a convenient means of incrementing
         the version.
@@ -70,6 +73,9 @@ and functionalities.
    c. Add a reference to the new release notes RST file in
       ``docs/release_notes.rst``.
 
+   d. In a separate commit, add back a blank pending release notes file stub.
+      See `Stub Pending Notes File`_.
+
 2. Create a pull/merge request for this branch with master as the merge target.
    This is to ensure that everything passes CI testing before making the
    release. If there is an issue then branches should be made and merged into
@@ -81,6 +87,22 @@ and functionalities.
 4. Merge version bump branch into the ``master`` branch.
 
 5. `Create new version release to PYPI`_
+
+Stub Pending Notes File
+^^^^^^^^^^^^^^^^^^^^^^^
+The following is the basic content that goes into the stub pending release
+notes file:
+
+.. code-block::
+
+    Pending Release Notes
+    =====================
+
+    Updates / New Features
+    ----------------------
+
+    Fixes
+    -----
 
 Tag new version
 ---------------
