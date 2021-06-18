@@ -64,7 +64,8 @@ class TestSimilarityScoring (TestCase):
                                 [0.55, 0.2], [0.1, 0.75], [0.35, 0.65]])
         sal = impl.generate(image1_feats, image2_feats, pertb_feats, EXPECTED_MASKS_4x6)
         standard_sal = np.load(os.path.join(DATA_DIR, 'SimilaritySal.npy'))
-        assert sal.shape == (1, 4, 6) and round(np.sum(sal)) == 10 and np.array_equal(standard_sal, sal)
+        assert sal.shape == (1, 4, 6)
+        assert np.allclose(standard_sal, sal)
 
     def test_512_featdim(self) -> None:
         """
