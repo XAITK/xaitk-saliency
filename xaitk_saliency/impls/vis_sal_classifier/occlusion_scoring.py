@@ -45,7 +45,11 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
         # Normalize final saliency map in range [0, 1]
-        sal = minmax_scale(sal.ravel(), feature_range=(0, 1)).reshape(sal.shape)
+        sal = minmax_scale(
+            sal.reshape(sal.shape[0], -1),
+            feature_range=(0, 1),
+            axis=1
+        ).reshape(sal.shape)
 
         return sal
 
