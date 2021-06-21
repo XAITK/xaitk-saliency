@@ -39,101 +39,87 @@ class TestOcclusionBasedPerturb (TestCase):
     def test_standard_config(self) -> None:
         ex_w = (777, 776)
         ex_s = (444, 445)
-        ex_threads = 86
-        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s, threads=ex_threads)
+        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s)
         for inst in configuration_test_helper(impl):
             assert inst.window_size == ex_w
             assert inst.stride == ex_s
-            assert inst.threads == ex_threads
 
     def test_perturb_1channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
+        Input image mode should not impact the masks output.
         """
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         # Image is slightly wide, should be occluded 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((4, 6), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "L"
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            (EXPECTED_MASKS_4x6 * 255).astype(np.uint8)
-        ))
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "L"
-            assert img == expected_perturbed_images[i]
-            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
-            total_perts.append(img)
-        assert len(total_perts) == 6
+
+        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        actual_masks = impl.perturb(white_image)
+
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_4x6
+        )
 
     def test_perturb_3channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
+        Input image mode should not impact the masks output.
         """
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         # Image is slightly wide, should be occluded 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGB"
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            np.repeat(np.uint8(EXPECTED_MASKS_4x6 * 255), 3).reshape((6, 4, 6, 3))
-        ))
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "RGB"
-            assert img == expected_perturbed_images[i]
-            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
-            total_perts.append(img)
-        assert len(total_perts) == 6
+
+        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        actual_masks = impl.perturb(white_image)
+
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_4x6
+        )
 
     def test_perturb_3channel_nonsquare(self) -> None:
         """
         Test basic perturbation on a known image with non-square window +
         stride.
+        Input image mode should not impact the masks output.
         """
-        impl = SlidingWindowPerturb(window_size=(3, 2), stride=(3, 2))
-        # Image is slightly wide, should be occluded 6-ways.
+        # Square image for uneven masking 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((6, 6, 3), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGB"
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            np.repeat(np.uint8(EXPECTED_MASKS_6x6_rect * 255), 3).reshape((6, 6, 6, 3))
-        ))
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "RGB"
-            assert img == expected_perturbed_images[i]
-            assert np.allclose(mask, EXPECTED_MASKS_6x6_rect[i])
-            total_perts.append(img)
-        assert len(total_perts) == 6
+
+        impl = SlidingWindowPerturb(window_size=(3, 2), stride=(3, 2))
+        actual_masks = impl.perturb(white_image)
+
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_6x6_rect
+        )
 
     def test_perturb_4channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
+        Input image mode should not impact the masks output.
         """
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         # Image is slightly wide, should be occluded 6-ways.
         white_image = PIL.Image.fromarray(
             np.full((4, 6, 4), fill_value=255, dtype=np.uint8)
         )
         assert white_image.mode == "RGBA"
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            np.repeat(np.uint8(EXPECTED_MASKS_4x6 * 255), 4).reshape((6, 4, 6, 4))
-        ))
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "RGBA"
-            assert img == expected_perturbed_images[i]
-            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
-            total_perts.append(img)
-        assert len(total_perts) == 6
+
+        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        actual_masks = impl.perturb(white_image)
+
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_4x6
+        )
 
 
 # Common expected masks for 6x6 tests

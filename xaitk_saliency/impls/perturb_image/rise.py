@@ -1,5 +1,5 @@
 import PIL.Image
-from typing import Optional, Tuple, Dict, Any, Generator
+from typing import Optional, Dict, Any
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils import parallel_map
@@ -35,8 +35,8 @@ class RISEPertubation (PerturbImage):
         :param seed:
             A seed to pass into the constructed random number generator to allow
             for reproducibility
-        :param threads: The number of threads to utilize when generating images and
-            masks. If this is <=0 or None, no threading is used and processing
+        :param threads: The number of threads to utilize when generating masks.
+            If this is <=0 or None, no threading is used and processing
             is performed in-line serially.
         """
         self.n = n
@@ -46,7 +46,7 @@ class RISEPertubation (PerturbImage):
         self.threads = threads
 
         # Generate a set of random grids of small resolution
-        grid = np.random.default_rng(seed).random((n, s, s)) < p1
+        grid: np.ndarray = np.random.default_rng(seed).random((n, s, s)) < p1
         grid = grid.astype('float32')
 
         self.grid = grid
@@ -54,46 +54,39 @@ class RISEPertubation (PerturbImage):
     def perturb(
         self,
         ref_image: PIL.Image.Image
-    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
-        image_from_array = PIL.Image.fromarray
-        ref_mat = np.asarray(ref_image)
-        ref_mode = ref_image.mode
+    ) -> np.ndarray:
         input_size = (ref_image.height, ref_image.width)
-        mul_slice: Tuple = (...,)
-        if ref_mat.ndim > 2:
-            mul_slice = (..., None)  # add channel axis for multiplication
-
-        grid = self.grid
         num_masks = self.n
+        grid = self.grid
         s = self.s
-
         shift_rng = np.random.default_rng(self.seed)
         cell_size = np.ceil(np.array(input_size) / s)
         up_size = (s + 1) * cell_size
 
-        def work_func(i_: int) -> Tuple[PIL.Image.Image, np.ndarray]:
+        masks = np.empty((num_masks, *input_size), dtype=grid.dtype)
+
+        def work_func(i_: int) -> np.ndarray:
             # Random shifts
             x = shift_rng.integers(0, cell_size[0])
             y = shift_rng.integers(0, cell_size[1])
             mask = resize(
                 grid[i_], up_size, order=1, mode='reflect', anti_aliasing=False
             )[x:x + input_size[0], y:y + input_size[1]]
-            # probably the majority cost like in sliding window impl.
-            img_m = (mask[mul_slice] * ref_mat).astype(ref_mat.dtype)
-            img_p = image_from_array(img_m, mode=ref_mode)
-            return img_p, mask
+            return mask
 
         threads = self.threads
-        if threads is None or threads <= 0:
+        if threads is None or threads < 1:
             for i in range(num_masks):
-                yield work_func(i)
+                masks[i, ...] = work_func(i)
         else:
-            for img, m in parallel_map(
+            for i, m in enumerate(parallel_map(
                 work_func, range(num_masks),
-                cores=self.threads,
+                cores=threads,
                 use_multiprocessing=False,
-            ):
-                yield img, m
+            )):
+                masks[i, ...] = m
+
+        return masks
 
     def get_config(self) -> Dict[str, Any]:
         return {
