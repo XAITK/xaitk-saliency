@@ -209,3 +209,33 @@ def weight_regions_by_scalar(
     # Compute final saliency map by normalizing with sampling factor.
     final_heatmap = sal_across_masks/mask_sum
     return final_heatmap
+
+
+def weight_regions_by_scalar_rise(
+    scalar_vec: np.ndarray,
+    masks: np.ndarray
+) -> np.ndarray:
+    """
+    Weight some binary masks region with its respective vector in scalar_vec.
+
+    We expect the "masks" matrices and the image to be the same height and
+    width, and be valued in the [0, 1] floating-point range. The length
+    and order of scalar_vec and masks are assumed to be the same.
+    In the mask matrix, higher values correspond to regions of the image that
+    preserved. E.g. a 0 in the mask will translate to blacking out the
+    corresponding location in the source image.
+
+    :param scalar_vec: Weights for image regions for nClasses and shape
+                       [nMasks, nClasses]
+    :param masks: Mask array in the [nMasks, Height, Weight] shape format.
+
+    :return: A numpy array representing the weighted heatmap.
+    """
+    # Weighting each perturbed region with its respective score in vector.
+    # NOTE: Here we use masks instead of 1 - masks as in the original method
+    heatmap = (np.expand_dims(np.transpose(masks), axis=3) * scalar_vec)
+
+    # Aggregate scores across all perturbed regions.
+    sal_across_masks = np.transpose(heatmap.sum(axis=2))
+    # NOTE: RISE does not need an explicit mask normalization step
+    return sal_across_masks

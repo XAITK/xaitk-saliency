@@ -15,6 +15,11 @@ Interfaces
 * Added support for positive and negative saliency values as output by the
   saliency map generation interfaces.
 
+Implementations
+
+* Add ``RISEScoring`` and ``DebiasedRISEScoring`` implementations, along
+  with new ``weight_regions_by_scalar_rise`` functionality.
+
 Utils
 
 * Masking
