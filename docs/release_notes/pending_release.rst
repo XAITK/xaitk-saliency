@@ -5,6 +5,11 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Documentation
+
+* Add "SuperPixelSaliency" notebook to demonstrate use of arbitrary perturbation
+  masks based on superpixels for saliency map generation.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
