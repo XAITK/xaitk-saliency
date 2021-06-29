@@ -178,7 +178,9 @@ def occlude_image_streaming(
 
 def weight_regions_by_scalar(
     scalar_vec: np.ndarray,
-    masks: np.ndarray
+    masks: np.ndarray,
+    inv_masks: bool = True,
+    normalize: bool = True,
 ) -> np.ndarray:
     """
     Weight some binary masks region with its respective vector in scalar_vec.
@@ -190,52 +192,37 @@ def weight_regions_by_scalar(
     preserved. E.g. a 0 in the mask will translate to blacking out the
     corresponding location in the source image.
 
-    :param scalar_vec: Weights for image regions for nClasses and shape
-                       [nMasks, nClasses]
-    :param masks: Mask array in the [nMasks, Height, Weight] shape format.
-
-    :return: A numpy array representing the weighted heatmap.
-    """
-    # Weighting each perturbed region with its respective score in vector.
-    heatmap = (np.expand_dims(np.transpose(1 - masks), axis=3) * scalar_vec)
-
-    # Aggregate scores across all perturbed regions.
-    sal_across_masks = np.transpose(heatmap.sum(axis=2))
-
-    # Removing regions that are never masked to avoid a dividebyzero warning
-    mask_sum = (1 - masks).sum(axis=0)
-    mask_sum[mask_sum == 0] = 1.
-
-    # Compute final saliency map by normalizing with sampling factor.
-    final_heatmap = sal_across_masks/mask_sum
-    return final_heatmap
-
-
-def weight_regions_by_scalar_rise(
-    scalar_vec: np.ndarray,
-    masks: np.ndarray
-) -> np.ndarray:
-    """
-    Weight some binary masks region with its respective vector in scalar_vec.
-
-    We expect the "masks" matrices and the image to be the same height and
-    width, and be valued in the [0, 1] floating-point range. The length
-    and order of scalar_vec and masks are assumed to be the same.
-    In the mask matrix, higher values correspond to regions of the image that
-    preserved. E.g. a 0 in the mask will translate to blacking out the
-    corresponding location in the source image.
+    We can optionally per-pixel normalize the weighted sum by the sum of masks.
+    E.g. if some region is covered by more masks than others, that region's
+    sum is down-weighted.
 
     :param scalar_vec: Weights for image regions for nClasses and shape
                        [nMasks, nClasses]
     :param masks: Mask array in the [nMasks, Height, Weight] shape format.
+    :param inv_masks: Boolean flag to apply the `scalar_vec` to the inverse of
+        the masks, i.e. `(1 - masks)`. If False, we more simply apply to just
+        `masks`.
+    :param normalize: If the output heatmap should be per-pixel normalized by
+        mask coverage. E.g. if some region is covered by more masks than
+        others, then the weighted sum
 
     :return: A numpy array representing the weighted heatmap.
     """
+    if inv_masks:
+        masks = (UINT8_ONE - masks)
+
     # Weighting each perturbed region with its respective score in vector.
-    # NOTE: Here we use masks instead of 1 - masks as in the original method
     heatmap = (np.expand_dims(np.transpose(masks), axis=3) * scalar_vec)
 
     # Aggregate scores across all perturbed regions.
     sal_across_masks = np.transpose(heatmap.sum(axis=2))
-    # NOTE: RISE does not need an explicit mask normalization step
+
+    if normalize:
+        # Removing regions that are never masked to avoid a dividebyzero warning
+        mask_sum = (1 - masks).sum(axis=0)
+        mask_sum[mask_sum == 0] = 1.
+
+        # Compute final saliency map by normalizing with sampling factor.
+        sal_across_masks /= mask_sum
+
     return sal_across_masks

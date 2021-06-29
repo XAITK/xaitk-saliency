@@ -1,5 +1,6 @@
+from typing import Optional, Dict, Any
 from xaitk_saliency import ImageClassifierSaliencyMapGenerator
-from xaitk_saliency.utils.masking import weight_regions_by_scalar_rise
+from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
@@ -22,28 +23,41 @@ class RISEScoring (ImageClassifierSaliencyMapGenerator):
     the maximum value in mask after rounding while 0 replaces the rest.
     """
 
+    def __init__(
+        self,
+        p1: float = 0.0,
+    ):
+        """
+        Generate RISE-based saliency maps with optional p1 de-biasing.
+
+        :param p1: De-biasing parameter based on the masking probability.
+        """
+        self.p1 = p1
+
     def generate(
-            self,
-            image_conf: np.ndarray,
-            perturbed_conf: np.ndarray,
-            perturbed_masks: np.ndarray
+        self,
+        image_conf: np.ndarray,
+        perturbed_conf: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
 
         if len(image_conf) != len(perturbed_conf[0]):
-            raise ValueError("Number of classses in original image and",
-                             " perturbed image do not match.")
+            raise ValueError("Number of classes in original image and ",
+                             "perturbed image do not match.")
 
         if len(perturbed_conf) != len(perturbed_masks):
-            raise ValueError("Number of perturbation masks and respective",
+            raise ValueError("Number of perturbation masks and respective ",
                              "confidence lengths do not match.")
 
-        # Iterating through each class confidence and compare it with
-        # its perturbed twin
-        # NOTE: we don't make use of image_conf now
-        diff = perturbed_conf
+        # The RISE method does not use the difference of confidences, but just
+        # the perturbed image confidences. The reference confidences are not
+        # used here.
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar_rise(diff,  perturbed_masks)
+        sal = weight_regions_by_scalar(perturbed_conf,
+                                       perturbed_masks - self.p1,
+                                       inv_masks=False,
+                                       normalize=False)
 
         # Normalize final saliency map
         sal = maxabs_scale(
@@ -56,5 +70,7 @@ class RISEScoring (ImageClassifierSaliencyMapGenerator):
 
         return sal
 
-    def get_config(self) -> dict:
-        return {}
+    def get_config(self) -> Dict[str, Any]:
+        return {
+            "p1": self.p1,
+        }

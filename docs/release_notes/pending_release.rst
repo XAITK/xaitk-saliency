@@ -17,8 +17,8 @@ Interfaces
 
 Implementations
 
-* Add ``RISEScoring`` and ``DebiasedRISEScoring`` implementations, along
-  with new ``weight_regions_by_scalar_rise`` functionality.
+* Add ``RISEScoring`` implementation, with the ability to also compute a
+  de-biased form of RISE with an optional input parameter.
 
 Utils
 
