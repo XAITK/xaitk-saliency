@@ -1,5 +1,5 @@
 import gc
-from typing import Dict, Any, Generator, Tuple
+from typing import Dict, Any
 import unittest.mock as mock
 
 import PIL.Image
@@ -13,7 +13,7 @@ class StubImpl (PerturbImage):
     def perturb(
         self,
         ref_image: PIL.Image.Image
-    ) -> Generator[Tuple[PIL.Image.Image, np.ndarray], None, None]:
+    ) -> np.ndarray:
         """ Stub impl. """
 
     def get_config(self) -> Dict[str, Any]:

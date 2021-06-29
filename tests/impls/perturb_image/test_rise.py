@@ -1,4 +1,3 @@
-
 from unittest import TestCase
 
 import PIL.Image
@@ -50,6 +49,7 @@ class TestRISEPerturbation (TestCase):
     def test_perturb_1channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
+        Input image mode should not impact the masks output.
         """
         # Image is slightly wide
         white_image = PIL.Image.fromarray(
@@ -59,20 +59,12 @@ class TestRISEPerturbation (TestCase):
         # Setting threads=0 for serialized processing for deterministic
         # results.
         impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
+        actual_masks = impl.perturb(white_image)
 
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            (EXPECTED_MASKS_4x6 * 255).astype(np.uint8)
-        ))
-
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "L"
-            # Test for expected output perturbed image content
-            assert np.allclose(img, expected_perturbed_images[i])
-            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
-            total_perts.append(img)
-        assert len(total_perts) == 2
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_4x6
+        )
 
     def test_call_idempotency(self) -> None:
         """
@@ -89,16 +81,18 @@ class TestRISEPerturbation (TestCase):
         # Also of course seeding otherwise random will do its random things.
         impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
 
-        imgs1, masks1 = zip(*impl.perturb(white_image))
-        imgs2, masks2 = zip(*impl.perturb(white_image))
+        actual_masks1 = impl.perturb(white_image)
+        actual_masks2 = impl.perturb(white_image)
 
-        for i, (img1, img2) in enumerate(zip(imgs1, imgs2)):
-            assert img1 == img2
-        assert np.allclose(np.asarray(masks1), np.asarray(masks2))
+        assert np.allclose(
+            actual_masks1,
+            actual_masks2,
+        )
 
     def test_perturb_3channel(self) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
+        Input image mode should not impact the masks output.
         """
         # Image is slightly wide
         white_image = PIL.Image.fromarray(
@@ -108,20 +102,12 @@ class TestRISEPerturbation (TestCase):
         # Setting threads=0 for serialized processing for deterministic
         # results.
         impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
+        actual_masks = impl.perturb(white_image)
 
-        expected_perturbed_images = list(map(
-            PIL.Image.fromarray,
-            np.repeat(np.uint8(EXPECTED_MASKS_4x6 * 255), 3).reshape((2, 4, 6, 3))
-        ))
-
-        total_perts = []
-        for i, (img, mask) in enumerate(impl.perturb(white_image)):
-            assert img.mode == "RGB"
-            # Test for expected output perturbed image content
-            assert np.allclose(img, expected_perturbed_images[i])
-            assert np.allclose(mask, EXPECTED_MASKS_4x6[i])
-            total_perts.append(img)
-        assert len(total_perts) == 2
+        assert np.allclose(
+            actual_masks,
+            EXPECTED_MASKS_4x6
+        )
 
     def test_multiple_image_sizes(self) -> None:
         """
@@ -135,17 +121,13 @@ class TestRISEPerturbation (TestCase):
         white_image_large = PIL.Image.fromarray(
             np.full((41, 26), fill_value=255, dtype=np.uint8)
         )
-        pairs_small = list(impl.perturb(white_image_small))
-        assert len(pairs_small) == 2
-        for i, m in pairs_small:
-            assert i.size == white_image_small.size
-            assert m.shape[::-1] == white_image_small.size
+        masks_small = impl.perturb(white_image_small)
+        assert len(masks_small) == 2
+        assert masks_small.shape[1:][::-1] == white_image_small.size
 
-        pairs_large = list(impl.perturb(white_image_large))
-        assert len(pairs_large) == 2
-        for i, m in pairs_large:
-            assert i.size == white_image_large.size
-            assert m.shape[::-1] == white_image_large.size
+        masks_large = impl.perturb(white_image_large)
+        assert len(masks_large) == 2
+        assert masks_large.shape[1:][::-1] == white_image_large.size
 
 
 # Common expected masks for 4x6 tests
