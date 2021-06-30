@@ -13,6 +13,12 @@ Documentation
 * Add "VIAME_OcclusionSaliency" notebook demonstrating integration with VIAME
   toolkit based on saliency map generation for a fish classification task.
 
+* Add "covid_classification" notebook demonstrating integration with MONAI
+  based on saliency map generation for a COVID-19 X-ray classification task.
+
+* Updated notebook demonstration for ``SimilarityScoring`` usage to better track
+  the notebook structures across the repo.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
@@ -39,10 +45,6 @@ Utils
     duplicated across ``PerturbImage`` implementations. Added both batch and
     streaming versions of this utility.
 
-Demos
-
-* Updated notebook demonstration for ``SimilarityScoring`` usage to better track
-  the notebook structures across the repo.
 
 Fixes
 -----
