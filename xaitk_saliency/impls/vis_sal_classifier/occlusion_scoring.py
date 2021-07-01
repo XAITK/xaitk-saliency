@@ -2,7 +2,7 @@ from xaitk_saliency import ImageClassifierSaliencyMapGenerator
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
-from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import maxabs_scale
 
 
 class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
@@ -30,11 +30,11 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
     ) -> np.ndarray:
 
         if len(image_conf) != len(perturbed_conf[0]):
-            raise ValueError("Number of classses in original image and",
+            raise ValueError("Number of classes in original image and"
                              " perturbed image do not match.")
 
         if len(perturbed_conf) != len(perturbed_masks):
-            raise ValueError("Number of perturbation masks and respective",
+            raise ValueError("Number of perturbation masks and respective "
                              "confidence lengths do not match.")
 
         # Iterating through each class confidence and compare it with
@@ -44,12 +44,14 @@ class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
-        # Normalize final saliency map in range [0, 1]
-        sal = minmax_scale(
+        # Normalize final saliency map
+        sal = maxabs_scale(
             sal.reshape(sal.shape[0], -1),
-            feature_range=(0, 1),
             axis=1
         ).reshape(sal.shape)
+
+        # Ensure saliency map in range [-1, 1]
+        sal = np.clip(sal, -1, 1)
 
         return sal
 

@@ -12,6 +12,14 @@ Interfaces
   all known implementations, that part has been split out into a utility
   function.
 
+* Added support for positive and negative saliency values as output by the
+  saliency map generation interfaces.
+
+Implementations
+
+* Add ``RISEScoring`` implementation, with the ability to also compute a
+  de-biased form of RISE with an optional input parameter.
+
 Utils
 
 * Masking

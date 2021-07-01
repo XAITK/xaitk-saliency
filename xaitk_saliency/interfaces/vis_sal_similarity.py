@@ -47,10 +47,11 @@ class ImageSimilaritySaliencyMapGenerator (Plugfigurable):
         Implementations are responsible for handling these expected variations.
 
         Generated saliency heat-map matrices should be floating-point typed and
-        be composed of values in the [0,1] range.
-        Values of the saliency heat-maps with values closer to 1.0 represent
-        more salient regions according to the classifier that generated input
-        confidence values.
+        be composed of values in the [-1,1] range.
+        Positive values of the saliency heat-maps indicate regions which increase
+        image similarity scores, while negative values indicate regions which
+        decrease image similarity scores according to the model that generated
+        input feature vectors.
 
         :param ref_descr_1:
             First image reference float feature-vector, shape `[nFeats]`

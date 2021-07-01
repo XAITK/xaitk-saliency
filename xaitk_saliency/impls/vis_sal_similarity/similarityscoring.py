@@ -2,7 +2,7 @@ from xaitk_saliency import ImageSimilaritySaliencyMapGenerator
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
-from sklearn.preprocessing import minmax_scale
+from sklearn.preprocessing import maxabs_scale
 from scipy.spatial.distance import cdist
 
 
@@ -85,12 +85,14 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
-        # Normalize final saliency map in range [0, 1]
-        sal = minmax_scale(
+        # Normalize final saliency map
+        sal = maxabs_scale(
             sal.reshape(sal.shape[0], -1),
-            feature_range=(0, 1),
             axis=1
         ).reshape(sal.shape)
+
+        # Ensure saliency map in range [-1, 1]
+        sal = np.clip(sal, -1, 1)
 
         return sal
 

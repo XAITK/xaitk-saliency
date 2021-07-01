@@ -31,7 +31,8 @@ class RISEPertubation (PerturbImage):
             Spatial resolution of the small masking grid. E.g. 8.
             Assumes square grid.
         :param p1:
-            Probability of the grid cell being set to 1 (otherwise 0). E.g. 0.5.
+            Probability of the grid cell being set to 1 (otherwise 0).
+            This should be a float value in the [0, 1] range. E.g. 0.5.
         :param seed:
             A seed to pass into the constructed random number generator to allow
             for reproducibility
@@ -39,6 +40,12 @@ class RISEPertubation (PerturbImage):
             If this is <=0 or None, no threading is used and processing
             is performed in-line serially.
         """
+        if p1 < 0 or p1 > 1:
+            raise ValueError(
+                f"Input p1 value of {p1} is not within the expected [0,1] "
+                f"range."
+            )
+
         self.n = n
         self.s = s
         self.p1 = p1

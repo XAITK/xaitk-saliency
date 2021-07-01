@@ -50,10 +50,11 @@ class ImageClassifierSaliencyMapGenerator(Plugfigurable):
         Implementations are responsible for handling these expected variations.
 
         Generated saliency heat-map matrices should be floating-point typed and
-        be composed of values in the [0,1] range.
-        Values of the saliency heat-maps with values closer to 1.0 represent
-        more salient regions according to the classifier that generated input
-        confidence values.
+        be composed of values in the [-1,1] range.
+        Positive values of the saliency heat-maps indicate regions which increase
+        class confidence scores, while negative values indicate regions which
+        decrease class confidence scores according to the model that generated
+        input confidence values.
 
         :param image_conf:
             Reference image predicted class-confidence vector, as a
