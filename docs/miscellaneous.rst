@@ -1,5 +1,5 @@
-Miscelaneous Documentation
-==========================
+Miscellaneous Documentation
+===========================
 
 .. toctree::
    :maxdepth: 1
