@@ -1,7 +1,6 @@
 import abc
 
 import numpy as np
-import PIL.Image
 from smqtk_core import Plugfigurable
 
 
@@ -17,7 +16,7 @@ class PerturbImage (Plugfigurable):
     @abc.abstractmethod
     def perturb(
         self,
-        ref_image: PIL.Image.Image
+        ref_image: np.ndarray
     ) -> np.ndarray:
         """
         Transform an input reference image into a number of mask matrices
@@ -42,7 +41,7 @@ class PerturbImage (Plugfigurable):
 
     def __call__(
         self,
-        ref_image: PIL.Image.Image
+        ref_image: np.ndarray
     ) -> np.ndarray:
         """
         Alias for :meth:`.PerturbImage.perturb`.
