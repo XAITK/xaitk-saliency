@@ -35,6 +35,10 @@ Utils
 Fixes
 -----
 
+Documentation
+
+* Fixed misspelled "miscellaneous" file.
+
 Implementations
 
 * Fix saliency map normalization in both ``OcclusionScoring`` as well as
