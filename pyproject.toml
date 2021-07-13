@@ -35,7 +35,6 @@ python = ">=3.7,<3.10"
 matplotlib = "^3.4.1"
 numpy = "^1.20.3"
 opencv-python-headless = "^4.5.1"
-Pillow = "^8.2.0"
 scikit-image = "^0.18.1"
 scikit-learn = "^0.24.2"
 smqtk-core = ">=0.18.0"
@@ -72,12 +71,13 @@ ipython = "^7.22.0"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [
-    "-lv",                  # Show local in trace-backs.
-    "--doctest-modules",    # Increased verbosity.
-    "--tb=long",            # Trace-back print mode.
-    "--cov=xaitk_saliency", # Cover our package specifically
-    "--cov-report=term",    # Coverage report to terminal
-    "--cov-report=xml:coverage.xml",
+    "-lv",                      # Show local in trace-backs.
+    "--doctest-modules",        # Increased verbosity.
+    "--tb=long",                # Trace-back print mode.
+    "--cov=./xaitk_saliency",   # Cover our package specifically
+    "--cov=./tests",            # Also cover our tests for dead spots
+    "--cov-report=term",        # Coverage report to terminal
+    "--cov-report=xml:coverage.xml",    # for external tool reporting
 ]
 testpaths = [
     "tests",

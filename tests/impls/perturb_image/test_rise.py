@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-import PIL.Image
 import pytest
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -69,9 +68,7 @@ class TestRISEPerturbation (TestCase):
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6), fill_value=255, dtype=np.uint8)
-        )
+        white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
@@ -89,9 +86,7 @@ class TestRISEPerturbation (TestCase):
         generation is idempotent.
         """
         # Image is slightly wide
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6), fill_value=255, dtype=np.uint8)
-        )
+        white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
         # Setting threads=0 for serialized processing for deterministic
         # results. When greater than 1 idempotency cannot be guaranteed due to
         # thread interleaving.
@@ -112,9 +107,7 @@ class TestRISEPerturbation (TestCase):
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
-        )
+        white_image = np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
@@ -132,19 +125,15 @@ class TestRISEPerturbation (TestCase):
         images of varying sizes
         """
         impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42)
-        white_image_small = PIL.Image.fromarray(
-            np.full((4, 6), fill_value=255, dtype=np.uint8)
-        )
-        white_image_large = PIL.Image.fromarray(
-            np.full((41, 26), fill_value=255, dtype=np.uint8)
-        )
+        white_image_small = np.full((4, 6), fill_value=255, dtype=np.uint8)
+        white_image_large = np.full((41, 26), fill_value=255, dtype=np.uint8)
         masks_small = impl.perturb(white_image_small)
         assert len(masks_small) == 2
-        assert masks_small.shape[1:][::-1] == white_image_small.size
+        assert masks_small.shape[1:] == white_image_small.shape
 
         masks_large = impl.perturb(white_image_large)
         assert len(masks_large) == 2
-        assert masks_large.shape[1:][::-1] == white_image_large.size
+        assert masks_large.shape[1:] == white_image_large.shape
 
 
 # Common expected masks for 4x6 tests
