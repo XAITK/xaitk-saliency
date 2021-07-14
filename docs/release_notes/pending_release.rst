@@ -31,9 +31,6 @@ Implementations
 * Add ``RISEScoring`` implementation, with the ability to also compute a
   de-biased form of RISE with an optional input parameter.
 
-* Updated ``SimilarityScoring`` to avoid saliency map clipping for supporting
-  positive and negative saliency maps.
-
 Utils
 
 * Masking
@@ -42,6 +39,10 @@ Utils
     duplicated across ``PerturbImage`` implementations. Added both batch and
     streaming versions of this utility.
 
+Demos
+
+* Updated notebook demonstration for ``SimilarityScoring`` usage to better track
+  the notebook structures across the repo.
 
 Fixes
 -----
