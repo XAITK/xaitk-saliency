@@ -10,6 +10,9 @@ Documentation
 * Add "SuperPixelSaliency" notebook to demonstrate use of arbitrary perturbation
   masks based on superpixels for saliency map generation.
 
+* Add "VIAME_OcclusionSaliency" notebook demonstrating integration with VIAME
+  toolkit based on saliency map generation for a fish classification task.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
