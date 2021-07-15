@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      default: false
+      tests:
+        target: 100%
+        paths:
+          - "tests/"
+      package:
+        target: 80%
+        paths:
+          - "!tests/"
+    patch:
+      default:
+        target: 80%

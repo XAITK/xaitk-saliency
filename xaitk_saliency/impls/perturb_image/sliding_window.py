@@ -1,6 +1,5 @@
 from typing import Any, Dict, Tuple
 
-import PIL.Image
 import numpy as np
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
@@ -36,12 +35,11 @@ class SlidingWindowPerturb (PerturbImage):
 
     def perturb(
         self,
-        ref_image: PIL.Image.Image
+        ref_image: np.ndarray
     ) -> np.ndarray:
-        ref_mat = np.asarray(ref_image)
         win_h, win_w = self.window_size
         stride_h, stride_w = self.stride
-        img_size = ref_mat.shape[:2]
+        img_size = ref_image.shape[:2]
         img_h, img_w = img_size
         rows = np.arange(0 + stride_h - win_h, img_h, stride_h)
         cols = np.arange(0 + stride_w - win_w, img_w, stride_w)

@@ -2,7 +2,6 @@ import gc
 from typing import Dict, Any
 import unittest.mock as mock
 
-import PIL.Image
 import numpy as np
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
@@ -12,7 +11,7 @@ class StubImpl (PerturbImage):
 
     def perturb(
         self,
-        ref_image: PIL.Image.Image
+        ref_image: np.ndarray
     ) -> np.ndarray:
         """ Stub impl. """
 
@@ -35,6 +34,6 @@ def test_call_alias() -> None:
     """
     stub = StubImpl()
     stub.perturb = mock.Mock()  # type: ignore
-    m_img = mock.Mock(spec=PIL.Image.Image)
+    m_img = mock.Mock(spec=np.ndarray)
     stub(m_img)
     stub.perturb.assert_called_once_with(m_img)

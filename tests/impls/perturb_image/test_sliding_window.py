@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-import PIL.Image
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
@@ -50,10 +49,8 @@ class TestOcclusionBasedPerturb (TestCase):
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6), fill_value=255, dtype=np.uint8)
-        )
-        assert white_image.mode == "L"
+        # Simulate grayscale image (single-channel)
+        white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
 
         impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
@@ -69,10 +66,8 @@ class TestOcclusionBasedPerturb (TestCase):
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
-        )
-        assert white_image.mode == "RGB"
+        # Simulate RGB or BGR image (3-channel)
+        white_image = np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
 
         impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
@@ -89,10 +84,8 @@ class TestOcclusionBasedPerturb (TestCase):
         Input image mode should not impact the masks output.
         """
         # Square image for uneven masking 6-ways.
-        white_image = PIL.Image.fromarray(
-            np.full((6, 6, 3), fill_value=255, dtype=np.uint8)
-        )
-        assert white_image.mode == "RGB"
+        # Simulate RGB or BGR image (3-channel)
+        white_image = np.full((6, 6, 3), fill_value=255, dtype=np.uint8)
 
         impl = SlidingWindowPerturb(window_size=(3, 2), stride=(3, 2))
         actual_masks = impl.perturb(white_image)
@@ -108,10 +101,8 @@ class TestOcclusionBasedPerturb (TestCase):
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.
-        white_image = PIL.Image.fromarray(
-            np.full((4, 6, 4), fill_value=255, dtype=np.uint8)
-        )
-        assert white_image.mode == "RGBA"
+        # Simulate RGBA format image (4-channel)
+        white_image = np.full((4, 6, 4), fill_value=255, dtype=np.uint8)
 
         impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)

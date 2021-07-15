@@ -1,4 +1,3 @@
-import PIL.Image
 from typing import Optional, Dict, Any
 import numpy as np
 from skimage.transform import resize
@@ -60,25 +59,30 @@ class RISEPertubation (PerturbImage):
 
     def perturb(
         self,
-        ref_image: PIL.Image.Image
+        ref_image: np.ndarray
     ) -> np.ndarray:
-        input_size = (ref_image.height, ref_image.width)
+        input_size = np.shape(ref_image)[:2]
         num_masks = self.n
         grid = self.grid
         s = self.s
         shift_rng = np.random.default_rng(self.seed)
+        # Shape format: [H x W], Inherits from `input_size`
         cell_size = np.ceil(np.array(input_size) / s)
         up_size = (s + 1) * cell_size
 
         masks = np.empty((num_masks, *input_size), dtype=grid.dtype)
 
+        # Expanding index accesses for repetition efficiency.
+        cell_h, cell_w = cell_size[:2]
+        input_h, input_w = input_size[:2]
+
         def work_func(i_: int) -> np.ndarray:
             # Random shifts
-            x = shift_rng.integers(0, cell_size[0])
-            y = shift_rng.integers(0, cell_size[1])
+            y = shift_rng.integers(0, cell_h)
+            x = shift_rng.integers(0, cell_w)
             mask = resize(
                 grid[i_], up_size, order=1, mode='reflect', anti_aliasing=False
-            )[x:x + input_size[0], y:y + input_size[1]]
+            )[y:y + input_h, x:x + input_w]
             return mask
 
         threads = self.threads
