@@ -82,6 +82,7 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         diff = perturbed_proximity - original_proximity
 
         diff = np.transpose(np.clip(diff, 0, None))
+
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 

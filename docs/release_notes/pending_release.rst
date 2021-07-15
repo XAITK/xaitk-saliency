@@ -39,6 +39,10 @@ Utils
     duplicated across ``PerturbImage`` implementations. Added both batch and
     streaming versions of this utility.
 
+Demos
+
+* Updated notebook demonstration for ``SimilarityScoring`` usage to better track
+  the notebook structures across the repo.
 
 Fixes
 -----
