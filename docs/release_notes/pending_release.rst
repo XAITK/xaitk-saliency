@@ -19,6 +19,8 @@ Documentation
 * Updated notebook demonstration for ``SimilarityScoring`` usage to better track
   the notebook structures across the repo.
 
+* Introduce class naming philosophy in the ``CONTRIBUTING.md`` file.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical

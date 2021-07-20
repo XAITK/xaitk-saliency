@@ -1,7 +1,7 @@
 # XAITK - Saliency
 
 ## Intent
-Provide interfaces that convey a standard API for generating visual saliency
+Provide interfaces that convey a standard API for visual saliency
 map generation.
 
 ## Documentation
