@@ -1,4 +1,5 @@
 import itertools
+import time
 from typing import Generator, Iterable, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -171,6 +172,55 @@ def occlude_image_streaming(
             use_multiprocessing=False,
         ):
             yield img
+
+
+def benchmark_occlude_image(
+    img_shape: Tuple[int, int] = (224, 224),
+    img_channels: int = 3,
+    num_masks: int = 1000,
+    threading_tests: Sequence[int] = (0, 1, 2),
+) -> None:
+    """
+    Simple benchmark for the two above `occlude_image_*` functions above w.r.t.
+    the given reference image matrix, which should be of the shape
+    `[H x W [x C]]`.
+    """
+    img_mat = np.ones((*img_shape, 3), dtype=np.uint8)
+    masks = (np.random.rand(num_masks, *img_shape[:2]) < 0.5)
+    fill_1c = 0
+    fill_mc = [0] * img_channels
+    perf_counter = time.perf_counter
+    print(f"Image shape={img_mat.shape}, masks={masks.shape}, fill_1c={fill_1c}, fill_{img_channels}c={fill_mc}")
+
+    s = perf_counter()
+    occlude_image_batch(img_mat, masks)
+    e = perf_counter()
+    print(f"Batch - no-fill - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
+        np.asarray(list(occlude_image_streaming(img_mat, masks, threads=threads)))
+        e = perf_counter()
+        print(f"Streaming - threads={threads:2d} - no-fill - {e-s} s")
+
+    s = perf_counter()
+    occlude_image_batch(img_mat, masks, fill=fill_1c)
+    e = perf_counter()
+    print(f"Batch - fill-1c - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
+        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_1c, threads=threads)))
+        e = perf_counter()
+        print(f"Streaming - threads={threads:2d} - fill-1c - {e-s} s")
+
+    s = perf_counter()
+    occlude_image_batch(img_mat, masks, fill=fill_mc)
+    e = perf_counter()
+    print(f"Batch - fill-{img_channels}c - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
+        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_mc, threads=threads)))
+        e = perf_counter()
+        print(f"Streaming - threads={threads:2d} - fill-{img_channels}c - {e-s} s")
 
 
 def weight_regions_by_scalar(

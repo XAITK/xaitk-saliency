@@ -32,6 +32,9 @@ Interfaces
 * Updated ``PerturbImage`` interface to take in `numpy.ndarray` as the image
   data structure.
 
+* Added new, higher-level ``GenerateImageClassifierBlackboxSaliency`` interface
+  for transforming an image and black-box classifier into visual saliency maps.
+
 Implementations
 
 * Add ``RISEScoring`` implementation, with the ability to also compute a

@@ -3,6 +3,7 @@ import pkg_resources
 from .interfaces.perturb_image import PerturbImage  # noqa: F401
 from .interfaces.vis_sal_similarity import ImageSimilaritySaliencyMapGenerator  # noqa: F401
 from .interfaces.vis_sal_classifier import ImageClassifierSaliencyMapGenerator  # noqa: F401
+from .interfaces.vis_sal_image_classifier_blackbox import GenerateImageClassifierBlackboxSaliency  # noqa: F401
 
 
 # It is known that this will fail if SMQTK-Core is not "installed" in the
