@@ -1,7 +1,7 @@
 Installation
 ============
 
-There are two ways to get ahold of XAITK-Saliency.
+There are two ways to get a hold of XAITK-Saliency.
 The simplest is to install via the :command:`pip` command.
 Alternatively, the source tree can be acquired and be locally developed using
 `Poetry`_ (`installation`_ and `usage`_).
