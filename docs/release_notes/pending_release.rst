@@ -37,6 +37,9 @@ Interfaces
 * Added new, higher-level ``GenerateImageClassifierBlackboxSaliency`` interface
   for transforming an image and black-box classifier into visual saliency maps.
 
+* Renamed ``ImageClassifierSaliencyMapGenerator`` interface to be
+  ``GenerateClassifierConfidenceSaliency``.
+
 Implementations
 
 * Add ``RISEScoring`` implementation, with the ability to also compute a

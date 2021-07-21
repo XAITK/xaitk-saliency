@@ -1,12 +1,12 @@
 from typing import Dict, Any
-from xaitk_saliency import ImageClassifierSaliencyMapGenerator
+from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 
 
-class RISEScoring (ImageClassifierSaliencyMapGenerator):
+class RISEScoring (GenerateClassifierConfidenceSaliency):
     """
     Saliency map generation based on the original RISE implementation.
     This version utilizes only the input perturbed image confidence predictions

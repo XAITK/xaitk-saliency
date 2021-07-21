@@ -4,10 +4,10 @@ import unittest.mock as mock
 
 import numpy as np
 
-from xaitk_saliency.interfaces.vis_sal_classifier import ImageClassifierSaliencyMapGenerator
+from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 
 
-class StubImpl (ImageClassifierSaliencyMapGenerator):
+class StubImpl (GenerateClassifierConfidenceSaliency):
     def generate(
         self,
         image_conf: np.ndarray,

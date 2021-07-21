@@ -7,7 +7,7 @@ from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DI
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
 from smqtk_core.configuration import configuration_test_helper
 
-from xaitk_saliency import PerturbImage, ImageClassifierSaliencyMapGenerator
+from xaitk_saliency import PerturbImage, GenerateClassifierConfidenceSaliency
 from xaitk_saliency.impls.vis_sal_image_classifier_blackbox.occlusion_based import PerturbationOcclusion
 
 
@@ -29,7 +29,7 @@ class TestPerturbationOcclusion:
             def get_config(self) -> Dict[str, Any]:
                 return {'stub_param': self.p}
 
-        class StubGen (ImageClassifierSaliencyMapGenerator):
+        class StubGen (GenerateClassifierConfidenceSaliency):
             generate = None  # type: ignore
 
             def __init__(self, stub_param: int):
@@ -65,7 +65,7 @@ class TestPerturbationOcclusion:
 
         # Stub saliency map generator that just returns zeros, but the shape
         # should be correct as documented by the interface.
-        class StubGen (ImageClassifierSaliencyMapGenerator):
+        class StubGen (GenerateClassifierConfidenceSaliency):
             """ Stub impl that returns constant heatmaps. """
             def generate(self, image_conf: np.ndarray, perturbed_conf: np.ndarray,
                          perturbed_masks: np.ndarray) -> np.ndarray:
