@@ -15,7 +15,7 @@ class RISEScoring (GenerateClassifierConfidenceSaliency):
     optional debias probability, `p1` (0 by default).
     In the original paper this is paired with the same probability used in RISE
     perturbation mask generation (see the `p1` parameter in
-    :class:`xaitk_saliency.impls.perturb_image.rise.RISEPertubation`).
+    :class:`xaitk_saliency.impls.perturb_image.rise.RISEGrid`).
 
     Based on Hatakeyama et. al:
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf

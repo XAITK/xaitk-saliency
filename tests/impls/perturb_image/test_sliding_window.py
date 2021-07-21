@@ -4,7 +4,7 @@ import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency import PerturbImage
-from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindowPerturb
+from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 from tests import EXPECTED_MASKS_4x6
 
 
@@ -14,7 +14,7 @@ class TestOcclusionBasedPerturb (TestCase):
         """
         Test empty construction since we provide defaults.
         """
-        impl = SlidingWindowPerturb()
+        impl = SlidingWindow()
         assert impl.window_size == (50, 50)
         assert impl.stride == (20, 20)
 
@@ -24,7 +24,7 @@ class TestOcclusionBasedPerturb (TestCase):
         """
         ex_w = (777, 776)
         ex_s = (444, 445)
-        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s)
+        impl = SlidingWindow(window_size=ex_w, stride=ex_s)
         assert impl.window_size == ex_w
         assert impl.stride == ex_s
 
@@ -33,12 +33,12 @@ class TestOcclusionBasedPerturb (TestCase):
         This implementation has no optional plugins so it should be found and
         exposed by the super-type's impl getter.
         """
-        assert SlidingWindowPerturb in PerturbImage.get_impls()
+        assert SlidingWindow in PerturbImage.get_impls()
 
     def test_standard_config(self) -> None:
         ex_w = (777, 776)
         ex_s = (444, 445)
-        impl = SlidingWindowPerturb(window_size=ex_w, stride=ex_s)
+        impl = SlidingWindow(window_size=ex_w, stride=ex_s)
         for inst in configuration_test_helper(impl):
             assert inst.window_size == ex_w
             assert inst.stride == ex_s
@@ -52,7 +52,7 @@ class TestOcclusionBasedPerturb (TestCase):
         # Simulate grayscale image (single-channel)
         white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
 
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
@@ -69,7 +69,7 @@ class TestOcclusionBasedPerturb (TestCase):
         # Simulate RGB or BGR image (3-channel)
         white_image = np.full((4, 6, 3), fill_value=255, dtype=np.uint8)
 
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
@@ -87,7 +87,7 @@ class TestOcclusionBasedPerturb (TestCase):
         # Simulate RGB or BGR image (3-channel)
         white_image = np.full((6, 6, 3), fill_value=255, dtype=np.uint8)
 
-        impl = SlidingWindowPerturb(window_size=(3, 2), stride=(3, 2))
+        impl = SlidingWindow(window_size=(3, 2), stride=(3, 2))
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
@@ -104,7 +104,7 @@ class TestOcclusionBasedPerturb (TestCase):
         # Simulate RGBA format image (4-channel)
         white_image = np.full((4, 6, 4), fill_value=255, dtype=np.uint8)
 
-        impl = SlidingWindowPerturb(window_size=(2, 2), stride=(2, 2))
+        impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
