@@ -4,10 +4,10 @@ import unittest.mock as mock
 
 import numpy as np
 
-from xaitk_saliency.interfaces.vis_sal_detection import ImageDetectionSaliencyMapGenerator
+from xaitk_saliency.interfaces.gen_detection_sal import GenerateDetectorProposalSaliency
 
 
-class StubImpl (ImageDetectionSaliencyMapGenerator):
+class StubImpl (GenerateDetectorProposalSaliency):
     def generate(
         self,
         ref_dets: np.ndarray,

@@ -4,7 +4,7 @@ import numpy as np
 from smqtk_core import Plugfigurable
 
 
-class ImageDetectionSaliencyMapGenerator (Plugfigurable):
+class GenerateDetectorProposalSaliency (Plugfigurable):
     """
     This interface proposes that implementations transform black-box image
     object detection predictions into visual saliency heatmaps.
@@ -94,6 +94,6 @@ class ImageDetectionSaliencyMapGenerator (Plugfigurable):
         perturb_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Alias for :meth:`.ImageDetectionSaliencyMapGenerator.generate`.
+        Alias for :meth:`.GenerateDetectorProposalSaliency.generate`.
         """
         return self.generate(ref_dets, perturbed_dets, perturb_masks)
