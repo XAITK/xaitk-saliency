@@ -4,10 +4,10 @@ import unittest.mock as mock
 
 import numpy as np
 
-from xaitk_saliency.interfaces.vis_sal_similarity import ImageSimilaritySaliencyMapGenerator
+from xaitk_saliency.interfaces.gen_similarity_sal import GenerateDescriptorSimilaritySaliency
 
 
-class StubImpl (ImageSimilaritySaliencyMapGenerator):
+class StubImpl (GenerateDescriptorSimilaritySaliency):
     def generate(
         self,
         ref_descr_1: np.ndarray,

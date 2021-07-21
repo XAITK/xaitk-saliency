@@ -40,6 +40,9 @@ Interfaces
 * Renamed ``ImageClassifierSaliencyMapGenerator`` interface to be
   ``GenerateClassifierConfidenceSaliency``.
 
+* Renamed ``ImageSimilaritySaliencyMapGenerator`` interface to be
+  ``GenerateDescriptorSimilaritySaliency``.
+
 Implementations
 
 * Add ``RISEScoring`` implementation, with the ability to also compute a
