@@ -66,10 +66,10 @@ ipython = "^7.22.0"
 # Add implementation sub-module exposure here.
 "impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.sliding_window"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
-"impls.vis_sal_classifier.occlusion_scoring" = "xaitk_saliency.impls.vis_sal_classifier.occlusion_scoring"
-"impls.vis_sal_classifier.rise_scoring" = "xaitk_saliency.impls.vis_sal_classifier.rise_scoring"
-"impls.vis_sal_image_classifier_blackbox.occlusion_based" = "xaitk_saliency.impls.vis_sal_image_classifier_blackbox.occlusion_based"
-"impls.vis_sal_similarity.similarityscoring" = "xaitk_saliency.impls.vis_sal_similarity.similarityscoring"
+"impls.gen_classifier_conf_sal.occlusion" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion"
+"impls.gen_classifier_conf_sal.rise_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring"
+"impls.gen_image_classifier_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based"
+"impls.gen_similarity_sal.similarityscoring" = "xaitk_saliency.impls.gen_similarity_sal.similarityscoring"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [

@@ -9,8 +9,8 @@ from smqtk_core.configuration import (
 )
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
-from xaitk_saliency.interfaces.vis_sal_classifier import ImageClassifierSaliencyMapGenerator
-from xaitk_saliency.interfaces.vis_sal_image_classifier_blackbox import GenerateImageClassifierBlackboxSaliency
+from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
+from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import GenerateImageClassifierBlackboxSaliency
 from xaitk_saliency.utils.masking import occlude_image_streaming
 
 
@@ -30,7 +30,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
     def __init__(
         self,
         perturber: PerturbImage,
-        generator: ImageClassifierSaliencyMapGenerator,
+        generator: GenerateClassifierConfidenceSaliency,
         threads: int = 0
     ):
         self.perturber = perturber
@@ -72,7 +72,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
     def get_default_config(cls) -> Dict[str, Any]:
         cfg = super().get_default_config()
         cfg['perturber'] = make_default_config(PerturbImage.get_impls())
-        cfg['generator'] = make_default_config(ImageClassifierSaliencyMapGenerator.get_impls())
+        cfg['generator'] = make_default_config(GenerateClassifierConfidenceSaliency.get_impls())
         return cfg
 
     @classmethod
@@ -88,7 +88,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
         )
         config_dict['generator'] = from_config_dict(
             config_dict['generator'],
-            ImageClassifierSaliencyMapGenerator.get_impls()
+            GenerateClassifierConfidenceSaliency.get_impls()
         )
         return super().from_config(config_dict)
 

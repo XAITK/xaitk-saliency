@@ -4,14 +4,15 @@ import unittest.mock as mock
 
 import numpy as np
 
-from xaitk_saliency.interfaces.vis_sal_classifier import ImageClassifierSaliencyMapGenerator
+from xaitk_saliency.interfaces.gen_similarity_sal import GenerateDescriptorSimilaritySaliency
 
 
-class StubImpl (ImageClassifierSaliencyMapGenerator):
+class StubImpl (GenerateDescriptorSimilaritySaliency):
     def generate(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        ref_descr_1: np.ndarray,
+        ref_descr_2: np.ndarray,
+        perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """ Stub impl """
@@ -35,8 +36,11 @@ def test_call_alias() -> None:
     """
     stub = StubImpl()
     stub.generate = mock.Mock()  # type: ignore
-    m_image_conf = mock.Mock(spec=np.ndarray)
+    m_ref_descr_1 = mock.Mock(spec=np.ndarray)
+    m_ref_descr_2 = mock.Mock(spec=np.ndarray)
     m_perturbed_conf = mock.Mock(spec=np.ndarray)
     m_perturbed_masks = mock.Mock(spec=np.ndarray)
-    stub(m_image_conf, m_perturbed_conf, m_perturbed_masks)
-    stub.generate.assert_called_once_with(m_image_conf, m_perturbed_conf, m_perturbed_masks)
+    stub(m_ref_descr_1, m_ref_descr_2, m_perturbed_conf, m_perturbed_masks)
+    stub.generate.assert_called_once_with(
+        m_ref_descr_1, m_ref_descr_2, m_perturbed_conf, m_perturbed_masks
+    )

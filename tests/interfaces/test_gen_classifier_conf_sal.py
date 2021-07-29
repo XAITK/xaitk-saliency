@@ -4,15 +4,15 @@ import unittest.mock as mock
 
 import numpy as np
 
-from xaitk_saliency.interfaces.vis_sal_detection import ImageDetectionSaliencyMapGenerator
+from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 
 
-class StubImpl (ImageDetectionSaliencyMapGenerator):
+class StubImpl (GenerateClassifierConfidenceSaliency):
     def generate(
         self,
-        ref_dets: np.ndarray,
-        perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        image_conf: np.ndarray,
+        perturbed_conf: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """ Stub impl """
 
@@ -35,10 +35,8 @@ def test_call_alias() -> None:
     """
     stub = StubImpl()
     stub.generate = mock.Mock()  # type: ignore
-    m_ref_dets = mock.Mock(spec=np.ndarray)
-    m_perturbed_dets = mock.Mock(spec=np.ndarray)
-    m_perturb_masks = mock.Mock(spec=np.ndarray)
-    stub(m_ref_dets, m_perturbed_dets, m_perturb_masks)
-    stub.generate.assert_called_once_with(
-        m_ref_dets, m_perturbed_dets, m_perturb_masks
-    )
+    m_image_conf = mock.Mock(spec=np.ndarray)
+    m_perturbed_conf = mock.Mock(spec=np.ndarray)
+    m_perturbed_masks = mock.Mock(spec=np.ndarray)
+    stub(m_image_conf, m_perturbed_conf, m_perturbed_masks)
+    stub.generate.assert_called_once_with(m_image_conf, m_perturbed_conf, m_perturbed_masks)
