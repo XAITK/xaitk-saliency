@@ -10,7 +10,7 @@ from smqtk_core.configuration import (
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
-from xaitk_saliency.interfaces.vis_sal_image_classifier_blackbox import GenerateImageClassifierBlackboxSaliency
+from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import GenerateImageClassifierBlackboxSaliency
 from xaitk_saliency.utils.masking import occlude_image_streaming
 
 

@@ -8,7 +8,7 @@ from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
 from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency import PerturbImage, GenerateClassifierConfidenceSaliency
-from xaitk_saliency.impls.vis_sal_image_classifier_blackbox.occlusion_based import PerturbationOcclusion
+from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
 
 
 class TestPerturbationOcclusion:
