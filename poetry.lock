@@ -683,6 +683,23 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "smqtk-classifier"
+version = "0.17.0"
+description = "Algorithms, data structures and utilities around performing classificationof inputs."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+numpy = ">=1.19.5,<2.0.0"
+smqtk-core = ">=0.18.0"
+smqtk-dataprovider = ">=0.16.0"
+smqtk-descriptors = ">=0.16.0"
+
+[package.extras]
+sklearn = ["scikit-learn (>=0.24.1,<0.25.0)"]
+
+[[package]]
 name = "smqtk-core"
 version = "0.18.0"
 description = "Python toolkit for pluggable algorithms and data structures for multimedia-based machine learning."
@@ -978,7 +995,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.10"
-content-hash = "ad1d98b9ea9a246db700f0731560ca445af18ccdb3b51af181f9913f535d6ee9"
+content-hash = "fd583fdfee943360080302df177b8d1072fc2fe22d9d4fbd99a1a14a3a9f7932"
 
 [metadata.files]
 alabaster = [
@@ -1521,6 +1538,10 @@ scipy = [
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+smqtk-classifier = [
+    {file = "smqtk_classifier-0.17.0-py3-none-any.whl", hash = "sha256:55ca160a122463aa4656db738a56e7111a9175f1d9b00e71b7cb390b7f58bc69"},
+    {file = "smqtk_classifier-0.17.0.tar.gz", hash = "sha256:e0f21c4b3f2ca78abc21be340ca7c0d6ee2fc9ff88e07d332a15bd9d6993c004"},
 ]
 smqtk-core = [
     {file = "smqtk-core-0.18.0.tar.gz", hash = "sha256:a5ae14cc83003fa13fd19f071bec484552c9f018f5e4e833c163e2cd609cae0f"},

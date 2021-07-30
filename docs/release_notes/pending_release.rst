@@ -10,6 +10,17 @@ Documentation
 * Add "SuperPixelSaliency" notebook to demonstrate use of arbitrary perturbation
   masks based on superpixels for saliency map generation.
 
+* Add "VIAME_OcclusionSaliency" notebook demonstrating integration with VIAME
+  toolkit based on saliency map generation for a fish classification task.
+
+* Add "covid_classification" notebook demonstrating integration with MONAI
+  based on saliency map generation for a COVID-19 X-ray classification task.
+
+* Updated notebook demonstration for ``SimilarityScoring`` usage to better track
+  the notebook structures across the repo.
+
+* Introduce class naming philosophy in the ``CONTRIBUTING.md`` file.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
@@ -22,6 +33,18 @@ Interfaces
 
 * Updated ``PerturbImage`` interface to take in `numpy.ndarray` as the image
   data structure.
+
+* Added new, higher-level ``GenerateImageClassifierBlackboxSaliency`` interface
+  for transforming an image and black-box classifier into visual saliency maps.
+
+* Renamed ``ImageClassifierSaliencyMapGenerator`` interface to be
+  ``GenerateClassifierConfidenceSaliency``.
+
+* Renamed ``ImageSimilaritySaliencyMapGenerator`` interface to be
+  ``GenerateDescriptorSimilaritySaliency``.
+
+* Renamed ``ImageDetectionSaliencyMapGenerator`` interface to be
+  ``GenerateDetectorProposalSaliency``.
 
 Implementations
 

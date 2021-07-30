@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from smqtk_core.configuration import configuration_test_helper
 
-from xaitk_saliency.impls.vis_sal_classifier.rise_scoring import RISEScoring
+from xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring import RISEScoring
 
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 

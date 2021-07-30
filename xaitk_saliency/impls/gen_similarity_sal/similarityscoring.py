@@ -1,4 +1,4 @@
-from xaitk_saliency import ImageSimilaritySaliencyMapGenerator
+from xaitk_saliency import GenerateDescriptorSimilaritySaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
@@ -6,7 +6,7 @@ from sklearn.preprocessing import maxabs_scale
 from scipy.spatial.distance import cdist
 
 
-class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
+class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     """
     This saliency implementation transforms proximity in feature
     space into saliency heatmaps. This should
@@ -22,8 +22,8 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
 
-    param proximity_metric: The type of comparision metric used
-        to determine proximity in feature space. The type of comparision
+    param proximity_metric: The type of comparison metric used
+        to determine proximity in feature space. The type of comparison
         metric supported is restricted by scipy's cdist() function. The
         following metrics are supported in scipy.
 
@@ -82,6 +82,7 @@ class SimilarityScoring (ImageSimilaritySaliencyMapGenerator):
         diff = perturbed_proximity - original_proximity
 
         diff = np.transpose(np.clip(diff, 0, None))
+
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 

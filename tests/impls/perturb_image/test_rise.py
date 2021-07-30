@@ -4,7 +4,7 @@ import pytest
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
-from xaitk_saliency.impls.perturb_image.rise import RISEPertubation
+from xaitk_saliency.impls.perturb_image.rise import RISEGrid
 
 
 class TestRISEPerturbation (TestCase):
@@ -15,7 +15,7 @@ class TestRISEPerturbation (TestCase):
         ex_n = 1000
         ex_s = 8
         ex_p1 = 0.5
-        impl = RISEPertubation(n=ex_n, s=ex_s, p1=ex_p1)
+        impl = RISEGrid(n=ex_n, s=ex_s, p1=ex_p1)
         assert impl.n == ex_n
         assert impl.s == ex_s
         assert impl.p1 == ex_p1
@@ -28,19 +28,19 @@ class TestRISEPerturbation (TestCase):
             ValueError,
             match=r"Input p1 value of -0\.3 is not within the expected \[0,1\] range\."
         ):
-            RISEPertubation(10, 8, p1=-0.3)
+            RISEGrid(10, 8, p1=-0.3)
 
         with pytest.raises(
             ValueError,
             match=r"Input p1 value of 5 is not within the expected \[0,1\] range\."
         ):
-            RISEPertubation(10, 8, p1=5)
+            RISEGrid(10, 8, p1=5)
 
     def test_standard_config(self) -> None:
         ex_n = 1000
         ex_s = 8
         ex_p1 = 0.5
-        impl = RISEPertubation(n=ex_n, s=ex_s, p1=ex_p1)
+        impl = RISEGrid(n=ex_n, s=ex_s, p1=ex_p1)
         for inst in configuration_test_helper(impl):
             assert inst.n == ex_n
             assert inst.s == ex_s
@@ -50,16 +50,16 @@ class TestRISEPerturbation (TestCase):
         """
         Test that the perturbations are randomized
         """
-        impl1 = RISEPertubation(n=1000, s=8, p1=0.5)
-        impl2 = RISEPertubation(n=1000, s=8, p1=0.5)
+        impl1 = RISEGrid(n=1000, s=8, p1=0.5)
+        impl2 = RISEGrid(n=1000, s=8, p1=0.5)
         assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
         """
         Test that passing a seed generates equivalent masks
         """
-        impl1 = RISEPertubation(n=1000, s=8, p1=0.5, seed=42)
-        impl2 = RISEPertubation(n=1000, s=8, p1=0.5, seed=42)
+        impl1 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
+        impl2 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self) -> None:
@@ -72,7 +72,7 @@ class TestRISEPerturbation (TestCase):
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
-        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
@@ -91,7 +91,7 @@ class TestRISEPerturbation (TestCase):
         # results. When greater than 1 idempotency cannot be guaranteed due to
         # thread interleaving.
         # Also of course seeding otherwise random will do its random things.
-        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
 
         actual_masks1 = impl.perturb(white_image)
         actual_masks2 = impl.perturb(white_image)
@@ -111,7 +111,7 @@ class TestRISEPerturbation (TestCase):
 
         # Setting threads=0 for serialized processing for deterministic
         # results.
-        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42, threads=0)
+        impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
         assert np.allclose(
@@ -124,7 +124,7 @@ class TestRISEPerturbation (TestCase):
         Test that once we initialize a RISEPerturbation we can call it on
         images of varying sizes
         """
-        impl = RISEPertubation(n=2, s=2, p1=0.5, seed=42)
+        impl = RISEGrid(n=2, s=2, p1=0.5, seed=42)
         white_image_small = np.full((4, 6), fill_value=255, dtype=np.uint8)
         white_image_large = np.full((41, 26), fill_value=255, dtype=np.uint8)
         masks_small = impl.perturb(white_image_small)

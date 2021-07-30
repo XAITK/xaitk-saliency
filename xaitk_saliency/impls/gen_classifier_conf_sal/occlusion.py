@@ -1,19 +1,18 @@
-from xaitk_saliency import ImageClassifierSaliencyMapGenerator
+from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 
 
-class OcclusionScoring (ImageClassifierSaliencyMapGenerator):
+class OcclusionScoring (GenerateClassifierConfidenceSaliency):
     """
     This saliency implementation transforms black-box
     image classification scores into saliency heatmaps. This should
     require a sequence of per-class confidences predicted on the
     reference image, a number of per-class confidences as predicted
     on perturbed images, as well as the masks of the reference image
-    perturbations (as would be output from a
-    `PerturbImage` implementation.
+    perturbations (as would be output from a `PerturbImage` implementation).
 
     The perturbation masks used by the following implementation are
     expected to be of type integer. Masks containing values of type

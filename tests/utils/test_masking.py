@@ -8,6 +8,7 @@ import pytest
 from xaitk_saliency.utils.masking import (
     occlude_image_batch,
     occlude_image_streaming,
+    benchmark_occlude_image,
 )
 
 
@@ -275,6 +276,13 @@ class TestOccludeImageStreaming:
                     np.ones((5, 5)),
                 ]
             ))
+
+
+def test_benchmark() -> None:
+    """
+    Simple run test of the benchmark function.
+    """
+    benchmark_occlude_image(threading_tests=[0, 1, 2])
 
 
 TEST_IMAGE_GRAY = np.full(

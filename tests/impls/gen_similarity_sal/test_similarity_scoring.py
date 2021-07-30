@@ -3,8 +3,8 @@ from unittest import TestCase
 import numpy as np
 import os
 
-from xaitk_saliency.impls.vis_sal_similarity.similarityscoring import SimilarityScoring
-from xaitk_saliency import ImageSimilaritySaliencyMapGenerator
+from xaitk_saliency.impls.gen_similarity_sal.similarityscoring import SimilarityScoring
+from xaitk_saliency import GenerateDescriptorSimilaritySaliency
 from smqtk_core.configuration import configuration_test_helper
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
@@ -16,7 +16,7 @@ class TestSimilarityScoring (TestCase):
         Test if implementation is usable.
         """
         impl = SimilarityScoring()
-        assert impl.is_usable() and isinstance(impl, ImageSimilaritySaliencyMapGenerator)
+        assert impl.is_usable() and isinstance(impl, GenerateDescriptorSimilaritySaliency)
 
     def test_default_param(self) -> None:
         """

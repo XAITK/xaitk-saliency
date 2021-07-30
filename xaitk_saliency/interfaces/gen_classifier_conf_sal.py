@@ -4,7 +4,7 @@ import numpy as np
 from smqtk_core import Plugfigurable
 
 
-class ImageClassifierSaliencyMapGenerator(Plugfigurable):
+class GenerateClassifierConfidenceSaliency(Plugfigurable):
     """
     Visual saliency map generation interface whose implementations transform
     black-box image classification scores into saliency heatmaps.
@@ -87,6 +87,6 @@ class ImageClassifierSaliencyMapGenerator(Plugfigurable):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Alias for :meth:`.ImageClassifierSaliencyMapGenerator.generate`.
+        Alias for :meth:`.GenerateClassifierConfidenceSaliency.generate`.
         """
         return self.generate(image_conf, perturbed_conf, perturbed_masks)

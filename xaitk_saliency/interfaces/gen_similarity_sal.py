@@ -4,7 +4,7 @@ import numpy as np
 from smqtk_core import Plugfigurable
 
 
-class ImageSimilaritySaliencyMapGenerator (Plugfigurable):
+class GenerateDescriptorSimilaritySaliency (Plugfigurable):
     """
     Visual saliency map generation interface whose implementations transform
     black-box feature-vectors from multiple references and perturbations into
@@ -79,7 +79,7 @@ class ImageSimilaritySaliencyMapGenerator (Plugfigurable):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Alias for :meth:`.ImageSimilaritySaliencyMapGenerator.generate`.
+        Alias for :meth:`.GenerateDescriptorSimilaritySaliency.generate`.
         """
         return self.generate(
             ref_descr_1,
