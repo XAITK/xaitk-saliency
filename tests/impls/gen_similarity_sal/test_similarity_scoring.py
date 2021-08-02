@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import os
 
-from xaitk_saliency.impls.gen_similarity_sal.similarityscoring import SimilarityScoring
+from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency
 from smqtk_core.configuration import configuration_test_helper
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
