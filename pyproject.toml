@@ -68,8 +68,9 @@ ipython = "^7.22.0"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
 "impls.gen_classifier_conf_sal.occlusion_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring"
 "impls.gen_classifier_conf_sal.rise_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring"
-"impls.gen_image_classifier_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based"
 "impls.gen_descriptor_sim_sal.similarity_scoring" = "xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring"
+"impls.gen_image_classifier_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based"
+"impls.gen_image_classifier_blackbox_sal.rise" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [

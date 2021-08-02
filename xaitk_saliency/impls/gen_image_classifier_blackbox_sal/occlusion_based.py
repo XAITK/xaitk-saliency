@@ -90,7 +90,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
             config_dict['generator'],
             GenerateClassifierConfidenceSaliency.get_impls()
         )
-        return super().from_config(config_dict)
+        return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> Dict[str, Any]:
         return {

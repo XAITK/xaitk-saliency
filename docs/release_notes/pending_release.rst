@@ -51,6 +51,10 @@ Implementations
 * Add ``RISEScoring`` implementation, with the ability to also compute a
   de-biased form of RISE with an optional input parameter.
 
+* Add ``RISEStack`` implementation of ``GenerateImageClassifierBlackboxSaliency``
+  interface as a simple way to invoke the combination of RISE component
+  algorithms.
+
 Utils
 
 * Masking
