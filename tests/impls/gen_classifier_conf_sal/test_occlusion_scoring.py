@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pytest
 
-from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion import OcclusionScoring
+from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 

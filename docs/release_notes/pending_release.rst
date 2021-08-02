@@ -71,3 +71,7 @@ Implementations
 
 * Fix saliency map normalization in both ``OcclusionScoring`` as well as
   ``SimilarityScoring`` to disallow cross-class pollution in the norm.
+
+Misc.
+
+* Fixed up module naming inconsistencies.
