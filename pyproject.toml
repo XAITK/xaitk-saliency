@@ -48,7 +48,8 @@ scipy = "^1.6.3"
 # CI
 flake8 = "^3.9.0"
 flake8-mutable = "^1.2.0"
-mypy = "^0.812"
+mypy = ">=0.812"
+types-setuptools = "^57.0.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
 Sphinx = "^3.5.3"
