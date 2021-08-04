@@ -25,6 +25,9 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
         masks that will dictate occlusion.
     :param generator: Implementation instance for generating saliency masks
         given occlusion masks and classifier outputs.
+    :param threads: Optional number threads to use to enable parallelism in
+        applying perturbation masks to an input image. If 0, a negative value,
+        or `None`, work will be performed on the main-thread in-line.
     """
 
     def __init__(
