@@ -55,6 +55,10 @@ Implementations
   interface as a simple way to invoke the combination of RISE component
   algorithms.
 
+Misc.
+
+* Update locked dependency versions to latest defined by abstract requirements.
+
 Utils
 
 * Masking
