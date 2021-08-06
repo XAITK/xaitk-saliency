@@ -63,7 +63,7 @@ class SlidingWindow (PerturbImage):
 
     @classmethod
     def get_default_config(cls) -> Dict[str, Any]:
-        # Minor override for to curry tuple defaults into lists, which are the
+        # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
         cfg = super().get_default_config()

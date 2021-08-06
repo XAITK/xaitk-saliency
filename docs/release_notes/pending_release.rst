@@ -51,9 +51,13 @@ Implementations
 * Add ``RISEScoring`` implementation, with the ability to also compute a
   de-biased form of RISE with an optional input parameter.
 
-* Add ``RISEStack`` implementation of ``GenerateImageClassifierBlackboxSaliency``
+* Add ``RISEStack`` implementation of the ``GenerateImageClassifierBlackboxSaliency``
   interface as a simple way to invoke the combination of RISE component
   algorithms.
+
+* Add ``SlidingWindowStack`` implementation of the ``GenerateImageClassifierBlackboxSaliency``
+  interface as a simple way to invoke the combination of the Sliding Window
+  perturbation method and the occlusion-based based scoring method.
 
 Misc.
 
