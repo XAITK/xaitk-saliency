@@ -1,5 +1,6 @@
 import gc
 from typing import Dict, Any, Iterator, Sequence, Hashable
+import unittest.mock as mock
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -9,6 +10,7 @@ from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency import PerturbImage, GenerateClassifierConfidenceSaliency
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
+from xaitk_saliency.utils.masking import occlude_image_streaming
 
 
 class TestPerturbationOcclusion:
@@ -45,11 +47,11 @@ class TestPerturbationOcclusion:
             StubPI(test_spi_p), StubGen(test_sgn_p), 87
         )
         for inst_i in configuration_test_helper(inst):
-            assert inst_i.threads == test_threads
-            assert isinstance(inst_i.perturber, StubPI)
-            assert inst_i.perturber.p == test_spi_p
-            assert isinstance(inst_i.generator, StubGen)
-            assert inst_i.generator.p == test_sgn_p
+            assert inst_i._threads == test_threads
+            assert isinstance(inst_i._perturber, StubPI)
+            assert inst_i._perturber.p == test_spi_p
+            assert isinstance(inst_i._generator, StubGen)
+            assert inst_i._generator.p == test_sgn_p
 
     def test_generate_success(self) -> None:
         """
@@ -59,7 +61,7 @@ class TestPerturbationOcclusion:
         class StubPI (PerturbImage):
             """ Stub impl that returns known constant masks."""
             def perturb(self, ref_image: np.ndarray) -> np.ndarray:
-                return np.ones((3, *ref_image.shape[:2]), dtype=bool)
+                return np.ones((6, *ref_image.shape[:2]), dtype=bool)
 
             get_config = None  # type: ignore
 
@@ -73,10 +75,6 @@ class TestPerturbationOcclusion:
 
             get_config = None  # type: ignore
 
-        inst = PerturbationOcclusion(
-            StubPI(), StubGen()
-        )
-
         # Stub classifier blackbox that returns two class predictions.
         class StubClassifier (ClassifyImage):
             """ Stub that returns a constant classification result. """
@@ -89,7 +87,44 @@ class TestPerturbationOcclusion:
 
             get_config = None  # type: ignore
 
-        test_image = np.ones((64, 64, 3), dtype=np.uint8)
-        result = inst._generate(test_image, StubClassifier())
+        test_pi = StubPI()
+        test_gen = StubGen()
+        test_classifier = StubClassifier()
 
-        assert result.shape == (2, 64, 64)
+        test_image = np.ones((64, 64, 3), dtype=np.uint8)
+
+        # Call with default fill
+        with mock.patch(
+            'xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based.occlude_image_streaming',
+            wraps=occlude_image_streaming
+        ) as m_occ_img:
+            inst = PerturbationOcclusion(test_pi, test_gen)
+            test_result = inst._generate(test_image, test_classifier)
+
+            assert test_result.shape == (2, 64, 64)
+            # The "fill" kwarg passed to the should match the default given,
+            # which is None
+            m_occ_img.assert_called_once()
+            # Using [-1] indexing for compatibility with python 3.7
+            m_kwargs = m_occ_img.call_args[-1]
+            assert "fill" in m_kwargs
+            assert m_kwargs['fill'] is None
+
+        # Call with a different fill value
+        test_fill = [9, 10, 11]
+        with mock.patch(
+            'xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based.occlude_image_streaming',
+            wraps=occlude_image_streaming
+        ) as m_occ_img:
+            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst.fill = test_fill
+            test_result = inst._generate(test_image, test_classifier)
+
+            assert test_result.shape == (2, 64, 64)
+            # The "fill" kwarg passed to the should match that set to the
+            # attribute above.
+            m_occ_img.assert_called_once()
+            # Using [-1] indexing for compatibility with python 3.7
+            m_kwargs = m_occ_img.call_args[-1]
+            assert "fill" in m_kwargs
+            assert m_kwargs['fill'] == test_fill
