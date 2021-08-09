@@ -21,6 +21,13 @@ Documentation
 
 * Introduce class naming philosophy in the ``CONTRIBUTING.md`` file.
 
+* Updated notebooks to make use of ``GenerateImageClassifierBlackboxSaliency``
+  interface/implementations where appropriate.
+
+* Updated wording of the ``SuperPixelSaliency.ipynb`` notebook as to cover a
+  use-case where the ``GenerateImageClassifierBlackboxSaliency`` interface API
+  is not appropriate, i.e. already have masks computed.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
