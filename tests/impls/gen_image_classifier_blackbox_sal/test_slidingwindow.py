@@ -11,7 +11,7 @@ from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.slidingwindow import
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
-class TestSpecializationRise:
+class TestSpecializationSlidingWindow:
 
     def test_configuration(self) -> None:
         """
@@ -23,13 +23,13 @@ class TestSpecializationRise:
             threads=99,
         )
         for inst_i in configuration_test_helper(inst):
-            inst_p = inst_i._po.perturber
-            inst_g = inst_i._po.generator
+            inst_p = inst_i._po._perturber
+            inst_g = inst_i._po._generator
             assert isinstance(inst_p, SlidingWindow)
             assert isinstance(inst_g, OcclusionScoring)
             assert inst_p.window_size == (8, 9)
             assert inst_p.stride == (19, 14)
-            assert inst_i._po.threads == 99
+            assert inst_i._po._threads == 99
 
     def test_generation_rgb(self) -> None:
         """
@@ -86,3 +86,13 @@ class TestSpecializationRise:
         # perturbations due to the fix return nature of the above stub class.
         exp_res = np.zeros(shape=(1, 32, 32))
         assert np.allclose(exp_res, res)
+
+    def test_fill_prop(self) -> None:
+        """
+        Test that the `fill` property appropriately gets and sets the
+        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """
+        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
+        assert inst.fill is None
+        inst.fill = 42
+        assert inst._po.fill == 42

@@ -29,8 +29,8 @@ class TestSpecializationRise:
             threads=99,
         )
         for inst_i in configuration_test_helper(inst):
-            inst_p = inst_i._po.perturber
-            inst_g = inst_i._po.generator
+            inst_p = inst_i._po._perturber
+            inst_g = inst_i._po._generator
             assert isinstance(inst_p, RISEGrid)
             assert isinstance(inst_g, RISEScoring)
             assert inst_p.n == 444
@@ -54,8 +54,8 @@ class TestSpecializationRise:
             debiased=False,
         )
         for inst_i in configuration_test_helper(inst):
-            inst_p = inst_i._po.perturber
-            inst_g = inst_i._po.generator
+            inst_p = inst_i._po._perturber
+            inst_g = inst_i._po._generator
             assert isinstance(inst_p, RISEGrid)
             assert isinstance(inst_g, RISEScoring)
             assert inst_p.p1 == .22
@@ -90,3 +90,13 @@ class TestSpecializationRise:
 
         exp_res = np.load(DATA_DIR / "exp_rise_stack_res.npy")
         assert np.allclose(exp_res, res)
+
+    def test_fill_prop(self) -> None:
+        """
+        Test that the `fill` property appropriately gets and sets the
+        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """
+        inst = RISEStack(5, 8, 0.5, seed=0)
+        assert inst.fill is None
+        inst.fill = 42
+        assert inst._po.fill == 42

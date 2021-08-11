@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Sequence, Union
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -57,6 +57,14 @@ class RISEStack (GenerateImageClassifierBlackboxSaliency):
             threads=threads
         )
 
+    @property
+    def fill(self) -> Optional[Union[int, Sequence[int]]]:
+        return self._po.fill
+
+    @fill.setter
+    def fill(self, v: Optional[Union[int, Sequence[int]]]) -> None:
+        self._po.fill = v
+
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         return self._po.generate(ref_image, blackbox)
 
@@ -64,6 +72,7 @@ class RISEStack (GenerateImageClassifierBlackboxSaliency):
         # It turns out that our configuration here is equivalent to that given
         # and retrieved from the RISEGrid implementation that is known set to
         # the internal ``PerturbationOcclusion.perturber``.
-        c = self._po.perturber.get_config()
+        # noinspection PyProtectedMember
+        c = self._po._perturber.get_config()
         c['debiased'] = self._debiased
         return c

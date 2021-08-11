@@ -1,4 +1,5 @@
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
+
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -38,6 +39,14 @@ class SlidingWindowStack (GenerateImageClassifierBlackboxSaliency):
             threads=threads,
         )
 
+    @property
+    def fill(self) -> Optional[Union[int, Sequence[int]]]:
+        return self._po.fill
+
+    @fill.setter
+    def fill(self, v: Optional[Union[int, Sequence[int]]]) -> None:
+        self._po.fill = v
+
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         return self._po.generate(ref_image, blackbox)
 
@@ -52,6 +61,11 @@ class SlidingWindowStack (GenerateImageClassifierBlackboxSaliency):
         return cfg
 
     def get_config(self) -> Dict[str, Any]:
-        c = self._po.perturber.get_config()
-        c['threads'] = self._po.threads
+        # It turns out that our configuration here is nearly equivalent to that
+        # given and retrieved from the SlidingWindow implementation that is
+        # known set to the internal ``PerturbationOcclusion.perturber``.
+        # noinspection PyProtectedMember
+        c = self._po._perturber.get_config()
+        # noinspection PyProtectedMember
+        c['threads'] = self._po._threads
         return c
