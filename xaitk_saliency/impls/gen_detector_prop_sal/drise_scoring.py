@@ -1,20 +1,18 @@
-import numpy as np
 from xaitk_saliency import GenerateDetectorProposalSaliency
+from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
-import torch
+import numpy as np
+from sklearn.preprocessing import maxabs_scale
 from scipy.spatial.distance import cdist
-import sklearn.preprocessing
 
 
-class DetectorRISE (GenerateDetectorProposalSaliency):
+class DRISEScoring (GenerateDetectorProposalSaliency):
     """
-    This interface proposes that implementations transform black-box image
-    object detection predictions into visual saliency heatmaps.
-    This should require externally-generated object detection predictions over
-    some image, along with predictions for perturbed images and the permutation
-    masks for those images as would be output from a
-    :class:`xaitk_saliency.interfaces.perturb_image.PerturbImage`
-    implementation.
+    This D-RISE implementation transforms black-box object detector predictions
+    into visual saliency heatmaps. Specifically, we make use of perturbed
+    detections generated using the `RISEGrid` image perturbation class and
+    a similarity metric that captures both the localization and categorization
+    aspects of object detection.
 
     Object detection representations used here would need to encapsulate
     localization information (i.e. bounding box regions), class scores, and
@@ -22,100 +20,128 @@ class DetectorRISE (GenerateDetectorProposalSaliency):
     Object detections are converted into (4+1+nClasses) vectors (4 indices for
     bounding box locations, 1 index for objectness, and nClasses indices for
     different object classes).
+
+    Based on Petsiuk et al:
+    https://arxiv.org/abs/2006.03204
     """
+
     def __init__(
         self,
         proximity_metric: str = 'cosine'
     ):
 
         try:
-            # Attempting to use chosen comparision metric
+            # Attempting to use chosen comparison metric
             cdist([[1], [1]], [[1], [1]], proximity_metric)
             self.proximity_metric: str = proximity_metric
         except ValueError:
-            raise ValueError("Chosen comparision metric not supported or",
+            raise ValueError("Chosen comparison metric not supported or "
                              "may not be available in scipy")
 
-    def intersect(self, box_a: torch.FloatTensor, box_b: torch.FloatTensor) -> torch.FloatTensor:
-        """ We resize both tensors to [A,B,2] without new malloc:
-        [A,2] -> [A,1,2] -> [A,B,2]
-        [B,2] -> [1,B,2] -> [A,B,2]
-        Then we compute the area of intersect between box_a and box_b.
-        Args:
-          box_a: (tensor) bounding boxes, Shape: [A,4].
-          box_b: (tensor) bounding boxes, Shape: [B,4].
-        Return:
-          (tensor) intersection area, Shape: [A,B].
-        """
-        A = box_a.size(0)
-        B = box_b.size(0)
-        min_xy = torch.min(box_a[:, 2:].unsqueeze(1).expand(A, B, 2),
-                           box_b[:, 2:].unsqueeze(0).expand(A, B, 2))
-        max_xy = torch.max(box_a[:, :2].unsqueeze(1).expand(A, B, 2),
-                           box_b[:, :2].unsqueeze(0).expand(A, B, 2))
-        inter = torch.clamp((min_xy - max_xy + 1), min=0)
-        return inter[:, :, 0] * inter[:, :, 1]
-
-    def jaccard(self, box_a: torch.FloatTensor, box_b: torch.FloatTensor) -> torch.FloatTensor:
-        """Compute the jaccard overlap of two sets of boxes.  The jaccard overlap
-        is simply the intersection over union of two boxes.  Here we operate on
-        ground truth boxes and default boxes.
+    def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
+        """Compute the intersection over union (IoU) of two sets of boxes.
         E.g.:
             A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
         Args:
-            box_a: (tensor) Ground truth bounding boxes, Shape: [num_objects,4]
-            box_b: (tensor) Prior boxes from priorbox layers, Shape: [num_priors,4]
+            box_a: (np.array) bounding boxes, Shape: [A,4]
+            box_b: (np.array) bounding boxes, Shape: [B,4]
         Return:
-            jaccard overlap: (tensor) Shape: [box_a.size(0), box_b.size(0)]
+            iou: (np.array), Shape: [A,B].
         """
-        inter = self.intersect(box_a, box_b)
-        area_a = ((box_a[:, 2]-box_a[:, 0]) *
-                  (box_a[:, 3]-box_a[:, 1])).unsqueeze(1).expand_as(inter)
-        area_b = ((box_b[:, 2]-box_b[:, 0]) *
-                  (box_b[:, 3]-box_b[:, 1])).unsqueeze(0).expand_as(inter)
-        union = area_a + area_b - inter
+        # check input box shape and dimensions
+        assert box_a.ndim == 2
+        assert box_b.ndim == 2
+        assert box_a.shape[1] == 4
+        assert box_b.shape[1] == 4
 
-        return inter / union
+        x11, y11, x12, y12 = np.split(box_a, 4, axis=1)
+        x21, y21, x22, y22 = np.split(box_b, 4, axis=1)
+
+        # determine the (x, y)-coordinates of the intersection rectangle
+        xa = np.maximum(x11, np.transpose(x21))
+        ya = np.maximum(y11, np.transpose(y21))
+        xb = np.minimum(x12, np.transpose(x22))
+        yb = np.minimum(y12, np.transpose(y22))
+
+        # compute the area of intersection rectangle
+        inter_area = np.maximum((xb - xa + 1), 0) * \
+            np.maximum((yb - ya + 1), 0)
+
+        # compute the area of both the prediction and ground-truth rectangles
+        box_a_area = (x12 - x11 + 1) * (y12 - y11 + 1)
+        box_b_area = (x22 - x21 + 1) * (y22 - y21 + 1)
+
+        # add a small eps to prevent divide by zero errors
+        iou = inter_area / \
+            (box_a_area + np.transpose(box_b_area) -
+             inter_area + np.finfo(float).eps)
+
+        return iou
 
     def generate(
         self,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
+        """
+        ref_dets: n_dets x (n_classes + 4 + 1)
+        perturbed_dets: n_masks x n_props x (n_classes + 4 + 1)
+        perturbed_masks: n_masks x H x W
 
-        if len(perturb_masks) != len(perturbed_dets):
-            raise ValueError("Number of perturbation masks and respective",
+        where n_dets is the number of reference detections,
+        n_masks is the number of perturbation masks,
+        n_props is the number of detection proposals,
+        n_classes is the number of object classes,
+        and H, W correspond to image height and width
+        """
+
+        if len(perturbed_dets) != len(perturbed_masks):
+            raise ValueError("Number of perturbation masks and respective "
                              "detections vector do not match.")
 
-        self.n_targets = len(ref_dets)
-        n_targets = len(ref_dets)
-        self.N = len(perturb_masks)
-        self.input_size = perturb_masks[0].shape
-        self.masks = torch.from_numpy(perturb_masks)
-        return_array = np.empty((n_targets, *self.input_size))
+        if ref_dets.shape[1] != perturbed_dets.shape[2]:
+            raise ValueError("Dimensions of reference detections and "
+                             "perturbed detections do not match. Both "
+                             "should be of dimension (n_classes + 4 + 1).")
 
-        for i, dete_ in enumerate(ref_dets):
-            this_dete = dete_.reshape(-1, len(dete_))[:, :4]
-            p_dete = perturbed_dets[:, i, :]
-            s1 = self.jaccard(torch.from_numpy(p_dete[:, :4]), torch.from_numpy(this_dete))
-            s2 = cdist(dete_[5:].reshape(1, -1),
-                       perturbed_dets[:, i, :][:, 5:],
-                       metric=self.proximity_metric)
-            s2 = torch.tensor(sklearn.preprocessing.minmax_scale(s2, feature_range=(0, 1), axis=1, copy=True))
-            try:
-                s3 = torch.tensor(perturbed_dets[:, i, 6])
-            except IndexError:
-                s3 = torch.ones((self.N))
-            cur_weights = s1 * s2 * s3
-            cur_weights = cur_weights.max(dim=1)[0].t()
-            # TODO: Replace with masking.py utils fnc()
-            sals = cur_weights.reshape(
-                1, -1).mm(
-                self.masks.view(self.N, -1).double()
-                ).view(1, *self.input_size) / self.masks.sum(0)
-            return_array[i, :self.input_size[0], :self.input_size[1]] = sals[0].cpu().numpy()
-        return return_array
+        n_masks = len(perturbed_masks)
+        n_props = perturbed_dets.shape[1]
+        n_dets = len(ref_dets)
+
+        # Compute IoU of bounding boxes
+        s1 = self.iou(perturbed_dets[:, :, :4].reshape(-1, 4),
+                      ref_dets[:, :4]).reshape(n_masks, n_props, n_dets)
+
+        # Compute similarity of class probabilities
+        s2 = cdist(perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
+                   ref_dets[:, 5:],
+                   metric=self.proximity_metric).reshape(n_masks, n_props, n_dets)
+
+        # Use objectness score if available
+        s3 = perturbed_dets[:, :, 4:5]
+
+        # Compute overall similarity s
+        # Shape: n_masks x n_props x n_dets
+        s = s1 * s2 * s3
+
+        # Take max similarity over all proposals
+        # Shape: n_masks x n_dets
+        s = s.max(axis=1)
+
+        # Weighting perturbed regions by similarity
+        sal = weight_regions_by_scalar(s, perturbed_masks)
+
+        # Normalize final saliency map
+        sal = maxabs_scale(
+            sal.reshape(sal.shape[0], -1),
+            axis=1
+        ).reshape(sal.shape)
+
+        # Ensure saliency map in range [-1, 1]
+        sal = np.clip(sal, -1, 1)
+
+        return sal
 
     def get_config(self) -> dict:
         return {
