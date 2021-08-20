@@ -28,6 +28,8 @@ Documentation
   use-case where the ``GenerateImageClassifierBlackboxSaliency`` interface API
   is not appropriate, i.e. already have masks computed.
 
+* Added support for doc building on Windows by adding a platform check so that "make.bat" is called for and not "make html".
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
@@ -90,6 +92,7 @@ Implementations
 
 * Fix saliency map normalization in both ``OcclusionScoring`` as well as
   ``SimilarityScoring`` to disallow cross-class pollution in the norm.
+
 
 Misc.
 
