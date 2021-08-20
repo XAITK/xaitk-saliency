@@ -1,0 +1,60 @@
+digraph G {
+// Figure showing the GenerateClassifierConfidenceSaliency API
+
+graph [
+    rankdir = "LR",
+];
+
+// Data Nodes
+node [style=filled, fillcolor=lightblue];
+node [label="Image Confidences"] img_conf;
+node [label="Masked Images Confidences"] mi_conf;
+node [label="Masks"] masks;
+node [label="Saliency Heatmap"] hm
+// Interface Node
+node [shape=box, fillcolor=white, color=white];
+node [label="..."] algo;
+// invisible nodes for arrows in and out
+node [style=invis, label=""]
+invis_in_img_conf;
+invis_in_mi_conf;
+invis_in_masks;
+invis_out_hm;
+
+subgraph cluster_interface {
+    graph [
+        label="GenerateClassifierConfidenceSaliency",
+    ];
+    subgraph cluster_inputs {
+        label="Inputs";
+        img_conf; mi_conf; masks;
+    }
+    subgraph cluster_outputs {
+        label="Outputs";
+        hm;
+    }
+
+    img_conf -> algo;
+    mi_conf -> algo;
+    masks -> algo;
+    algo -> hm;
+}
+
+invis_in_img_conf -> img_conf;
+invis_in_mi_conf -> mi_conf;
+invis_in_masks -> masks;
+hm -> invis_out_hm
+
+}
+
+// dot perturb_occlude_diagram.dot -Tsvg -o perturb_occlude_diagram.svg
+//
+// inotifywait -e close_write -m . |
+//   while read -r directory events filename
+//   do
+//     if [[ "$filename" = "gen_classifier_conf_sal_diagram.dot" ]]
+//     then
+//       echo "Regenerating SVG"
+//       dot gen_classifier_conf_sal_diagram.dot -Tsvg -o gen_classifier_conf_sal_diagram.svg
+//     fi
+//   done;

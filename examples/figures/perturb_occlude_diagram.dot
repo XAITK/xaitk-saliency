@@ -1,0 +1,65 @@
+digraph G {
+
+graph [
+    compound=true,
+    rankdir = "LR",
+];
+
+// Data Nodes
+node [style=filled, fillcolor=lightblue];
+node [label=Image] img;
+node [label="Black-Box Classifier"] bb;
+node [label="Saliency Heatmap"] hm
+// Interface Node
+node [shape=box, style=filled, fillcolor=green];
+node [label="PerturbImage"] p;
+node [label="GenerateClassifierConfidenceSaliency"] g;
+// invisible nodes for arrows in and out
+node [style=invis, label=""]
+invis_in_img;
+invis_in_bb;
+invis_out_hm;
+
+subgraph cluster_interface {
+
+    graph [
+        label="Interface: GenerateImageClassifierBlackboxSaliency";
+    ];
+
+    subgraph cluster_inputs {
+        label="Inputs";
+        rank=same { img; bb; }
+    }
+
+    subgraph cluster_impl {
+        label="Implementation: Perturb-Occlude"
+        p -> g;
+    }
+
+    subgraph cluster_outputs {
+        label="Outputs";
+        hm;
+    }
+
+    img -> p [lhead=cluster_impl];
+    bb -> p [lhead=cluster_impl];
+    g -> hm [ltail=cluster_impl];
+}
+
+invis_in_img -> img;
+invis_in_bb -> bb;
+hm -> invis_out_hm;
+
+}
+
+// dot perturb_occlude_diagram.dot -Tsvg -o perturb_occlude_diagram.svg
+//
+// inotifywait -e close_write -m . |
+//   while read -r directory events filename
+//   do
+//     if [[ "$filename" = "perturb_occlude_diagram.dot" ]]
+//     then
+//       echo "Regenerating SVG"
+//       dot perturb_occlude_diagram.dot -Tsvg -o perturb_occlude_diagram.svg
+//     fi
+//   done;

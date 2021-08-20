@@ -1,3 +1,4 @@
+/monai-example/**
+/viame-example/**
 **/imagenet_classes.txt*
 /*.jpg
-/*.png

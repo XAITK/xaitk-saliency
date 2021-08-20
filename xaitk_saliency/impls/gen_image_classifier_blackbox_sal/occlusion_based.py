@@ -1,4 +1,4 @@
-from typing import Dict, Any, Type, TypeVar
+from typing import Any, Dict, Optional, Sequence, Type, TypeVar, Union
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -21,10 +21,20 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
     """
     Generator composed of modular perturbation and occlusion-based algorithms.
 
+    This implementation exposes a public attribute `fill`.
+    This may be set to a scalar or sequence value to indicate a color that
+    should be used for filling occluded areas as determined by the given
+    `PerturbImage` implementation.
+    This is a parameter to be set during runtime as this is most often driven
+    by the blackbox algorithm used, if at all.
+
     :param perturber: PerturbImage implementation instance for generating
         masks that will dictate occlusion.
     :param generator: Implementation instance for generating saliency masks
         given occlusion masks and classifier outputs.
+    :param threads: Optional number threads to use to enable parallelism in
+        applying perturbation masks to an input image. If 0, a negative value,
+        or `None`, work will be performed on the main-thread in-line.
     """
 
     def __init__(
@@ -33,16 +43,18 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
         generator: GenerateClassifierConfidenceSaliency,
         threads: int = 0
     ):
-        self.perturber = perturber
-        self.generator = generator
-        self.threads = threads
+        self._perturber = perturber
+        self._generator = generator
+        self._threads = threads
+        # Optional fill color
+        self.fill: Optional[Union[int, Sequence[int]]] = None
 
     def _generate(
         self,
         ref_image: np.ndarray,
-        blackbox: ClassifyImage
+        blackbox: ClassifyImage,
     ) -> np.ndarray:
-        perturbation_masks = self.perturber(ref_image)
+        perturbation_masks = self._perturber(ref_image)
         class_list = blackbox.get_labels()
         # Input one thing so assume output of one thing.
         ref_conf_dict = list(blackbox.classify_images([ref_image]))[0]
@@ -54,7 +66,8 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
         pert_conf_it = blackbox.classify_images(
             occlude_image_streaming(
                 ref_image, perturbation_masks,
-                threads=self.threads
+                fill=self.fill,
+                threads=self._threads
             )
         )
         for i, pc in enumerate(pert_conf_it):
@@ -62,7 +75,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
 
         # Compose classification results into a matrix for the generator
         # algorithm.
-        return self.generator(
+        return self._generator(
             ref_conf_vec,
             pert_conf_mat,
             perturbation_masks,
@@ -90,11 +103,11 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
             config_dict['generator'],
             GenerateClassifierConfidenceSaliency.get_impls()
         )
-        return super().from_config(config_dict)
+        return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> Dict[str, Any]:
         return {
-            "perturber": to_config_dict(self.perturber),
-            "generator": to_config_dict(self.generator),
-            "threads": self.threads,
+            "perturber": to_config_dict(self._perturber),
+            "generator": to_config_dict(self._generator),
+            "threads": self._threads,
         }

@@ -76,6 +76,17 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
             )
         return output
 
+    def __call__(
+        self,
+        ref_image: np.ndarray,
+        blackbox: ClassifyImage
+    ) -> np.ndarray:
+        """
+        Alias to the :meth:`generate` method.
+        See :meth:`generate` for more details.
+        """
+        return self.generate(ref_image, blackbox)
+
     @abc.abstractmethod
     def _generate(
         self,

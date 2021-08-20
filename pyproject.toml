@@ -37,18 +37,25 @@ numpy = "^1.20.3"
 opencv-python-headless = "^4.5.1"
 scikit-image = "^0.18.1"
 scikit-learn = "^0.24.2"
-# master branch after merge if `ClassifyImage` interface.
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
 tqdm = "^4.60.0"
 scipy = "^1.6.3"
+# Optionals for "example" extra
+jupyter = { version = "^1.0.0", optional = true }
+torch = { version = "^1.9.0", optional = true }
+torchvision = { version = "^0.10.0", optional = true }
+
+[tool.poetry.extras]
+example_deps = [ "jupyter", "torch", "torchvision" ]
 
 [tool.poetry.dev-dependencies]
 # CI
 flake8 = "^3.9.0"
 flake8-mutable = "^1.2.0"
-mypy = "^0.812"
+mypy = ">=0.812"
+types-setuptools = "^57.0.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
 Sphinx = "^3.5.3"
@@ -66,10 +73,11 @@ ipython = "^7.22.0"
 # Add implementation sub-module exposure here.
 "impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.sliding_window"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
-"impls.gen_classifier_conf_sal.occlusion" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion"
+"impls.gen_classifier_conf_sal.occlusion_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring"
 "impls.gen_classifier_conf_sal.rise_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring"
+"impls.gen_descriptor_sim_sal.similarity_scoring" = "xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring"
 "impls.gen_image_classifier_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based"
-"impls.gen_similarity_sal.similarityscoring" = "xaitk_saliency.impls.gen_similarity_sal.similarityscoring"
+"impls.gen_image_classifier_blackbox_sal.rise" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [

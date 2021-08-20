@@ -66,3 +66,19 @@ def test_generate_checks_output_mismatch() -> None:
               r"\(output\)$"
     ):
         GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+
+
+def test_call_alias() -> None:
+    """ Test that __call__ is just an alias to the generate method. """
+    m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
+    m_img = mock.Mock(spec=np.ndarray)
+    m_bbox = mock.Mock(spec=ClassifyImage)
+
+    expected_return = 'expected return'
+    m_impl.generate.return_value = expected_return
+
+    test_ret = GenerateImageClassifierBlackboxSaliency.__call__(
+        m_impl, m_img, m_bbox
+    )
+    m_impl.generate.assert_called_once_with(m_img, m_bbox)
+    assert test_ret == expected_return

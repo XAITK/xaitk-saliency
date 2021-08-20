@@ -21,6 +21,13 @@ Documentation
 
 * Introduce class naming philosophy in the ``CONTRIBUTING.md`` file.
 
+* Updated notebooks to make use of ``GenerateImageClassifierBlackboxSaliency``
+  interface/implementations where appropriate.
+
+* Updated wording of the ``SuperPixelSaliency.ipynb`` notebook as to cover a
+  use-case where the ``GenerateImageClassifierBlackboxSaliency`` interface API
+  is not appropriate, i.e. already have masks computed.
+
 Interfaces
 
 * Update ``PerturbImage`` to only output perturbation masks, dropping physical
@@ -51,6 +58,18 @@ Implementations
 * Add ``RISEScoring`` implementation, with the ability to also compute a
   de-biased form of RISE with an optional input parameter.
 
+* Add ``RISEStack`` implementation of the ``GenerateImageClassifierBlackboxSaliency``
+  interface as a simple way to invoke the combination of RISE component
+  algorithms.
+
+* Add ``SlidingWindowStack`` implementation of the ``GenerateImageClassifierBlackboxSaliency``
+  interface as a simple way to invoke the combination of the Sliding Window
+  perturbation method and the occlusion-based based scoring method.
+
+Misc.
+
+* Update locked dependency versions to latest defined by abstract requirements.
+
 Utils
 
 * Masking
@@ -71,3 +90,7 @@ Implementations
 
 * Fix saliency map normalization in both ``OcclusionScoring`` as well as
   ``SimilarityScoring`` to disallow cross-class pollution in the norm.
+
+Misc.
+
+* Fixed up module naming inconsistencies.
