@@ -14,6 +14,7 @@ Welcome to xaitk-saliency's documentation!
    review_process
    releasing
    design
+   faq
    miscellaneous
 
 
