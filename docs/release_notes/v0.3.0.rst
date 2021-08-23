@@ -1,6 +1,8 @@
-Pending Release Notes
-=====================
-
+v0.3.0
+======
+This minor release provides updates to example notebooks, interface naming
+updating for consistency, as well as added a "high level" interface for visual
+saliency map generation from black-box classifiers.
 
 Updates / New Features
 ----------------------
@@ -92,7 +94,6 @@ Implementations
 
 * Fix saliency map normalization in both ``OcclusionScoring`` as well as
   ``SimilarityScoring`` to disallow cross-class pollution in the norm.
-
 
 Misc.
 
