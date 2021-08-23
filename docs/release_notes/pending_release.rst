@@ -72,6 +72,8 @@ Misc.
 
 * Update locked dependency versions to latest defined by abstract requirements.
 
+* Add a code of conduct file.
+
 Utils
 
 * Masking
