@@ -1,7 +1,7 @@
 Installation
 ============
 
-There are two ways to get a hold of XAITK-Saliency.
+There are two ways to obtain XAITK-Saliency.
 The simplest is to install via the :command:`pip` command.
 Alternatively, the source tree can be acquired and be locally developed using
 `Poetry`_ (`installation`_ and `usage`_).
@@ -92,7 +92,7 @@ Within the :file:`docs/` directory is a small Python script called
 
 .. prompt:: bash
 
-    python sphinx_server.py
+    poetry run python sphinx_server.py
 
 This will run a small process that watches the :file:`docs/` folder contents,
 as well as the source files in :file:`xaitk_saliency/`, for changes.

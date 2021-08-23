@@ -122,7 +122,7 @@ Fill in the new version in the ``Tag version`` text box (e.g. ``v#.#.#``)
 and use the same string in the ``Release title`` text box.
 The "@" target should be the release branch created above.
 
-Copy and past this version's release notes into the ``Describe this release``
+Copy and paste this version's release notes into the ``Describe this release``
 text box.
 
 Remember to check the ``This is a pre-release`` check-box if appropriate.

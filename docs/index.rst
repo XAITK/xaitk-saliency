@@ -10,6 +10,7 @@ Welcome to xaitk-saliency's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
    installation
    review_process
    releasing
