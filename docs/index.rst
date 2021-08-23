@@ -11,6 +11,7 @@ Welcome to xaitk-saliency's documentation!
    :caption: Contents:
 
    installation
+   review_process
    releasing
    design
    miscellaneous
