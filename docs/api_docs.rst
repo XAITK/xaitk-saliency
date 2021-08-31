@@ -43,27 +43,17 @@ Image Occlusion via Perturbation Masks
 
 A common intermediate step in this process is applying the generated perturbation masks to imagery to produce occluded images. We provide two utility functions as baseline implementation to perform this step. One is the version that performs the transformation as a batch operation, ``xaitk_saliency.utils.masking.occlude_image_batch``. The other, ``xaitk_saliency.utils.masking.occlude_image_streaming``, performs the transformation in a streaming method with optional parallelization in that streaming. While the batch version is simpler and in many cases the faster of the two versions, the streaming version may be more applicable to large image masks or when a great deal of masks are being input, where in such cases the batch version would exceed available memory.
 
-* occlude_image_batch
-
-.. autoclass:: xaitk_saliency.utils.masking.occlude_image_batch
-   :members:
-   :private-members:
-
-
-* occlude_image_streaming
-
-.. automodule:: xaitk_saliency.utils.masking.occlude_image_streaming
-   :members:
-   :private-members:
-
 ----------------------------
 Saliency Heatmap Generation
 ----------------------------
 
 These interfaces comprise a family of siblings that all perform a similar transformation, but requiring different standard inputs. There is no standard to rule them all without being so abstract that it would break the concept of interface abstraction, or the ability to substitute any arbitrary implementations of the interface without interrupting successful execution. Each interface is intended to handle different black-box outputs from different algorithmic categories. In the future, as additional algorithmic categories are identified for which saliency map generation is applicable, additional interfaces may be defined and added to this initial repertoire.
 
-Interface: ImageSimilaritySaliencyMapGenerator
+Interface: GenerateDescriptorSimilaritySaliency
 -----------------------------------------------
+.. autoclass:: xaitk_saliency.interfaces.gen_descriptor_sim_sal.GenerateDescriptorSimilaritySaliency
+   :members:
+   :private-members:
 
 This interface proposes that implementations require externally generated feature-vectors for two reference images between which we are trying to discern the feature-space saliency. This also requires the feature-vectors for perturbed images as well as the masks of the perturbations as would be output from a ``PerturbImage`` implementation. We expect perturbations to be relative to the second reference image feature-vector.
 
@@ -86,7 +76,10 @@ Output
 * Generated saliency heat-map matrix (numpy.ndarray, shape [H x W], float)
 
 
-Interface: ImageClassifierSaliencyMapGenerator
+
+
+
+Interface: GenerateClassifierConfidenceSaliency
 ------------------------------------------------
 
 This interface proposes that implementations transform black-box image classification scores into saliency heatmaps. This should require a sequence of per-class confidences predicted on the reference image, a number of per-class confidences as predicted on perturbed images, as well as the masks of the reference image perturbations (as would be output from a ``PerturbImage`` implementation).
@@ -109,8 +102,9 @@ Output
 
 * Generated saliency heat-map matrix for each input class (numpy.ndarray, shape [nClasses x H x W], float)
 
-Interface: ImageDetectionSaliencyMapGenerator
+Interface: GenerateDetectorProposalSaliency
 ----------------------------------------------
+
 This interface proposes that implementations transform black-box image object detection predictions into visual saliency heatmaps. This should require externally generated object detection predictions over some image, along with predictions for perturbed images and the permutation masks for those images as would be output from a ``PerturbImage`` implementation. Object detection representations used here would need to encapsulate localization information (i.e. bounding box regions), class scores, and objectness scores (if applicable to the detector, such as YOLOv3). Object detections are converted into (4+1+nClasses) vectors (4 indices for bounding box locations, 1 index for objectness, and nClasses indices for different object classes).
 
 Implementations should use this input to generate a visual saliency heat-map for each input detection. We assume that an input detection is coupled with a single truth class (or a single leaf node in a hierarchical structure). Input detections on the reference image may be drawn from ground truth or predictions as desired by the use-case. As for perturbed image detections, we expect those to usually be decoupled from the source of reference image detections, which is why below we formulate the shape of perturbed image detects with ``nProps`` instead of ``nDets`` (though the value of that axis may be the same in some cases).
