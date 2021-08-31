@@ -17,6 +17,7 @@ Welcome to xaitk-saliency's documentation!
    design
    faq
    miscellaneous
+   api_docs
 
 
 Indices and tables
