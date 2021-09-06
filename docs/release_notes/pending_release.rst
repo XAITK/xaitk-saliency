@@ -13,6 +13,11 @@ Documentation
 
 * Add background material for saliency maps to ``introduction.rst``.
 
+Tests
+
+* Removed use of `unittest.TestCase` as it is not utilized directly in any way
+  that PyTest does not provide.
+
 
 Fixes
 -----

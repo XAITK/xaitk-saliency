@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import numpy as np
 import os
 
@@ -9,7 +7,7 @@ from smqtk_core.configuration import configuration_test_helper
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
 
-class TestSimilarityScoring (TestCase):
+class TestSimilarityScoring:
 
     def test_init_(self) -> None:
         """
