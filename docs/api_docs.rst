@@ -171,109 +171,128 @@ Generating perturbed images and masks::
 
 Generating Similarity-based Saliency Heatmaps::
 
-	import PIL.Image
-	import numpy as np
-	from xaitk_saliency import PerturbImageImplementation
-	from xaitk_saliency import ImageSimilaritySaliencyMapGeneratorImplementation
-	from xaitk_saliency.utils.masking import occlude_image_batch
-	from MyIntegration import describe_images
+    import PIL.Image
+    import numpy as np
+    from xaitk_saliency import PerturbImage
+    from xaitk_saliency import GenerateDescriptorSimilaritySaliency
+    from xaitk_saliency.utils.masking import occlude_image_batch
+    from MyIntegration import describe_images  # type: ignore
 
 
-	# Initializing an implementation of perturbation based algorithms
-	perturb_image = PerturbImageImplementation()
+    # Pretend we have implementations of the standard interfaces.
+    class PerturbImageImplementation (PerturbImage):
+       ...
 
-	# Initializing an implementation of similarity based saliency generator
-	similarity_saliency = ImageSimilaritySaliencyMapGeneratorImplementation()
 
-	...
+    class GenerateDescriptorSimilaritySaliencyImplementation (GenerateDescriptorSimilaritySaliency):
+       ...
 
-	# Loading test image1 from file
-	test_image_1 = np.asarray(PIL.Image.open("some/test/image1.png"))
-	# Loading reference image2 from file
-	ref_image_2 = np.asarray(PIL.Image.open("some/test/image2.png"))
 
-	# Generate perturbed images and perturbation masks on reference image on which
-	# saliency needs to be computed.
-	mask_array = perturb_image(ref_image_2)
-	perturbed_images = occlude_image_batch(ref_image_2, mask_array)
+    # Initializing an implementation of perturbation based algorithms
+    perturb_image = PerturbImageImplementation()
 
-	# Compute descriptors for the test, reference and perturbed image.
-	# This part may be specific to your application or integration.
-	# The output here is expected to be in the shape [nInputs x nFeats].
-	test_img_descr, ref_img_descr = describe_images([test_image_1, ref_image_2])
-	perturb_descr = describe_images(perturbed_images)
+    # Initializing an implementation of similarity based saliency generator
+    similarity_saliency = GenerateDescriptorSimilaritySaliencyImplementation()
 
-	# Compute the final similarity based saliency map using original features from
-	# both the test and reference images, along with descriptors computed on the
-	# perturbed versions of the reference image and masks used to perturb the
-	# reference image
-	similarity_saliency_map = similarity_saliency(
-	   test_img_descr,  # shape: [nFeats]
-	   ref_img_descr,  # shape: [nFeats]
-	   perturb_descr,  # shape: [len(perturbed_images), nFeats]
-	   mask_array  # shape: [len(perturbed_images), ref_image_2.height, ref_image_2.width]
-	)
-	# The shape of the output heatmap should be congruent to the shape of input
-	# perturbation masks.
-	assert similarity_saliency_map.shape == mask_array[0].shape
+    ...
+
+    # Loading test image1 from file
+    test_image_1 = np.asarray(PIL.Image.open("some/test/image1.png"))
+    # Loading reference image 2 from file
+    ref_image_2 = np.asarray(PIL.Image.open("some/test/image2.png"))
+
+    # Generate perturbed images and perturbation masks on reference image on which
+    # saliency needs to be computed.
+    mask_array = perturb_image(ref_image_2)
+    perturbed_images = occlude_image_batch(ref_image_2, mask_array)
+
+    # Compute descriptors for the test, reference and perturbed image.
+    # This part may be specific to your application or integration.
+    # The output here is expected to be in the shape [nInputs x nFeats].
+    test_img_descr, ref_img_descr = describe_images([test_image_1, ref_image_2])
+    perturb_descr = describe_images(perturbed_images)
+
+    # Compute the final similarity based saliency map using original features from
+    # both the test and reference images, along with descriptors computed on the
+    # perturbed versions of the reference image and masks used to perturb the
+    # reference image
+    similarity_saliency_map = similarity_saliency(
+      test_img_descr,  # shape: [nFeats]
+      ref_img_descr,  # shape: [nFeats]
+      perturb_descr,  # shape: [len(perturbed_images), nFeats]
+      mask_array  # shape: [len(perturbed_images), ref_image_2.height, ref_image_2.width]
+    )
+    # The shape of the output heatmap should be congruent to the shape of input
+    # perturbation masks.
+    assert similarity_saliency_map.shape == mask_array[0].shape
 
 Generating Classification-based Saliency Heatmaps::
 
-	import PIL.Image
-	import numpy as np
-	from xaitk_saliency import PerturbImageImplementation
-	from xaitk_saliency import ImageClassifierSaliencyMapGeneratorImplementation
-	from xaitk_saliency.utils.masking import occlude_image_batch
-	from MyIntegration import classify_images
+    import PIL.Image
+    import numpy as np
+    from xaitk_saliency import PerturbImage
+    from xaitk_saliency import GenerateClassifierConfidenceSaliency
+    from xaitk_saliency.utils.masking import occlude_image_batch
+    from MyIntegration import classify_images  # type: ignore
 
 
-	# Initializing an implementation of perturbation based algorithms
-	perturb_image = PerturbImageImplementation()
+    # Pretend we have implementations of the standard interfaces.
+    class PerturbImageImplementation (PerturbImage):
+      ...
 
-	# Initializing an implementation of classifier based saliency generator
-	classifier_saliency = ImageClassifierSaliencyMapGeneratorImplementation()
 
-	...
+    class GenerateClassifierConfidenceSaliencyImplementation (GenerateClassifierConfidenceSaliency):
+      ...
 
-	# Loading reference image from file
-	ref_image = np.asarray(PIL.Image.open("some/test/image.png"))
 
-	# Generate perturbed images and perturbation masks on
-	# reference image on which saliency needs to be computed
-	mask_array = perturb_image(ref_image)
-	perturbed_images = occlude_image_batch(ref_image, mask_array)
+    # Initializing an implementation of perturbation based algorithms
+    perturb_image = PerturbImageImplementation()
 
-	# Compute class confidence predictions for reference and perturbed images.
-	# We assume for this example that this black-box image classification function
-	# returns a matrix of class label confidences with different class labels
-	# corresponding to different columns of the output matrix, whose shape will be
-	# [nInputs x nClasses].
-	ref_class_confs = classify_images([ref_image])[0]
-	perturbed_class_confs = classify_images(perturbed_images)
+    # Initializing an implementation of classifier based saliency generator
+    classifier_saliency = GenerateClassifierConfidenceSaliencyImplementation()
 
-	# We will also show the example case where we do not want to pass along all
-	# class confidences for saliency map generation, but only a select few.
-	# Maybe this would be defined by some interface or configuration.
-	pertinent_class_indices = [1, 4, 10]
-	ref_class_confs2 = ref_class_confs[pertinent_class_indices]
-	perturbed_class_confs2 = perturbed_class_confs[..., pertinent_class_indices]
+    ...
 
-	# Computing the final classifier based saliency map using
-	# classifier confidence on the original feature vector of an reference image
-	# along with the classifier confidence on all descriptors computed on the
-	# perturbed versions of the reference image and masks used to perturb the reference
-	# image
-	classifier_saliency_map = classifier_saliency(
-	   ref_class_confs2,  # shape: [len(pertinent_class_indices)]
-	   perturbed_class_confs2,  # shape: [len(perturbed_images), len(pertinent_class_indices)]
-	   mask_array  # shape: [len(perturbed_images), ref_image.height, ref_image.width]
-	)
-	# There should be an equal number of saliency maps output as the number of
-	# distinct class confidences input:
-	assert len(classifier_saliency_map) == len(pertinent_class_indices)
-	# The shape of the output heatmap should be congruent to the shape of input
-	# perturbation masks.
-	assert classifier_saliency_map[0].shape == mask_array[0].shape
+    # Loading reference image from file
+    ref_image = np.asarray(PIL.Image.open("some/test/image.png"))
+
+    # Generate perturbed images and perturbation masks on
+    # reference image on which saliency needs to be computed
+    mask_array = perturb_image(ref_image)
+    perturbed_images = occlude_image_batch(ref_image, mask_array)
+
+    # Compute class confidence predictions for reference and perturbed images.
+    # We assume for this example that this black-box image classification function
+    # returns a matrix of class label confidences with different class labels
+    # corresponding to different columns of the output matrix, whose shape will be
+    # [nInputs x nClasses].
+    ref_class_confs = classify_images([ref_image])[0]
+    perturbed_class_confs = classify_images(perturbed_images)
+
+    # We will also show the example case where we do not want to pass along all
+    # class confidences for saliency map generation, but only a select few.
+    # Maybe this would be defined by some interface or configuration.
+    pertinent_class_indices = [1, 4, 10]
+    ref_class_confs2 = ref_class_confs[pertinent_class_indices]
+    perturbed_class_confs2 = perturbed_class_confs[..., pertinent_class_indices]
+
+    # Computing the final classifier based saliency map using
+    # classifier confidence on the original feature vector of an reference image
+    # along with the classifier confidence on all descriptors computed on the
+    # perturbed versions of the reference image and masks used to perturb the reference
+    # image
+    classifier_saliency_map = classifier_saliency(
+      ref_class_confs2,  # shape: [len(pertinent_class_indices)]
+      perturbed_class_confs2,  # shape: [len(perturbed_images), len(pertinent_class_indices)]
+      mask_array  # shape: [len(perturbed_images), ref_image.height, ref_image.width]
+    )
+    # There should be an equal number of saliency maps output as the number of
+    # distinct class confidences input:
+    assert len(classifier_saliency_map) == len(pertinent_class_indices)
+    # The shape of the output heatmap should be congruent to the shape of input
+    # perturbation masks.
+    assert classifier_saliency_map[0].shape == mask_array[0].shape
+
 
 ------------------
 References
