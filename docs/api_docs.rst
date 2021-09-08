@@ -188,10 +188,10 @@ Generating Similarity-based Saliency Heatmaps::
        ...
 
 
-    # Initializing an implementation of perturbation based algorithms
+    # Initializing an implementation of perturbation-based algorithms
     perturb_image = PerturbImageImplementation()
 
-    # Initializing an implementation of similarity based saliency generator
+    # Initializing an implementation of similarity-based saliency generator
     similarity_saliency = GenerateDescriptorSimilaritySaliencyImplementation()
 
     ...
@@ -212,7 +212,7 @@ Generating Similarity-based Saliency Heatmaps::
     test_img_descr, ref_img_descr = describe_images([test_image_1, ref_image_2])
     perturb_descr = describe_images(perturbed_images)
 
-    # Compute the final similarity based saliency map using original features from
+    # Compute the final similarity based-saliency map using original features from
     # both the test and reference images, along with descriptors computed on the
     # perturbed versions of the reference image and masks used to perturb the
     # reference image
@@ -245,10 +245,10 @@ Generating Classification-based Saliency Heatmaps::
       ...
 
 
-    # Initializing an implementation of perturbation based algorithms
+    # Initializing an implementation of perturbation-based algorithms
     perturb_image = PerturbImageImplementation()
 
-    # Initializing an implementation of classifier based saliency generator
+    # Initializing an implementation of classifier-based saliency generator
     classifier_saliency = GenerateClassifierConfidenceSaliencyImplementation()
 
     ...
@@ -276,7 +276,7 @@ Generating Classification-based Saliency Heatmaps::
     ref_class_confs2 = ref_class_confs[pertinent_class_indices]
     perturbed_class_confs2 = perturbed_class_confs[..., pertinent_class_indices]
 
-    # Computing the final classifier based saliency map using
+    # Computing the final classifier-based saliency map using
     # classifier confidence on the original feature vector of an reference image
     # along with the classifier confidence on all descriptors computed on the
     # perturbed versions of the reference image and masks used to perturb the reference
