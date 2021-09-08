@@ -14,10 +14,7 @@ These interfaces are based on the plugin and configuration features provided by 
 Perturbed Image Generation
 ---------------------------
 
-Interface: PerturbImage
-------------------------
-
-This interface abstracts the behavior of taking a reference image and generating some number perturbations of the image along with paired mask matrices indicating where perturbations have occurred and to what amount.
+The PerturbImage interface abstracts the behavior of taking a reference image and generating some number perturbations of the image along with paired mask matrices indicating where perturbations have occurred and to what amount.
 
 Implementations should impart no side effects upon the input image.
 
@@ -37,6 +34,11 @@ Outputs
 
 * Masks matrix of type ``np.ndarray`` with shape [nMasks x Height x Width].
 
+Interface: PerturbImage
+------------------------
+.. autoclass:: xaitk_saliency.interfaces.perturb_image.PerturbImage
+   :members:
+
 -----------------------------------------
 Image Occlusion via Perturbation Masks
 -----------------------------------------
@@ -53,7 +55,6 @@ Interface: GenerateDescriptorSimilaritySaliency
 -----------------------------------------------
 .. autoclass:: xaitk_saliency.interfaces.gen_descriptor_sim_sal.GenerateDescriptorSimilaritySaliency
    :members:
-   :private-members:
 
 This interface proposes that implementations require externally generated feature-vectors for two reference images between which we are trying to discern the feature-space saliency. This also requires the feature-vectors for perturbed images as well as the masks of the perturbations as would be output from a ``PerturbImage`` implementation. We expect perturbations to be relative to the second reference image feature-vector.
 
@@ -82,6 +83,9 @@ Output
 Interface: GenerateClassifierConfidenceSaliency
 ------------------------------------------------
 
+.. autoclass:: xaitk_saliency.interfaces.gen_classifier_conf_sal.GenerateClassifierConfidenceSaliency
+   :members:
+
 This interface proposes that implementations transform black-box image classification scores into saliency heatmaps. This should require a sequence of per-class confidences predicted on the reference image, a number of per-class confidences as predicted on perturbed images, as well as the masks of the reference image perturbations (as would be output from a ``PerturbImage`` implementation).
 
 Implementations should use this input to generate a visual saliency heat-map for each input “class” in the input. This is both an effort to vectorize the operation for optimal performance, as well as to allow some algorithms to take advantage of differences in classification behavior for other classes to influence heatmap generation. For classifiers that generate many class label predictions, it is intended that only a subset of relevant class predictions need be provided here if computational performance is a consideration.
@@ -104,6 +108,9 @@ Output
 
 Interface: GenerateDetectorProposalSaliency
 ----------------------------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.gen_detector_prop_sal.GenerateDetectorProposalSaliency
+   :members:
 
 This interface proposes that implementations transform black-box image object detection predictions into visual saliency heatmaps. This should require externally generated object detection predictions over some image, along with predictions for perturbed images and the permutation masks for those images as would be output from a ``PerturbImage`` implementation. Object detection representations used here would need to encapsulate localization information (i.e. bounding box regions), class scores, and objectness scores (if applicable to the detector, such as YOLOv3). Object detections are converted into (4+1+nClasses) vectors (4 indices for bounding box locations, 1 index for objectness, and nClasses indices for different object classes).
 
@@ -129,45 +136,45 @@ Output
 Code Examples
 ------------------
 
-Generating perturbed images and masks::
+Generating Perturbed Images and Masks::
 
-	import PIL.Image
-	import numpy as np
-	import numpy.typing as npt
-	from xaitk_saliency import PerturbImage
-	from xaitk_saliency.utils.masking import occlude_image_batch
-
-
-	# Define an implementation, or use a discovered plugin.
-	# This does not need to be defined in-line, but may be instead
-	# imported from some alternative module, or found via plugin
-	# discovery.
-	class PerturbImageImplementation (PerturbImage):
-	def perturb(
-		   self,
-		   ref_image: npt.ArrayLike
-	   ) -> np.ndarray:
-		   ...
+    import PIL.Image
+    import numpy as np
+    import numpy.typing as npt
+    from xaitk_saliency import PerturbImage
+    from xaitk_saliency.utils.masking import occlude_image_batch
 
 
-	...
+    # Define an implementation, or use a discovered plugin.
+    # This does not need to be defined in-line, but may be instead
+    # imported from some alternative module, or found via plugin
+    # discovery.
+    class PerturbImageImplementation (PerturbImage):
+       def perturb(
+           self,
+           ref_image: npt.ArrayLike
+       ) -> np.ndarray:
+           ...
 
-	perturb_image = PerturbImageImplementation()
 
-	...
+    ...
 
-	test_image = np.asarray(PIL.Image.open("some/test/image.png"))
+    perturb_image = PerturbImageImplementation()
 
-	# Generate perturbed images and perturbation masks
-	mask_array = perturb_image(test_image)
-	perturbed_images = occlude_image_batch(test_image, mask_array)
+    ...
 
-	# Returned sequences should be congruent in length.
-	assert perturbed_images.shape == mask_array.shape
+    test_image = np.asarray(PIL.Image.open("some/test/image.png"))
 
-	# Do application-appropriate things with the pairs!
-	for img, mask in zip(image_seq, mask_array):
-	render(img, mask)
+    # Generate perturbed images and perturbation masks
+    mask_array = perturb_image(test_image)
+    perturbed_images = occlude_image_batch(test_image, mask_array)
+
+    # Returned sequences should be congruent in length.
+    assert perturbed_images.shape == mask_array.shape
+
+    # Do application-appropriate things with the pairs!
+    for img, mask in zip(image_seq, mask_array):
+       render(img, mask)
 
 Generating Similarity-based Saliency Heatmaps::
 
@@ -184,7 +191,7 @@ Generating Similarity-based Saliency Heatmaps::
        ...
 
 
-    class GenerateDescriptorSimilaritySaliencyImplementation (GenerateDescriptorSimilaritySaliency):
+     class GenerateDescriptorSimilaritySaliencyImplementation (GenerateDescriptorSimilaritySaliency):
        ...
 
 
