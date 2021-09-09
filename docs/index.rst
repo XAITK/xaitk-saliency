@@ -12,12 +12,13 @@ Welcome to xaitk-saliency's documentation!
 
    introduction
    installation
+   api_docs
    review_process
    releasing
    design
    faq
    miscellaneous
-   api_docs
+
 
 
 Indices and tables
