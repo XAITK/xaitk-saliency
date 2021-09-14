@@ -13,6 +13,8 @@ Documentation
 
 * Add background material for saliency maps to ``introduction.rst``.
 
+* Added API docs section.
+
 Implementations
 
 * Add ``DRISEScoring`` implementation of the ``GenerateDetectorProposalSaliency``

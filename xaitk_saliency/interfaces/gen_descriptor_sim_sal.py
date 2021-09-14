@@ -8,7 +8,7 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
     """
     Visual saliency map generation interface whose implementations transform
     black-box feature-vectors from multiple references and perturbations into
-    a saliency heat-maps.
+    saliency heat-maps.
 
     This transformation requires two reference images, translated into
     feature-vectors via some black-box means, between which we are trying to
@@ -40,7 +40,7 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         method implementation.
         We expect perturbations to be relative to the second reference image.
         These should have the shape `[nMasks x H x W]`, and values in range
-        [0, 1], where a value closer to 1 indicate areas of the image that
+        [0, 1], where a value closer to 1 indicates areas of the image that
         are *unperturbed*.
         Note the type of values in masks can be either integer, floating point
         or boolean within the above range definition.
@@ -56,16 +56,16 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         :param ref_descr_1:
             First image reference float feature-vector, shape `[nFeats]`
         :param ref_descr_2:
-            Second image reference float feature-vector, shape `[nFeats]'
+            Second image reference float feature-vector, shape `[nFeats]`
         :param perturbed_descrs:
             Feature vectors of second reference image perturbations, float
             typed of shape `[nMasks x nFeats]`.
         :param perturbed_masks:
             Perturbation masks `numpy.ndarray` over the second reference image.
-            This should bbe parallel in association to the `perturbed_descrs`
+            This should be parallel in association to the `perturbed_descrs`
             parameter.
             This should have a shape `[nMasks x H x W]`, and values in range
-            [0, 1], where a value closer to 1 indicate areas of the image that
+            [0, 1], where a value closer to 1 indicates areas of the image that
             are *unperturbed*.
         :return: Generated saliency heat-map as a float-typed `numpy.ndarray`
             with shape `[H x W]`.
