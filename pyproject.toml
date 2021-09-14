@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.3.0"
+version = "0.3.1"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
@@ -32,23 +32,22 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.10"
-matplotlib = "^3.4.1"
 numpy = "^1.20.3"
-opencv-python-headless = "^4.5.1"
 scikit-image = "^0.18.1"
 scikit-learn = "^0.24.2"
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
-tqdm = "^4.60.0"
 scipy = "^1.6.3"
 # Optionals for "example" extra
 jupyter = { version = "^1.0.0", optional = true }
+matplotlib = { version="^3.4.1", optional = true }
 torch = { version = "^1.9.0", optional = true }
 torchvision = { version = "^0.10.0", optional = true }
+tqdm = { version = "^4.45.0", optional = true }
 
 [tool.poetry.extras]
-example_deps = [ "jupyter", "torch", "torchvision" ]
+example_deps = [ "jupyter", "matplotlib", "torch", "torchvision", "tqdm" ]
 
 [tool.poetry.dev-dependencies]
 # CI
