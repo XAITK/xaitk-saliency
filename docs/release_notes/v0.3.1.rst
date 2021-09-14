@@ -1,0 +1,16 @@
+v0.3.1
+======
+This patch release focuses on removing some listed dependencies that are in
+reality unused.
+
+
+Fixes
+-----
+
+CI
+
+* Enable the running of CI for branches and PRs targeting release branches.
+
+Package
+
+* Remove required dependencies that are in fact not used.
