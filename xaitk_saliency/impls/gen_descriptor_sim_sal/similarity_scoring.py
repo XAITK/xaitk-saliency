@@ -22,7 +22,7 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
 
-    param proximity_metric: The type of comparison metric used
+    :param proximity_metric: The type of comparison metric used
         to determine proximity in feature space. The type of comparison
         metric supported is restricted by scipy's cdist() function. The
         following metrics are supported in scipy.
