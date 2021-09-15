@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import pytest
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -7,7 +5,7 @@ from smqtk_core.configuration import configuration_test_helper
 from xaitk_saliency.impls.perturb_image.rise import RISEGrid
 
 
-class TestRISEPerturbation (TestCase):
+class TestRISEPerturbation:
     def test_init_valued(self) -> None:
         """
         Test that constructor values pass.

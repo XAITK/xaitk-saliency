@@ -1,0 +1,117 @@
+//digraph iqr_saliency {
+//
+//labeljust=left;
+//
+//// Inheritence
+//edge [style=solid; dir=back; arrowtail=empty];
+//Pluggable -> Plugfigurable;
+//Configurable -> Plugfigurable;
+//Plugfigurable -> IqrSaliencyGen;
+//Plugfigurable -> DescriptorSaliencyGen;
+//Plugfigurable -> ClassifierSaliencyGen;
+//IqrSaliencyGen -> DescriptorBased;
+//IqrSaliencyGen -> ClassifierBased;
+//DescriptorSaliencyGen -> DSGimpl;
+//ClassifierSaliencyGen -> CSGimpl;
+//DSGimpl [label="..."];
+//CSGimpl [label="..."];
+//
+//// Encapsulation
+//edge [style=dashed; label="encapsulates"; dir=back, arrowtail="diamond"];
+//DescriptorBased -> DescriptorSaliencyGen;
+//ClassifierBased -> ClassifierSaliencyGen;
+//
+//subgraph "cluster smqtk" {
+//  label="SMQTK-Core";
+//  Pluggable; Configurable;
+//  Plugfigurable;
+//}
+//subgraph "cluster_xaitk" {
+//  label="XAITK-Saliency"
+//	subgraph "cluster interfaces" {
+//    label="Interfaces";
+//	  IqrSaliencyGen; DescriptorSaliencyGen; ClassifierSaliencyGen;
+//	}
+//	subgraph "cluster impls" {
+//    label="Implementations";
+//  	DescriptorBased; ClassifierBased; DSGimpl; CSGimpl;
+//	}
+//}
+//
+//}
+
+digraph api_v0_3 {
+
+// Options
+//size="12,4"; ratio=fill;
+labeljust=left;
+rankdir=LR;
+newrank=true;  // Required to not "unbox" things out of subclusters.
+
+// Gridding -- Used to vertically align nodes to separate clusters as desired.
+node [style=invis]
+edge [style=invis]
+A -> B -> C -> D;
+
+// Interfaces
+node [style=solid]
+edge [style=solid; dir=back; arrowtail=empty];
+Pluggable -> Plugfigurable;
+Configurable -> Plugfigurable;
+Plugfigurable -> PerturbImage;
+Plugfigurable -> GenerateClassifierConfidenceSaliency;
+Plugfigurable -> GenerateDescriptorSimilaritySaliency;
+Plugfigurable -> GenerateDetectorProposalSaliency;
+Plugfigurable -> GenerateImageClassifierBlackboxSaliency;
+
+subgraph cluster_smqtk {
+  label="Package: SMQTK-Core";
+  Pluggable; Configurable; Plugfigurable;
+}
+subgraph cluster_xaitk_saliency {
+  label="Package: XAITK-Saliency";
+  subgraph cluster_interfaces {
+    label="Abstract Interfaces";
+    subgraph cluster_perturb {
+      label="Perturbation";
+      PerturbImage;
+    }
+    subgraph cluster_saliency_generation {
+      label="Saliency Map Generation";
+      GenerateClassifierConfidenceSaliency;
+      GenerateDescriptorSimilaritySaliency;
+      GenerateDetectorProposalSaliency;
+      GenerateImageClassifierBlackboxSaliency;
+    }
+  }
+  subgraph cluster_impls {
+    label="Implementation Examples";
+    PerturbationOcclusion;
+    GenerateImageClassifierBlackboxSaliency -> PerturbationOcclusion;
+    PerturbationOcclusion -> PerturbImage [arrowtail=diamond, constraint=false];
+    PerturbationOcclusion -> GenerateClassifierConfidenceSaliency [arrowtail=diamond, constraint=false];
+  }
+}
+
+// Gridding pt. 2
+{ rank=same; A; Pluggable; Configurable; }
+{ rank=same; B; Plugfigurable; }
+{ rank=same; C; PerturbImage;
+                GenerateClassifierConfidenceSaliency;
+                GenerateDescriptorSimilaritySaliency;
+                GenerateDetectorProposalSaliency; }
+{ rank=same; D; PerturbationOcclusion; }
+
+}
+
+// dot concept.dot -Tpng -o concept.png
+//
+// inotifywait -e close_write -m . |
+//   while read -r directory events filename
+//   do
+//     if [[ "$filename" = "concept.dot" ]]
+//     then
+//       echo "Regenerating PNG"
+//       dot concept.dot -Tpng -o concept.png
+//     fi
+//   done;

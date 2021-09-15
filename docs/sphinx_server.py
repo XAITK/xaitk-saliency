@@ -11,10 +11,17 @@ and browse to http://localhost:5500
 livereload_: https://pypi.python.org/pypi/livereload
 """
 import os
+import sys
 
 from livereload import Server, shell
 
-rebuild_cmd = shell("make html", cwd=".")
+if sys.platform == "win32":
+    print("Using make.bat")
+    rebuild_cmd = shell("make.bat html", cwd=".")
+else:
+    print("Using Makefile")
+    rebuild_cmd = shell("make html", cwd=".")
+
 rebuild_root = "_build/html"
 
 watch_dirs = [

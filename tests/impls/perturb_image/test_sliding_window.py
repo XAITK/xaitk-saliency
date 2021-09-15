@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
@@ -8,7 +6,7 @@ from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 from tests import EXPECTED_MASKS_4x6
 
 
-class TestOcclusionBasedPerturb (TestCase):
+class TestOcclusionBasedPerturb:
 
     def test_init_default(self) -> None:
         """
