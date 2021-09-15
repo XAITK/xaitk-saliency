@@ -23,6 +23,10 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
 
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
+
+    :param proximity_metric: String label for the distance metric to use.
+      See scipy.spatial.distance.cdist() and it's *metric* parameter for more
+      details and possible values.
     """
 
     def __init__(
