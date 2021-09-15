@@ -44,7 +44,8 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
 
     def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
         """
-        | Compute the intersection over union (IoU) of two sets of boxes.
+        Compute the intersection over union (IoU) of two sets of boxes.
+
         | E.g.:
         |    A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
 
