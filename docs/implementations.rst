@@ -2,7 +2,12 @@
 Saliency Implementations
 =========================
 
-Included with this toolkit are a number of implementations for the interfaces described in the previous section. Like those interfaces, these initial implementations focus of black-box visual saliency and are separated by use-case. Each implementation provides functionality for a different perturbation or heatmap generation algorithm specific to that use-case.
+Included with this toolkit are a number of implementations for the interfaces
+described in the previous section.
+Like those interfaces, these initial implementations focus of black-box visual
+saliency and are separated by use-case.
+Each implementation provides functionality for a different perturbation or
+heatmap generation algorithm specific to that use-case.
 
 -------------------
 Image Perturbation
