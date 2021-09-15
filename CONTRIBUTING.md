@@ -17,6 +17,13 @@ See the [XAITK-Saliency README](README.md) file for additional information.
         $ git add <file1> <file2> ...
         $ git commit
 
+    * Included in your commits should be an addition to the
+      `docs/release_notes/pending_release.rst` file (or the relevant patch
+      release notes file).
+      This addition should be a short, descriptive summary of the update,
+      feature or fix that was added.
+      This is generally required for merger approval.
+
 4.  Push topic branch with commits to your fork in GitHub:
 
         $ git push origin HEAD -u
@@ -36,6 +43,21 @@ appropriate permissions.
 
 We use Sphinx for manual and automatic API [documentation](docs).
 
+### Contribution Release Note Exceptions
+When a new contribution is fixing a bug or minor issue with something that has
+been recently contributed, it may be the case that no additional release notes
+are needed since they would add redundancy to the document.
+
+For example, let's say that a recent contribution added a feature `Foo` and
+an appropriate release note for that feature.
+If a bug with that feature is quickly noticed and fixed in a follow-on
+contribution that does not impact how the feature is summarized in the
+release notes, then the release-notes check on that follow-on contribution may
+be ignored by the reviewers of the contribution.
+
+Generally, a reviewer will assume that a release note is required unless the
+contributor makes a case that the check should be ignored.
+This will be considered by reviewers on a case-by-case basis.
 
 ## Class Naming Philosophy
 For classes that define a behavior, or perform a transformation of a
