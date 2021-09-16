@@ -13,7 +13,7 @@ UINT8_ONE = np.uint8(1)
 def occlude_image_batch(
     ref_image: np.ndarray,
     masks: np.ndarray,
-    fill: Optional[Union[int, Sequence[int]]] = None,
+    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
 ) -> np.ndarray:
     """
     Apply a number of input occlusion masks to the given reference image,
@@ -24,12 +24,21 @@ def occlude_image_batch(
     width, and for the mask matrix values to be in the [0, 1] range.
     In the mask matrix, values closer to 1 correspond to regions of the image
     that should *NOT* be occluded.
-    E.g. a 0 in the mask will translate to "blacking out" the corresponding
+    E.g. a 0 in the mask will translate to *fully* occluding the corresponding
     location in the source image.
 
-    We optionally take in a fill-color value as input. This may be either a
-    scalar or per-channel sequence. When no fill is passed, black is used
-    (default absence of color).
+    We optionally take in a "fill" that alpha-blend into masked regions of the
+    input `ref_image`.
+    `fill` may be either a scalar, sequence of scalars, or another image matrix
+    congruent in shape to the `ref_image`.
+    When `fill` is a scalar or a sequence of scalars, the scalars should be in
+    the same data-type and value range as the input image.
+    A sequence of scalars should be the same length as there are channels in
+    the `ref_image`.
+    When `fill` is an image matrix it should follow the format of `[H x W]` or
+    `[H x W x C]`, should be in the same dtype and value range as `ref_image`
+    and should match the same number of channels if channels are provided.
+    When no fill is passed, black is used (default absence of color).
 
     Images output will mirror the input image format. As such, the `fill` value
     passed must be compatible with the input image channels for broadcasting.
@@ -48,8 +57,9 @@ def occlude_image_batch(
     :param ref_image: Reference image to generate perturbations from.
     :param masks: Mask matrix input of shape `[N x H x W]` where height and
         width dimensions are the same size as the input `ref_image`.
-    :param fill: Optional fill color for the occluded regions as a single uint8
-        value or a per-channel sequence.
+    :param fill: Optional fill for alpha-blending based on the input masks for
+        the occluded regions as a scalar value, a per-channel sequence or a
+        shape-matched image.
 
     :raises ValueError: The input mask matrix was not 3-dimensional, its last
         two dimensions did not match the shape of the input imagery, or the
@@ -72,8 +82,8 @@ def occlude_image_batch(
     s: Tuple = (...,)
     if ref_image.ndim > 2:
         s = (..., None)  # add channel axis for multiplication
-    # Basically `np.empty_like` but tacking on the batch-dim to the front of
-    # the shape.
+    # Basically `np.empty_like` but tacking on the num-masks-dim to the front
+    # of the shape.
     occ_img_mats = np.empty(
         (len(masks), *ref_image_shape),
         dtype=ref_image.dtype,
@@ -95,7 +105,7 @@ def occlude_image_batch(
 def occlude_image_streaming(
     ref_image: np.ndarray,
     masks: Iterable[np.ndarray],
-    fill: Optional[Union[int, Sequence[int]]] = None,
+    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
     threads: Optional[int] = None,
 ) -> Generator[np.ndarray, None, None]:
     """
@@ -107,12 +117,21 @@ def occlude_image_streaming(
     width, and for the mask matrix values to be in the [0, 1] range.
     In the mask matrix, values closer to 1 correspond to regions of the image
     that should *NOT* be occluded.
-    E.g. a 0 in the mask will translate to "blacking out" the corresponding
+    E.g. a 0 in the mask will translate to *fully* occluding the corresponding
     location in the source image.
 
-    We optionally take in a fill-color value as input. This may be either a
-    scalar or per-channel sequence. When no fill is passed, black is used
-    (default absence of color).
+    We optionally take in a "fill" that alpha-blend into masked regions of the
+    input `ref_image`.
+    `fill` may be either a scalar, sequence of scalars, or another image matrix
+    congruent in shape to the `ref_image`.
+    When `fill` is a scalar or a sequence of scalars, the scalars should be in
+    the same data-type and value range as the input image.
+    A sequence of scalars should be the same length as there are channels in
+    the `ref_image`.
+    When `fill` is an image matrix it should follow the format of `[H x W]` or
+    `[H x W x C]`, should be in the same dtype and value range as `ref_image`
+    and should match the same number of channels if channels are provided.
+    When no fill is passed, black is used (default absence of color).
 
     Images output will mirror the input image format. As such, the `fill` value
     passed must be compatible with the input image channels for broadcasting.
@@ -127,8 +146,9 @@ def occlude_image_streaming(
 
     :param ref_image: Original base image
     :param masks: Mask images in the [N, Height, Weight] shape format.
-    :param fill: Optional fill color for the occluded regions as a single uint8
-        value or a per-channel sequence.
+    :param fill: Optional fill for alpha-blending based on the input masks for
+        the occluded regions as a scalar value, a per-channel sequence or a
+        shape-matched image.
     :param threads: Optional number of threads to use for parallelism when set
         to a positive integer. If 0, a negative value, or `None`, work will be
         performed on the main-thread in-line.
@@ -187,7 +207,7 @@ def benchmark_occlude_image(
     """
     img_mat = np.ones((*img_shape, 3), dtype=np.uint8)
     masks = (np.random.rand(num_masks, *img_shape[:2]) < 0.5)
-    fill_1c = 0
+    fill_1c: int = 0
     fill_mc = [0] * img_channels
     perf_counter = time.perf_counter
     print(f"Image shape={img_mat.shape}, masks={masks.shape}, fill_1c={fill_1c}, fill_{img_channels}c={fill_mc}")
