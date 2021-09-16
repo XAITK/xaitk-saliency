@@ -23,6 +23,10 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
 
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
+
+    :param proximity_metric: String label for the distance metric to use.
+      See scipy.spatial.distance.cdist() and it's *metric* parameter for more
+      details and possible values.
     """
 
     def __init__(
@@ -39,14 +43,15 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
                              "may not be available in scipy")
 
     def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
-        """Compute the intersection over union (IoU) of two sets of boxes.
-        E.g.:
-            A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
-        Args:
-            box_a: (np.array) bounding boxes, Shape: [A,4]
-            box_b: (np.array) bounding boxes, Shape: [B,4]
-        Return:
-            iou: (np.array), Shape: [A,B].
+        """
+        Compute the intersection over union (IoU) of two sets of boxes.
+
+        | E.g.:
+        |    A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
+
+        :param box_a: (np.array) bounding boxes, Shape: [A,4]
+        :param box_b: (np.array) bounding boxes, Shape: [B,4]
+        :return: iou(np.array), Shape: [A,B].
         """
         # check input box shape and dimensions
         assert box_a.ndim == 2
@@ -84,17 +89,6 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        ref_dets: n_dets x (n_classes + 4 + 1)
-        perturbed_dets: n_masks x n_props x (n_classes + 4 + 1)
-        perturbed_masks: n_masks x H x W
-
-        where n_dets is the number of reference detections,
-        n_masks is the number of perturbation masks,
-        n_props is the number of detection proposals,
-        n_classes is the number of object classes,
-        and H, W correspond to image height and width
-        """
 
         if len(perturbed_dets) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective "

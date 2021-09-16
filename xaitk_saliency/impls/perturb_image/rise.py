@@ -49,6 +49,7 @@ class RISEGrid (PerturbImage):
     ):
         """
         Generate a set of random binary masks
+
         :param n:
             Number of random masks used in the algorithm. E.g. 1000.
         :param s:

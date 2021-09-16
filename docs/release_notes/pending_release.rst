@@ -18,6 +18,8 @@ Documentation
 * Added content to the `CONTRIBUTING.md` file on including notes here for added
   updates, features and fixes.
 
+* Add implementations section.
+
 Implementations
 
 * Add ``DRISEScoring`` implementation of the ``GenerateDetectorProposalSaliency``
