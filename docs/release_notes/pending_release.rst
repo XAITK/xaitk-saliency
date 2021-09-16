@@ -30,6 +30,11 @@ Tests
 * Removed use of `unittest.TestCase` as it is not utilized directly in any way
   that PyTest does not provide.
 
+Utilities
+
+* Add type annotation, documentation and unit-tests for using image matrices as
+  the fill option instead of just a solid color.
+
 
 Fixes
 -----
