@@ -37,6 +37,9 @@ Utilities
 * Add type annotation, documentation and unit-tests for using image matrices as
   the fill option instead of just a solid color.
 
+Examples
+
+* Add example utilizing scikit-learn
 
 Fixes
 -----
