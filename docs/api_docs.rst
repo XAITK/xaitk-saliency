@@ -7,7 +7,7 @@ These initial interfaces focus on black-box visual saliency.
 We define the two high-level requirements for this initial task: reference image perturbation in preparation for
 black-box testing, and saliency heatmap generation utilizing black-box inputs.
 We define a few similar interfaces for performing the saliency heatmap generation, separated by the intermediate
-algorithmic use-cases: image similarity, classification and object detection.
+algorithmic use cases: image similarity, classification and object detection.
 We explicitly do not require an abstraction for the black-box operations to fit inside.
 This is intended to allow for applications using these interfaces while leveraging existing functionality, only needing
 to perform any data formatting to fit the input defined here.
@@ -134,6 +134,21 @@ detections, which is why below we formulate the shape of perturbed image detects
 A candidate implementation for this interface is the D-RISE [4] algorithm.
 
 .. autoclass:: xaitk_saliency.interfaces.gen_detector_prop_sal.GenerateDetectorProposalSaliency
+   :members:
+
+---------------------------------------------
+Blackbox Saliency Image Generation
+---------------------------------------------
+
+Unlike the previous saliency heatmap generation interfaces, this interface uses a blackbox classifier as input along
+with a reference image to generate visual saliency heatmaps .
+
+A candidate implementation for this interface is the D-RISE [4] algorithm.
+
+Interface: GenerateImageClassifierBlackboxSaliency
+---------------------------------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal.GenerateImageClassifierBlackboxSaliency
    :members:
 
 ------------------
