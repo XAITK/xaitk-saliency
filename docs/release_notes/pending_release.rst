@@ -39,7 +39,8 @@ Utilities
 
 Examples
 
-* Add example utilizing scikit-learn
+* Add example notebook using classifier-based interfaces and implementations
+  with scikit-learn on the MNIST dataset.
 
 Fixes
 -----
