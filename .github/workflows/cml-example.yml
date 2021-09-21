@@ -1,0 +1,50 @@
+name: Example CML Use
+
+on:
+  pull_request:
+    branches:
+      - dev/cml-experiment
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  model_xai:
+    runs-on: ubuntu-latest
+    # CML container -- contains python v3.8.10
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      # Setup repo checkout
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/cache@v2
+        id: env-cache
+        with:
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.8-${{ hashFiles('poetry.lock') }}
+      - uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      # Initialize CML support functions
+      - uses: iterative/setup-cml@v1
+      # ML Workflow test
+      - name: Train/Explain Model
+        env:
+          REPO_TOPEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd cml_example
+
+          poetry run python train.py
+
+          cat metrics.txt >> report.md
+          echo "# Confusion Matrix" >> report.md
+          cml-publish confusion_matrix.png --md >> report.md
+          echo "# Test Image Metrics" >> report.md
+          cat test_metrics.txt >> report.md
+          echo "## Test Image Visual Saliency" >> report.md
+          cml-publish xai_class_single.png --md >> report.md
+          echo "# Class Aggregate Saliency" >> report.md
+          cml-publish xai_perclass_agg_saliency.png --md >> report.md
+          cml-send-comment --token "$REPO_TOKEN" --driver github --repo https://github.com/XAITK/xaitk-saliency --update report.md
