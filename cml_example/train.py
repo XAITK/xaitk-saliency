@@ -46,23 +46,23 @@ X_test = scaler.transform(X_test)
 ###############################################################################
 # Train a scikit-learn estimator model -- assuming as .predict_proba
 print("Training model")
-model = LogisticRegression(
-    C=50. / train_samples,
-    penalty='l1',
-    solver='saga',
-    tol=0.1,
-    # important to make model training some sort of deterministic
-    random_state=0,
-)
-# model = MLPClassifier(
-#     hidden_layer_sizes=(50,),
-#     # max_iter=10,
-#     alpha=1e-4,
-#     solver='sgd',
-#     verbose=10,
-#     random_state=1,
-#     learning_rate_init=.1
+# model = LogisticRegression(
+#     C=50. / train_samples,
+#     penalty='l1',
+#     solver='saga',
+#     tol=0.1,
+#     # important to make model training some sort of deterministic
+#     random_state=0,
 # )
+model = MLPClassifier(
+    hidden_layer_sizes=(50,),
+    # max_iter=10,
+    alpha=1e-4,
+    solver='sgd',
+    verbose=10,
+    random_state=1,
+    learning_rate_init=.1
+)
 model.fit(X_train, y_train)
 print("Training model -- Done")
 
