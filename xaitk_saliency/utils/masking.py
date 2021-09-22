@@ -65,7 +65,7 @@ def occlude_image_batch(
         two dimensions did not match the shape of the input imagery, or the
         input fill value could not be broadcast against the input image.
 
-    :return: List of masked images in PIL Image form.
+    :return: A numpy array of masked images.
     """
     # Full shape of input image, including channel dim if present.
     ref_image_shape = ref_image.shape
@@ -156,7 +156,7 @@ def occlude_image_streaming(
     :raises ValueError: One or more input masks in the input iterable did not
         match shape of the input reference image.
 
-    :return: List of masked images in PIL Image form.
+    :return: A generator of numpy array masked images.
     """
     # Just the [H x W] component.
     img_shape = ref_image.shape[:2]

@@ -53,7 +53,8 @@ We provide two utility functions as baseline implementation to perform this step
 
 * ``xaitk_saliency.utils.masking.occlude_image_batch`` - performs the transformation as a batch operation
 
-* ``xaitk_saliency.utils.masking.occlude_image_streaming`` - performs the transformation in a streaming method with optional parallelization in that streaming
+* ``xaitk_saliency.utils.masking.occlude_image_streaming`` - performs the transformation in a streaming method with
+optional parallelization in that streaming
 
 While the batch version is simpler and in many cases the faster of the two versions, the streaming version may be more
 applicable to large image masks or when a great deal of masks are being input, where in such cases the batch version
@@ -143,7 +144,8 @@ Blackbox Saliency Image Generation
 Unlike the previous saliency heatmap generation interfaces, this interface uses a blackbox classifier as input along
 with a reference image to generate visual saliency heatmaps .
 
-A candidate implementation for this interface is the D-RISE [4] algorithm.
+A candidate implementation for this interface is the PerturbationOcclusion implementation or its sub-implementations
+(RISEStack and/or SlidingWindowStack).
 
 Interface: GenerateImageClassifierBlackboxSaliency
 ---------------------------------------------------
