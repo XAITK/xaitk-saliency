@@ -144,8 +144,9 @@ Blackbox Saliency Image Generation
 Unlike the previous saliency heatmap generation interfaces, this interface uses a blackbox classifier as input along
 with a reference image to generate visual saliency heatmaps .
 
-A candidate implementation for this interface is the PerturbationOcclusion implementation or its sub-implementations
-(RISEStack and/or SlidingWindowStack).
+A candidate implementation for this interface is the ``PerturbationOcclusion`` implementation or its sub-implementations
+(``RISEStack`` and/or ``SlidingWindowStack``).
+
 
 Interface: GenerateImageClassifierBlackboxSaliency
 ---------------------------------------------------
