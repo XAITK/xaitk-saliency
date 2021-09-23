@@ -20,6 +20,8 @@ Documentation
 
 * Add implementations section.
 
+* Update example Jupyter notebooks to work with Google Colab.
+
 Implementations
 
 * Add ``DRISEScoring`` implementation of the ``GenerateDetectorProposalSaliency``
