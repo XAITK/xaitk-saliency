@@ -13,7 +13,7 @@ Documentation
 
 * Add background material for saliency maps to ``introduction.rst``.
 
-* Added API docs section.
+* Added API docs section, which includes descriptions of all interfaces.
 
 * Added content to the `CONTRIBUTING.md` file on including notes here for added
   updates, features and fixes.
