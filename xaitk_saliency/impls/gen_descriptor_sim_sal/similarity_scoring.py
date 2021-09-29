@@ -44,7 +44,7 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
             cdist([[1], [1]], [[1], [1]], proximity_metric)
             self.proximity_metric: str = proximity_metric
         except ValueError:
-            raise ValueError("Chosen comparision metric not supported or",
+            raise ValueError("Chosen comparison metric not supported or "
                              "may not be available in scipy")
 
     def generate(
@@ -54,13 +54,12 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-
         if len(perturbed_descrs) != len(perturbed_masks):
-            raise ValueError("Number of perturbation masks and respective",
+            raise ValueError("Number of perturbation masks and respective "
                              "feature vector do not match.")
 
         if len(ref_descr_1) != len(ref_descr_2):
-            raise ValueError("Length of feature vector between",
+            raise ValueError("Length of feature vector between "
                              "two images do not match.")
 
         # Computing original proximity between image1 and image2 feature vectors.
