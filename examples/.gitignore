@@ -1,5 +1,8 @@
 /monai-example/**
 /viame-example/**
 /scikit-learn-example/**
+/pretrained_agents/**
 **/imagenet_classes.txt*
 /*.jpg
+/*.zip
+/*.mp4
