@@ -35,18 +35,26 @@ class GenerateDetectorProposalSaliency (Plugfigurable):
         associated reference detection.
 
         We expect input detections to come from a black-box source that outputs
-        our minimum requirements of a bounding-box, objectness and per-class
-        scores.
-        For detection black-box methods that *do not* produce objectness
-        scores, we recommend using a value of 1.0 in that column.
+        our minimum requirements of a bounding-box, per-class scores.
+        Objectness scores are required in our input format, but not
+        necessarily from detection black-box methods as there is a sensible
+        default value for this.
+        See the :py:func:`~.utils.detection.format_detection` helper function
+        for assistance in forming our input format, which includes this
+        optional default fill-in.
+        We expect objectness is a confidence score valued in the inclusive
+        ``[0,1]`` range.
+        We also expect classification scores to be in the inclusive ``[0,1]``
+        range.
+
         We assume that an input detection is coupled with a single truth class
         (or a single leaf node in a hierarchical structure).
-        Detections input as references may be either ground truth or predicted
-        detections.
-        As for perturbed image detections input, we expect the quantity of
-        detections to be decoupled from the source of reference image
-        detections, which is why below we formulate the shape of perturbed
-        image detects with `nProps` instead of `nDets`.
+        Detections input as references (``ref_dets`` parameter) may be either
+        ground truth or predicted detections.
+        As for perturbed image detections input (``perturbed_dets``), we expect
+        the quantity of detections to be decoupled from the source of reference
+        image detections, which is why below we formulate the shape of
+        perturbed image detections with `nProps` instead of `nDets`.
 
         Perturbation mask input into the `perturbed_masks` parameter here is
         equivalent to the perturbation mask output from a
