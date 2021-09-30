@@ -1,5 +1,7 @@
-import numpy as np
 import os
+
+import numpy as np
+import pytest
 
 from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency
@@ -25,7 +27,7 @@ class TestSimilarityScoring:
 
     def test_get_config(self) -> None:
         """
-        Test expected configuation behavior.
+        Test expected configuration behavior.
         """
         impl = SimilarityScoring('hamming')
         for i in configuration_test_helper(impl):
@@ -37,6 +39,57 @@ class TestSimilarityScoring:
         """
         impl = SimilarityScoring('hamming')
         assert impl.proximity_metric == 'hamming'
+
+    def test_invalid_metric(self) -> None:
+        """
+        Test that a ValueError is raised when an invalid cdist proximity_metric
+        is passed.
+        """
+        with pytest.raises(
+            ValueError,
+            match=r"Chosen comparison metric not supported or may not be "
+                  r"available in scipy"
+        ):
+            SimilarityScoring('invalid metric')
+
+    def test_generate_mismatch_ref_descriptors(self) -> None:
+        """
+        Test that we appropriately error when the input reference descriptors
+        are not the same dimensionality.
+        """
+        np.random.seed(0)
+        test_d1 = np.random.rand(16)
+        test_d2 = np.random.rand(15)  # Different than above
+        test_descriptors = np.random.rand(32, 16)
+        test_masks = np.random.rand(32, 16, 16)
+
+        impl = SimilarityScoring()
+
+        with pytest.raises(
+            ValueError,
+            match=r"Length of feature vector between two images do not match."
+        ):
+            impl.generate(test_d1, test_d2, test_descriptors, test_masks)
+
+    def test_generate_mismatched_perturbed(self) -> None:
+        """
+        Test that we appropriately error when the input perturbation
+        descriptors and mask arrays are not equal in first-dimension length.
+        """
+        np.random.seed(0)
+        test_d1 = np.random.rand(16)
+        test_d2 = np.random.rand(16)
+        test_descriptors = np.random.rand(32, 16)
+        test_masks = np.random.rand(30, 16, 16)  # Different than above
+
+        impl = SimilarityScoring()
+
+        with pytest.raises(
+            ValueError,
+            match=r"Number of perturbation masks and respective feature "
+                  r"vector do not match."
+        ):
+            impl.generate(test_d1, test_d2, test_descriptors, test_masks)
 
     def test_1_featurevec(self) -> None:
         """

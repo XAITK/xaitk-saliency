@@ -44,3 +44,8 @@ Examples
 
 Fixes
 -----
+
+Implementations
+
+* Fixed ``ValueError`` messages raised in the ``SimilarityScoring``
+  implementation. Added unittests to check the raising and message content.
