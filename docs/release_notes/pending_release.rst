@@ -15,7 +15,7 @@ Documentation
 
 * Added API docs section, which includes descriptions of all interfaces.
 
-* Added content to the `CONTRIBUTING.md` file on including notes here for added
+* Added content to the ``CONTRIBUTING.md`` file on including notes here for added
   updates, features and fixes.
 
 * Add implementations section.
@@ -29,13 +29,16 @@ Implementations
 
 Tests
 
-* Removed use of `unittest.TestCase` as it is not utilized directly in any way
+* Removed use of ``unittest.TestCase`` as it is not utilized directly in any way
   that PyTest does not provide.
 
 Utilities
 
 * Add type annotation, documentation and unit-tests for using image matrices as
   the fill option instead of just a solid color.
+
+* Add ``format_detection`` helper function to form the input for
+  ``GenerateDetectorProposalSaliency`` from separated components.
 
 Examples
 

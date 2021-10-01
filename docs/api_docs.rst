@@ -113,7 +113,7 @@ algorithms [3] that generate saliency heat-maps.
    :members:
 
 Interface: GenerateDetectorProposalSaliency
-----------------------------------------------
+-------------------------------------------
 
 This interface proposes that implementations transform black-box image object detection predictions into visual
 saliency heatmaps.
@@ -136,6 +136,20 @@ A candidate implementation for this interface is the D-RISE [4] algorithm.
 
 .. autoclass:: xaitk_saliency.interfaces.gen_detector_prop_sal.GenerateDetectorProposalSaliency
    :members:
+
+Detection formatting helper
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The :py:meth:`.GenerateDetectorProposalSaliency.generate` method takes in a
+specifically formatted matrix that combines 3 different aspects of common
+detector model outputs:
+  * bounding boxes
+  * objectness scores
+  * classification scores
+
+We provide a helper function to merge distinct output data into the unified
+format.
+
+.. autofunction:: xaitk_saliency.utils.detection.format_detection
 
 ---------------------------------------------
 Blackbox Saliency Image Generation
