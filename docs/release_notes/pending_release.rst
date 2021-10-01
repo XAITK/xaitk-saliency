@@ -41,6 +41,9 @@ Implementations
 * Add ``DRISEScoring`` implementation of the ``GenerateDetectorProposalSaliency``
   interface using detection output and associated occlusion masks.
 
+* Add ``SlidingRadial`` implementation of the ``PerturbImage`` interface that
+  slides circular occlusion area across image.
+
 Tests
 
 * Removed use of ``unittest.TestCase`` as it is not utilized directly in any way
@@ -53,6 +56,9 @@ Utilities
 
 * Add ``format_detection`` helper function to form the input for
   ``GenerateDetectorProposalSaliency`` from separated components.
+
+* Add example notebook performing saliency on a deep RL agent in an Atari 2600
+  environment.
 
 Fixes
 -----
