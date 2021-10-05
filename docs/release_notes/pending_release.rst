@@ -5,6 +5,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Added workflow for test running *some* example notebooks.
+
 Documentation
 
 * Added some review process documentation.
@@ -15,12 +19,20 @@ Documentation
 
 * Added API docs section, which includes descriptions of all interfaces.
 
-* Added content to the ``CONTRIBUTING.md`` file on including notes here for added
-  updates, features and fixes.
+* Added content to the ``CONTRIBUTING.md`` file on:
+
+  * including notes here for added updates, features and fixes
+
+  * Jupyter notebook CI workflow inclusion
 
 * Add implementations section.
 
 * Update example Jupyter notebooks to work with Google Colab.
+
+Examples
+
+* Add example notebook using classifier-based interfaces and implementations
+  with scikit-learn on the MNIST dataset.
 
 Implementations
 
@@ -39,11 +51,6 @@ Utilities
 
 * Add ``format_detection`` helper function to form the input for
   ``GenerateDetectorProposalSaliency`` from separated components.
-
-Examples
-
-* Add example notebook using classifier-based interfaces and implementations
-  with scikit-learn on the MNIST dataset.
 
 Fixes
 -----

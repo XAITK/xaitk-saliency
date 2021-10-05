@@ -42,6 +42,24 @@ Some notebooks may require additional data. This data will be downloaded when ru
 
 For issues relating to XAITK-Saliency functionality or running of an example, please create an issue on the [repository](https://github.com/XAITK/xaitk-saliency/issues).
 
+
+### Continuous Integration
+Notebooks contained here are (mostly) executed as part of the continuous
+integration workflows to ensure their example appropriately reflects the
+toolkit's current functionality.
+The CI workflow may be found in ``.github/workflows/ci-example-notebooks.yml``.
+
+Not all are included in this CI due to their long-running or heavy resource
+requirements.
+The specification of which notebooks are included in CI is around L29 of the
+above referenced workflow configuration.
+
+The following is a list of rationales as to why certain notebooks are not
+currently included in to CI workflow:
+
+* ``covid_classification.ipynb`` which trains a deep learning model. This both
+  takes a non-trivial amount of time and consumes greater resources.
+
 ---
 
 This README is adapted from [MONAI Tutorials](https://github.com/Project-MONAI/tutorials).

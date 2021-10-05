@@ -132,6 +132,13 @@ by the current host ReadTheDocs.org.
 
 Passage of these checks is strictly required.
 
+Example Notebooks Execution
+---------------------------
+This check executes included example notebooks to ensure their proper
+functionality with the package with respect to a pull request.
+Not all notebooks may be run as some maybe set up to use too many resources or
+run for an extended period of time.
+
 
 Human Review
 ============
@@ -148,6 +155,17 @@ ensure that there are no outstanding issues.
 
 If a PR is not a draft and has an approving review, it may be merged at any
 time.
+
+Notebooks
+---------
+The default preference is that all Jupyter Notebooks be included in execution
+of the Notebook CI workflow (here: ``.github/workflows/ci-example-notebooks.yml``).
+If a notebook is added, it should be verified that it has been added to the
+list of notebooks to be run.
+If it has not been, the addition should be requested or for a rationale as to
+why it has not been.
+Rationale for specific notebooks should be added to the relevant section in
+``examples/README.md``.
 
 Resolving a Branch
 ==================
