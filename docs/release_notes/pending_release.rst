@@ -19,8 +19,11 @@ Documentation
 
 * Added API docs section, which includes descriptions of all interfaces.
 
-* Added content to the ``CONTRIBUTING.md`` file on including notes here for added
-  updates, features and fixes.
+* Added content to the ``CONTRIBUTING.md`` file on:
+
+  * including notes here for added updates, features and fixes
+
+  * Jupyter notebook CI workflow inclusion
 
 * Add implementations section.
 
