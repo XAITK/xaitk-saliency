@@ -42,7 +42,7 @@ Implementations
   interface using detection output and associated occlusion masks.
 
 * Add ``SlidingRadial`` implementation of the ``PerturbImage`` interface that
-  slides circular occlusion areas across an image.
+  slides radial occlusion areas across an image.
 
 Tests
 
@@ -57,8 +57,8 @@ Utilities
 * Add ``format_detection`` helper function to form the input for
   ``GenerateDetectorProposalSaliency`` from separated components.
 
-* Add example notebook performing saliency on a deep RL agent in an Atari 2600
-  environment.
+* Add example notebook showing the use of ``SlidingRadial`` perturbation and
+  the use of ``occlude_image_batch`` with blurred-image alpha blending.
 
 Fixes
 -----
