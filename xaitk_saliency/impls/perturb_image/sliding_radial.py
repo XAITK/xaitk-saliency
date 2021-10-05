@@ -41,29 +41,29 @@ class SlidingRadial (PerturbImage):
         ref_image: np.ndarray
     ) -> np.ndarray:
         stride_h, stride_w = self.stride
-        img_h, img_w = ref_image.shape[:2]
-
-        # Center masks in between pixels
-        center_xs = np.arange(0.5, img_w, stride_w)
-        center_ys = np.arange(0.5, img_h, stride_h)
+        img_size = ref_image.shape[:2]
+        img_h, img_w = img_size
+        center_xs = np.arange(0, img_w, stride_w)
+        center_ys = np.arange(0, img_h, stride_h)
 
         num_masks = len(center_xs) * len(center_ys)
-
-        masks = np.ones((num_masks, img_h, img_w))
-
+        masks = np.empty((num_masks, img_h, img_w), dtype='float32')
         center_xs_m = np.tile(center_xs, len(center_ys))
         center_ys_m = np.repeat(center_ys, len(center_xs))
 
-        y, x = np.ogrid[0:img_h, 0:img_w]
+        y, x = np.ogrid[:img_h, :img_w]
 
         for i, (center_x, center_y) in enumerate(zip(center_xs_m, center_ys_m)):
-            mask = np.ones((img_h, img_w))
+            mask = np.zeros((img_h, img_w))
+            circle = (x-center_x)*(x-center_x) + (y-center_y) * \
+                (y-center_y) <= self.radius*self.radius
+            mask[circle] = 1
 
-            circle = (x-center_x)*(x-center_x) + (y-center_y)*(y-center_y) < self.radius*self.radius
+            if self.sigma:
+                mask = gaussian_filter(mask, sigma=self.sigma)
+                mask = mask/mask.max()
 
-            mask[circle] = 0
-            mask = gaussian_filter(mask, sigma=self.sigma)
-            masks[i] = mask
+            masks[i] = 1 - mask
 
         return masks
 

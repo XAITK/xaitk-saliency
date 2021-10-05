@@ -42,7 +42,7 @@ Implementations
   interface using detection output and associated occlusion masks.
 
 * Add ``SlidingRadial`` implementation of the ``PerturbImage`` interface that
-  slides circular occlusion area across image.
+  slides circular occlusion areas across an image.
 
 Tests
 
