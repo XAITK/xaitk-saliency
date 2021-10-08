@@ -111,14 +111,6 @@ obscured in the black box model.
           AI model after it has been created*; nothing is implied
           about how the model is constructed.
 
-.. note:: This distinction applies to both the *concept* and
-          *implementation*. An AI model could support white box
-          reasoning but its implmentation might lack the APIs to
-          access the internal state; conversely, it might provide
-          complete API access yet provide no guidance on how that
-          state influences the output. **API access to the model does
-          not automatically imply white box explainability.**
-
 Let's take a look at the pros and cons of these two approaches.
 
 White Box Methods
@@ -174,14 +166,21 @@ Pros
 """"
 
 * A white box XAI can choose to **leverage its tight coupling to the
-  model** to maximize the information available, at the sacrifice of
+  AI model** to maximize the information available, at the sacrifice of
   generalization to other AI models.
 
-* A white box XAI **accesses the actual AI computation which generated
+* A white box XAI **accesses the actual AI model's computation which generated
   the output**. The explanation is derived directly from what the
   AI model computed about the input, in contrast to black box XAIs
   which can only indirectly compare the output to output from slightly
   different inputs.
+
+* A white box XAI is usually more computationally efficient, since it
+  typically only requires a single forward / backward pass through the
+  AI model. In Figure 5, the white box approach on the left interacts
+  with the AI during its single processing run to produce the output;
+  in comparison, black box methods (such as in Figure 5 on the right)
+  typically run the AI network multiple times.
 
 Cons
 """"
