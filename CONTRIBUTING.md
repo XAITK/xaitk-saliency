@@ -43,6 +43,7 @@ All checks/tests must pass before a PR can be merged by an individual with the
 appropriate permissions.
 
 We use Sphinx for manual and automatic API [documentation](docs).
+For spelling and word usage guidance, see the "Style Sheet for XAITK Saliency Docs" (`docs/misc/style_sheet.rst`).
 
 ### Jupyter Notebooks
 When adding or modifying a Jupyter Notebook in this repository, consider the
