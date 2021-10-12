@@ -11,6 +11,8 @@ CI
 
 Documentation
 
+* Added text discussing white box methods to ``introduction.rst``.
+
 * Added some review process documentation.
 
 * Add initial FAQ documentation file.
