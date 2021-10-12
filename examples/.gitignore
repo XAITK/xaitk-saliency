@@ -1,4 +1,5 @@
 /monai-example/**
 /viame-example/**
+/scikit-learn-example/**
 **/imagenet_classes.txt*
 /*.jpg

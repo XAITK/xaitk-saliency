@@ -9,18 +9,18 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
     """
-    Interface for algorithms that take a reference image and a image classifier
-    blackbox algorithm, and generates a number of visual saliency heatmap
-    matrices, one for each class output by the classifier blackbox.
+    This interface for algorithms takes a reference image and an image
+    classifier blackbox algorithm, then generates a number of visual
+    saliency heatmap matrices, one for each class output by the classifier
+    blackbox.
 
-    An input classifier blackbox needs to be input, which requires some
+    A classifier blackbox needs to be input, which requires some
     specification in how to operate the blackbox.
-    The `smqtk_classifier.ClassifyImage` abstract interface is utilized for
-    this purpose in order to provide some minimal form that a blackbox
-    classifier must have: be able to classify an image into confidences for
+    The `smqtk_classifier.ClassifyImage` abstract interface is used to
+    provide a minimal form that a blackbox classifier requires: be able to classify an image into confidences for
     some number of class labels.
 
-    Generated visual saliency heat-map for each input class as a
+    Generates a visual saliency heatmap for each input class as a
     float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
     """
 
@@ -30,24 +30,24 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
         blackbox: ClassifyImage
     ) -> np.ndarray:
         """
-        Generate per-class visual saliency heatmaps for some classifier
+        Generates per-class visual saliency heatmaps for some classifier
         blackbox over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
         either a `H x W` or `H x W x C` shape format.
 
-        Output saliency map matrix should be in the shape `nClasses x H x W`,
-        be floating-point typed and be composed of values in the `[-1, 1]`
+        Output saliency map matrix should be (1) in the shape `nClasses x H x W`,
+        (2) floating-point typed, and (3) composed of values in the `[-1, 1]`
         range.
         `nClasses` should be the quantity of unique class labels output by the
         given classifier blackbox.
-        While specific algorithms determine the quantity of heatmaps returned
+        While specific algorithms determine the quantity of heatmaps returned,
         the height and width of returned heatmaps should be consistent with the
         input image, i.e. the `H` and `W` dimensions should match in size to
         the reference image's `H` and `W` dimensions.
-        Positive values of the saliency heat-maps indicate regions which
+        Positive values of the saliency heatmaps indicate regions that
         increase respective class confidence scores, while negative values
-        indicate regions which decrease respective class confidence scores
+        indicate regions that decrease respective class confidence scores
         according to the given blackbox classifier.
 
         :param ref_image: Reference image over which visual saliency heatmaps
