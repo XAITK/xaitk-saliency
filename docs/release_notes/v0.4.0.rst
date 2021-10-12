@@ -1,5 +1,8 @@
-Pending Release Notes
-=====================
+v0.4.0
+======
+This minor release expands our documentation and examples pool.
+We additionally provide an the D-RISE implementation for the
+``GenerateDetectorProposalSaliency`` interface.
 
 
 Updates / New Features
