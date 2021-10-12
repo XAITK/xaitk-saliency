@@ -33,12 +33,13 @@ Image Saliency Maps: An Intuitive Introduction
 ----------------------------------------------
 
 Figure 4 shows a deep learning pipeline for recognizing objects in
-images; pixels in the image (in green) are processed by the pipeline
-(in yellow) to produce the output (in orange). Here, the system has been
-trained to recognize 1000 object categories. Its output is a list of
-1000 numbers, one for each object type; each number is between 0 and
-1, representing the system's estimate of whether or not that
-particular object is in the image.
+images; pixels in the image (in green) are processed by the
+Convolutional Neural Network (CNN, in yellow) to produce the
+output (in orange). Here, the system has been trained to recognize
+1000 object categories. Its output is a list of 1000 numbers, one for
+each object type; each number is between 0 and 1, representing the
+system's estimate of whether or not that particular object is in the
+image.
 
 .. figure:: figures/cnn-tagged-scaled.png
 
@@ -98,7 +99,7 @@ approaches to this:
    we can deduce certain aspects of the how the AI and its model behaves.
 
 These are illustrated in Figure 5. Note how the AI algorithm is
-obscured in the black box model.
+not available for inspection in the black box model.
 
 .. figure:: figures/white-box-vs-black-box.png
 
