@@ -28,6 +28,7 @@ jobs:
             "DRISE.ipynb",
             "MNIST_scikit_saliency.ipynb",
             "OcclusionSaliency.ipynb",
+            "Radial_Image_Perturbation.ipynb",
             "SimilarityScoring.ipynb",
             "SuperPixelSaliency.ipynb",
             "VIAME_OcclusionSaliency.ipynb",

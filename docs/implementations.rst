@@ -22,6 +22,11 @@ Class: SlidingWindow
 .. autoclass:: xaitk_saliency.impls.perturb_image.sliding_window.SlidingWindow
   :members:
 
+Class: SlidingRadial
+---------------------
+.. autoclass:: xaitk_saliency.impls.perturb_image.sliding_radial.SlidingRadial
+  :members:
+
 -------------------
 Heatmap Generation
 -------------------
