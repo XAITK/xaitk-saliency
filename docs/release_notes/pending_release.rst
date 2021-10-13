@@ -9,6 +9,8 @@ CI
 
 * Added workflow for test running *some* example notebooks.
 
+* Update CodeCov action used to version 2.
+
 Documentation
 
 * Added text discussing white box methods to ``introduction.rst``.
