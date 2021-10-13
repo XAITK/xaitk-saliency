@@ -38,6 +38,8 @@ Examples
 * Add example notebook using classifier-based interfaces and implementations
   with scikit-learn on the MNIST dataset.
 
+* Edited notebook examples.
+
 Implementations
 
 * Add ``DRISEScoring`` implementation of the ``GenerateDetectorProposalSaliency``

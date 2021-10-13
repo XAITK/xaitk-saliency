@@ -4,5 +4,6 @@ Miscellaneous Documentation
 .. toctree::
    :maxdepth: 1
 
-   local_sonarqube_testing
-   setting_up_sonarcloud
+   misc/local_sonarqube_testing
+   misc/setting_up_sonarcloud
+   misc/style_sheet.rst
