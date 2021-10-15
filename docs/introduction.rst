@@ -203,12 +203,100 @@ Cons
 
 Black Box Methods
 ^^^^^^^^^^^^^^^^^
-*Explanation options are correlated to how the related input are
-generated. pros: independent of the model; operates across all models; does not
-require access to the model implementation. cons: requires extra work
-to generate and process the related images; makes only indirect /
-differential observations about the original input / output pair;
-generally more resource intensive than white box.*
+
+One way to frame the AI pipeline in Figure 1 is that we're asking the
+AI a question (the input), and it gives us an answer (the output.) In
+this setting, a white box XAI uses its special access to observe
+details of how the AI answers the question. In contrast, a **black
+box** XAI (Figure 5, right) does not see any details of how the AI
+answers a single question; rather, **it asks the AI a series of
+different questions related to the original input** and bases its
+explanation on how these answers differ from the original
+output.
+
+This technique relies on two assumptions:
+
+1) We have some way to generate these "related questions" based on the
+   original input whose output we're trying to explain.
+
+2) The AI algorithm's responses to these additional questions will
+   somehow "add up" to an explanation for the answer to the original
+   input.
+
+The XAITK-Saliency package deals with image-based AI; black box XAI
+for images typically generate the "related questions" by **image
+perturbation** techniques. These repeatedly change or partially
+obscure the input image to create new images to run through the AI,
+which in turn generate the "related answers" the XAI uses to form its
+explanation.
+
+.. figure:: figures/intro-rise-annotated.png
+
+  Figure 7: RISE architecture. Functional regions annotated to align
+  with Figure 4: input in green, AI in yellow, output in orange. Note
+  that the operation of the AI is not exposed to the XAI. The XAI (in
+  blue) creates the set of related inputs (red box) by randomly
+  obscuring areas of the input. Figure from `Petsiuk, Das, and
+  Saenko. <https://arxiv.org/abs/1806.07421>`_
+
+Figure 7 shows the architecture for one black box XAI algorithm, `RISE
+(Randomized Input Sampling for Explanation)
+<https://arxiv.org/abs/1806.07421>`_. When applied to an image
+classification AI algorithm, RISE generates an "importance map"
+indicating which regions of the input are most associated with high
+confidence for a particular label. This is done by generating copies
+of the input with areas randomly obscured (shown in the red box in
+Figure 7.) Each of these is fed through the AI; by comparing how the
+outputs change, RISE develops a correlation between image areas and
+label confidences.
+
+Two aspects typical of black box methods are demonstrated here:
+
+* **The explanation does not require access to the inner workings of
+  the AI**. RISE is black box because it only uses the AI's standard
+  input and output pathways.
+
+* **The AI must be run many times on different inputs to generate the
+  explanation**. In the experiments described in their paper, the RISE
+  team used up to 8000 masked versions of a single input image to
+  generate an explanation.
+
+In general, pros and cons of black box approaches are:
+
+Pros
+""""
+
+* A black box XAI is **independent from how the AI works**. In Figure 7,
+  the AI (in yellow) can be anything: a CNN, a decision tree, or
+  random number generator. This independence is the primary appeal of
+  black box methods, and has several implications:
+
+   * A single black box XAI can, in theory, **operate across any
+     number of AI implementations.** As long as the AI provides input and output
+     as in Figure 1, it can be used with a black box XAI.
+
+   * Black box XAIs are **loosely coupled** to the AIs they
+     explain. As long as the basic I/O pathways are unchanged,
+     the AI has more freedom to evolve at a different pace
+     from the XAI.
+
+   * The black box approach **enables XAI when the AI must not be
+     exposed**, due to security concerns, contractual agreements, etc.
+
+Cons
+""""
+
+* Black box XAI approaches **require extra work** to generate and
+  process the related inputs. As a result, they are generally slower
+  and more resource intensive than white box approaches.
+
+* A black box XAI can only **indirectly observe how the AI processes
+  the original input**. A white box XAI's explanation directly uses
+  how the AI responds to the input, but for any one input, a black box
+  XAI can never know anything beyond the output. Processing an array
+  of related inputs provides indirect / differential insight into the
+  AI's *behavior*, but a black box XAI cannot relate this behavior to
+  anything inside the AI.
 
 
 XAITK-Saliency Map Algorithms
