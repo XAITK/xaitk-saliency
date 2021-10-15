@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.3.1"
+version = "0.4.0"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
@@ -71,8 +71,9 @@ ipython = "^7.22.0"
 
 [tool.poetry.plugins."smqtk_plugins"]
 # Add implementation sub-module exposure here.
-"impls.perturb_image.occlusion" = "xaitk_saliency.impls.perturb_image.sliding_window"
+"impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
+"impls.perturb_image.sliding_radial" = "xaitk_saliency.impls.perturb_image.sliding_radial"
 "impls.gen_classifier_conf_sal.occlusion_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring"
 "impls.gen_classifier_conf_sal.rise_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring"
 "impls.gen_descriptor_sim_sal.similarity_scoring" = "xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring"
