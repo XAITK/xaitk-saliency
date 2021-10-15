@@ -227,7 +227,7 @@ The XAITK-Saliency package deals with image-based AI; black box XAI
 for images typically generate the "related questions" by **image
 perturbation** techniques. These repeatedly change or partially
 obscure the input image to create new images to run through the AI,
-which in turn generate the "related answers" the XAI uses to form its
+which in turn generates the "related answers" the XAI uses to form its
 explanation.
 
 .. figure:: figures/intro-rise-annotated.png
@@ -244,7 +244,7 @@ Figure 7 shows the architecture for one black box XAI algorithm, `RISE
 <https://arxiv.org/abs/1806.07421>`_. When applied to an image
 classification AI algorithm, RISE generates an "importance map"
 indicating which regions of the input are most associated with high
-confidence for a particular label. This is done by generating copies
+confidence for a particular label. This is done by creating copies
 of the input with areas randomly obscured (shown in the red box in
 Figure 7.) Each of these is fed through the AI; by comparing how the
 outputs change, RISE develops a correlation between image areas and
