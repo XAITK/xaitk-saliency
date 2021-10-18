@@ -42,7 +42,7 @@ scipy = "^1.6.3"
 # Optionals for "example" extra
 jupyter = { version = "^1.0.0", optional = true }
 matplotlib = { version="^3.4.1", optional = true }
-papermill = "^2.3.3"
+papermill = { version = "^2.3.3", optional = true }
 torch = { version = "^1.9.0", optional = true }
 torchvision = { version = "^0.10.0", optional = true }
 tqdm = { version = "^4.45.0", optional = true }
