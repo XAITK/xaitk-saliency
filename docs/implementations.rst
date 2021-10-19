@@ -4,9 +4,9 @@ Saliency Implementations
 
 Included with this toolkit are a number of implementations for the interfaces
 described in the previous section.
-Unlike the interfaces, which declare operation and use-case, implementations
-provide variations on *how* to satisfy the interface-defined use-case, varying
-trade-offs or results implications.
+Unlike the interfaces, which declare operation and use case, implementations
+provide variations on *how* to satisfy the interface-defined use case, varying
+trade-offs, or results implications.
 
 -------------------
 Image Perturbation

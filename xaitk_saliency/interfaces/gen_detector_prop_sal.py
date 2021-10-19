@@ -30,7 +30,7 @@ class GenerateDetectorProposalSaliency (Plugfigurable):
         perturb_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Generate visual saliency heat-map matrices for each reference
+        Generate visual saliency heatmap matrices for each reference
         detection, describing what visual information contributed to the
         associated reference detection.
 
@@ -67,9 +67,9 @@ class GenerateDetectorProposalSaliency (Plugfigurable):
         or boolean within the above range definition.
         Implementations are responsible for handling these expected variations.
 
-        Generated saliency heat-map matrices should be floating-point typed and
+        Generated saliency heatmap matrices should be floating-point typed and
         be composed of values in the [-1,1] range.
-        Positive values of the saliency heat-maps indicate regions which increase
+        Positive values of the saliency heatmaps indicate regions which increase
         object detection scores, while negative values indicate regions which
         decrease object detection scores according to the model that generated
         input object detections.
@@ -90,7 +90,7 @@ class GenerateDetectorProposalSaliency (Plugfigurable):
             [0, 1], where a value closer to 1 indicate areas of the image that
             are *unperturbed*.
         :return:
-            A visual saliency heat-map matrix describing each input reference
+            A visual saliency heatmap matrix describing each input reference
             detection. These will be float-typed arrays with shape
             `[nDets x H x W]`.
         """

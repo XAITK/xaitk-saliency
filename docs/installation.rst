@@ -1,7 +1,7 @@
 Installation
 ============
 
-There are two ways to obtain XAITK-Saliency.
+There are two ways to obtain the xaitk-saliency package.
 The simplest is to install via the :command:`pip` command.
 Alternatively, the source tree can be acquired and be locally developed using
 `Poetry`_ (`installation`_ and `usage`_).
@@ -41,10 +41,10 @@ Quick Start
     poetry run make html
 
 
-Installing Python dependencies
+Installing Python Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This project uses `Poetry`_ for depedency management, environment consistency,
-package building, version management and publishing to PYPI.
+package building, version management, and publishing to PYPI.
 Dependencies are `abstractly defined`_ in the :file:`pyproject.toml` file, as
 well as `specifically pinned versions`_ in the :file:`poetry.lock` file, both
 of which can be found in the root of the source tree.
@@ -63,28 +63,28 @@ specified in the :file:`pyproject.toml` file, with versions specified
 
 Building the Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-The documentation for XAITK-Saliency is maintained as a collection of
+The documentation for xaitk-saliency is maintained as a collection of
 `reStructuredText`_ documents in the :file:`docs/` folder of the project.
-This documentation can be processed by the :program:`Sphinx` documentation tool
-into a variety of documentation formats, the most common of which is HTML.
+The :program:`Sphinx` documentation tool can process this documentation
+into a variety of formats, the most common of which is HTML.
 
 Within the :file:`docs/` directory is a Unix :file:`Makefile` (for Windows
 systems, a :file:`make.bat` file with similar capabilities exists).
 This :file:`Makefile` takes care of the work required to run :program:`Sphinx`
 to convert the raw documentation to an attractive output format.
-For example, as shown in the quickstart, calling ``make html`` will generate
+For example, as shown in the Quick Start section (above), calling ``make html`` will generate
 HTML format documentation rooted at :file:`docs/_build/html/index.html`.
 
 Calling the command ``make help`` here will show the other documentation
 formats that may be available (although be aware that some of them require
-additional dependencies such as :program:`TeX` or :program:`LaTeX`)
+additional dependencies such as :program:`TeX` or :program:`LaTeX`).
 
 
 Live Preview
 """"""""""""
 
-While writing documentation in a mark up format such as `reStructuredText`_ it
-is very helpful to be able to preview the formatted version of the text.
+While writing documentation in a markup format such as `reStructuredText`_, it
+is very helpful to preview the formatted version of the text.
 While it is possible to simply run the ``make html`` command periodically, a
 more seamless workflow of this is available.
 Within the :file:`docs/` directory is a small Python script called
@@ -98,7 +98,7 @@ This will run a small process that watches the :file:`docs/` folder contents,
 as well as the source files in :file:`xaitk_saliency/`, for changes.
 :command:`make html` is re-run automatically when changes are detected.
 This will serve the resulting HTML files at http://localhost:5500.
-Having this URL open in a browser will provide you with a relatively up-to-date
+Having this URL open in a browser will provide you with an up-to-date
 preview of the rendered documentation.
 
 

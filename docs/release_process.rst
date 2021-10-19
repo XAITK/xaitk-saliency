@@ -1,9 +1,10 @@
-Steps of the XAITK-Saliency Release Process
+Steps of the xaitk-saliency Release Process
 ===========================================
 Three types of releases are expected to occur:
-- major
-- minor
-- patch
+
+* patch
+* minor
+* major
 
 See the ``CONTRIBUTING.md`` file for information on how to contribute features
 and patches.
@@ -11,7 +12,7 @@ and patches.
 The following process should apply when any release that changes the version
 number occurs.
 
-Create and merge version update branch
+Create and Merge Version Update Branch
 --------------------------------------
 
 Patch Release
@@ -41,7 +42,7 @@ As such, patch releases should only ever be based on an existing release point.
 
 2. Create a pull/merge request for this branch with master as the merge target.
    This is to ensure that everything passes CI testing before making the
-   release. If there is an issue then branches should be made and merged into
+   release. If there is an issue, then branches should be made and merged into
    this branch until the issue is resolved.
 
 3. Tag branch (see `Tag new version`_ below ) after resolving issues and before
@@ -49,7 +50,7 @@ As such, patch releases should only ever be based on an existing release point.
 
 4. Merge version bump branch into ``master`` branch.
 
-5. `Create new version release to PYPI`_
+5. `Create new version release to PYPI`_.
 
 Major and Minor Releases
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -78,7 +79,7 @@ and functionalities.
 
 2. Create a pull/merge request for this branch with master as the merge target.
    This is to ensure that everything passes CI testing before making the
-   release. If there is an issue then branches should be made and merged into
+   release. If there is an issue, then branches should be made and merged into
    this branch until the issue is resolved.
 
 3. Tag branch (see `Tag new version`_ below) after resolving issues and before
@@ -86,7 +87,7 @@ and functionalities.
 
 4. Merge version bump branch into the ``master`` branch.
 
-5. `Create new version release to PYPI`_
+5. `Create new version release to PYPI`_.
 
 Stub Pending Notes File
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -104,8 +105,8 @@ notes file:
     Fixes
     -----
 
-Tag new version
----------------
+Tag New Version
+--------------
 Release branches should be tagged in order to record where in the git tree a
 particular release refers to.
 The branch off of ``master`` is usually the target of such tags.
@@ -116,7 +117,7 @@ release.
 From GitHub
 ^^^^^^^^^^^
 Navigate to the `releases page on GitHub`_ and click the ``Draft a new
-release`` button in upper right.
+release`` button in the upper right.
 
 Fill in the new version in the ``Tag version`` text box (e.g. ``v#.#.#``)
 and use the same string in the ``Release title`` text box.

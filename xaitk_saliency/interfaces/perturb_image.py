@@ -22,7 +22,7 @@ class PerturbImage (Plugfigurable):
         Transform an input reference image into a number of mask matrices
         indicating the perturbed regions.
 
-        Output mask matrix should be 3-dimensional with the format
+        Output mask matrix should be three-dimensional with the format
         [nMasks x Height x Width], sharing the same height and width to the
         input reference image.
         The implementing algorithm may determine the quantity of output masks
@@ -31,7 +31,7 @@ class PerturbImage (Plugfigurable):
         image that have been modified.
         Values should be in the [0, 1] range, where a value closer to 1.0
         indicates areas of the image that are unperturbed.
-        Note that output mask matrices may be of a floating-point type in order
+        Note that output mask matrices may be of a floating-point type
         to allow for fractional perturbation.
 
         :param ref_image:

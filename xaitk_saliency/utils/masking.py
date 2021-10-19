@@ -61,7 +61,7 @@ def occlude_image_batch(
         the occluded regions as a scalar value, a per-channel sequence or a
         shape-matched image.
 
-    :raises ValueError: The input mask matrix was not 3-dimensional, its last
+    :raises ValueError: The input mask matrix was not three-dimensional, its last
         two dimensions did not match the shape of the input imagery, or the
         input fill value could not be broadcast against the input image.
 

@@ -1,26 +1,26 @@
 ==============================================
-XAITK Software Framework: Saliency API
+API
 ==============================================
 
-This API consists of a number of object-oriented functor interfaces for saliency heatmap generation.
+The xaitk-saliency API consists of a number of object-oriented functor interfaces for saliency heatmap generation.
 These initial interfaces focus on black-box visual saliency.
 We define the two high-level requirements for this initial task: reference image perturbation in preparation for
 black-box testing, and saliency heatmap generation utilizing black-box inputs.
 We define a few similar interfaces for performing the saliency heatmap generation, separated by the intermediate
-algorithmic use cases: image similarity, classification and object detection.
+algorithmic use cases: image similarity, classification, and object detection.
 We explicitly do not require an abstraction for the black-box operations to fit inside.
-This is intended to allow for applications using these interfaces while leveraging existing functionality, only needing
-to perform any data formatting to fit the input defined here.
+This is intended to allow for applications using these interfaces while leveraging existing functionality, which only
+need to perform data formatting to fit the input defined here.
 Note, however, that some interfaces are defined for certain black-box concepts as part of the SMQTK ecosystem (e.g.
 in `SMQTK-Descriptors <https://github.com/Kitware/SMQTK-Descriptors>`_, `SMQTK-Classifier <https://github
-.com/Kitware/SMQTK-Classifier>`_, `SMQTK-Relevancy <https://github.com/Kitware/SMQTK-Relevancy>`_ and other SMQTK-*
+.com/Kitware/SMQTK-Classifier>`_, `SMQTK-Relevancy <https://github.com/Kitware/SMQTK-Relevancy>`_, and other SMQTK-*
 modules).
 
 
 These interfaces are based on the plugin and configuration features provided by SMQTK-Core to allow convenient hooks
-into implementation,discoverability, and factory generation from runtime configuration.
-This allows for opaque discovery of interface implementations from a class-method on the interface class object, and
-instantiation of a concrete instance via a JSON-like configuration fed in from an outside resource.
+into implementation, discoverability, and factory generation from runtime configuration.
+This allows for both opaque discovery of interface implementations from a class-method on the interface class object,
+as well as instantiation of a concrete instance via a JSON-like configuration fed in from an outside resource.
 
 .. figure:: figures/api-docs-fig-01.png
 
@@ -31,9 +31,9 @@ Perturbed Image Generation
 ---------------------------
 
 The PerturbImage interface abstracts the behavior of taking a reference image and generating some number perturbations
-of the image along with paired mask matrices indicating where perturbations have occurred and to what amount.
+of the image along with paired mask matrices that indicate where perturbations have occurred and to what amount.
 
-Implementations should impart no side effects upon the input image.
+Implementations should impart no side effects on the input image.
 
 Immediate candidates for implementation of this interface are occlusion-based saliency algorithms [3] that perform
 perturbations on image pixels.
@@ -69,7 +69,7 @@ would exceed available memory.
 Saliency Heatmap Generation
 ----------------------------
 
-These interfaces comprise a family of siblings that all perform a similar transformation, but requiring different
+These interfaces comprise a family of siblings that all perform a similar transformation, but require different
 standard inputs.
 There is no standard to rule them all without being so abstract that it would break the concept of interface
 abstraction, or the ability to substitute any arbitrary implementations of the interface without interrupting successful
@@ -100,14 +100,14 @@ This should require a sequence of per-class confidences predicted on the referen
 confidences as predicted on perturbed images, as well as the masks of the reference image perturbations (as would be
 output from a ``PerturbImage`` implementation).
 
-Implementations should use this input to generate a visual saliency heat-map for each input “class” in the input. This
+Implementations should use this input to generate a visual saliency heatmap for each input “class” in the input. This
 is both an effort to vectorize the operation for optimal performance, as well as to allow some algorithms to take
 advantage of differences in classification behavior for other classes to influence heatmap generation.
 For classifiers that generate many class label predictions, it is intended that only a subset of relevant class
 predictions need be provided here if computational performance is a consideration.
 
 An immediate candidate implementation for this interface is the RISE algorithm [2] and occlusion-based saliency
-algorithms [3] that generate saliency heat-maps.
+algorithms [3] that generate saliency heatmaps.
 
 .. autoclass:: xaitk_saliency.interfaces.gen_classifier_conf_sal.GenerateClassifierConfidenceSaliency
    :members:
@@ -124,7 +124,7 @@ regions), class scores, and objectness scores (if applicable to the detector, su
 Object detections are converted into (4+1+nClasses) vectors (4 indices for bounding box locations, 1 index for
 objectness, and nClasses indices for different object classes).
 
-Implementations should use this input to generate a visual saliency heat-map for each input detection.
+Implementations should use this input to generate a visual saliency heatmap for each input detection.
 We assume that an input detection is coupled with a single truth class (or a single leaf node in a hierarchical
 structure).
 Input detections on the reference image may be drawn from ground truth or predictions as desired by the use case.
@@ -152,10 +152,10 @@ format.
 .. autofunction:: xaitk_saliency.utils.detection.format_detection
 
 ---------------------------------------------
-Blackbox Saliency Image Generation
+Black-Box Saliency Image Generation
 ---------------------------------------------
 
-Unlike the previous saliency heatmap generation interfaces, this interface uses a blackbox classifier as input along
+Unlike the previous saliency heatmap generation interfaces, this interface uses a black-box classifier as input along
 with a reference image to generate visual saliency heatmaps.
 
 A candidate implementation for this interface is the ``PerturbationOcclusion`` implementation or one of its

@@ -1,14 +1,13 @@
 Review Process
 **************
 
-The purpose of this document is to define the process for reviewing and
-integrating branches into XAITK-Saliency.
+The process for reviewing and integrating branches into xaitk-saliency is described below.
 
-See ``CONTRIBUTING.md`` for guidelines on contributing to XAITK-Saliency.
+For guidelines on contributing to xaitk-saliency, see ``CONTRIBUTING.md``.
 
-See `release process`_ for guidelines on the release process for XAITK-Saliency.
+For guidelines on the release process for xaitk-saliency, see `Release Process and Notes`_.
 
-.. _`release process`: release_process.html
+.. _`Release Process and Notes`: release_process.html
 
 .. contents:: The review process consists of the following steps:
 
@@ -16,7 +15,7 @@ Pull Request
 ============
 A PR is initiated by a user intending to integrate a branch from their forked
 repository.
-Before the branch is integrated into the XAITK-Saliency master branch, it must
+Before the branch is integrated into the xaitk-saliency master branch, it must
 first go through a series of checks and a review to ensure that the branch is
 consistent with the rest of the repository and doesn't contain any issues.
 
@@ -55,12 +54,12 @@ ghostflow
 ---------
 Runs basic checks on the commits submitted in a PR.
 Should ghostflow find any issues with the build, the diagnostics are written
-out prompting the submitter to correct the reported issues.
+out, prompting the submitter to correct the reported issues.
 If there are no issues, or just warnings, ghostflow simply reports a successful
 build.
 The branch should usually pass this check before it can be merged.
 In the rare case that a PR is not subject to a change note, then failure of
-this check specifically in regard to that lower-level check, may be ignored by
+this check, specifically in regard to that lower level check, may be ignored by
 the reviewer.
 
 Some reports such as whitespace issues will need to be corrected by rewriting
@@ -136,7 +135,7 @@ Example Notebooks Execution
 ---------------------------
 This check executes included example notebooks to ensure their proper
 functionality with the package with respect to a pull request.
-Not all notebooks may be run as some maybe set up to use too many resources or
+Not all notebooks may be run, as some may be set up to use too many resources or
 run for an extended period of time.
 
 
@@ -146,7 +145,7 @@ Once the automatic checks are either resolved or addressed, the submitted PR
 will need to go through a human review.
 Reviewers should add comments to provide feedback and raise potential issues.
 Should the PR pass their review, the reviewer should then indicate that it has
-their approval using the Github review interface to flag the PR as ``Approved``.
+their approval using the GitHub review interface to flag the PR as ``Approved``.
 
 A review can still be requested before the checks are resolved, but the PR must
 be marked as a ``Draft``.
@@ -179,5 +178,5 @@ merged.
 
 Close
 -----
-If it is decided that the PR will not be integrated into XAITK-Saliency, then
-it can be closed through Github.
+If it is decided that the PR will not be integrated into xaitk-saliency, then
+it can be closed through GitHub.
