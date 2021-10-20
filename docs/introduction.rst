@@ -270,17 +270,17 @@ Pros
   random number generator. This independence is the primary appeal of
   black-box methods, and has several implications:
 
-   * A single black-box XAI can, in theory, **operate across any
-     number of AI implementations.** As long as the AI provides input and output
-     as in Figure 1, it can be used with a black-box XAI.
+  * A single black-box XAI can, in theory, **operate across any
+    number of AI implementations.** As long as the AI provides input and output
+    as in Figure 1, it can be used with a black-box XAI.
 
-   * Black-box XAIs are **loosely coupled** to the AIs they
-     explain. As long as the basic I/O pathways are unchanged,
-     the AI has more freedom to evolve at a different pace
-     from the XAI.
+  * Black-box XAIs are **loosely coupled** to the AIs they
+    explain. As long as the basic I/O pathways are unchanged,
+    the AI has more freedom to evolve at a different pace
+    from the XAI.
 
-   * The black-box approach **enables XAI when the AI must not be
-     exposed**, due to security concerns, contractual agreements, etc.
+  * The black-box approach **enables XAI when the AI must not be
+    exposed**, due to security concerns, contractual agreements, etc.
 
 Cons
 """"
