@@ -12,6 +12,9 @@ Examples
 
 * Add example notebook for saliency on Atari deep RL agent
 
+* Updated examples to all use a common data sub-directory when downloading or
+  saving generated data.
+
 Fixes
 -----
 

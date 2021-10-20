@@ -1,5 +1,12 @@
-# XAITK-Saliency Examples
-This directory hosts the XAITK-Saliency examples.
+# xaitk-saliency Examples
+This directory hosts the xaitk-saliency examples.
+
+### Implementation Guide
+Example notebooks should have an "Open in Colab" button.
+See other example notebooks on how to add a Colab cell.
+
+Example notebooks that download or generate data should place it into the
+`data` sub-directory.
 
 ### Requirements
 Most of the examples require [Jupyter Notebook](https://jupyter.org/) and [Pytorch](https://pytorch.org/).
@@ -13,9 +20,8 @@ poetry install -E example_deps
 Some notebooks may require additional dependencies. Please see the first cell of each notebook ("Setup environment") on how to install the relevant packages.
 
 ### Run the notebooks from Colab
-
-Most of the notebooks have an "Open in Colab" button.
-Please right-click on the button, and select "Open Link in New Tab" to start a Colab page with the corresponding notebook content.
+Please right-click on the "Open in Colab" button, and select "Open Link in New
+Tab" to start a Colab page with the corresponding notebook content.
 
 To use GPU resources through Colab, please remember to change the runtime type to `GPU`:
 
@@ -40,7 +46,7 @@ Some notebooks may require additional data. This data will be downloaded when ru
 
 ### Encountering Issues
 
-For issues relating to XAITK-Saliency functionality or running of an example, please create an issue on the [repository](https://github.com/XAITK/xaitk-saliency/issues).
+For issues relating to xaitk-saliency functionality or running of an example, please create an issue on the [repository](https://github.com/XAITK/xaitk-saliency/issues).
 
 
 ### Continuous Integration

@@ -1,7 +1,1 @@
-/monai-example/**
-/viame-example/**
-/scikit-learn-example/**
-/pretrained_agents/**
-**/imagenet_classes.txt*
-/*.jpg
-/*.mp4
+/data/**
