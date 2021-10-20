@@ -1,7 +1,7 @@
 Introduction
 ============
 
-The XAITK-Saliency package implements a class of XAI algorithms known
+The xaitk-saliency package implements a class of XAI algorithms known
 as `saliency algorithms`. The basic machine learning application pipeline is shown in Figure 1:
 
 .. figure:: figures/intro-fig-01.png
@@ -26,7 +26,7 @@ the AI. Figure 3 shows sample saliency maps for text and images.
    <https://arxiv.org/abs/1907.05664>`_) and images (right, from `Dong et
    al. <https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content-Based_Image_Retrieval_CVPRW_2019_paper.html>`_)
 
-.. note:: The XAITK-Saliency toolkit currently focuses on providing saliency
+.. note:: The xaitk-saliency toolkit currently focuses on providing saliency
           maps for images.
 
 Image Saliency Maps: An Intuitive Introduction
@@ -88,40 +88,40 @@ In order to answer questions such as the ones raised above, the XAI
 must have some way of interacting with the AI. There are two popular
 approaches to this:
 
-1) The **white box** approach: the AI system is altered to open or
+1) The **white-box** approach: the AI system is altered to open or
    expose its model. The XAI examines the state of the AI model as the
    AI generates its output, and uses this information to create the explanation.
 
-2) The **black box** approach: the AI's model is not exposed; instead,
+2) The **black-box** approach: the AI's model is not exposed; instead,
    the XAI probes the AI by creating an *additional set of input
    images* which perturb or change the original input in some way. By
    comparing the original output to that for the related images,
    we can deduce certain aspects of the how the AI and its model behaves.
 
 These are illustrated in Figure 5. Note how the AI algorithm is
-not available for inspection in the black box model.
+not available for inspection in the black-box model.
 
 .. figure:: figures/white-box-vs-black-box.png
 
-   Figure 5: White box vs. black box approaches to XAI. The white box
-   approach has access to the AI model; the black box approach does
+   Figure 5: White-box vs. black-box approaches to XAI. The white-box
+   approach has access to the AI model; the black-box approach does
    not and instead repeatedly probes the AI with variations on the
    input image.
 
-.. note:: The white box vs. black box distinction refers to *using the
+.. note:: The white-box vs. black-box distinction refers to *using the
           AI model after it has been created*; nothing is implied
           about how the model is constructed.
 
 Let's take a look at the pros and cons of these two approaches.
 
-White Box Methods
+White-Box Methods
 ^^^^^^^^^^^^^^^^^
 
-The **white box** approach to XAI (Figure 5, left) exposes some (or all) of the
+The **white-box** approach to XAI (Figure 5, left) exposes some (or all) of the
 internal state of the AI model; the explanation draws a connection
 between this exposed state and the AI's output. Some AI methods are
 intrinsically introspective to the point where they are not so much
-"white box" as transparent:
+"white-box" as transparent:
 
 * In `linear regression
   <https://en.wikipedia.org/wiki/Linear_regression>`_, the influence of
@@ -132,7 +132,7 @@ intrinsically introspective to the point where they are not so much
   the output is directly computed by making the comparisons and
   branches encoded in the AI's model.
 
-An example of a white box explanation method for CNNs is Grad-CAM (`paper <https://arxiv.org/abs/1610.02391>`_, `code <https://github.com/ramprs/grad-cam/>`_), which exposes some (but not all) of the CNN layers to the explanation generation algorithm.
+An example of a white-box explanation method for CNNs is Grad-CAM (`paper <https://arxiv.org/abs/1610.02391>`_, `code <https://github.com/ramprs/grad-cam/>`_), which exposes some (but not all) of the CNN layers to the explanation generation algorithm.
 
 .. figure:: figures/intro-grad-cam-annotated.png
 
@@ -150,7 +150,7 @@ CNN (made available to the XAI through the red circles) to measure and
 visualize the activation of those regions associated with the output
 (orange).
 
-Two aspects typical of white box methods are demonstrated here:
+Two aspects typical of white-box methods are demonstrated here:
 
 * **The explanation could not have been created from the output
   alone**. In order to operate, the explanation algorithm (blue)
@@ -161,26 +161,26 @@ Two aspects typical of white box methods are demonstrated here:
   general, any particular *implementation* will expect the AI's CNN
   architecture to conform to the specifics of the API.
 
-In general, pros and cons of white box approaches are:
+In general, pros and cons of white-box approaches are:
 
 Pros
 """"
 
-* A white box XAI can choose to **leverage its tight coupling to the
+* A white-box XAI can choose to **leverage its tight coupling to the
   AI model** to maximize the information available, at the sacrifice of
   generalization to other AI models.
 
-* A white box XAI **accesses the actual AI model's computation which generated
+* A white-box XAI **accesses the actual AI model's computation which generated
   the output**. The explanation is derived directly from what the
-  AI model computed about the input, in contrast to black box XAIs
+  AI model computed about the input, in contrast to black-box XAIs
   which can only indirectly compare the output to output from slightly
   different inputs.
 
-* A white box XAI is usually more computationally efficient, since it
+* A white-box XAI is usually more computationally efficient, since it
   typically only requires a single forward / backward pass through the
-  AI model. In Figure 5, the white box approach on the left interacts
+  AI model. In Figure 5, the white-box approach on the left interacts
   with the AI during its single processing run to produce the output;
-  in comparison, black box methods (such as in Figure 5 on the right)
+  in comparison, black-box methods (such as in Figure 5 on the right)
   typically run the AI network multiple times.
 
 Cons
@@ -197,22 +197,22 @@ Cons
   the AI was developed and delivered, this problem may be trivial
   or insurmountable.
 
-* Similarly, the white box XAI may **require updating as the
+* Similarly, the white-box XAI may **require updating as the
   AI model evolves**. Tight coupling introduces a dependency which must
   be managed, possibly increasing development costs.
 
-Black Box Methods
+Black-Box Methods
 ^^^^^^^^^^^^^^^^^
 
 One way to frame the AI pipeline in Figure 1 is that we're asking the
-AI a question (the input), and it gives us an answer (the output.) In
-this setting, a white box XAI uses its special access to observe
-details of how the AI answers the question. In contrast, a **black
-box** XAI (Figure 5, right) does not see any details of how the AI
+AI a question (the input), and it gives us an answer (the output). In
+this setting, a white-box XAI uses its special access to the AI model to observe
+details of how the AI answers the question. In contrast, a **black-box**
+XAI (Figure 5, right) does not see any details of how the AI
 answers a single question; rather, **it asks the AI a series of
 different questions related to the original input** and bases its
 explanation on how these answers differ from the original
-output.
+answer.
 
 This technique relies on two assumptions:
 
@@ -220,10 +220,9 @@ This technique relies on two assumptions:
    original input whose output we're trying to explain.
 
 2) The AI algorithm's responses to these additional questions will
-   somehow "add up" to an explanation for the answer to the original
-   input.
+   somehow "add up" to an explanation for the original output.
 
-The XAITK-Saliency package deals with image-based AI; black box XAI
+The xaitk-saliency package deals with image-based AI; black-box XAI
 for images typically generate the "related questions" by **image
 perturbation** techniques. These repeatedly change or partially
 obscure the input image to create new images to run through the AI,
@@ -239,18 +238,18 @@ explanation.
   obscuring areas of the input. Figure from `Petsiuk, Das, and
   Saenko. <https://arxiv.org/abs/1806.07421>`_
 
-Figure 7 shows the architecture for one black box XAI algorithm, `RISE
+Figure 7 shows the architecture for one black-box XAI algorithm, `RISE
 (Randomized Input Sampling for Explanation)
 <https://arxiv.org/abs/1806.07421>`_. When applied to an image
 classification AI algorithm, RISE generates an "importance map"
 indicating which regions of the input are most associated with high
-confidence for a particular label. This is done by creating copies
+confidence for a particular label. This is done by creatingt copies
 of the input with areas randomly obscured (shown in the red box in
-Figure 7.) Each of these is fed through the AI; by comparing how the
+Figure 7). Each of these is fed through the AI; by comparing how the
 outputs change, RISE develops a correlation between image areas and
 label confidences.
 
-Two aspects typical of black box methods are demonstrated here:
+Two aspects typical of black-box methods are demonstrated here:
 
 * **The explanation does not require access to the inner workings of
   the AI**. RISE is black box because it only uses the AI's standard
@@ -261,44 +260,44 @@ Two aspects typical of black box methods are demonstrated here:
   team used up to 8000 masked versions of a single input image to
   generate an explanation.
 
-In general, pros and cons of black box approaches are:
+In general, pros and cons of black-box approaches are:
 
 Pros
 """"
 
-* A black box XAI is **independent from how the AI works**. In Figure 7,
+* A black-box XAI **does not depend on the AI method, only the inputs and outputs**. (It is said to be *model-agnostic*.) In Figure 7,
   the AI (in yellow) can be anything: a CNN, a decision tree, or
   random number generator. This independence is the primary appeal of
-  black box methods, and has several implications:
+  black-box methods, and has several implications:
 
-   * A single black box XAI can, in theory, **operate across any
+   * A single black-box XAI can, in theory, **operate across any
      number of AI implementations.** As long as the AI provides input and output
-     as in Figure 1, it can be used with a black box XAI.
+     as in Figure 1, it can be used with a black-box XAI.
 
-   * Black box XAIs are **loosely coupled** to the AIs they
+   * Black-box XAIs are **loosely coupled** to the AIs they
      explain. As long as the basic I/O pathways are unchanged,
      the AI has more freedom to evolve at a different pace
      from the XAI.
 
-   * The black box approach **enables XAI when the AI must not be
+   * The black-box approach **enables XAI when the AI must not be
      exposed**, due to security concerns, contractual agreements, etc.
 
 Cons
 """"
 
-* Black box XAI approaches **require extra work** to generate and
+* Black-box XAI approaches **require extra work** to generate and
   process the related inputs. As a result, they are generally slower
-  and more resource intensive than white box approaches.
+  and more resource intensive than white-box approaches.
 
-* A black box XAI can only **indirectly observe how the AI processes
-  the original input**. A white box XAI's explanation directly uses
-  how the AI responds to the input, but for any one input, a black box
+* A black-box XAI can only **indirectly observe how the AI processes
+  the original input**. A white-box XAI's explanation directly uses
+  how the AI responds to the input, but for any one input, a black-box
   XAI can never know anything beyond the output. Processing an array
   of related inputs provides indirect / differential insight into the
-  AI's *behavior*, but a black box XAI cannot relate this behavior to
+  AI's *behavior*, but a black-box XAI cannot relate this behavior to
   anything inside the AI.
 
 
-XAITK-Saliency Map Algorithms
+xaitk-saliency Map Algorithms
 --------------------------------
-*Discuss the provided XAITK-Saliency algorithms in terms of the above.*
+*Discuss the provided xaitk-saliency algorithms in terms of the above.*
