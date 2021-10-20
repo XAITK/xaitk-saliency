@@ -8,6 +8,10 @@ Documentation
 
 * Added text discussing black box methods to ``introduction.rst``.
 
+Examples
+
+* Add example notebook for saliency on Atari deep RL agent
+
 Fixes
 -----
 
