@@ -243,7 +243,7 @@ Figure 7 shows the architecture for one black-box XAI algorithm, `RISE
 <https://arxiv.org/abs/1806.07421>`_. When applied to an image
 classification AI algorithm, RISE generates an "importance map"
 indicating which regions of the input are most associated with high
-confidence for a particular label. This is done by creatingt copies
+confidence for a particular label. This is done by creating copies
 of the input with areas randomly obscured (shown in the red box in
 Figure 7). Each of these is fed through the AI; by comparing how the
 outputs change, RISE develops a correlation between image areas and
