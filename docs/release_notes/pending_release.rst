@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Documentation
+
+* Added text discussing black box methods to ``introduction.rst``.
+
 Fixes
 -----
 
