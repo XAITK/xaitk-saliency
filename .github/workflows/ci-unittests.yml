@@ -109,6 +109,8 @@ jobs:
             ~/.cache/pypoetry/virtualenvs/
             ~/.local
           key: python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-${{ matrix.opt-extra }}
+          restore-keys: |
+            python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
         uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
