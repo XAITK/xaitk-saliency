@@ -8,7 +8,7 @@ Unlike the interfaces, which declare operation and use case, implementations
 provide variations on *how* to satisfy the interface-defined use case, varying
 trade-offs, or results implications.
 
-..When adding new classes within implementations, sort them alphabetically.
+.. When adding new classes within implementations, sort them alphabetically.
 
 -------------------
 Image Perturbation

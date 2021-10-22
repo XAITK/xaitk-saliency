@@ -12,13 +12,12 @@ We explicitly do not require an abstraction for the black-box operations to fit 
 This is intended to allow for applications using these interfaces while leveraging existing functionality, which only
 need to perform data formatting to fit the input defined here.
 Note, however, that some interfaces are defined for certain black-box concepts as part of the SMQTK ecosystem (e.g.
-in `SMQTK-Core <https://github.com/Kitware/SMQTK-Core>`_, `SMQTK-Descriptors <https://github
-.com/Kitware/SMQTK-Descriptors>`_, `SMQTK-Classifier <https://github
+in `SMQTK-Descriptors <https://github.com/Kitware/SMQTK-Descriptors>`_, `SMQTK-Classifier <https://github
 .com/Kitware/SMQTK-Classifier>`_, `SMQTK-Relevancy <https://github.com/Kitware/SMQTK-Relevancy>`_, and other SMQTK-*
 modules).
 
 
-These interfaces are based on the plugin and configuration features provided by SMQTK-Core to allow convenient hooks
+These interfaces are based on the plugin and configuration features provided by `SMQTK-Core <https://github.com/Kitware/SMQTK-Core>`_, to allow convenient hooks
 into implementation, discoverability, and factory generation from runtime configuration.
 This allows for both opaque discovery of interface implementations from a class-method on the interface class object,
 as well as instantiation of a concrete instance via a JSON-like configuration fed in from an outside resource.
@@ -27,7 +26,7 @@ as well as instantiation of a concrete instance via a JSON-like configuration fe
 
    Figure 1: Abstract Interface Inheritance.
 
-..When adding new classes within interfaces, sort them alphabetically.
+.. When adding new classes within interfaces, sort them alphabetically.
 
 ---------------------------
 Image Perturbation

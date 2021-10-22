@@ -125,13 +125,13 @@ intrinsically introspective to the point where they are not so much
 "white-box" as transparent:
 
 * In `linear regression
-  <https://en.wikipedia.org/wiki/Linear_regression>`_, the influence of
-  the observations on the solution is an immediate consequence of the
-  method.
+  <https://en.wikipedia.org/wiki/Linear_regression>`_, the output is a
+  weighted sum of input features, making it easy to separate out effects
+  just by looking at each of the learned-feature weights.
 
 * In a `decision tree <https://en.wikipedia.org/wiki/Decision_tree>`_,
-  the output is directly computed by making the comparisons and
-  branches encoded in the AI's model.
+  the output is directly computed by making the comparisons through
+  a set of nodes and branches that are part of the AI's model.
 
 An example of a white-box explanation method for CNNs is Grad-CAM
 (`paper <https://arxiv.org/abs/1610.02391>`_,
