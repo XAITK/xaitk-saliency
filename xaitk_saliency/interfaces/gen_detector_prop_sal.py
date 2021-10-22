@@ -9,7 +9,7 @@ class GenerateDetectorProposalSaliency (Plugfigurable):
     This interface proposes that implementations transform black-box image
     object detection predictions into visual saliency heatmaps.
     This should require externally-generated object detection predictions over
-    some image, along with predictions for perturbed images and the permutation
+    some image, along with predictions for perturbed images and the perturbation
     masks for those images as would be output from a
     :class:`xaitk_saliency.interfaces.perturb_image.PerturbImage`
     implementation.

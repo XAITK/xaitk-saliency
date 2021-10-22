@@ -27,7 +27,7 @@
 //  Plugfigurable;
 //}
 //subgraph "cluster_xaitk" {
-//  label="XAITK-Saliency"
+//  label="xaitk-saliency"
 //	subgraph "cluster interfaces" {
 //    label="Interfaces";
 //	  IqrSaliencyGen; DescriptorSaliencyGen; ClassifierSaliencyGen;
@@ -69,7 +69,7 @@ subgraph cluster_smqtk {
   Pluggable; Configurable; Plugfigurable;
 }
 subgraph cluster_xaitk_saliency {
-  label="Package: XAITK-Saliency";
+  label="Package: xaitk-saliency";
   subgraph cluster_interfaces {
     label="Abstract Interfaces";
     subgraph cluster_perturb {

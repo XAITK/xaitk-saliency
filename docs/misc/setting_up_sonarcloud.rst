@@ -112,10 +112,9 @@ will fail for those fork-based PRs.
 
 The value for this secret is from a SonarCloud personal security token (see
 below on how to make one of these).
-Currently, Paul Tunison holds the security token that is set to the
+Currently, Paul Tunison (paul.tunison@kitware.com) holds the security token that is set to the
 ``SONAR_TOKEN`` secret in the upstream `xaitk-saliency`_ repository on GitHub.
-In the future this may be changed by a repo admin, as described in a below
-section.
+In the future this may be changed by a repo admin, as described below.
 
 Create a Personal Security Token
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

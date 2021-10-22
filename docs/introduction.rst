@@ -2,7 +2,7 @@ Introduction
 ============
 
 The xaitk-saliency package implements a class of XAI algorithms known
-as `saliency algorithms`. The basic machine learning application pipeline is shown in Figure 1:
+as `saliency algorithms`. A basic machine learning application pipeline is shown in Figure 1:
 
 .. figure:: figures/intro-fig-01.png
 
@@ -81,8 +81,8 @@ To avoid confusion, we need some definitions:
   AIs are built around CNNs such as in Figure 4, examples of other models
   include decision trees and support vector machines.
 
-* The **Explainable AI system, or XAI**, is the system we attach to
-  the AI to generate explanations (as in Figure 2). The XAI may itself
+* **Explainable AI algorithms, or XAI**, is what we attach to
+  the AI system to generate explanations (as in Figure 2). The XAI may itself
   use CNNs, but these details are typically hidden from the XAI user.
 
 To answer questions such as the ones raised above, the XAI
@@ -302,6 +302,6 @@ Cons
   anything inside the AI.
 
 
-xaitk-saliency Map Algorithms
+Saliency Algorithms
 --------------------------------
 *Discuss the provided xaitk-saliency algorithms in terms of the above.*

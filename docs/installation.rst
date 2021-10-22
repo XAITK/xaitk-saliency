@@ -43,7 +43,7 @@ Quick Start
 
 Installing Python Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This project uses `Poetry`_ for depedency management, environment consistency,
+This project uses `Poetry`_ for dependency management, environment consistency,
 package building, version management, and publishing to PYPI.
 Dependencies are `abstractly defined`_ in the :file:`pyproject.toml` file, as
 well as `specifically pinned versions`_ in the :file:`poetry.lock` file, both
@@ -54,7 +54,7 @@ of which can be found in the root of the source tree.
 
 The following installs both installation and development dependencies as
 specified in the :file:`pyproject.toml` file, with versions specified
-(including for transitive depedencies) in the :file:`poetry.lock` file:
+(including for transitive dependencies) in the :file:`poetry.lock` file:
 
 .. prompt:: bash
 

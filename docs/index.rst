@@ -12,7 +12,7 @@ Welcome to xaitk-saliency's documentation!
 
    introduction
    installation
-   api_docs
+   interfaces
    implementations
    review_process
    releasing

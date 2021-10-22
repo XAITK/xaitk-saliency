@@ -1,4 +1,4 @@
-# xaitk-saliency Examples
+# Examples
 This directory hosts the xaitk-saliency examples.
 
 ### Implementation Guide
@@ -9,7 +9,7 @@ Example notebooks that download or generate data should place it into the
 `data` sub-directory.
 
 ### Requirements
-Most of the examples require [Jupyter Notebook](https://jupyter.org/) and [Pytorch](https://pytorch.org/).
+Most of the examples require [Jupyter Notebook](https://jupyter.org/) and [PyTorch](https://pytorch.org/).
 
 These can be installed manually using `pip` or with the following command:
 
@@ -17,18 +17,24 @@ These can be installed manually using `pip` or with the following command:
 poetry install -E example_deps
 ```
 
-Some notebooks may require additional dependencies. Please see the first cell of each notebook ("Setup environment") on how to install the relevant packages.
+Some notebooks may require additional dependencies.
+See the first cell of each notebook ("Set Up Environment") on how to install
+the relevant packages.
 
-### Run the notebooks from Colab
-Please right-click on the "Open in Colab" button, and select "Open Link in New
-Tab" to start a Colab page with the corresponding notebook content.
+### Run the Notebooks from Colab
+Most of the notebooks have an "Open in Colab" button.
+Right-click on the button and select "Open Link in New Tab" to start a Colab
+page with the corresponding notebook content.
 
-To use GPU resources through Colab, please remember to change the runtime type to `GPU`:
+To use GPU resources through Colab, remember to change the runtime type to
+`GPU`:
 
 1. From the `Runtime` menu select `Change runtime type`
 1. Choose `GPU` from the drop-down menu
 1. Click `SAVE`
-This will reset the notebook and may ask you if you are a robot (these instructions assume you are not).
+
+This will reset the notebook and may ask you if you are a robot (these
+instructions assume you are not).
 
 Running:
 

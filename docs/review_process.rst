@@ -137,6 +137,7 @@ This check executes included example notebooks to ensure their proper
 functionality with the package with respect to a pull request.
 Not all notebooks may be run, as some may be set up to use too many resources or
 run for an extended period of time.
+Passage of this check is not strictly required but highly encouraged.
 
 
 Human Review

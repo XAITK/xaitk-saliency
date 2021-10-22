@@ -12,7 +12,7 @@ separately from running the local server.
 Documentation and references to acquire the scanner maybe found on their
 `SonarScanner`_ docs page.
 
-Paul has found local success running a script as per the following:
+Locally, we have had success running a script as per the following:
 
 .. code-block:: bash
 
