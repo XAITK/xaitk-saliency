@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Updated notebooks CI workflow to include notebook data caching.
+
 Documentation
 
 * Added text discussing black box methods to ``introduction.rst``.
@@ -11,6 +15,9 @@ Documentation
 Examples
 
 * Add example notebook for saliency on Atari deep RL agent
+
+* Updated examples to all use a common data sub-directory when downloading or
+  saving generated data.
 
 Fixes
 -----

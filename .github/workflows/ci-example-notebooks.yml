@@ -45,27 +45,45 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
       - uses: actions/cache@v2
         id: env-cache
         with:
-          # Confirmed that the `.local` directory doesn't exist until the
-          # `pip install --user` is invoked below, so we can be confident that
-          # only our python stuff is being captured in this cache (intentional).
+          # * Confirmed that the `.local` directory doesn't exist until the
+          #   `pip install --user` is invoked below, so we can be confident
+          #   that only our python stuff is being captured in this cache
+          #   (intentional).
+          # * *Not* caching the actual virtualenv, just the cached packages for
+          #   installation -- Some packages used in examples have very large
+          #   installation sizes which does not compliment well our limited
+          #   cache GB allowance.
           path: |
-            ~/.cache/pypoetry/virtualenvs/
-            ~/.cache/torch/
-            ~/.local/
-            ~/scikit_learn_data/
+            ~/.cache/pypoetry/artifacts/
+            ~/.cache/pypoetry/cache/
+            ~/.local
           # Using a different key due to additional things the notebook
           # examples ad-hoc install.
           key: python-3.7-${{ hashFiles('poetry.lock') }}-Examples
+          restore-keys: |
+            python-3.7-${{ hashFiles('poetry.lock') }}
+
       - name: Setup Environment
         # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
         uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+
       - name: Install additional example extras requirements
         run: poetry install -E example_deps
+
+      - uses: actions/cache@v2
+        id: notebook-data-cache
+        with:
+          path: |
+            ~/.cache/torch/
+            examples/data/
+          key: python-3.7-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
+          # pretty unique, no restore-keys.
 
       - name: Run Notebook
         env:
