@@ -8,7 +8,7 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
     """
     Visual saliency map generation interface whose implementations transform
     black-box feature-vectors from multiple references and perturbations into
-    saliency heat-maps.
+    saliency heatmaps.
 
     This transformation requires two reference images, translated into
     feature-vectors via some black-box means, between which we are trying to
@@ -29,7 +29,7 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Generate a visual saliency heat-map matrix given the black-box
+        Generate a visual saliency heatmap matrix given the black-box
         descriptor generation output on two reference images, the same
         descriptor output on perturbed images and the masks of the visual
         perturbations.
@@ -46,9 +46,9 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         or boolean within the above range definition.
         Implementations are responsible for handling these expected variations.
 
-        Generated saliency heat-map matrices should be floating-point typed and
+        Generated saliency heatmap matrices should be floating-point typed and
         be composed of values in the [-1,1] range.
-        Positive values of the saliency heat-maps indicate regions which increase
+        Positive values of the saliency heatmaps indicate regions which increase
         image similarity scores, while negative values indicate regions which
         decrease image similarity scores according to the model that generated
         input feature vectors.
@@ -67,7 +67,7 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
             This should have a shape `[nMasks x H x W]`, and values in range
             [0, 1], where a value closer to 1 indicates areas of the image that
             are *unperturbed*.
-        :return: Generated saliency heat-map as a float-typed `numpy.ndarray`
+        :return: Generated saliency heatmap as a float-typed `numpy.ndarray`
             with shape `[H x W]`.
         """
 

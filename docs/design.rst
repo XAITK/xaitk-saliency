@@ -11,8 +11,8 @@ requirements here via the :file:`poetry.lock` file.
 This distinction is described well by [Stufft]_, using the ``setuptools``-based
 resources which are parallel in use to the above respectively described files.
 
-While ``xaitk-saliency`` is a library, we choose to retain concrete
-dependencies via the :file:`poetry.lock` file in order to maintain consistency
+While xaitk-saliency is a library, we choose to retain concrete
+dependencies via the :file:`poetry.lock` file to maintain consistency
 of environment across developers as well as CI processes.
 This falls in conceptual line with the "Developing Reusable Things or How Not
 to Repeat Yourself" section from [Stufft]_.
@@ -28,16 +28,16 @@ The timing of such updates are currently not concretely scheduled, nor are they
 specifically tied to events, but more on an "every so often" cadence that is
 relatively more frequent than versioned releases.
 
-Image format
+Image Format
 ------------
 We choose to use the ``numpy.ndarray`` data structure for our image
 representation in this toolkit.
-Earlier, we utilized the Pillow package's ``PIL.Image.Image`` data-structure
-but encountered issues in certain use-cases regarding large images, images with
+Earlier, we utilized the Pillow package's ``PIL.Image.Image`` data structure
+but encountered issues in certain use cases regarding large images, images with
 non-standard quantities of channels (e.g. > 3) or with imagery consisting of
 12 or 16-bit valuation.
-Additionally, other popular and highly utilized packages in the python
-community, like OpenCV, Scikit-Image and PyTorch to name a few, utilize raw
+Additionally, other popular and highly utilized packages in the Python
+community, like OpenCV, Scikit-Image, and PyTorch to name a few, utilize raw
 ``numpy.ndarray`` matrices as the container for image data.
 
 

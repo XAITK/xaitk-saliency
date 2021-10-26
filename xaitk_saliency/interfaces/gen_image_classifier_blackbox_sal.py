@@ -10,14 +10,14 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
     """
     This interface for algorithms takes a reference image and an image
-    classifier blackbox algorithm, then generates a number of visual
+    classifier black-box algorithm, then generates a number of visual
     saliency heatmap matrices, one for each class output by the classifier
-    blackbox.
+    black box.
 
-    A classifier blackbox needs to be input, which requires some
-    specification in how to operate the blackbox.
+    A classifier black box needs to be input, which requires some
+    specification in how to operate the black box.
     The `smqtk_classifier.ClassifyImage` abstract interface is used to
-    provide a minimal form that a blackbox classifier requires: be able to classify an image into confidences for
+    provide a minimal form that a black-box classifier requires: be able to classify an image into confidences for
     some number of class labels.
 
     Generates a visual saliency heatmap for each input class as a
@@ -31,7 +31,7 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
     ) -> np.ndarray:
         """
         Generates per-class visual saliency heatmaps for some classifier
-        blackbox over some image of interest.
+        black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
         either a `H x W` or `H x W x C` shape format.
@@ -40,7 +40,7 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
         (2) floating-point typed, and (3) composed of values in the `[-1, 1]`
         range.
         `nClasses` should be the quantity of unique class labels output by the
-        given classifier blackbox.
+        given classifier black box.
         While specific algorithms determine the quantity of heatmaps returned,
         the height and width of returned heatmaps should be consistent with the
         input image, i.e. the `H` and `W` dimensions should match in size to
@@ -48,11 +48,11 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
         Positive values of the saliency heatmaps indicate regions that
         increase respective class confidence scores, while negative values
         indicate regions that decrease respective class confidence scores
-        according to the given blackbox classifier.
+        according to the given black-box classifier.
 
         :param ref_image: Reference image over which visual saliency heatmaps
             will be generated.
-        :param blackbox: The blackbox classifier handle to perform arbitrary
+        :param blackbox: The black-box classifier handle to perform arbitrary
             operations on in order to deduce visual saliency.
 
         :raises ShapeMismatchError: The implementation result visual saliency
@@ -60,7 +60,7 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
             the reference image.
 
         :return: A number of visual saliency heatmaps equivalent in number to
-            the quantity of class labels output by the blackbox classifier.
+            the quantity of class labels output by the black-box classifier.
         """
         # This is a template method that enforces standard input and result
         # checks.
@@ -102,9 +102,9 @@ class GenerateImageClassifierBlackboxSaliency (Plugfigurable):
 
         :param ref_image: Reference image over which visual saliency heatmaps
             will be generated.
-        :param blackbox: The blackbox classifier handle to perform arbitrary
+        :param blackbox: The black-box classifier handle to perform arbitrary
             operations on in order to deduce visual saliency.
 
         :return: A number of visual saliency heatmaps equivalent in number to
-            the quantity of class labels output by the blackbox classifier.
+            the quantity of class labels output by the black-box classifier.
         """

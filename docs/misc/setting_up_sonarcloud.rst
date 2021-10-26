@@ -1,14 +1,14 @@
-Setting Up XAITK-Saliency with SonarCloud
+Setting Up xaitk-saliency with SonarCloud
 =========================================
 
-Creating a SonarCloud organization
+Create a SonarCloud Organization
 ----------------------------------
 This will house our repository ("project") dashboard and is parallel to the
 GitHub organization.
 
 * Go to `SonarCloud`_
 
-* Click the "+" button in the upper-right near user drop-down.
+* Click the "+" button in the upper right near user drop-down.
 
 * Select "Create a new organization".
 
@@ -18,11 +18,11 @@ GitHub organization.
     Select either "All repositories" or select repositories to enable SonarCloud access to.
     Currently we have selected access only to the `xaitk-saliency`_ repository.
 
-Create project for `XAITK-Saliency`_
+Create a Project for xaitk-saliency
 ------------------------------------
 * Go to `SonarCloud`_.
 
-* Click the "+" button in the upper-right near user drop-down.
+* Click the "+" button in the upper right near user drop-down.
 
 * Select the "XAITK" organization created above.
 
@@ -35,12 +35,11 @@ due to the SonarCloud automatic scanning not having access to the unit test
 coverage reports generated during the GitHub Actions-based CI workflow.
 In the future we may want to switch to performing the SonarQube scanning action
 inside our CI workflow, however currently there is the hurdle where PRs from
-forks do not have the appropriate access to submit scan reports without leaning
+forks do not have the appropriate access to submit scan reports without learning
 private security tokens.
-The following `Setting Analysis method to GitHub Actions`_ is provided as
-purely experimental/historical information.
+The following section is provided as purely experimental/historical information.
 
-Setting Analysis method to GitHub Actions
+Set Analysis Method to GitHub Actions
 -----------------------------------------
 **NOTE:** *THIS IS NOT THE CURRENT CONFIGURATION.*
 This documentation here is notionally provided as it was written during
@@ -49,7 +48,7 @@ experimentation and maybe has future value if we attempted again.
 This is less setting something up but more deactivating the default setting
 to use SonarCloud Automatic Analysis.
 We chose to do this as SonarCloud automatic analysis has no ability to consider
-unittest code coverage as this is only a byproduct of the CI unittests.
+unittest code coverage, as this is only a byproduct of the CI unittests.
 
 * Go to project page (e.g. https://sonarcloud.io/dashboard?id=XAITK_xaitk-saliency)
 
@@ -113,24 +112,23 @@ will fail for those fork-based PRs.
 
 The value for this secret is from a SonarCloud personal security token (see
 below on how to make one of these).
-Currently, Paul Tunison holds the security token that is set to the
+Currently, Paul Tunison (paul.tunison@kitware.com) holds the security token that is set to the
 ``SONAR_TOKEN`` secret in the upstream `xaitk-saliency`_ repository on GitHub.
-In the future this may be changed by a repo admin, as described in a below
-section.
+In the future this may be changed by a repo admin, as described below.
 
-Creating a personal security token
+Create a Personal Security Token
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Go to `SonarCloud`_.
 
-* Drop down user option in the upper right --> select "My Account"
+* At the drop-down user option in the upper right --> select "My Account".
 
 * Click "Security" tab.
 
-* Enter the descriptive label for the token in the editable box --> Click "Generate"
+* Enter the descriptive label for the token in the editable box --> click "Generate".
 
 * Retain one-time-exposed value of token appropriately.
 
-Setting GitHub repository ``SONAR_TOKEN`` secret
+Set GitHub Repository ``SONAR_TOKEN`` Secret
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Go to the `XAITK-Saliency`_ repository page.
 

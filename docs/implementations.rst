@@ -1,12 +1,14 @@
 =========================
-Saliency Implementations
+Implementations
 =========================
 
 Included with this toolkit are a number of implementations for the interfaces
 described in the previous section.
-Unlike the interfaces, which declare operation and use-case, implementations
-provide variations on *how* to satisfy the interface-defined use-case, varying
-trade-offs or results implications.
+Unlike the interfaces, which declare operation and use case, implementations
+provide variations on *how* to satisfy the interface-defined use case, varying
+trade-offs, or results implications.
+
+.. When adding new classes within implementations, sort them alphabetically.
 
 -------------------
 Image Perturbation
@@ -17,19 +19,24 @@ Class: RISEGrid
 .. autoclass:: xaitk_saliency.impls.perturb_image.rise.RISEGrid
   :members:
 
-Class: SlidingWindow
----------------------
-.. autoclass:: xaitk_saliency.impls.perturb_image.sliding_window.SlidingWindow
-  :members:
-
 Class: SlidingRadial
 ---------------------
 .. autoclass:: xaitk_saliency.impls.perturb_image.sliding_radial.SlidingRadial
   :members:
 
+Class: SlidingWindow
+---------------------
+.. autoclass:: xaitk_saliency.impls.perturb_image.sliding_window.SlidingWindow
+  :members:
+
 -------------------
 Heatmap Generation
 -------------------
+
+Class: DRISEScoring
+--------------------
+.. autoclass:: xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring.DRISEScoring
+  :members:
 
 Class: OcclusionScoring
 ------------------------
@@ -46,14 +53,9 @@ Class: SimilarityScoring
 .. autoclass:: xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring.SimilarityScoring
   :members:
 
-Class: DRISEScoring
---------------------
-.. autoclass:: xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring.DRISEScoring
-  :members:
-
----------------
-Combined Stack
----------------
+---------------------------------------------
+End-to-End Saliency Generation
+---------------------------------------------
 
 Class: PerturbationOcclusion
 -----------------------------

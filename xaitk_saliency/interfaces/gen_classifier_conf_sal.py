@@ -17,7 +17,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     implementation).
 
     Implementations should use this input to generate a visual saliency
-    heat-map for each input “class” in the input.
+    heatmap for each input “class” in the input.
     This is both an effort to vectorize the operation for optimal performance,
     as well as to allow some algorithms to take advantage of differences in
     classification behavior for other classes to influence heatmap generation.
@@ -34,7 +34,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
-        Generate an visual saliency heat-map matrix given the black-box
+        Generate a visual saliency heatmap matrix given the black-box
         classifier output on a reference image, the same classifier output on
         perturbed images and the masks of the visual perturbations.
 
@@ -49,9 +49,9 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
         or boolean within the above range definition.
         Implementations are responsible for handling these expected variations.
 
-        Generated saliency heat-map matrices should be floating-point typed and
+        Generated saliency heatmap matrices should be floating-point typed and
         be composed of values in the [-1,1] range.
-        Positive values of the saliency heat-maps indicate regions which increase
+        Positive values of the saliency heatmaps indicate regions which increase
         class confidence scores, while negative values indicate regions which
         decrease class confidence scores according to the model that generated
         input confidence values.
@@ -76,7 +76,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
             [0, 1], where a value closer to 1 indicate areas of the image that
             are *unperturbed*.
 
-        :return: Generated visual saliency heat-map for each input class as a
+        :return: Generated visual saliency heatmap for each input class as a
             float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
         """
 

@@ -2,14 +2,14 @@ Introduction
 ============
 
 The xaitk-saliency package implements a class of XAI algorithms known
-as `saliency algorithms`. The basic machine learning application pipeline is shown in Figure 1:
+as `saliency algorithms`. A basic machine learning application pipeline is shown in Figure 1:
 
 .. figure:: figures/intro-fig-01.png
 
    Figure 1: A basic AI pipeline.
 
 In this scenario, an AI algorithm operates on an input (text, image,
-etc.) to produce some sort of output (classification, detection, etc.) Saliency algorithms build on
+etc.) to produce some sort of output (classification, detection, etc.). Saliency algorithms build on
 this to produce visual explanations in the form of saliency maps as shown in Figure 2:
 
 .. figure:: figures/intro-fig-02.png
@@ -24,7 +24,8 @@ the AI. Figure 3 shows sample saliency maps for text and images.
 
    Figure 3: Sample saliency maps for text (left, from `Tuckey et al.
    <https://arxiv.org/abs/1907.05664>`_) and images (right, from `Dong et
-   al. <https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content-Based_Image_Retrieval_CVPRW_2019_paper.html>`_)
+   al. <https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content
+   -Based_Image_Retrieval_CVPRW_2019_paper.html>`_).
 
 .. note:: The xaitk-saliency toolkit currently focuses on providing saliency
           maps for images.
@@ -80,11 +81,11 @@ To avoid confusion, we need some definitions:
   AIs are built around CNNs such as in Figure 4, examples of other models
   include decision trees and support vector machines.
 
-* The **Explainable AI system, or XAI**, is the system we attach to
-  the AI to generate explanations (as in Figure 2.) The XAI may itself
+* **Explainable AI algorithms, or XAI**, is what we attach to
+  the AI system to generate explanations (as in Figure 2). The XAI may itself
   use CNNs, but these details are typically hidden from the XAI user.
 
-In order to answer questions such as the ones raised above, the XAI
+To answer questions such as the ones raised above, the XAI
 must have some way of interacting with the AI. There are two popular
 approaches to this:
 
@@ -124,15 +125,18 @@ intrinsically introspective to the point where they are not so much
 "white-box" as transparent:
 
 * In `linear regression
-  <https://en.wikipedia.org/wiki/Linear_regression>`_, the influence of
-  the observations on the solution is an immediate consequence of the
-  method.
+  <https://en.wikipedia.org/wiki/Linear_regression>`_, the output is a
+  weighted sum of input features, making it easy to separate out effects
+  just by looking at each of the learned-feature weights.
 
 * In a `decision tree <https://en.wikipedia.org/wiki/Decision_tree>`_,
-  the output is directly computed by making the comparisons and
-  branches encoded in the AI's model.
+  the output is directly computed by making the comparisons through
+  a set of nodes and branches that are part of the AI's model.
 
-An example of a white-box explanation method for CNNs is Grad-CAM (`paper <https://arxiv.org/abs/1610.02391>`_, `code <https://github.com/ramprs/grad-cam/>`_), which exposes some (but not all) of the CNN layers to the explanation generation algorithm.
+An example of a white-box explanation method for CNNs is Grad-CAM
+(`paper <https://arxiv.org/abs/1610.02391>`_,
+`code <https://github.com/ramprs/grad-cam/>`_), which exposes some (but not all) of the CNN layers to the explanation
+generation algorithm.
 
 .. figure:: figures/intro-grad-cam-annotated.png
 
@@ -298,6 +302,6 @@ Cons
   anything inside the AI.
 
 
-xaitk-saliency Map Algorithms
+Saliency Algorithms
 --------------------------------
 *Discuss the provided xaitk-saliency algorithms in terms of the above.*

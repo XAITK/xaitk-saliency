@@ -26,7 +26,7 @@ class PerturbationOcclusion (GenerateImageClassifierBlackboxSaliency):
     should be used for filling occluded areas as determined by the given
     `PerturbImage` implementation.
     This is a parameter to be set during runtime as this is most often driven
-    by the blackbox algorithm used, if at all.
+    by the black-box algorithm used, if at all.
 
     :param perturber: PerturbImage implementation instance for generating
         masks that will dictate occlusion.
