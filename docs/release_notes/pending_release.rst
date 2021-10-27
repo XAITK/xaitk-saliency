@@ -29,6 +29,9 @@ Build
 * Fix incorrect specification of actually-optional `papermill` in relation to
   its intended inclusion in the `example_deps` extra.
 
+* Update patch version of Pillow transitive dependency locked in the
+  ``poetry.lock`` file to address CVE-2021-23437.
+
 Examples
 
 * Updated example Jupyter notebooks with more consistent dependency checks and
