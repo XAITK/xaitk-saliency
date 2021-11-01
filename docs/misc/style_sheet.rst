@@ -1,4 +1,4 @@
-Style Sheet for XAITK Saliency Docs
+Style Sheet
 ====================================
 
 

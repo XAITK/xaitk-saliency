@@ -32,8 +32,9 @@ as well as instantiation of a concrete instance via a JSON-like configuration fe
 Image Perturbation
 ---------------------------
 
-The PerturbImage interface abstracts the behavior of taking a reference image and generating some number perturbations
-of the image along with paired mask matrices that indicate where perturbations have occurred and to what amount.
+The PerturbImage interface abstracts the behavior of taking a reference image and generating some number of
+perturbations of the image along with paired mask matrices that indicate where perturbations have occurred and to
+what amount.
 
 Implementations should impart no side effects on the input image.
 
