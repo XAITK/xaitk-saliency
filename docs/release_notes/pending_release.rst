@@ -20,7 +20,9 @@ Documentation
 
 Examples
 
-* Add example notebook for saliency on Atari deep RL agent
+* Add example notebook for saliency on Atari deep RL agent, including updates
+  on top of the original work to normalize saliency maps and conform to our
+  API standards.
 
 * Updated examples to all use a common data sub-directory when downloading or
   saving generated data.
