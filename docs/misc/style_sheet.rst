@@ -1,5 +1,5 @@
 Style Sheet
-====================================
+===========
 
 
 •	*black box* (noun) or *black-box* (adj); not blackbox (avoid)

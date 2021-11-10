@@ -111,7 +111,7 @@ This also requires the feature-vectors for perturbed images as well as the masks
 output from a ``PerturbImage`` implementation.
 We expect perturbations to be relative to the second reference image feature-vector.
 
-An immediate candidate implementation for this interface is the SBSM algorithm [1].
+An immediate candidate implementation for this interface is the Similarity Based Saliency Maps (SBSM) algorithm [1].
 
 .. autoclass:: xaitk_saliency.interfaces.gen_descriptor_sim_sal.GenerateDescriptorSimilaritySaliency
    :members:
