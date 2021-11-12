@@ -305,26 +305,37 @@ Cons
 Saliency Algorithms
 -------------------
 
-The xaitk-saliency package provides two types of black-box algorithms to create explanations: **image perturbation
-algorithms** that generate perturbed images and **saliency algorithms** that generate saliency heatmaps based on the
-black-box observations of the resulting perturbed images.
+The xaitk-saliency package currently provides several black-box XAI algorithms.
+These algorithms follow a general pattern that consists of two sequential steps: **image perturbation** followed by
+**heatmap generation**.
+**Image perturbation** involves generating perturbed versions of the input image by applying a set of perturbation masks.
+**Heatmap generation** involves generating saliency heatmaps based on how the black-box model outputs change as a result
+of image perturbation.
+This technical design choice allows for modularization of the image perturbation and heatmap generation
+components of the algorithm.
+By formulating the algorithms in this manner, the exact operation of the black-box model is not needed by
+an algorithm, which is concerned only with the inputs and outputs.
+Additionally, the algorithm can be flexibly determined by the user; that is, the user is free to choose and configure
+the algorithm as needed for the problem domain.
 
-The saliency algorithms can be organized into three classes according to their respective tasks:
 
-* **Image classification** - Randomized Input Sampling for Explanation (RISE) and RISEScoring algorithms, and the
-  OcclusionScoring algorithm
+The saliency algorithms can also be organized according to their respective tasks:
 
-* **Image similarity** - the Similarity Based Saliency Maps (SBSM) algorithm
+.. list-table:: Saliency Algorithms by Task
+   :widths: 1,
+   :header-rows: 1
 
-* **Object detection** - D-RISE and D-RISEScoring algorithms
+   * - Task
+     - Saliency Algorithm(s)
+   * - Image classification
+     - Occlusion-based Saliency [1]; Randomized Input Sampling for Explanation (RISE) [2]
+   * - Image similarity
+     - Similarity Based Saliency Maps (SBSM) [3]
+   * - Object detection
+     - Detector-RISE (D-RISE) [4]
 
-In addition, there are stacked (end-to-end) implementations for image classification that use multiple algorithms:
 
-*  RISEStack (which uses the RISEGrid perturbation and the RISEScoring saliency algorithms), and
-*  SlidingWindowStack (which uses the SlidingWindows perturbation and the OcclusionScoring saliency
-   algorithms).
-
-.. note:: Stacked implementations are planned in the future for the image similarity and object detection task domains.
-
-The sections that follow describe the interfaces available for perturbing images and generating the saliency heatmaps,
-and the implementations for which the algorithms are candidates.
+1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
+2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.
+3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops 2019 Jun (pp. 95-98).
+4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
