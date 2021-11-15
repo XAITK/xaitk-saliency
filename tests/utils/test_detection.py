@@ -11,7 +11,7 @@ class TestFormatDetection:
         Test that when objectness scores are not provided the expected default
         is filled into the appropriate column.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         combined_mat = format_detection(test_bbox_mat, test_class_mat)
         # The objectness scores should be in the index 4 column and they should
@@ -22,7 +22,7 @@ class TestFormatDetection:
         """
         Test that input objectness vector is represented in the output.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_obj_v = np.tile([.1, .2, .3, .4], 4)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
@@ -34,7 +34,7 @@ class TestFormatDetection:
         Test that an input objectness vector that is of shape `[nDets x 1]` is
         treated fine.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_obj_v = np.tile([.1, .2, .3, .4], 4).reshape(16, 1)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
@@ -73,7 +73,7 @@ class TestFormatDetection:
         mismatch in input bbox and classification matrices.
         """
         # 16 boxes, 14 classifications.
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(14, 8)
         with pytest.raises(
             ValueError,
@@ -87,7 +87,7 @@ class TestFormatDetection:
         Test that an error is raised when the explicitly input objectness array
         is not a matching size.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_objnes_v = np.random.rand(11)
         with pytest.raises(
