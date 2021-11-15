@@ -434,7 +434,12 @@ def test_benchmark() -> None:
     """
     Simple run test of the benchmark function.
     """
-    benchmark_occlude_image(threading_tests=[0, 1, 2])
+    # Reducing some parameterization just for functionality test.
+    benchmark_occlude_image(
+        img_shape=(64, 64),
+        num_masks=100,
+        threading_tests=[0, 1, 2]
+    )
 
 
 class TestWeightRegionsByScalar:
