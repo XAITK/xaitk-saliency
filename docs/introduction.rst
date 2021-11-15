@@ -322,7 +322,7 @@ the algorithm as needed for the problem domain.
 The saliency algorithms can also be organized according to their respective tasks:
 
 .. list-table:: Saliency Algorithms by Task
-   :widths: 1,
+   :widths: 1,9
    :header-rows: 1
 
    * - Task
