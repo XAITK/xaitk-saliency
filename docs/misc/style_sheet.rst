@@ -1,5 +1,5 @@
-Style Sheet for XAITK Saliency Docs
-====================================
+Style Sheet
+===========
 
 
 •	*black box* (noun) or *black-box* (adj); not blackbox (avoid)

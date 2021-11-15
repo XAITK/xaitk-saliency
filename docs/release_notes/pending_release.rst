@@ -12,6 +12,8 @@ Documentation
 
 * Added text discussing black box methods to ``introduction.rst``.
 
+* Added a section to ``introduction.rst`` that describes the links between saliency algorithms and implementations.
+
 * Edited all text.
 
 * Update top-level ``README.md`` file to have more useful content.
