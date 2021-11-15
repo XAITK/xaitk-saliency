@@ -9,6 +9,7 @@ from xaitk_saliency.utils.masking import (
     occlude_image_batch,
     occlude_image_streaming,
     benchmark_occlude_image,
+    weight_regions_by_scalar,
 )
 
 
@@ -434,6 +435,36 @@ def test_benchmark() -> None:
     Simple run test of the benchmark function.
     """
     benchmark_occlude_image(threading_tests=[0, 1, 2])
+
+
+class TestWeightRegionsByScalar:
+
+    @pytest.mark.parametrize("inv_masks", [True, False])
+    @pytest.mark.parametrize("normalize", [True, False])
+    @pytest.mark.parametrize(
+        "scalar_type,mask_type,expected_output_type",
+        [
+            (np.float32, np.bool_, np.float32),
+            (np.float32, np.int16, np.float32),
+            (np.float32, np.float32, np.float32),
+            (np.float64, np.float32, np.float64),
+            (np.float32, np.float64, np.float64),
+        ]
+    )
+    def test_against_type_upcasting(
+        self, scalar_type: np.dtype, mask_type: np.dtype,
+        expected_output_type: np.dtype, inv_masks: bool, normalize: bool
+    ) -> None:
+        """
+        Test that the output is not of a type that is larger than is input.
+        In other words, the output should follow numpy's type promotion rules
+        based on the input data types.
+        E.g. when input is float32, output is *not* float64, but still float32.
+        """
+        scalar_vec = np.random.randn(100, 10).astype(scalar_type)
+        masks = np.ones((100, 224, 224)).astype(mask_type)
+        output = weight_regions_by_scalar(scalar_vec, masks, inv_masks, normalize)
+        assert output.dtype == expected_output_type
 
 
 # Test input images

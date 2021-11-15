@@ -276,7 +276,7 @@ def weight_regions_by_scalar(
     :return: A numpy array representing the weighted heatmap.
     """
     if inv_masks:
-        masks = (1 - masks)
+        masks = (UINT8_ONE - masks)
 
     # Weighting each perturbed region with its respective score in vector.
     heatmap = (np.expand_dims(np.transpose(masks), axis=3) * scalar_vec)
