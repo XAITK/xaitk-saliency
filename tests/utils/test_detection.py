@@ -96,3 +96,44 @@ class TestFormatDetection:
                   r"the array at index 1 has size 11"
         ):
             format_detection(test_bbox_mat, test_class_mat, test_objnes_v)
+
+    @pytest.mark.parametrize(
+        "bbox_type,clf_type,expected_type",
+        [[np.float32, np.float32, np.float32],
+         [np.float32, np.uint8, np.float32],
+         [np.uint8, np.float16, np.float16],
+         [np.uint8, np.uint8, np.uint8]]
+    )
+    def test_against_type_upcasting(
+        self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype
+    ) -> None:
+        """
+        Test that the output is not of a type that is larger than is input.
+        E.g. when input is float32, output is *not* float64, but still float32.
+        """
+        bbox_mat = np.random.randn(100, 4).astype(bbox_type)
+        classification_mat = np.random.randn(100, 10).astype(clf_type)
+        output = format_detection(bbox_mat, classification_mat)
+        assert output.dtype == expected_type
+
+    @pytest.mark.parametrize(
+        "bbox_type,clf_type,obj_type,expected_type",
+        [[np.float32, np.float32, np.float32, np.float32],
+         [np.float32, np.uint8, np.uint8, np.float32],
+         [np.uint8, np.float16, np.float16, np.float16],
+         [np.uint8, np.uint8, np.float16, np.float16],
+         [np.uint8, np.uint8, np.uint8, np.uint8]]
+    )
+    def test_against_type_upcasting_obj(
+        self, bbox_type: np.dtype, clf_type: np.dtype, obj_type: np.dtype,
+        expected_type: np.dtype
+    ) -> None:
+        """
+        Same as ``test_against_type_upcasting`` but including the objectness
+        input vector instead of it being ``None``.
+        """
+        bbox_mat = np.random.randn(100, 4).astype(bbox_type)
+        classification_mat = np.random.randn(100, 10).astype(clf_type)
+        objectness = np.random.randn(100).astype(obj_type)
+        output = format_detection(bbox_mat, classification_mat, objectness)
+        assert output.dtype == expected_type

@@ -40,3 +40,8 @@ Examples
 
 * Updated example Jupyter notebooks with more consistent dependency checks and
   also fixed minor header formatting issues.
+
+Utilities
+
+* Fix ``xaitk_saliency.utils.detection.format_detection`` to not upcast the
+  data type output when ``objectness is None``.
