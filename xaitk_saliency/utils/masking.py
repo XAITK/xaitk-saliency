@@ -205,7 +205,7 @@ def benchmark_occlude_image(
     the given reference image matrix, which should be of the shape
     `[H x W [x C]]`.
     """
-    img_mat = np.ones((*img_shape, 3), dtype=np.uint8)
+    img_mat = np.ones((*img_shape, img_channels), dtype=np.uint8)
     masks = (np.random.rand(num_masks, *img_shape[:2]) < 0.5)
     fill_1c: int = 0
     fill_mc = [0] * img_channels
@@ -276,7 +276,7 @@ def weight_regions_by_scalar(
     :return: A numpy array representing the weighted heatmap.
     """
     if inv_masks:
-        masks = (1 - masks)
+        masks = (UINT8_ONE - masks)
 
     # Weighting each perturbed region with its respective score in vector.
     heatmap = (np.expand_dims(np.transpose(masks), axis=3) * scalar_vec)

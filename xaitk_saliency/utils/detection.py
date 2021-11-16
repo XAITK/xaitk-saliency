@@ -51,7 +51,9 @@ def format_detection(
     :returns: Matrix combining bounding box, objectness and class confidences.
     """
     if objectness is None:
-        objectness = np.full((bbox_mat.shape[0], 1), fill_value=1)
+        # Using the smallest sized type (boolean) to represent the 1-value so
+        # as to not blowup the output type to something larger than input.
+        objectness = np.full((bbox_mat.shape[0], 1), fill_value=True)
     elif objectness.ndim == 1:
         objectness = objectness.reshape(objectness.shape[0], 1)
     return np.hstack([bbox_mat, objectness, classification_mat])

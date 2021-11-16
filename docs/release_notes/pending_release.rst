@@ -40,3 +40,15 @@ Examples
 
 * Updated example Jupyter notebooks with more consistent dependency checks and
   also fixed minor header formatting issues.
+
+Tests
+
+* Fix deprecation warnings around the use of ``numpy.random.random_integers``.
+
+Utilities
+
+* Fix ``xaitk_saliency.utils.detection.format_detection`` to not upcast the
+  data type output when ``objectness is None``.
+
+* Fix ``xaitk_saliency.utils.masking.weight_regions_by_scalar`` to not upcast
+  the data type output when ``inv_masks is True``.

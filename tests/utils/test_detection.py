@@ -11,7 +11,7 @@ class TestFormatDetection:
         Test that when objectness scores are not provided the expected default
         is filled into the appropriate column.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         combined_mat = format_detection(test_bbox_mat, test_class_mat)
         # The objectness scores should be in the index 4 column and they should
@@ -22,7 +22,7 @@ class TestFormatDetection:
         """
         Test that input objectness vector is represented in the output.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_obj_v = np.tile([.1, .2, .3, .4], 4)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
@@ -34,7 +34,7 @@ class TestFormatDetection:
         Test that an input objectness vector that is of shape `[nDets x 1]` is
         treated fine.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_obj_v = np.tile([.1, .2, .3, .4], 4).reshape(16, 1)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
@@ -73,7 +73,7 @@ class TestFormatDetection:
         mismatch in input bbox and classification matrices.
         """
         # 16 boxes, 14 classifications.
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(14, 8)
         with pytest.raises(
             ValueError,
@@ -87,7 +87,7 @@ class TestFormatDetection:
         Test that an error is raised when the explicitly input objectness array
         is not a matching size.
         """
-        test_bbox_mat = np.random.random_integers(0, 255, 16 * 4).reshape(16, 4)
+        test_bbox_mat = np.random.randint(0, 255, (16, 4))
         test_class_mat = np.random.rand(16, 8)
         test_objnes_v = np.random.rand(11)
         with pytest.raises(
@@ -96,3 +96,44 @@ class TestFormatDetection:
                   r"the array at index 1 has size 11"
         ):
             format_detection(test_bbox_mat, test_class_mat, test_objnes_v)
+
+    @pytest.mark.parametrize(
+        "bbox_type,clf_type,expected_type",
+        [[np.float32, np.float32, np.float32],
+         [np.float32, np.uint8, np.float32],
+         [np.uint8, np.float16, np.float16],
+         [np.uint8, np.uint8, np.uint8]]
+    )
+    def test_against_type_upcasting(
+        self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype
+    ) -> None:
+        """
+        Test that the output is not of a type that is larger than is input.
+        E.g. when input is float32, output is *not* float64, but still float32.
+        """
+        bbox_mat = np.random.randn(100, 4).astype(bbox_type)
+        classification_mat = np.random.randn(100, 10).astype(clf_type)
+        output = format_detection(bbox_mat, classification_mat)
+        assert output.dtype == expected_type
+
+    @pytest.mark.parametrize(
+        "bbox_type,clf_type,obj_type,expected_type",
+        [[np.float32, np.float32, np.float32, np.float32],
+         [np.float32, np.uint8, np.uint8, np.float32],
+         [np.uint8, np.float16, np.float16, np.float16],
+         [np.uint8, np.uint8, np.float16, np.float16],
+         [np.uint8, np.uint8, np.uint8, np.uint8]]
+    )
+    def test_against_type_upcasting_obj(
+        self, bbox_type: np.dtype, clf_type: np.dtype, obj_type: np.dtype,
+        expected_type: np.dtype
+    ) -> None:
+        """
+        Same as ``test_against_type_upcasting`` but including the objectness
+        input vector instead of it being ``None``.
+        """
+        bbox_mat = np.random.randn(100, 4).astype(bbox_type)
+        classification_mat = np.random.randn(100, 10).astype(clf_type)
+        objectness = np.random.randn(100).astype(obj_type)
+        output = format_detection(bbox_mat, classification_mat, objectness)
+        assert output.dtype == expected_type
