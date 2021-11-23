@@ -38,6 +38,7 @@ scikit-learn = "^0.24.2"
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
+smqtk-detection = ">=0.17.0"
 scipy = "^1.6.3"
 # Optionals for "example" extra
 jupyter = { version = "^1.0.0", optional = true }
@@ -46,6 +47,7 @@ papermill = { version = "^2.3.3", optional = true }
 torch = { version = "^1.9.0", optional = true }
 torchvision = { version = "^0.10.0", optional = true }
 tqdm = { version = "^4.45.0", optional = true }
+click = "^8.0.3"
 
 [tool.poetry.extras]
 example_deps = [ "jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]

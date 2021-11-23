@@ -32,6 +32,12 @@ Implementations
 * Add ``SquaredDifferenceScoring`` implementation of the ``GenerateClassifierConfidenceSaliency``
   interface that uses squared difference.
 
+Utilities
+
+* Add ``gen_detector_sal`` function to compute saliency maps for a detection
+  algorithm using any chosen implementations of ``DetectImageObjects``,
+  ``PerturbImage``, and ``GenerateDetectorProposalSaliency``.
+
 Fixes
 -----
 
