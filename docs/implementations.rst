@@ -53,6 +53,11 @@ Class: SimilarityScoring
 .. autoclass:: xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring.SimilarityScoring
   :members:
 
+Class: SquaredDifferenceScoring
+---------------------
+.. autoclass:: xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring.SquaredDifferenceScoring
+  :members:
+
 ---------------------------------------------
 End-to-End Saliency Generation
 ---------------------------------------------
