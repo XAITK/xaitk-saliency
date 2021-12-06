@@ -71,6 +71,9 @@ pytest-cov = "^2.11.1"
 # Utility
 ipython = "^7.22.0"
 
+[tool.poetry.scripts]
+det-sal-on-img-dir = "xaitk_saliency.utils.bin.det_sal_on_img_dir:det_sal_on_img_dir"
+
 [tool.poetry.plugins."smqtk_plugins"]
 # Add implementation sub-module exposure here.
 "impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"

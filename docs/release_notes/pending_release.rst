@@ -36,7 +36,9 @@ Utilities
 
 * Add ``gen_detector_sal`` function to compute saliency maps for a detection
   algorithm using any chosen implementations of ``DetectImageObjects``,
-  ``PerturbImage``, and ``GenerateDetectorProposalSaliency``.
+  ``PerturbImage``, and ``GenerateDetectorProposalSaliency``, with accompanying
+  cli script ``det-sal-on-img-dir`` that takes a config file for those
+  implementations.
 
 Fixes
 -----
