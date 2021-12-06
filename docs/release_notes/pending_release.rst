@@ -40,6 +40,10 @@ Utilities
   cli script ``det-sal-on-img-dir`` that takes a config file for those
   implementations.
 
+Containerization
+
+* Added Dockerfile and compose file that create base xaitk_saliency image.
+
 Fixes
 -----
 

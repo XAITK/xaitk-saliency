@@ -1,0 +1,6 @@
+version: "3.8"
+services:
+  base:
+    build:
+      context: ./
+      target: xaitk_base
