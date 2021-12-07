@@ -108,9 +108,9 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
                       ref_dets[:, :4]).reshape(n_masks, n_props, n_dets)
 
         # Compute similarity of class probabilities
-        s2 = cdist(perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
-                   ref_dets[:, 5:],
-                   metric=self.proximity_metric).reshape(n_masks, n_props, n_dets)
+        s2 = 1 - cdist(perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
+                       ref_dets[:, 5:],
+                       metric=self.proximity_metric).reshape(n_masks, n_props, n_dets)
 
         # Use objectness score if available
         s3 = perturbed_dets[:, :, 4:5]
@@ -124,7 +124,9 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
         s = s.max(axis=1)
 
         # Weighting perturbed regions by similarity
-        sal = weight_regions_by_scalar(s, perturbed_masks)
+        sal = weight_regions_by_scalar(s,
+                                       perturbed_masks,
+                                       inv_masks=False)
 
         # Normalize final saliency map
         sal = maxabs_scale(
