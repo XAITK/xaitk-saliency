@@ -23,24 +23,7 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
 
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
-
-    :param proximity_metric: String label for the distance metric to use.
-      See scipy.spatial.distance.cdist() and it's *metric* parameter for more
-      details and possible values.
     """
-
-    def __init__(
-        self,
-        proximity_metric: str = 'cosine'
-    ):
-
-        try:
-            # Attempting to use chosen comparison metric
-            cdist([[1], [1]], [[1], [1]], proximity_metric)
-            self.proximity_metric: str = proximity_metric
-        except ValueError:
-            raise ValueError("Chosen comparison metric not supported or "
-                             "may not be available in scipy")
 
     def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
         """
@@ -108,9 +91,11 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
                       ref_dets[:, :4]).reshape(n_masks, n_props, n_dets)
 
         # Compute similarity of class probabilities
-        s2 = 1 - cdist(perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
-                       ref_dets[:, 5:],
-                       metric=self.proximity_metric).reshape(n_masks, n_props, n_dets)
+        s2 = (1 - cdist(perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
+                        ref_dets[:, 5:],
+                        metric='cosine')
+              .reshape(n_masks, n_props, n_dets)
+              .astype(np.promote_types(perturbed_dets.dtype, ref_dets.dtype)))
 
         # Use objectness score if available
         s3 = perturbed_dets[:, :, 4:5]
@@ -140,6 +125,4 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
         return sal
 
     def get_config(self) -> dict:
-        return {
-            "proximity_metric": self.proximity_metric,
-        }
+        return {}

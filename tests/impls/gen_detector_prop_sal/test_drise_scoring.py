@@ -6,7 +6,6 @@ import re
 from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 
 from xaitk_saliency import GenerateDetectorProposalSaliency
-from smqtk_core.configuration import configuration_test_helper
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
 
 
@@ -18,39 +17,6 @@ class TestDRISEScoring:
         """
         impl = DRISEScoring()
         assert impl.is_usable() and isinstance(impl, GenerateDetectorProposalSaliency)
-
-    def test_default_param(self) -> None:
-        """
-        Test default construction.
-        """
-        impl = DRISEScoring()
-        assert impl.proximity_metric == 'cosine'
-
-    def test_get_config(self) -> None:
-        """
-        Test expected configuation behavior.
-        """
-        impl = DRISEScoring('euclidean')
-        for i in configuration_test_helper(impl):
-            assert i.proximity_metric == 'euclidean'
-
-    def test_metric_args(self) -> None:
-        """
-        Test non-default metric type.
-        """
-        impl = DRISEScoring('hamming')
-        assert impl.proximity_metric == 'hamming'
-
-    def test_bad_metric_args(self) -> None:
-        """
-        Test non-default metric type.
-        """
-        with pytest.raises(
-            ValueError,
-            match=r"Chosen comparison metric not supported or "
-                  r"may not be available in scipy"
-        ):
-            _ = DRISEScoring('bad_metric')
 
     def test_shape_sanity(self) -> None:
         """
@@ -113,3 +79,9 @@ class TestDRISEScoring:
                             r"should be of dimension (n_classes + 4 + 1).")
         ):
             impl.generate(ref_dets, pert_dets, pert_mask)
+
+    def test_config(self) -> None:
+
+        impl = DRISEScoring()
+
+        assert impl.get_config() == {}
