@@ -43,6 +43,11 @@ Build
 * Update patch version of Pillow transitive dependency locked in the
   ``poetry.lock`` file to address CVE-2021-23437.
 
+Implementations
+
+* Fix incorrect cosine similarity computation and mask inversion in implementation of
+  ``DRISEScoring`` detector saliency.
+
 Examples
 
 * Updated example Jupyter notebooks with more consistent dependency checks and
