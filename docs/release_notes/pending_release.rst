@@ -18,6 +18,8 @@ Documentation
 
 * Update top-level ``README.md`` file to have more useful content.
 
+* Update misc. doc on local SonarQube scanning.
+
 Examples
 
 * Add example notebook for saliency on Atari deep RL agent, including updates
