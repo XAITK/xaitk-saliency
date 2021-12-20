@@ -2,6 +2,12 @@ Local SonarQube Testing
 =======================
 Follow the `Try Out SonarQube`_ documentation with the "From the Docker
 image" method.
+For a more robust docker-based setup, follow the `install server`_ docs from
+the "Installing SonarQube from the Docker Image" section.
+There is a docker-compose example there that may be adapted.
+The `SonarQube DockerHub page`_ contains information on host requirements
+needed to run the server ("Docker Host Requirements" section).
+
 As part of the setup of the repository/project you will need to create a token
 for running scans with.
 The below assumes that you have saved this locally somewhere for reference,
@@ -30,4 +36,6 @@ Locally, we have had success running a script as per the following:
 
 
 .. _Try Out SonarQube: https://docs.sonarqube.org/latest/setup/get-started-2-minutes/
+.. _install server: https://docs.sonarqube.org/latest/setup/install-server/
+.. _SonarQube DockerHub page: https://hub.docker.com/_/sonarqube?tab=description
 .. _SonarScanner: https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
