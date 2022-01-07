@@ -85,6 +85,7 @@ jobs:
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
             "",  # no extras
+            "tools",
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
