@@ -26,6 +26,9 @@ Examples
   on top of the original work to normalize saliency maps and conform to our
   API standards.
 
+* Add example demonstrating saliency map generation for COCO formatted
+  serialized detections.
+
 * Updated examples to all use a common data sub-directory when downloading or
   saving generated data.
 

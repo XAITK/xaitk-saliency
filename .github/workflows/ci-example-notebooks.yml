@@ -32,6 +32,7 @@ jobs:
             "SimilarityScoring.ipynb",
             "SuperPixelSaliency.ipynb",
             "VIAME_OcclusionSaliency.ipynb",
+            "SerializedDetectionSaliency.ipynb",
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
