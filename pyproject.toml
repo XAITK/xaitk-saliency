@@ -69,7 +69,7 @@ coverage = "^5.5"
 pytest = "^6.2.2"
 pytest-cov = "^2.11.1"
 # Utility
-ipython = "^7.22.0"
+ipython = "^7.31.1"
 
 [tool.poetry.scripts]
 det-sal-on-img-dir = "xaitk_saliency.utils.bin.det_sal_on_img_dir:det_sal_on_img_dir"

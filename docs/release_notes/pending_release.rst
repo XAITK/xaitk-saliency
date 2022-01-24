@@ -57,6 +57,9 @@ Build
 * Update patch version of Pillow transitive dependency locked in the
   ``poetry.lock`` file to address CVE-2021-23437.
 
+* Update the developer dependency and locked version of ipython to address a
+  security vulnerability.
+
 Implementations
 
 * Fix incorrect cosine similarity computation and mask inversion in implementation of
