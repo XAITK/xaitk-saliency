@@ -9,16 +9,20 @@ from typing import TextIO
 import logging
 
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
-from smqtk_core.configuration import from_config_dict
-from smqtk_core.configuration import make_default_config
+from smqtk_core.configuration import from_config_dict, make_default_config
 
-from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
-from xaitk_saliency.interfaces.perturb_image import PerturbImage
-from xaitk_saliency.utils.tools.gen_detector_sal import gen_detector_sal
+from xaitk_saliency import PerturbImage, GenerateDetectorProposalSaliency
+
+try:
+    import kwcoco  # type: ignore
+    from xaitk_saliency.utils.gen_coco_sal import gen_coco_sal
+    is_usable = True
+except (ModuleNotFoundError, NameError):
+    is_usable = False
 
 
 @click.command(context_settings={"help_option_names": ['-h', '--help']})
-@click.argument('img_dir', type=click.Path(exists=True, file_okay=False))
+@click.argument('coco_file', type=click.Path(exists=True))
 @click.argument('output_dir', type=click.Path(exists=False))
 @click.argument('config_file', type=click.File(mode='r'))
 @click.option(
@@ -28,8 +32,8 @@ from xaitk_saliency.utils.tools.gen_detector_sal import gen_detector_sal
 )
 @click.option('-g', '--generate-config-file', help='write default config to specified file', type=click.File(mode='w'))
 @click.option('--verbose', '-v', count=True, help='print progress messages')
-def det_sal_on_img_dir(
-    img_dir: str,
+def sal_on_coco_dets(
+    coco_file: str,
     output_dir: str,
     config_file: TextIO,
     overlay_image: bool,
@@ -37,16 +41,20 @@ def det_sal_on_img_dir(
     verbose: bool
 ) -> None:
     """
-    Generate saliency maps for each image in a directory.
+    Generate saliency maps for detections in a COCO format file and write them
+    to disk. Maps for each detection are written out in subdirectories named
+    after their corresponding image file.
 
     \b
-    IMG_DIR - Directory containg the imgaes.
+    COCO_FILE - COCO style annotation file with detections to compute saliency
+        for.
     OUTPUT_DIR - Directory to write the saliency maps to.
     CONFIG_FILE - Configuration file for the DetectImageObjects, PerturbImage,
         and GenerateDetectorProposalSaliency implementations to use.
 
     \f
-    :param img_dir: Directory containing the images.
+    :param coco_file: COCO style annotation file with detections to compute
+        saliency for.
     :param output_dir: Directory to write the saliency maps to.
     :param config_file: Config file specifying the ``DetectImageObjects``,
         ``PerturbImage``, and ``GenerateDetectorProposalSaliency``
@@ -69,21 +77,17 @@ def det_sal_on_img_dir(
 
         exit()
 
-    files = os.listdir(img_dir)
+    if not is_usable:
+        print("This tool requires additional dependencies, please install 'xaitk-saliency[tools]'")
+        exit(-1)
 
-    img_files = []
-    imgs = []
+    # load dets
+    dets_dset = kwcoco.CocoDataset(coco_file)
 
-    for file_name in files:
-        try:
-            img = np.asarray(Image.open(os.path.join(img_dir, file_name)))
-            imgs.append(img)
-            img_files.append(file_name)
-        except IOError:
-            print(f"File {file_name} is not a valid image file.")
-
+    # load config
     config = json.load(config_file)
 
+    # instantiate objects from config
     blackbox_detector = from_config_dict(config["DetectImageObjects"], DetectImageObjects.get_impls())
     img_perturber = from_config_dict(config["PerturbImage"], PerturbImage.get_impls())
     sal_generator = from_config_dict(
@@ -94,37 +98,48 @@ def det_sal_on_img_dir(
     if verbose:
         logging.basicConfig(level=logging.INFO)
 
-    sal_maps_list, ref_dets_list = gen_detector_sal(
-        imgs,
+    sal_maps = gen_coco_sal(
+        dets_dset,
         blackbox_detector,
         img_perturber,
         sal_generator,
         verbose=verbose
     )
 
-    for img_file, ref_img, img_sal_maps, img_dets in zip(img_files, imgs, sal_maps_list, ref_dets_list):
+    for img_id, det_ids in dets_dset.gid_to_aids.items():
+        # continue if there are no dets for this image
+        if len(det_ids) == 0:
+            continue
 
-        dot_ind = img_file.rfind('.')
+        img_file = dets_dset.get_image_fpath(img_id)
+        ref_img = np.asarray(Image.open(img_file))
 
-        if dot_ind == -1:
-            img_name = img_file
-        else:
-            img_name = img_file[:dot_ind]
+        img_file = dets_dset.imgs[img_id]['file_name']
+
+        # split file from parent folder
+        img_name = os.path.split(img_file)[1]
+        # split off file extension
+        img_name = os.path.splitext(img_name)[0]
 
         sub_dir = os.path.join(output_dir, img_name)
 
         os.makedirs(sub_dir, exist_ok=True)
 
-        for det_i, (sal_map, ref_det) in enumerate(zip(img_sal_maps, img_dets)):
+        for det_id in det_ids:
+
+            sal_map = sal_maps[det_id]
+
             fig = plt.figure()
             plt.axis('off')
             if overlay_image:
                 gray_img = np.asarray(Image.fromarray(ref_img).convert("L"))
                 plt.imshow(gray_img, alpha=0.7, cmap='gray')
+
+                bbox = dets_dset.anns[det_id]['bbox']
                 plt.gca().add_patch(Rectangle(
-                    (ref_det[0], ref_det[1]),
-                    ref_det[2] - ref_det[0],
-                    ref_det[3] - ref_det[1],
+                    (bbox[0], bbox[1]),
+                    bbox[2],
+                    bbox[3],
                     linewidth=1,
                     edgecolor='r',
                     facecolor='none'
@@ -134,5 +149,5 @@ def det_sal_on_img_dir(
             else:
                 plt.imshow(sal_map, cmap='jet')
                 plt.colorbar()
-            plt.savefig(os.path.join(sub_dir, f"det_{det_i}.jpeg"), bbox_inches='tight')
+            plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches='tight')
             plt.close(fig)

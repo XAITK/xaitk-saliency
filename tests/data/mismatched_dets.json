@@ -1,0 +1,95 @@
+{
+    "categories": [
+        {
+            "id": 1,
+            "name": "cat1"
+        },
+        {
+            "id": 2,
+            "name": "cat2"
+        },
+        {
+            "id": 3,
+            "name": "cat3"
+        }
+    ],
+    "videos": [],
+    "images": [
+        {
+            "id": 1,
+            "file_name": "test_image1.png"
+        },
+        {
+            "id": 2,
+            "file_name": "no_dets_image.png"
+        },
+        {
+            "id": 3,
+            "file_name": "test_image2.png"
+        }
+    ],
+    "annotations": [
+        {
+            "id": 1,
+            "image_id": 1,
+            "category_id": 1,
+            "bbox": [
+                10,
+                20,
+                30,
+                40
+            ],
+            "score": 1.0
+        },
+        {
+            "id": 2,
+            "image_id": 1,
+            "category_id": 2,
+            "bbox": [
+                12,
+                45,
+                50,
+                30
+            ],
+            "score": 1.0
+        },
+        {
+            "id": 3,
+            "image_id": 1,
+            "category_id": 3,
+            "bbox": [
+                30,
+                5,
+                47,
+                92
+            ],
+            "score": 1.0
+        },
+        {
+            "id": 4,
+            "image_id": 3,
+            "category_id": 2,
+            "bbox": [
+                50,
+                50,
+                32,
+                17
+            ],
+            "score": 1.0
+        },
+        {
+            "id": 5,
+            "image_id": 3,
+            "category_id": 3,
+            "bbox": [
+                68,
+                82,
+                11,
+                7
+            ],
+            "score": 1.0
+        }
+    ],
+    "licenses": [],
+    "info": []
+}
