@@ -69,15 +69,15 @@ else:
         else:
             _log = _mute_log
 
-        num_imgs = len(dets_dset.imgs)
+        # filter out images with no detections
+        gid_to_aids = {key: value for (key, value) in dets_dset.gid_to_aids.items() if len(value) > 0}
+
+        num_imgs = len(gid_to_aids)
 
         sal_maps = {}
-        for img_i, (img_id, det_ids) in enumerate(dets_dset.gid_to_aids.items()):
+        for img_i, (img_id, det_ids) in enumerate(gid_to_aids.items()):
 
             num_dets = len(det_ids)
-            # continue if there are no dets for this image
-            if num_dets == 0:
-                continue
 
             img_file = dets_dset.get_image_fpath(img_id)
             ref_img = np.asarray(Image.open(img_file))
