@@ -36,12 +36,6 @@ Implementations
 
 Utilities
 
-* Add ``gen_detector_sal`` function to compute saliency maps for a detection
-  algorithm using any chosen implementations of ``DetectImageObjects``,
-  ``PerturbImage``, and ``GenerateDetectorProposalSaliency``, with accompanying
-  cli script ``det-sal-on-img-dir`` that takes a config file for those
-  implementations.
-
 * Add ``gen_coco_sal`` function to compute saliency maps for detections in a
   ``kwcoco`` dataset, with accompanying cli script ``sal-on-coco-dets`` which
   does this on a COCO formatted json file and writes saliency maps to disk.
