@@ -29,6 +29,10 @@ Examples
 * Add example demonstrating saliency map generation for COCO formatted
   serialized detections.
 
+* Add example showing edge case predictions made by a CenterNet model on the
+  VisDrone dataset and using saliency maps to provide insight on why the model
+  acted as such.
+
 * Updated examples to all use a common data sub-directory when downloading or
   saving generated data.
 

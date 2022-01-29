@@ -33,6 +33,7 @@ jobs:
             "SuperPixelSaliency.ipynb",
             "VIAME_OcclusionSaliency.ipynb",
             "SerializedDetectionSaliency.ipynb",
+            "EdgeCaseSaliency.ipynb",
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
