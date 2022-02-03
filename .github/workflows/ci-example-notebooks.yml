@@ -38,7 +38,9 @@ jobs:
       fail-fast: false
 
     # Just one python version, using our base supported version.
-    container: python:3.7
+    container:
+      image: python:3.7
+      options: "--shm-size 2GB"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
