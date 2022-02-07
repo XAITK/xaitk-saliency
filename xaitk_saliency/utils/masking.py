@@ -275,14 +275,26 @@ def weight_regions_by_scalar(
 
     :return: A numpy array representing the weighted heatmap.
     """
+    # upcast to common type
+    if scalar_vec.dtype < masks.dtype:
+        scalar_vec = scalar_vec.astype(max(scalar_vec.dtype, masks.dtype))
+    elif masks.dtype < scalar_vec.dtype:
+        masks = masks.astype(max(scalar_vec.dtype, masks.dtype))
+
     if inv_masks:
         masks = (UINT8_ONE - masks)
 
-    # Weighting each perturbed region with its respective score in vector.
-    heatmap = (np.expand_dims(np.transpose(masks), axis=3) * scalar_vec)
+    # initialize final saliency maps
+    sal_across_masks = np.zeros(
+        (scalar_vec.shape[1], masks.shape[1], masks.shape[2]),
+        dtype=max(scalar_vec.dtype, masks.dtype)
+    )
 
-    # Aggregate scores across all perturbed regions.
-    sal_across_masks = np.transpose(heatmap.sum(axis=2))
+    # split weights per class
+    for i, class_scales in enumerate(np.transpose(scalar_vec)):
+        # aggregate scaled masks
+        for (mask, scalar) in zip(masks, class_scales):
+            sal_across_masks[i] += mask * scalar
 
     if normalize:
         # Removing regions that are never masked to avoid a dividebyzero warning
