@@ -173,7 +173,6 @@ else:
             ``DetectImageObjects``.
         :param cats: Dict of categories, as taken from the "categories" section
             of a COCO style annotation dictionary.
-        :param cat_map: Dictionary mapping score dict keys to category ids.
         :returns: Matrix of detections with shape
             [nImgs x nDets x (4+1+nClasses)]. If the number of detections for
             each image is not consistent, the matrix will be padded with rows
@@ -206,16 +205,23 @@ else:
 
             # assume class ids are arranged between 0 and the maximum id
             scores_mat = np.empty([0, max_cat_id+1])
+            objectness = np.ones(len(img_dets))
 
-            for score_dict in score_dicts:
+            for det_i, score_dict in enumerate(score_dicts):
                 score_array = np.zeros(max_cat_id+1)
 
                 for key, score in score_dict.items():
                     score_array[cat_map[key]] = score
 
+                # detect one-hot
+                if len([score for score in score_array if score > 0]) == 1:
+                    score = max(score_array)
+                    objectness[det_i] = score
+                    score_array /= score
+
                 scores_mat = np.vstack((scores_mat, score_array))
 
-            dets_mat_list.append(format_detection(bbox_mat, scores_mat))
+            dets_mat_list.append(format_detection(bbox_mat, scores_mat, objectness))
 
         # pad matrices
         num_dets = [dets_mat.shape[0] for dets_mat in dets_mat_list]
@@ -256,8 +262,17 @@ else:
         # assume class ids are arranged between 0 and the maximum id
         max_cat_id = max(coco_dset.cats.keys())
         class_mat = np.zeros((len(dets), max_cat_id+1))
+        objectness = np.ones(len(dets))
 
         for i, det in enumerate(dets):
-            class_mat[i, det['category_id']] = det['score']
 
-        return format_detection(bbox_mat, class_mat)
+            # look for class probabilities
+            if 'prob' in det:
+                class_mat[i, :] = det['prob']
+
+            # assume single score is present
+            else:
+                class_mat[i, det['category_id']] = 1
+                objectness[i] = det['score']
+
+        return format_detection(bbox_mat, class_mat, objectness)
