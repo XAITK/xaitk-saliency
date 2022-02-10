@@ -82,3 +82,6 @@ Utilities
 
 * Fix ``xaitk_saliency.utils.masking.weight_regions_by_scalar`` to not upcast
   the data type output when ``inv_masks is True``.
+
+* Update ``xaitk_saliency.utils.masking.weight_regions_by_scalar`` to not use
+  fully vectorized operation which significantly improves efficiency.
