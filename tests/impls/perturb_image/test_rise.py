@@ -133,6 +133,27 @@ class TestRISEPerturbation:
         assert len(masks_large) == 2
         assert masks_large.shape[1:] == white_image_large.shape
 
+    def test_multi_axis_grid(self) -> None:
+        """
+        Test using tuple s-value to split horizontal and vertical axis
+        unevenly.
+        """
+        img = np.full((4, 6), fill_value=255, dtype=np.uint8)
+        impl1 = RISEGrid(n=2, s=(2, 3), p1=0.5, seed=42, threads=0)
+        impl2 = RISEGrid(n=2, s=(2, None), p1=0.5, seed=42, threads=0)
+        impl3 = RISEGrid(n=2, s=(None, 3), p1=0.5, seed=42, threads=0)
+
+        masks1 = impl1(img)
+        masks2 = impl2(img)
+        masks3 = impl3(img)
+
+        assert np.allclose(
+            masks1,
+            masks2,
+            masks3,
+            EXPECTED_MASKS_4X6_SQUARE,
+        )
+
 
 # Common expected masks for 4x6 tests
 # These assume seed=42, serial generation with threads=0
@@ -148,5 +169,21 @@ EXPECTED_MASKS_4x6 = np.array([
         [0.55555550, 0.62962960, 0.48148146, 0.33333330, 0.18518515, 0.03703701],
         [0.27777780, 0.31481487, 0.24074076, 0.16666669, 0.09259259, 0.01851851],
         [0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000]
+    ]
+], dtype=np.float32)
+
+EXPECTED_MASKS_4X6_SQUARE = np.array([
+    [
+        [0.06250000, 0.43750000, 0.81250000, 0.81250000, 0.43750000, 0.06250000],
+        [0.06250000, 0.43750000, 0.81250000, 0.81250000, 0.43750000, 0.06250000],
+        [0.06250000, 0.43750000, 0.81250000, 0.81250000, 0.43750000, 0.06250000],
+        [0.06250000, 0.43750000, 0.81250000, 0.81250000, 0.43750000, 0.06250000],
+    ],
+
+    [
+        [0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.18750000, 0.56250000],
+        [0.33333334, 0.33333334, 0.33333334, 0.33333334, 0.39583334, 0.52083330],
+        [0.66666660, 0.66666660, 0.66666660, 0.66666660, 0.60416660, 0.47916670],
+        [1.00000000, 1.00000000, 1.00000000, 1.00000000, 0.81250000, 0.43750000],
     ]
 ], dtype=np.float32)

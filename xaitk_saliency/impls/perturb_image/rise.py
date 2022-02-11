@@ -23,7 +23,7 @@ RISE MIT License (https://github.com/eclique/RISE/blob/master/LICENSE):
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 """
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple, Union
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils import parallel_map
@@ -42,7 +42,7 @@ class RISEGrid (PerturbImage):
     def __init__(
         self,
         n: int,
-        s: int,
+        s: Union[int, Tuple[int, int], Tuple[int, None], Tuple[None, int]],
         p1: float,
         seed: Optional[int] = None,
         threads: Optional[int] = 4,
@@ -53,8 +53,11 @@ class RISEGrid (PerturbImage):
         :param n:
             Number of random masks used in the algorithm. E.g. 1000.
         :param s:
-            Spatial resolution of the small masking grid. E.g. 8.
-            Assumes square grid.
+            Spatial resolution of the small masking grid. Can be an int,
+            representing both the horizontal and vertical resolution, or a
+            tuple representing those values seperately. Passing ``None`` for
+            one dimension will use square cells based on the other dimension
+            value.
         :param p1:
             Probability of the grid cell being set to 1 (otherwise 0).
             This should be a float value in the [0, 1] range. E.g. 0.5.
@@ -78,8 +81,15 @@ class RISEGrid (PerturbImage):
         self.threads = threads
 
         # Generate a set of random grids of small resolution
-        grid: np.ndarray = np.random.default_rng(seed).random((n, s, s)) < p1
-        grid = grid.astype('float32')
+        if type(s) is tuple:
+            if None in s:
+                grid = None  # type: Optional[np.ndarray]
+            else:
+                grid = np.random.default_rng(seed).random((n, *s)) < p1
+                grid = grid.astype('float32')
+        else:
+            grid = np.random.default_rng(seed).random((n, s, s)) < p1
+            grid = grid.astype('float32')
 
         self.grid = grid
 
@@ -92,6 +102,18 @@ class RISEGrid (PerturbImage):
         grid = self.grid
         s = self.s
         shift_rng = np.random.default_rng(self.seed)
+
+        if type(s) is tuple:
+            s = np.array(s)
+
+        # Dynamic square masking
+        if grid is None:
+            val_idx = 1 - list(s).index(None)
+            r = input_size[val_idx] / s[val_idx]
+            s[1 - val_idx] = np.ceil(input_size[1 - val_idx] / r).astype('int')
+            grid: np.ndarray = np.random.default_rng(self.seed).random((self.n, *s)) < self.p1
+            grid = grid.astype('float32')
+
         # Shape format: [H x W], Inherits from `input_size`
         cell_size = np.ceil(np.array(input_size) / s)
         up_size = (s + 1) * cell_size

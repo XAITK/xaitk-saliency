@@ -37,6 +37,9 @@ Implementations
 * Add ``SquaredDifferenceScoring`` implementation of the ``GenerateClassifierConfidenceSaliency``
   interface that uses squared difference.
 
+* Add logic for two dimensional ``s`` value in ``RISEGrid``, allowing for
+  different spatial resolutions along the vertical and horizontal axis.
+
 Utilities
 
 * Add ``gen_coco_sal`` function to compute saliency maps for detections in a
