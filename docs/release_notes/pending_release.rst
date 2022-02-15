@@ -43,6 +43,8 @@ Utilities
   ``kwcoco`` dataset, with accompanying cli script ``sal-on-coco-dets`` which
   does this on a COCO formatted json file and writes saliency maps to disk.
 
+* Add multi-threaded functionality to ``occlude_image_batch`` utility.
+
 Containerization
 
 * Added Dockerfile and compose file that create base xaitk_saliency image.

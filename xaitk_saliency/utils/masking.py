@@ -14,6 +14,7 @@ def occlude_image_batch(
     ref_image: np.ndarray,
     masks: np.ndarray,
     fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
+    threads: Optional[int] = None,
 ) -> np.ndarray:
     """
     Apply a number of input occlusion masks to the given reference image,
@@ -60,6 +61,9 @@ def occlude_image_batch(
     :param fill: Optional fill for alpha-blending based on the input masks for
         the occluded regions as a scalar value, a per-channel sequence or a
         shape-matched image.
+    :param threads: Optional number of threads to use for parallelism when set
+        to a positive integer. If 0, a negative value, or `None`, work will be
+        performed on the main-thread in-line.
 
     :raises ValueError: The input mask matrix was not three-dimensional, its last
         two dimensions did not match the shape of the input imagery, or the
@@ -90,15 +94,28 @@ def occlude_image_batch(
     )
     # The Batch Operation -> Bulk apply mask matrices to input image matrix to
     # generate occluded images.
-    if fill is not None:
-        masks_sview = masks[s]
-        np.add(
-            (masks_sview * ref_image),
-            ((UINT8_ONE - masks_sview) * fill),
-            out=occ_img_mats, casting="unsafe"
-        )
+
+    masks_sview = masks[s]
+
+    def work_func(i_: int) -> np.ndarray:
+        occ_mat = masks_sview[i_] * ref_image
+
+        if fill is not None:
+            occ_mat += (UINT8_ONE - masks_sview[i_]) * np.array(fill, dtype=ref_image.dtype)
+
+        return occ_mat.astype(ref_image.dtype)
+
+    if threads is None or threads < 1:
+        for i in range(len(masks)):
+            occ_img_mats[i] = work_func(i)
     else:
-        np.multiply(masks[s], ref_image, out=occ_img_mats, casting="unsafe")
+        for i, m in enumerate(parallel_map(
+            work_func, range(len(masks)),
+            cores=threads,
+            use_multiprocessing=False,
+        )):
+            occ_img_mats[i] = m
+
     return occ_img_mats
 
 

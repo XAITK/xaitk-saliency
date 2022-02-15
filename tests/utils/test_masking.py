@@ -15,9 +15,10 @@ from xaitk_saliency.utils.masking import (
 
 @pytest.fixture(
     scope='module',
-    ids=["batch", "streaming-serial", "streaming-parallel"],
+    ids=["batch-serial", "batch-parallel", "streaming-serial", "streaming-parallel"],
     params=[
-        occlude_image_batch,
+        functools.partial(occlude_image_batch, threads=None),
+        functools.partial(occlude_image_batch, threads=4),
         functools.partial(occlude_image_streaming, threads=None),
         functools.partial(occlude_image_streaming, threads=4),
     ]
