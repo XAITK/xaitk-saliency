@@ -20,6 +20,8 @@ def occlude_image_batch(
     Apply a number of input occlusion masks to the given reference image,
     producing a list of images equivalent in length, and parallel in order, to
     the input masks.
+    This batch version will compute all occluded images and returns them all in
+    one large matrix.
 
     We expect the "mask" matrices and the image to be the same height and
     width, and for the mask matrix values to be in the [0, 1] range.
@@ -129,6 +131,8 @@ def occlude_image_streaming(
     Apply a number of input occlusion masks to the given reference image,
     producing a list of images equivalent in length, and parallel in order, to
     the input masks.
+    This streaming version will return an iterator that yields occluded image
+    matrices.
 
     We expect the "mask" matrices and the image to be the same height and
     width, and for the mask matrix values to be in the [0, 1] range.
