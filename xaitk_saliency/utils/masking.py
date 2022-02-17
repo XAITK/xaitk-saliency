@@ -235,6 +235,11 @@ def benchmark_occlude_image(
     print(f"Batch - no-fill - {e-s} s")
     for threads in threading_tests:
         s = perf_counter()
+        occlude_image_batch(img_mat, masks, threads=threads)
+        e = perf_counter()
+        print(f"Batch - threads={threads:2d} - no-fill - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
         np.asarray(list(occlude_image_streaming(img_mat, masks, threads=threads)))
         e = perf_counter()
         print(f"Streaming - threads={threads:2d} - no-fill - {e-s} s")
@@ -245,6 +250,11 @@ def benchmark_occlude_image(
     print(f"Batch - fill-1c - {e-s} s")
     for threads in threading_tests:
         s = perf_counter()
+        occlude_image_batch(img_mat, masks, fill=fill_1c, threads=threads)
+        e = perf_counter()
+        print(f"Batch - threads={threads:2d} - fill-1c - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
         np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_1c, threads=threads)))
         e = perf_counter()
         print(f"Streaming - threads={threads:2d} - fill-1c - {e-s} s")
@@ -253,6 +263,11 @@ def benchmark_occlude_image(
     occlude_image_batch(img_mat, masks, fill=fill_mc)
     e = perf_counter()
     print(f"Batch - fill-{img_channels}c - {e-s} s")
+    for threads in threading_tests:
+        s = perf_counter()
+        occlude_image_batch(img_mat, masks, fill=fill_mc, threads=threads)
+        e = perf_counter()
+        print(f"Batch - threads={threads:2d} - fill-{img_channels}c - {e-s} s")
     for threads in threading_tests:
         s = perf_counter()
         np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_mc, threads=threads)))
