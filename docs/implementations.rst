@@ -14,6 +14,11 @@ trade-offs, or results implications.
 Image Perturbation
 -------------------
 
+Class: RandomGrid
+------------------
+.. autoclass:: xaitk_saliency.impls.perturb_image.random_grid.RandomGrid
+  :members:
+
 Class: RISEGrid
 ----------------
 .. autoclass:: xaitk_saliency.impls.perturb_image.rise.RISEGrid
