@@ -21,6 +21,11 @@ class DRISEScoring (GenerateDetectorProposalSaliency):
     bounding box locations, 1 index for objectness, and nClasses indices for
     different object classes).
 
+    If your detections consist of a single class prediction and confidence
+    score instead of scores for each class, it is best practice to replace the
+    objectness score with the confidence score and use a one-hot encoding of
+    the prediction as the class scores.
+
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
     """
