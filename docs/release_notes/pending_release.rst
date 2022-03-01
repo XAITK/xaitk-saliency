@@ -37,6 +37,9 @@ Implementations
 * Add ``SquaredDifferenceScoring`` implementation of the ``GenerateClassifierConfidenceSaliency``
   interface that uses squared difference.
 
+* Add ``RandomGrid`` implementation of ``PerturbImage``. This generates masks
+  of randomly occluded cells with a given size in pixels.
+
 Utilities
 
 * Add ``gen_coco_sal`` function to compute saliency maps for detections in a
