@@ -5,7 +5,7 @@ import json
 import matplotlib.pyplot as plt  # type: ignore
 from matplotlib.patches import Rectangle  # type: ignore
 import numpy as np
-from typing import TextIO
+from typing import TextIO, Optional, Tuple
 import logging
 
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
@@ -26,6 +26,15 @@ except (ModuleNotFoundError, NameError):
 @click.argument('output_dir', type=click.Path(exists=False))
 @click.argument('config_file', type=click.File(mode='r'))
 @click.option(
+    '--fill',
+    '-f',
+    help="""channel value (0-255) of fill to use when occluding images, number
+            of values passed should match the number of channels in each
+            image""",
+    multiple=True,
+    type=int,
+)
+@click.option(
     '--overlay-image',
     is_flag=True,
     help='overlay saliency map on images with bounding boxes, RGB images are converted to grayscale'
@@ -36,6 +45,7 @@ def sal_on_coco_dets(
     coco_file: str,
     output_dir: str,
     config_file: TextIO,
+    fill: Optional[Tuple[int]],
     overlay_image: bool,
     generate_config_file: TextIO,
     verbose: bool
@@ -59,9 +69,12 @@ def sal_on_coco_dets(
     :param config_file: Config file specifying the ``DetectImageObjects``,
         ``PerturbImage``, and ``GenerateDetectorProposalSaliency``
         implementations to use.
+    :param fill: Channel values for fill to use when occluding images. The
+        number of values provided should match the number of channels in each
+        of your images.
     :param overlay_image: Overlay saliency maps on images with bounding boxes.
-        RGB images are converted to grayscaleDefault is to output write out
-        saliency maps by themselves.
+        RGB images are converted to grayscale. Default is to write out saliency
+        maps by themselves.
     :param verbose: Display progress messages. Default is false.
     """
 
@@ -98,11 +111,15 @@ def sal_on_coco_dets(
     if verbose:
         logging.basicConfig(level=logging.INFO)
 
+    if fill == ():
+        fill = None
+
     sal_maps = gen_coco_sal(
         dets_dset,
         blackbox_detector,
         img_perturber,
         sal_generator,
+        fill=fill,
         verbose=verbose
     )
 
