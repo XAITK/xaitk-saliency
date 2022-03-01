@@ -32,5 +32,8 @@ Examples
 
 * Updated demo resource download links from Google Drive to data.kitware.com
 
+* Added example using saliency to qualitatively compare two object detection
+  models.
+
 Fixes
 -----
