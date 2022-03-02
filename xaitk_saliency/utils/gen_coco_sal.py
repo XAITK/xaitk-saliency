@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Optional, Dict, Callable, Any, Iterable, List, Hashable, Tuple, KeysView
+from typing import Optional, Dict, Callable, Any, Iterable, List, Hashable, Tuple, KeysView, Union, Sequence
 import logging
 from PIL import Image  # type: ignore
 
@@ -34,6 +34,7 @@ else:
         detector: DetectImageObjects,
         img_perturber: PerturbImage,
         sal_generator: GenerateDetectorProposalSaliency,
+        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         verbose: Optional[bool] = False,
     ) -> Dict[int, np.ndarray]:
         """
@@ -55,6 +56,12 @@ else:
         :param img_perturber: Implementation of ``PerturbImage`` to use.
         :param sal_generator: Implementation of
             ``GenerateDetectorProposalSaliency`` to use.
+        :param fill: Optional fill for alpha-blending based on the input masks
+            for the occluded regions as a scalar value, a per-channel sequence
+            or a shape-matched image. If a multi-channel value is used, all the
+            images in ``dets_dset`` must have that number of channels.
+            Similarly, if a shape-matched image is used, it must match the
+            shape of each image in ``dets_dset``.
         :param verbose: Option to print out progress statements. Default is
             false.
 
@@ -89,7 +96,7 @@ else:
             _log(f'[{img_id}] ({img_i+1}/{num_imgs}) Perturbing image.')
 
             pert_masks = img_perturber(ref_img)
-            pert_imgs = occlude_image_batch(ref_img, pert_masks)
+            pert_imgs = occlude_image_batch(ref_img, pert_masks, fill=fill)
 
             _log(f'[{img_id}] ({img_i+1}/{num_imgs}) Getting perturbation detections.')
 
