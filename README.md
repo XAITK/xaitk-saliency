@@ -22,6 +22,12 @@ explanations.
 This framework is a part of the [Explainable AI Toolkit (XAITK)](
 https://xaitk.org).
 
+## Supported Algorithms
+The `xaitk-saliency` package provides saliency algorithms for a wide range of image understanding
+tasks, including image classification, image similarity, object detection, and reinforcement learning.
+The current list of supported saliency algorithms can be found [here](
+https://xaitk-saliency.readthedocs.io/en/latest/introduction.html#saliency-algorithms).
+
 ## Target Audience
 This toolkit is intended to help data scientists and developers who want to
 add visual saliency explanations to their workflow or product.

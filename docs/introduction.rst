@@ -328,14 +328,18 @@ The saliency algorithms can also be organized according to their respective task
    * - Task
      - Saliency Algorithm(s)
    * - Image classification
-     - Occlusion-based Saliency [1]; Randomized Input Sampling for Explanation (RISE) [2]
+     - `Occlusion-based Saliency <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-slidingwindowstack>`_ [1];
+       `Randomized Input Sampling for Explanation (RISE) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-risestack>`_ [2]
    * - Image similarity
-     - Similarity Based Saliency Maps (SBSM) [3]
+     - `Similarity Based Saliency Maps (SBSM) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-similarityscoring>`_ [3]
    * - Object detection
-     - Detector-RISE (D-RISE) [4]
+     - `Detector-RISE (D-RISE) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-drisescoring>`_ [4]
+   * - Reinforcement learning
+     - `Perturbation-based Saliency <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-squareddifferencescoring>`_ [5]
 
 
 1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
 2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.
-3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops 2019 Jun (pp. 95-98).
+3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. In CVPR Workshops 2019 Jun (pp. 95-98).
 4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
+5. Greydanus S, Koul A, Dodge J, Fern A. Visualizing and understanding atari agents. In International conference on machine learning 2018 Jul 3 (pp. 1792-1801). PMLR.
