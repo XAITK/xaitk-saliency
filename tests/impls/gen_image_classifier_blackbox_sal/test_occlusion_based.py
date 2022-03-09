@@ -102,8 +102,8 @@ class TestPerturbationOcclusion:
             test_result = inst._generate(test_image, test_classifier)
 
             assert test_result.shape == (2, 64, 64)
-            # The "fill" kwarg passed to the should match the default given,
-            # which is None
+            # The "fill" kwarg passed to occlude_image_streaming should match
+            # the default given, which is None
             m_occ_img.assert_called_once()
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
@@ -121,8 +121,8 @@ class TestPerturbationOcclusion:
             test_result = inst._generate(test_image, test_classifier)
 
             assert test_result.shape == (2, 64, 64)
-            # The "fill" kwarg passed to the should match that set to the
-            # attribute above.
+            # The "fill" kwarg passed to occlude_image_streaming should match
+            # the attribute above
             m_occ_img.assert_called_once()
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
