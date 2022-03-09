@@ -91,3 +91,7 @@ Object Detection
 Class: PerturbationOcclusion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.PerturbationOcclusion
+
+Class: DRISEStack
+~~~~~~~~~~~~~~~~~
+.. autoclass:: xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise.DRISEStack
