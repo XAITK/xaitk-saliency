@@ -59,7 +59,7 @@ Class: SimilarityScoring
   :members:
 
 Class: SquaredDifferenceScoring
--------------------------------
+--------------------------------
 .. autoclass:: xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring.SquaredDifferenceScoring
   :members:
 
@@ -67,17 +67,27 @@ Class: SquaredDifferenceScoring
 End-to-End Saliency Generation
 ---------------------------------------------
 
+Image Classification
+---------------------
+
 Class: PerturbationOcclusion
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based.PerturbationOcclusion
   :members:
 
 Class: RISEStack
------------------
+~~~~~~~~~~~~~~~~~
 .. autoclass:: xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise.RISEStack
   :members:
 
 Class: SlidingWindowStack
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. autoclass:: xaitk_saliency.impls.gen_image_classifier_blackbox_sal.slidingwindow.SlidingWindowStack
   :members:
+
+Object Detection
+-----------------
+
+Class: PerturbationOcclusion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.PerturbationOcclusion
