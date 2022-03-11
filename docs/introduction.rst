@@ -318,6 +318,7 @@ an algorithm, which is concerned only with the inputs and outputs.
 Additionally, the algorithm can be flexibly determined by the user; that is, the user is free to choose and configure
 the algorithm as needed for the problem domain.
 
+:ref:`custom text <Class: SlidingWindow>`
 
 The saliency algorithms can also be organized according to their respective tasks:
 
@@ -328,14 +329,14 @@ The saliency algorithms can also be organized according to their respective task
    * - Task
      - Saliency Algorithm(s)
    * - Image classification
-     - `Occlusion-based Saliency <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-slidingwindowstack>`_ [1];
-       `Randomized Input Sampling for Explanation (RISE) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-risestack>`_ [2]
+     - :ref:`Occlusion-based Saliency <Class: SlidingWindowStack>` [1];
+       :ref:`Randomized Input Sampling for Explanation (RISE) <Class: RISEStack>` [2]
    * - Image similarity
-     - `Similarity Based Saliency Maps (SBSM) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-similarityscoring>`_ [3]
+     - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SimilarityScoring>` [3]
    * - Object detection
-     - `Detector-RISE (D-RISE) <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-drisescoring>`_ [4]
+     - :ref:`Detector-RISE (D-RISE) <Class: DRISEScoring>` [4]
    * - Reinforcement learning
-     - `Perturbation-based Saliency <https://xaitk-saliency.readthedocs.io/en/latest/implementations.html#class-squareddifferencescoring>`_ [5]
+     - :ref:`Perturbation-based Saliency <Class: SquaredDifferenceScoring>` [5]
 
 
 1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
