@@ -139,7 +139,7 @@ Set GitHub Repository ``SONAR_TOKEN`` Secret
 
   * This will open a new page to enter the name of the secret, which should be
     "SONAR_TOKEN" and a space to paste the value of the secret, which should be
-    the token hash as generated above in `Creating a personal security token`_.
+    the token hash as generated above in `Create a personal security token`_.
 
 * Otherwise, update the existing secret value by clicking on the "Update"
   button to the right of the secret entry.
@@ -147,7 +147,7 @@ Set GitHub Repository ``SONAR_TOKEN`` Secret
   * This will open a new page to enter a new value for the existing
     ``SONAR_TOKEN`` secret (i.e. cannot change the name of the secret).
     There should be a space to paste the value of the secret, which should be
-    the token hash as generated above in `Creating a personal security token`_.
+    the token hash as generated above in `Create a personal security token`_.
 
 
 .. _SonarCloud: https://sonarcloud.io

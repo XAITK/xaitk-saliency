@@ -146,9 +146,9 @@ Detection formatting helper
 The :py:meth:`.GenerateDetectorProposalSaliency.generate` method takes in a
 specifically formatted matrix that combines three aspects of common
 detector model outputs:
-  * bounding boxes
-  * objectness scores
-  * classification scores
+* bounding boxes
+* objectness scores
+* classification scores
 
 We provide a helper function to merge distinct output data into the unified
 format.
