@@ -36,7 +36,15 @@ release = xaitk_saliency.__version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
     "sphinx-prompt",
+]
+
+suppress_warnings = [
+    # Suppressing duplicate label warning from autosectionlabel extension.
+    # This happens a lot across files that happen to talk about the same
+    # topics.
+    "autosectionlabel.*",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -47,7 +55,7 @@ templates_path = []  # ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-autoclass_content = 'both' # Document both class and constructor
+autoclass_content = 'both'  # Document both class and constructor
 
 # -- Options for HTML output -------------------------------------------------
 

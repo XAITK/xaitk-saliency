@@ -106,7 +106,7 @@ notes file:
     -----
 
 Tag New Version
---------------
+---------------
 Release branches should be tagged in order to record where in the git tree a
 particular release refers to.
 The branch off of ``master`` is usually the target of such tags.
