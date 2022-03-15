@@ -1,4 +1,4 @@
-![xaitk-logo](./docs/figures/xaitk-wordmark.png)
+![xaitk-logo](./docs/figures/xaitk-wordmark-light.png)
 
 <hr/>
 
