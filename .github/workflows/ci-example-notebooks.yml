@@ -25,6 +25,7 @@ jobs:
     strategy:
       matrix:
         notebook-file: [
+            "atari_deepRL_saliency.ipynb",
             "DRISE.ipynb",
             "MNIST_scikit_saliency.ipynb",
             "OcclusionSaliency.ipynb",
