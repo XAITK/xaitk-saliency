@@ -28,6 +28,13 @@ Implementations
   generic ``PerturbationOcclusion``, and two usable classes ``DRISEStack``
   and ``RandomGridStack``.
 
+Utils
+
+* Updated COCO utility functions to use new high-level detector interface.
+  `gen_coco_sal()` is now deprecated in exchange for `parse_coco_dset()` which
+  parses a `kwcoco.CocoDataset` object into the inputs used with an
+  implementation of `GenerateObjectDetectorBlackboxSaliency`.
+
 Examples
 
 * Updated demo resource download links from Google Drive to data.kitware.com

@@ -3,20 +3,14 @@
         "type": "smqtk_detection.impls.detect_image_objects.random_detector.RandomDetector",
                 "smqtk_detection.impls.detect_image_objects.random_detector.RandomDetector": {}
     },
-    "PerturbImage": {
-        "type": "xaitk_saliency.impls.perturb_image.rise.RISEGrid",
-                "xaitk_saliency.impls.perturb_image.rise.RISEGrid": {
+    "GenerateObjectDetectorBlackboxSaliency": {
+        "type": "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise.DRISEStack",
+                "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise.DRISEStack": {
                     "n": 10,
                     "s": 8,
                     "p1": 0.5,
                     "seed": 0,
                     "threads": 4
-                }
-    },
-    "GenerateDetectorProposalSaliency": {
-        "type": "xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring.DRISEScoring",
-                "xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring.DRISEScoring": {
-                    "proximity_metric": "cosine"
                 }
     }
 }
