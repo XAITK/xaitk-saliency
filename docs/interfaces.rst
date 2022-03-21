@@ -1,6 +1,6 @@
-==============================================
+==========
 Interfaces
-==============================================
+==========
 
 The xaitk-saliency API consists of a number of object-oriented functor interfaces for saliency heatmap generation.
 These initial interfaces focus on black-box visual saliency.
@@ -28,9 +28,9 @@ as well as instantiation of a concrete instance via a JSON-like configuration fe
 
 .. When adding new classes within interfaces, sort them alphabetically.
 
----------------------------
+------------------
 Image Perturbation
----------------------------
+------------------
 
 The PerturbImage interface abstracts the behavior of taking a reference image and generating some number of
 perturbations of the image along with paired mask matrices that indicate where perturbations have occurred and to
@@ -42,13 +42,13 @@ Immediate candidates for implementation of this interface are occlusion-based sa
 perturbations on image pixels.
 
 Interface: PerturbImage
-------------------------
+-----------------------
 .. autoclass:: xaitk_saliency.interfaces.perturb_image.PerturbImage
    :members:
 
 
 Image Occlusion via Perturbation Masks
------------------------------------------
+--------------------------------------
 
 A common intermediate step in this process is applying the generated perturbation masks to imagery to produce occluded
 images.
@@ -68,9 +68,9 @@ would exceed available memory.
 .. autofunction:: xaitk_saliency.utils.masking.occlude_image_streaming
 
 
-----------------------------
+------------------
 Heatmap Generation
-----------------------------
+------------------
 
 These interfaces comprise a family of siblings that all perform a similar transformation, but require different
 standard inputs.
@@ -83,7 +83,7 @@ additional interfaces may be defined and added to this initial repertoire.
 
 
 Interface: GenerateClassifierConfidenceSaliency
-------------------------------------------------
+-----------------------------------------------
 
 This interface proposes that implementations transform black-box image classification scores into saliency heatmaps.
 This should require a sequence of per-class confidences predicted on the reference image, a number of per-class
@@ -156,9 +156,9 @@ format.
 .. autofunction:: xaitk_saliency.utils.detection.format_detection
 
 
----------------------------------------------
+------------------------------
 End-to-End Saliency Generation
----------------------------------------------
+------------------------------
 
 Unlike the previous saliency heatmap generation interfaces, this interface uses a black-box classifier as input along
 with a reference image to generate visual saliency heatmaps.
@@ -168,20 +168,26 @@ sub-implementations (``RISEStack`` or ``SlidingWindowStack``).
 
 
 Interface: GenerateImageClassifierBlackboxSaliency
----------------------------------------------------
+--------------------------------------------------
 
 .. autoclass:: xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal.GenerateImageClassifierBlackboxSaliency
    :members:
 
-------------------
+Interface: GenerateObjectDetectorBlackboxSaliency
+-------------------------------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.gen_object_detector_blackbox_sal.GenerateObjectDetectorBlackboxSaliency
+   :members:
+
+-------------
 Code Examples
-------------------
+-------------
 
 For Jupyter Notebook examples of xaitk-saliency interfaces, see the :file:`examples/` directory of the project.
 
-------------------
+----------
 References
-------------------
+----------
 
 1. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops 2019 Jun (pp. 95-98).
 2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.

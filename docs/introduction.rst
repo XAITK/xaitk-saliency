@@ -318,8 +318,6 @@ an algorithm, which is concerned only with the inputs and outputs.
 Additionally, the algorithm can be flexibly determined by the user; that is, the user is free to choose and configure
 the algorithm as needed for the problem domain.
 
-:ref:`custom text <Class: SlidingWindow>`
-
 The saliency algorithms can also be organized according to their respective tasks:
 
 .. list-table:: Saliency Algorithms by Task
@@ -334,7 +332,7 @@ The saliency algorithms can also be organized according to their respective task
    * - Image similarity
      - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SimilarityScoring>` [3]
    * - Object detection
-     - :ref:`Detector-RISE (D-RISE) <Class: DRISEScoring>` [4]
+     - :ref:`Detector-RISE (D-RISE) <Class: DRISEStack>` [4]
    * - Reinforcement learning
      - :ref:`Perturbation-based Saliency <Class: SquaredDifferenceScoring>` [5]
 

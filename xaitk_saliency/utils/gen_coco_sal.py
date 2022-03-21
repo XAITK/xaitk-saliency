@@ -183,7 +183,7 @@ else:
         :returns: Matrix of detections with shape
             [nImgs x nDets x (4+1+nClasses)]. If the number of detections for
             each image is not consistent, the matrix will be padded with rows
-            of ones, except for the objectiveness which is set to zero.
+            of ones, except for the objectness which is set to zero.
         """
 
         max_cat_id = max(cats.keys())
