@@ -22,5 +22,9 @@ Documentation
   the generic ``PerturbationOcclusion``, and ``DRISEStack`` which uses
   ``RISEGrid`` and ``DRISEScoring`` together.
 
+Examples
+
+* Updated demo resource download links from Google Drive to data.kitware.com
+
 Fixes
 -----
