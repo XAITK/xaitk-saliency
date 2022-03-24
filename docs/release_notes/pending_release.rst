@@ -28,6 +28,10 @@ Implementations
   generic ``PerturbationOcclusion``, and two usable classes ``DRISEStack``
   and ``RandomGridStack``.
 
+* Updated behavior of the ``SlidingWindow`` ``PerturbImage`` implementation. For
+  a given stride, the number of masks generated is now agnostic to the window
+  size.
+
 Utils
 
 * Updated COCO utility functions to use new high-level detector interface.
