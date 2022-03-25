@@ -46,7 +46,9 @@ class TestPerturbationOcclusion:
         test_spi_p = 0
         test_sgn_p = 1
         inst = PerturbationOcclusion(
-            StubPI(test_spi_p), StubGen(test_sgn_p), 87
+            StubPI(test_spi_p),
+            StubGen(test_sgn_p),
+            threads=87
         )
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == test_threads
