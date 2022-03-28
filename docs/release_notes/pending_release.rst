@@ -17,14 +17,23 @@ Documentation
   light- and dark-theme contexts. The main README file has been updated to refer
   to this image.
 
+Interfaces
+
 * Added new high-level interface for black-box object detector saliency,
-  ``GenerateObjectDetectorBlackboxSaliency``, along with two implementations,
-  the generic ``PerturbationOcclusion``, and ``DRISEStack`` which uses
-  ``RISEGrid`` and ``DRISEScoring`` together.
+  ``GenerateObjectDetectorBlackboxSaliency``.
+
+Implementations
+
+* Added three ``GenerateObjectDetectorBlackboxSaliency`` implementations: the
+  generic ``PerturbationOcclusion``, and two usable classes ``DRISEStack``
+  and ``RandomGridStack``.
 
 Examples
 
 * Updated demo resource download links from Google Drive to data.kitware.com
+
+* Added example using saliency to qualitatively compare two object detection
+  models.
 
 Fixes
 -----
