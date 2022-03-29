@@ -45,8 +45,8 @@ Implementations
 * Updated ``SimilarityScoring`` to return [H x W] instead of [1 x H x W]
   saliency heatmaps.
 
-* Added the ``PerturbationOcclusion`` implementation of
-  ``GenerateImageSimilarityBlackboxSaliency``.
+* Added two implementations of ``GenerateImageSimilarityBlackboxSaliency``:
+  ``PerturbationOcclusion`` and ``SBSMStack``.
 
 Misc.
 

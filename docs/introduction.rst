@@ -330,7 +330,7 @@ The saliency algorithms can also be organized according to their respective task
      - :ref:`Occlusion-based Saliency <Class: SlidingWindowStack>` [1];
        :ref:`Randomized Input Sampling for Explanation (RISE) <Class: RISEStack>` [2]
    * - Image similarity
-     - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SimilarityScoring>` [3]
+     - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SBSMStack>` [3]
    * - Object detection
      - :ref:`Detector-RISE (D-RISE) <Class: DRISEStack>` [4]
    * - Reinforcement learning
