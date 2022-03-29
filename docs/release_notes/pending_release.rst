@@ -45,6 +45,9 @@ Implementations
 * Updated ``SimilarityScoring`` to return [H x W] instead of [1 x H x W]
   saliency heatmaps.
 
+* Added the ``PerturbationOcclusion`` implementation of
+  ``GenerateImageSimilarityBlackboxSaliency``.
+
 Misc.
 
 * Updated `poetry-core` build backend to version `1.0.8`, which now supports
