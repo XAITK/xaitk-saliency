@@ -173,6 +173,12 @@ Interface: GenerateImageClassifierBlackboxSaliency
 .. autoclass:: xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal.GenerateImageClassifierBlackboxSaliency
    :members:
 
+Interface: GenerateImageSimilarityBlackboxSaliency
+--------------------------------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.gen_image_similarity_blackbox_sal.GenerateImageSimilarityBlackboxSaliency
+   :members:
+
 Interface: GenerateObjectDetectorBlackboxSaliency
 -------------------------------------------------
 

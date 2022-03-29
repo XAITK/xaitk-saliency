@@ -29,6 +29,9 @@ Interfaces
 * Added new high-level interface for black-box object detector saliency,
   ``GenerateObjectDetectorBlackboxSaliency``.
 
+* Added new high-level interface for image similarity saliency,
+  ``GenerateImageSimilarityBlackboxSaliency``.
+
 Implementations
 
 * Added three ``GenerateObjectDetectorBlackboxSaliency`` implementations: the
