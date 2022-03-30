@@ -17,14 +17,14 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
     masks of the perturbations as would be output from a
     :class:`xaitk_saliency.interfaces.perturb_image.PerturbImage`
     implementation.
-    We expect perturbations to be relative to the second reference image.
+    We expect perturbations to be relative to the query image.
     """
 
     @abc.abstractmethod
     def generate(
         self,
-        ref_descr_1: np.ndarray,
-        ref_descr_2: np.ndarray,
+        ref_descr: np.ndarray,
+        query_descr: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
@@ -53,15 +53,15 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         decrease image similarity scores according to the model that generated
         input feature vectors.
 
-        :param ref_descr_1:
-            First image reference float feature-vector, shape `[nFeats]`
-        :param ref_descr_2:
-            Second image reference float feature-vector, shape `[nFeats]`
+        :param ref_descr:
+            Reference image float feature-vector, shape `[nFeats]`
+        :param query_descr:
+            Query image float feature-vector, shape `[nFeats]`.
         :param perturbed_descrs:
-            Feature vectors of second reference image perturbations, float
-            typed of shape `[nMasks x nFeats]`.
+            Feature vectors of query image perturbations, float typed of shape
+            `[nMasks x nFeats]`.
         :param perturbed_masks:
-            Perturbation masks `numpy.ndarray` over the second reference image.
+            Perturbation masks `numpy.ndarray` over the query image.
             This should be parallel in association to the `perturbed_descrs`
             parameter.
             This should have a shape `[nMasks x H x W]`, and values in range
@@ -73,8 +73,8 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
 
     def __call__(
         self,
-        ref_descr_1: np.ndarray,
-        ref_descr_2: np.ndarray,
+        ref_descr: np.ndarray,
+        query_descr: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
@@ -82,8 +82,8 @@ class GenerateDescriptorSimilaritySaliency (Plugfigurable):
         Alias for :meth:`.GenerateDescriptorSimilaritySaliency.generate`.
         """
         return self.generate(
-            ref_descr_1,
-            ref_descr_2,
+            ref_descr,
+            query_descr,
             perturbed_descrs,
             perturbed_masks
         )

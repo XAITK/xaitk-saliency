@@ -8,19 +8,22 @@ from scipy.spatial.distance import cdist
 
 class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     """
-    This saliency implementation transforms proximity in feature
-    space into saliency heatmaps. This should
-    require a sequence of feature vectors of the query and
-    reference image, a number of feature vectors as predicted
-    on perturbed images, as well as the masks of the reference image
-    perturbations (as would be output from a
-    `PerturbImage` implementation.
+    This saliency implementation transforms proximity in feature space into
+    saliency heatmaps.
+    This should require a sequence of feature vectors of the query and reference
+    image, a number of feature vectors as predicted on perturbed versions of the
+    query image, as well as the masks of the query image perturbations (as would
+    be output from a `PerturbImage` implementation.
 
     The perturbation masks used by the following implementation are
     expected to be of type integer. Masks containing values of type
     float are rounded to the nearest value and binarized
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
+
+    The resulting saliency map is relative to the query image.
+    As such, it denotes regions in the query image that make it more or less
+    similar to the other image, called the reference image.
 
     :param proximity_metric: The type of comparison metric used
         to determine proximity in feature space. The type of comparison
@@ -49,8 +52,8 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
 
     def generate(
         self,
-        ref_descr_1: np.ndarray,
-        ref_descr_2: np.ndarray,
+        ref_descr: np.ndarray,
+        query_descr: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
@@ -58,20 +61,20 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
             raise ValueError("Number of perturbation masks and respective "
                              "feature vector do not match.")
 
-        if len(ref_descr_1) != len(ref_descr_2):
+        if len(ref_descr) != len(query_descr):
             raise ValueError("Length of feature vector between "
                              "two images do not match.")
 
         # Computing original proximity between image1 and image2 feature vectors.
         original_proximity = cdist(
-            ref_descr_1.reshape(1, -1),
-            ref_descr_2.reshape(1, -1),
+            ref_descr.reshape(1, -1),
+            query_descr.reshape(1, -1),
             metric=self.proximity_metric
         )
 
         # Computing proximity between original image1 and perturbed image2 feature vectors.
         perturbed_proximity = cdist(
-            ref_descr_1.reshape(1, -1),
+            ref_descr.reshape(1, -1),
             perturbed_descrs,
             metric=self.proximity_metric
         )[0]
