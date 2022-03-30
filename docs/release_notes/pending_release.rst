@@ -24,6 +24,9 @@ Examples
 * Added example using saliency to qualitatively compare two object detection
   models.
 
+* Updated SimilarityScoring example to use new high-level image similarity
+  saliency interface.
+
 Interfaces
 
 * Added new high-level interface for black-box object detector saliency,
