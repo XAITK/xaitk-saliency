@@ -94,7 +94,8 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
         # Ensure saliency map in range [-1, 1]
         sal = np.clip(sal, -1, 1)
 
-        return sal
+        # return just HxW components
+        return sal[0]
 
     def get_config(self) -> dict:
         return {

@@ -42,6 +42,9 @@ Implementations
   a given stride, the number of masks generated is now agnostic to the window
   size.
 
+* Updated ``SimilarityScoring`` to return [H x W] instead of [1 x H x W]
+  saliency heatmaps.
+
 Misc.
 
 * Updated `poetry-core` build backend to version `1.0.8`, which now supports
