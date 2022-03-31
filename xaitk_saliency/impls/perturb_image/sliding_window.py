@@ -41,8 +41,17 @@ class SlidingWindow (PerturbImage):
         stride_h, stride_w = self.stride
         img_size = ref_image.shape[:2]
         img_h, img_w = img_size
-        rows = np.arange(0 + stride_h - win_h, img_h, stride_h)
-        cols = np.arange(0 + stride_w - win_w, img_w, stride_w)
+
+        rows = np.arange(0, img_h, stride_h)
+        cols = np.arange(0, img_w, stride_w)
+
+        # Overhang of last window.
+        overhang_h = win_h - (img_h - rows[-1])
+        overhang_w = win_w - (img_w - cols[-1])
+
+        # Offset rows and cols to center windows.
+        rows -= overhang_h // 2
+        cols -= overhang_w // 2
 
         num_masks = len(rows) * len(cols)
         masks = np.ones((num_masks, img_h, img_w), dtype=bool)

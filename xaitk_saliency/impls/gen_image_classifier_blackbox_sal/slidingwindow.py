@@ -14,14 +14,17 @@ class SlidingWindowStack (GenerateImageClassifierBlackboxSaliency):
     """
     Encapsulation of the perturbation-occlusion method using specifically
     sliding windows and the occlusion-scoring method.
+    See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
+    for more details.
 
     :param window_size: The block window size as a tuple with format
         `(height, width)`.
     :param stride: The sliding window striding step as a tuple with format
         `(height_step, width_step)`.
     :param threads: Optional number threads to use to enable parallelism in
-        applying perturbation masks to an input image. If 0, a negative value,
-        or `None`, work will be performed on the main-thread in-line.
+        applying perturbation masks to an input image.
+        If 0, a negative value, or `None`, work will be performed on the
+        main-thread in-line.
     """
 
     def __init__(
