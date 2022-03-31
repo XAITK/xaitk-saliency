@@ -17,6 +17,13 @@ Documentation
   light- and dark-theme contexts. The main README file has been updated to refer
   to this image.
 
+Examples
+
+* Updated demo resource download links from Google Drive to data.kitware.com
+
+* Added example using saliency to qualitatively compare two object detection
+  models.
+
 Interfaces
 
 * Added new high-level interface for black-box object detector saliency,
@@ -32,19 +39,17 @@ Implementations
   a given stride, the number of masks generated is now agnostic to the window
   size.
 
+Misc.
+
+* Updated `poetry-core` build backend to version `1.0.8`, which now supports
+  `pip` editable installs (`pip install -e .`).
+
 Utils
 
 * Updated COCO utility functions to use new high-level detector interface.
   `gen_coco_sal()` is now deprecated in exchange for `parse_coco_dset()` which
   parses a `kwcoco.CocoDataset` object into the inputs used with an
   implementation of `GenerateObjectDetectorBlackboxSaliency`.
-
-Examples
-
-* Updated demo resource download links from Google Drive to data.kitware.com
-
-* Added example using saliency to qualitatively compare two object detection
-  models.
 
 Fixes
 -----
