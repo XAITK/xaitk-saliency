@@ -85,6 +85,19 @@ Class: SlidingWindowStack
 .. autoclass:: xaitk_saliency.impls.gen_image_classifier_blackbox_sal.slidingwindow.SlidingWindowStack
   :members:
 
+Image Similarity
+----------------
+
+Class: PerturbationOcclusion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.PerturbationOcclusion
+  :members:
+
+Class: SBSMStack
+~~~~~~~~~~~~~~~~
+.. autoclass:: xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm.SBSMStack
+  :members:
+
 Object Detection
 ----------------
 

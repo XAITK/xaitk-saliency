@@ -24,10 +24,16 @@ Examples
 * Added example using saliency to qualitatively compare two object detection
   models.
 
+* Updated SimilarityScoring example to use new high-level image similarity
+  saliency interface.
+
 Interfaces
 
 * Added new high-level interface for black-box object detector saliency,
   ``GenerateObjectDetectorBlackboxSaliency``.
+
+* Added new high-level interface for image similarity saliency,
+  ``GenerateImageSimilarityBlackboxSaliency``.
 
 Implementations
 
@@ -38,6 +44,12 @@ Implementations
 * Updated behavior of the ``SlidingWindow`` ``PerturbImage`` implementation. For
   a given stride, the number of masks generated is now agnostic to the window
   size.
+
+* Updated ``SimilarityScoring`` to return [H x W] instead of [1 x H x W]
+  saliency heatmaps.
+
+* Added two implementations of ``GenerateImageSimilarityBlackboxSaliency``:
+  ``PerturbationOcclusion`` and ``SBSMStack``.
 
 Misc.
 

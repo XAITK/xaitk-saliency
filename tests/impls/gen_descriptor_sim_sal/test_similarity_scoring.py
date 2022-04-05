@@ -102,7 +102,7 @@ class TestSimilarityScoring:
         pertb_feats = np.random.rand(3, 2048)
         pertb_mask = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
         sal = impl.generate(image1_feats, image2_feats, pertb_feats, pertb_mask)
-        assert sal.shape == (1, 10, 10)
+        assert sal.shape == (10, 10)
 
     def test_standard_featurevec(self) -> None:
         """
@@ -115,7 +115,7 @@ class TestSimilarityScoring:
                                 [0.55, 0.2], [0.1, 0.75], [0.35, 0.65]])
         sal = impl.generate(image1_feats, image2_feats, pertb_feats, EXPECTED_MASKS_4x6)
         standard_sal = np.load(os.path.join(DATA_DIR, 'SimilaritySal.npy'))
-        assert sal.shape == (1, 4, 6)
+        assert sal.shape == (4, 6)
         assert np.allclose(standard_sal, sal)
 
     def test_512_featdim(self) -> None:
@@ -129,4 +129,4 @@ class TestSimilarityScoring:
         pertb_feats = np.random.rand(15, 512)
         pertb_mask = np.random.randint(low=0, high=2, size=(15, 10, 10), dtype='int')
         sal = impl.generate(image1_feats, image2_feats, pertb_feats, pertb_mask)
-        assert sal.shape == (1, 10, 10)
+        assert sal.shape == (10, 10)
