@@ -74,12 +74,12 @@ class TestPerturbationOcclusion:
 
             def generate(
                 self,
-                ref_descr_1: np.ndarray,
-                ref_descr_2: np.ndarray,
+                ref_descr: np.ndarray,
+                query_descrs: np.ndarray,
                 perturbed_descrs: np.ndarray,
                 perturbed_masks: np.ndarray,
             ) -> np.ndarray:
-                return np.zeros(perturbed_masks.shape[1:], dtype=np.float16)
+                return np.zeros((query_descrs.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
 
             get_config = None  # type: ignore
 
@@ -101,8 +101,8 @@ class TestPerturbationOcclusion:
         test_gen = StubGen()
         test_desc_gen = StubDescGen()
 
-        test_ref_img = np.ones((50, 50, 3))
-        test_query_img = np.ones((80, 60))
+        test_ref_img = np.ones((51, 52, 3))
+        test_query_imgs = [np.ones((80, 60))] * 3
 
         # Call with default fill
         with mock.patch(
@@ -112,11 +112,11 @@ class TestPerturbationOcclusion:
             inst = PerturbationOcclusion(test_pi, test_gen)
             test_result = inst._generate(
                 test_ref_img,
-                test_query_img,
+                test_query_imgs,
                 test_desc_gen
             )
 
-            assert test_result.shape == (80, 60)
+            assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
             # the default given, which is None
             m_occ_img.assert_called_once()
@@ -135,11 +135,11 @@ class TestPerturbationOcclusion:
             inst.fill = test_fill
             test_result = inst._generate(
                 test_ref_img,
-                test_query_img,
+                test_query_imgs,
                 test_desc_gen
             )
 
-            assert test_result.shape == (80, 60)
+            assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
             # the default given, which is None
             m_occ_img.assert_called_once()

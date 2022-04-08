@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Iterable
+import gc
 
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 from smqtk_core.configuration import configuration_test_helper
@@ -14,6 +15,11 @@ from tests import DATA_DIR
 
 
 class TestBlackBoxSBSM:
+
+    def teardown(self) -> None:
+        # Collect any temporary implementations so they are not returned during
+        # later `*.get_impl()` requests.
+        gc.collect()
 
     def test_configuration(self) -> None:
         """
@@ -59,7 +65,7 @@ class TestBlackBoxSBSM:
 
         test_desc_gen = TestDescriptorGenerator()
         test_ref_img = np.full((25, 32, 3), fill_value=255, dtype=np.uint8)
-        test_query_img = np.full((27, 28), fill_value=255, dtype=np.uint8)
+        test_query_imgs = [np.full((27, 28), fill_value=255, dtype=np.uint8)] * 2
 
         inst = SBSMStack(
             window_size=(4, 5),
@@ -67,14 +73,16 @@ class TestBlackBoxSBSM:
             proximity_metric='euclidean'
         )
 
-        res = inst.generate(
+        sal_maps = inst.generate(
             test_ref_img,
-            test_query_img,
+            test_query_imgs,
             test_desc_gen
         )
 
+        assert sal_maps.shape == (2, 25, 32)
+
         exp_res = np.load(DATA_DIR / "exp_sbsm_stack_res.npy")
-        assert np.allclose(exp_res, res)
+        assert np.allclose(exp_res, sal_maps)
 
     def test_fill_prop(self) -> None:
         """

@@ -5,7 +5,7 @@ import numpy as np
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 
 from xaitk_saliency import GenerateImageSimilarityBlackboxSaliency
-from xaitk_saliency.exceptions import ShapeMismatchError, UnexpectedDimensionsError
+from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 def test_generate_checks_success() -> None:
@@ -16,10 +16,10 @@ def test_generate_checks_success() -> None:
 
     # test images
     test_ref_image = np.empty((50, 50))
-    test_query_image = np.empty((256, 256, 7))
+    test_query_images = [np.empty((256, 256, 7))] * 3
 
-    # mock _generate result with matching height and width to query image
-    exp_res = np.ones((256, 256))
+    # mock _generate result with 3 saliency maps and matching height and width to reference image
+    exp_res = np.ones((3, 50, 50))
     m_impl._generate.return_value = exp_res
 
     # mock image descriptor generator
@@ -28,13 +28,13 @@ def test_generate_checks_success() -> None:
     res = GenerateImageSimilarityBlackboxSaliency.generate(
         m_impl,
         test_ref_image,
-        test_query_image,
+        test_query_images,
         m_desc_generator
     )
 
     m_impl._generate.assert_called_once_with(
         test_ref_image,
-        test_query_image,
+        test_query_images,
         m_desc_generator
     )
 
@@ -43,14 +43,14 @@ def test_generate_checks_success() -> None:
 
 def test_generate_checks_image_shape() -> None:
     """
-    Test that the input images conform to our assumption.
+    Test that the input reference image conforms to our assumption.
     """
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
     m_desc_generator = mock.Mock(spec=ImageDescriptorGenerator)
 
-    # bad ref image
+    # too few dimensions
     test_ref_image = np.empty((256,))
-    test_query_image = np.empty((256, 400, 3))
+    test_query_images = [np.empty((256, 400, 3))] * 2
     with pytest.raises(
         ValueError,
         match=r"^Input reference image matrix has an unexpected number of dimensions: 1$"
@@ -58,48 +58,20 @@ def test_generate_checks_image_shape() -> None:
         GenerateImageSimilarityBlackboxSaliency.generate(
             m_impl,
             test_ref_image,
-            test_query_image,
+            test_query_images,
             m_desc_generator
         )
 
-    # bad query image
-    test_ref_image = np.empty((123, 345))
-    test_query_image = np.empty((1, 2, 3, 4, 5))
+    # too many dimensions
+    test_ref_image = np.empty((256, 256, 1, 1))
     with pytest.raises(
         ValueError,
-        match=r"^Input query image matrix has an unexpected number of dimensions: 5$"
+        match=r"^Input reference image matrix has an unexpected number of dimensions: 4$"
     ):
         GenerateImageSimilarityBlackboxSaliency.generate(
             m_impl,
             test_ref_image,
-            test_query_image,
-            m_desc_generator
-        )
-
-
-def test_generate_checks_num_output_heatmaps() -> None:
-    """
-    Test that the `_generate` output is checked to be a single heatmap.
-    """
-    m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
-
-    # mock _generate result with multiple heatmaps
-    m_impl._generate.return_value = np.empty((8, 100, 200))
-
-    # mock image descriptor generator
-    m_desc_generator = mock.Mock(spec=ImageDescriptorGenerator)
-
-    test_ref_image = np.empty((256, 123))
-    test_query_image = np.empty((100, 200, 3))
-    with pytest.raises(
-        UnexpectedDimensionsError,
-        match=r"^Expected output to be a 2D heatmap matrix but got matrix with "
-              r"shape: \(8, 100, 200\)$"
-    ):
-        GenerateImageSimilarityBlackboxSaliency.generate(
-            m_impl,
-            test_ref_image,
-            test_query_image,
+            test_query_images,
             m_desc_generator
         )
 
@@ -107,15 +79,16 @@ def test_generate_checks_num_output_heatmaps() -> None:
 def test_generate_checks_output_shape() -> None:
     """
     Test that the `_generate` output shape is appropriately checked against that
-    of the query image.
+    of the reference image.
     """
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
 
     test_ref_image = np.empty((256, 123))
-    test_query_image = np.empty((100, 200, 3))
+    test_query_images = [np.empty((100, 200, 3))] * 2
 
-    # mock _generate result with non-matching height and width to query image
-    m_impl._generate.return_value = np.empty((214, 179))
+    # mock _generate result with matching length to the query images but
+    # non-matching height and width to reference image
+    m_impl._generate.return_value = np.empty((2, 214, 179))
 
     # mock image descriptor generator
     m_desc_generator = mock.Mock(spec=ImageDescriptorGenerator)
@@ -123,13 +96,42 @@ def test_generate_checks_output_shape() -> None:
     with pytest.raises(
         ShapeMismatchError,
         match=r"^Output saliency heatmaps did not have matching height and "
-              r"width shape components: \(query\) \(100, 200\) != \(214, 179\) "
+              r"width shape components: \(reference\) \(256, 123\) != \(214, 179\) "
               r"\(output\)$"
     ):
         GenerateImageSimilarityBlackboxSaliency.generate(
             m_impl,
             test_ref_image,
-            test_query_image,
+            test_query_images,
+            m_desc_generator
+        )
+
+
+def test_generate_checkout_num_saliency_maps() -> None:
+    """
+    Test that the number of output heatmaps is checked against the number of
+    input query images.
+    """
+    m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
+
+    test_ref_image = np.empty((55, 44, 6))
+    test_query_images = [np.empty((15, 7))] * 7
+
+    # mock _generate result with non-matching length to query images
+    m_impl._generate.return_value = np.empty((3, 55, 44))
+
+    # mock image descriptor generator
+    m_desc_generator = mock.Mock(spec=ImageDescriptorGenerator)
+
+    with pytest.raises(
+        ShapeMismatchError,
+        match=r"^Number of output saliency heatmaps did not match number of "
+              r"input query images: \(heatmaps\) 3 != 7 \(query images\)$"
+    ):
+        GenerateImageSimilarityBlackboxSaliency.generate(
+            m_impl,
+            test_ref_image,
+            test_query_images,
             m_desc_generator
         )
 

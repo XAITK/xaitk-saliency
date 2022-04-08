@@ -10,20 +10,14 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     """
     This saliency implementation transforms proximity in feature space into
     saliency heatmaps.
-    This should require a sequence of feature vectors of the query and reference
-    image, a number of feature vectors as predicted on perturbed versions of the
-    query image, as well as the masks of the query image perturbations (as would
-    be output from a `PerturbImage` implementation.
+    This should require feature vectors for the reference image, for each query
+    image, and for perturbed versions of the reference image, as well as the
+    masks of the reference image perturbations (as would be output from a
+    `PerturbImage` implementation).
 
-    The perturbation masks used by the following implementation are
-    expected to be of type integer. Masks containing values of type
-    float are rounded to the nearest value and binarized
-    with value 1 replacing values greater than or equal to half of
-    the maximum value in mask after rounding while 0 replaces the rest.
-
-    The resulting saliency map is relative to the query image.
-    As such, it denotes regions in the query image that make it more or less
-    similar to the other image, called the reference image.
+    The resulting saliency maps are relative to the reference image.
+    As such, each map denotes regions in the reference image that make it more
+    or less similar to the corresponding query image.
 
     :param proximity_metric: The type of comparison metric used
         to determine proximity in feature space. The type of comparison
@@ -43,7 +37,7 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     ):
 
         try:
-            # Attempting to use chosen comparision metric
+            # Attempting to use chosen comparison metric
             cdist([[1], [1]], [[1], [1]], proximity_metric)
             self.proximity_metric: str = proximity_metric
         except ValueError:
@@ -53,7 +47,7 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
     def generate(
         self,
         ref_descr: np.ndarray,
-        query_descr: np.ndarray,
+        query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
@@ -61,34 +55,36 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
             raise ValueError("Number of perturbation masks and respective "
                              "feature vector do not match.")
 
-        if len(ref_descr) != len(query_descr):
-            raise ValueError("Length of feature vector between "
-                             "two images do not match.")
+        if len(ref_descr) != query_descrs.shape[1]:
+            raise ValueError("Size of feature vectors between reference and "
+                             "query images do not match.")
 
-        # Computing original proximity between image1 and image2 feature vectors.
+        # Computing original proximity between reference image feature vector
+        # and each query image feature vector.
         original_proximity = cdist(
             ref_descr.reshape(1, -1),
-            query_descr.reshape(1, -1),
+            query_descrs,
             metric=self.proximity_metric
         )
 
-        # Computing proximity between original image1 and perturbed image2 feature vectors.
+        # Computing proximity between query feature vectors and perturbed
+        # reference image feature vectors.
         perturbed_proximity = cdist(
-            ref_descr.reshape(1, -1),
+            query_descrs,
             perturbed_descrs,
             metric=self.proximity_metric
-        )[0]
+        )
 
         # Iterating through each distance and compare it with
         # its perturbed twin
-        diff = perturbed_proximity - original_proximity
+        diff = perturbed_proximity - np.transpose(original_proximity)
 
         diff = np.transpose(np.clip(diff, 0, None))
 
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)
 
-        # Normalize final saliency map
+        # Normalize final saliency maps
         sal = maxabs_scale(
             sal.reshape(sal.shape[0], -1),
             axis=1
@@ -97,8 +93,7 @@ class SimilarityScoring (GenerateDescriptorSimilaritySaliency):
         # Ensure saliency map in range [-1, 1]
         sal = np.clip(sal, -1, 1)
 
-        # return just HxW components
-        return sal[0]
+        return sal
 
     def get_config(self) -> dict:
         return {

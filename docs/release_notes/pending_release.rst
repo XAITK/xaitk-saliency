@@ -25,12 +25,16 @@ Examples
   models.
 
 * Updated SimilarityScoring example to use new high-level image similarity
-  saliency interface.
+  saliency interface and follow new similarity interface inputs.
 
 Interfaces
 
 * Added new high-level interface for black-box object detector saliency,
   ``GenerateObjectDetectorBlackboxSaliency``.
+
+* Updated image similarity interface ``GenerateDescriptorSimilaritySaliency`` to
+  accept multiple query images and compute a saliency map for each one, relative
+  to the reference image.
 
 * Added new high-level interface for image similarity saliency,
   ``GenerateImageSimilarityBlackboxSaliency``.
@@ -45,8 +49,8 @@ Implementations
   a given stride, the number of masks generated is now agnostic to the window
   size.
 
-* Updated ``SimilarityScoring`` to return [H x W] instead of [1 x H x W]
-  saliency heatmaps.
+* Updated ``SimilarityScoring`` to return [N x H x W] instead of [1 x H x W]
+  saliency heatmaps matrix. This is inline with the similarity interface update.
 
 * Added two implementations of ``GenerateImageSimilarityBlackboxSaliency``:
   ``PerturbationOcclusion`` and ``SBSMStack``.
