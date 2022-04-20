@@ -57,15 +57,16 @@ class PerturbationOcclusion (GenerateImageSimilarityBlackboxSaliency):
     def _generate(
         self,
         ref_image: np.ndarray,
-        query_image: np.ndarray,
+        query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator
     ) -> np.ndarray:
-        ref_feat, query_feat = blackbox.generate_arrays_from_images([ref_image, query_image])
+        ref_feat = np.array(list(blackbox.generate_arrays_from_images([ref_image]))[0])
+        query_feats = np.array(list(blackbox.generate_arrays_from_images(query_images)))
 
-        pert_masks = self._perturber(query_image)
+        pert_masks = self._perturber(ref_image)
 
         pert_imgs = occlude_image_batch(
-            query_image,
+            ref_image,
             pert_masks,
             fill=self.fill,
             threads=self._threads
@@ -75,7 +76,7 @@ class PerturbationOcclusion (GenerateImageSimilarityBlackboxSaliency):
 
         sal_map = self._generator(
             ref_feat,
-            query_feat,
+            query_feats,
             pert_feats,
             pert_masks
         )

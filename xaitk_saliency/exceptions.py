@@ -15,9 +15,3 @@ class MismatchedLabelsError(Exception):
     ):
         self.message = message
         super().__init__(self.message)
-
-
-class UnexpectedDimensionsError(Exception):
-    """
-    Exception for when the expected number of dimensions is violated.
-    """

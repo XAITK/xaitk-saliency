@@ -67,12 +67,12 @@ class SBSMStack (GenerateImageSimilarityBlackboxSaliency):
     def _generate(
         self,
         ref_image: np.ndarray,
-        query_image: np.ndarray,
+        query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator
     ) -> np.ndarray:
         return self._po.generate(
             ref_image,
-            query_image,
+            query_images,
             blackbox
         )
 
