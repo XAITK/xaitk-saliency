@@ -69,3 +69,8 @@ Utils
 
 Fixes
 -----
+
+Dependency Versions
+
+* Update pinned jupyter notebook transitive dependency version due to
+  vulnerability warning.
