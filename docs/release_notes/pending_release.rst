@@ -60,6 +60,11 @@ Misc.
 * Updated `poetry-core` build backend to version `1.0.8`, which now supports
   `pip` editable installs (`pip install -e .`).
 
+* Updated release process to include updating the version referenced in
+  xaitk.org source.
+
+* Added introductory sentence to the style sheet document.
+
 Utils
 
 * Updated COCO utility functions to use new high-level detector interface.
