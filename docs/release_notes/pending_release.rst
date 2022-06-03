@@ -17,6 +17,13 @@ Documentation
   light- and dark-theme contexts. The main README file has been updated to refer
   to this image.
 
+* Added introductory sentence to the style sheet document.
+
+* Updated the release process to be incrementally more comprehensive and now
+  includes the specification of a ``release`` branch with better patch release
+  instructions. This also now includes a step to update the version referenced
+  in the xaitk.org source.
+
 Examples
 
 * Updated demo resource download links from Google Drive to data.kitware.com
@@ -59,11 +66,6 @@ Misc.
 
 * Updated `poetry-core` build backend to version `1.0.8`, which now supports
   `pip` editable installs (`pip install -e .`).
-
-* Updated release process to include updating the version referenced in
-  xaitk.org source.
-
-* Added introductory sentence to the style sheet document.
 
 Utils
 
