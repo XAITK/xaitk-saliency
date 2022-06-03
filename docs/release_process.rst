@@ -52,6 +52,9 @@ As such, patch releases should only ever be based on an existing release point.
 
 5. `Create new version release to PYPI`_.
 
+6. Update version reference in the `XAITK/xaitk.github.io home page`_ to the
+   new version.
+
 Major and Minor Releases
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Major and minor releases may add one or more trivial or non-trivial features
@@ -88,6 +91,9 @@ and functionalities.
 4. Merge version bump branch into the ``master`` branch.
 
 5. `Create new version release to PYPI`_.
+
+6. Update version reference in the `XAITK/xaitk.github.io home page`_ to the
+   new version.
 
 Stub Pending Notes File
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -175,3 +181,4 @@ PYPA with::
 .. _Poetry's version command: https://python-poetry.org/docs/cli/#version
 .. _releases page on GitHub: https://github.com/XAITK/xaitk-saliency/releases
 .. _tags page on GitHub: https://github.com/XAITK/xaitk-saliency/tags
+.. _XAITK/xaitk.github.io home page: https://github.com/XAITK/xaitk.github.io/edit/master/_pages/home.md#L12

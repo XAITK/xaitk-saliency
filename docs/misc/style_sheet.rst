@@ -1,6 +1,7 @@
 Style Sheet
 ===========
-
+This document lists the appropriate spelling of words and phrases to be used
+within this repo's code and documentation for consistency purposes.
 
 •	*black box* (noun) or *black-box* (adj); not blackbox (avoid)
 •	*D-RISE* not DRISE
