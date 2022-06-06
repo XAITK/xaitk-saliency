@@ -1,5 +1,15 @@
 v0.6.0
 ======
+This minor release notably adds new high-level interfaces for black-box object
+detector and image similarity saliency generation.
+We provide some reference implementations for these interfaces, notably the
+D-RISE and SBSM algorithms, respectively.
+
+Other improvements include the addition of more examples notebooks,
+improvements/fixes to existing implementations and a revision to the CLI object
+detection saliency generation tool.
+
+See below for more details.
 
 Updates / New Features
 ----------------------
