@@ -81,3 +81,8 @@ Dependency Versions
 
 * Update pinned jupyter notebook transitive dependency version due to
   vulnerability warning.
+
+Examples
+
+* Fixed inconsistency of dependency package installs at the head of the
+  ``examples/SerializedDetectionSaliency.ipynb`` notebook.
