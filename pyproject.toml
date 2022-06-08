@@ -1,5 +1,5 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.8"]
 build-backend = "poetry.core.masonry.api"
 
 ###############################################################################
@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.5.0"
+version = "0.6.0"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
@@ -81,6 +81,7 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 # Add implementation sub-module exposure here.
 "impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
+"impls.perturb_image.random_grid" = "xaitk_saliency.impls.perturb_image.random_grid"
 "impls.perturb_image.sliding_radial" = "xaitk_saliency.impls.perturb_image.sliding_radial"
 "impls.gen_classifier_conf_sal.occlusion_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring"
 "impls.gen_classifier_conf_sal.rise_scoring" = "xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring"
@@ -88,6 +89,10 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 "impls.gen_image_classifier_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based"
 "impls.gen_image_classifier_blackbox_sal.rise" = "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise"
 "impls.gen_detector_prop_sal.drise_scoring" = "xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring"
+"impls.gen_object_detector_blackbox_sal.drise" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise"
+"impls.gen_object_detector_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based"
+"impls.gen_image_similarity_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based"
+"image.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
 ###############################################################################
 [tool.pytest.ini_options]
 addopts = [

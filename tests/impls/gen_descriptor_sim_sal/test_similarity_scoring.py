@@ -58,18 +58,18 @@ class TestSimilarityScoring:
         are not the same dimensionality.
         """
         np.random.seed(0)
-        test_d1 = np.random.rand(16)
-        test_d2 = np.random.rand(15)  # Different than above
-        test_descriptors = np.random.rand(32, 16)
+        test_ref_descr = np.random.rand(16)
+        test_query_descrs = np.random.rand(5, 15)  # Different than above
+        test_pert_descrs = np.random.rand(32, 16)
         test_masks = np.random.rand(32, 16, 16)
 
         impl = SimilarityScoring()
 
         with pytest.raises(
             ValueError,
-            match=r"Length of feature vector between two images do not match."
+            match=r"Size of feature vectors between reference and query images do not match."
         ):
-            impl.generate(test_d1, test_d2, test_descriptors, test_masks)
+            impl.generate(test_ref_descr, test_query_descrs, test_pert_descrs, test_masks)
 
     def test_generate_mismatched_perturbed(self) -> None:
         """
@@ -77,9 +77,9 @@ class TestSimilarityScoring:
         descriptors and mask arrays are not equal in first-dimension length.
         """
         np.random.seed(0)
-        test_d1 = np.random.rand(16)
-        test_d2 = np.random.rand(16)
-        test_descriptors = np.random.rand(32, 16)
+        test_ref_descr = np.random.rand(16)
+        test_query_descrs = np.random.rand(1, 16)
+        test_pert_descrs = np.random.rand(32, 16)
         test_masks = np.random.rand(30, 16, 16)  # Different than above
 
         impl = SimilarityScoring()
@@ -89,7 +89,7 @@ class TestSimilarityScoring:
             match=r"Number of perturbation masks and respective feature "
                   r"vector do not match."
         ):
-            impl.generate(test_d1, test_d2, test_descriptors, test_masks)
+            impl.generate(test_ref_descr, test_query_descrs, test_pert_descrs, test_masks)
 
     def test_1_featurevec(self) -> None:
         """
@@ -97,25 +97,25 @@ class TestSimilarityScoring:
         """
         impl = SimilarityScoring()
         np.random.seed(2)
-        image1_feats = np.random.rand(2048)
-        image2_feats = np.random.rand(2048)
+        ref_feat = np.random.rand(2048)
+        query_feats = np.random.rand(2, 2048)
         pertb_feats = np.random.rand(3, 2048)
         pertb_mask = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
-        sal = impl.generate(image1_feats, image2_feats, pertb_feats, pertb_mask)
-        assert sal.shape == (1, 10, 10)
+        sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
+        assert sal.shape == (2, 10, 10)
 
     def test_standard_featurevec(self) -> None:
         """
         Test basic scoring on known values and non-square masks.
         """
         impl = SimilarityScoring()
-        image1_feats = np.array([0.6, 0.7])
-        image2_feats = np.array([0.3, 0.5])
+        ref_feat = np.array([0.6, 0.7])
+        query_feats = np.array([[0.3, 0.5], [0.1, 0.6], [0.4, 0.4]])
         pertb_feats = np.array([[0.25, 0.9], [0.3, 0.45], [0.8, 0.95],
                                 [0.55, 0.2], [0.1, 0.75], [0.35, 0.65]])
-        sal = impl.generate(image1_feats, image2_feats, pertb_feats, EXPECTED_MASKS_4x6)
+        sal = impl.generate(ref_feat, query_feats, pertb_feats, EXPECTED_MASKS_4x6)
         standard_sal = np.load(os.path.join(DATA_DIR, 'SimilaritySal.npy'))
-        assert sal.shape == (1, 4, 6)
+        assert sal.shape == (3, 4, 6)
         assert np.allclose(standard_sal, sal)
 
     def test_512_featdim(self) -> None:
@@ -124,9 +124,9 @@ class TestSimilarityScoring:
         """
         impl = SimilarityScoring()
         np.random.seed(2)
-        image1_feats = np.random.rand(512)
-        image2_feats = np.random.rand(512)
+        ref_feat = np.random.rand(512)
+        query_feats = np.random.rand(1, 512)
         pertb_feats = np.random.rand(15, 512)
         pertb_mask = np.random.randint(low=0, high=2, size=(15, 10, 10), dtype='int')
-        sal = impl.generate(image1_feats, image2_feats, pertb_feats, pertb_mask)
+        sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
         assert sal.shape == (1, 10, 10)

@@ -25,6 +25,7 @@ jobs:
     strategy:
       matrix:
         notebook-file: [
+            "atari_deepRL_saliency.ipynb",
             "DRISE.ipynb",
             "MNIST_scikit_saliency.ipynb",
             "OcclusionSaliency.ipynb",
@@ -33,6 +34,8 @@ jobs:
             "SuperPixelSaliency.ipynb",
             "VIAME_OcclusionSaliency.ipynb",
             "SerializedDetectionSaliency.ipynb",
+            # Model comparison example is excluded due to computational complexity
+            #"ModelComparisonWithSaliency.ipynb",
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false

@@ -2,12 +2,13 @@ from click.testing import CliRunner
 import os
 import py
 import pytest
-from unittest.mock import patch
+import builtins
+import sys
+from typing import Any
 
 from tests import DATA_DIR
 
 from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets
-from xaitk_saliency.exceptions import MismatchedLabelsError
 
 from importlib.util import find_spec
 
@@ -36,8 +37,21 @@ class TestSalOnCocoDetsNotUsable:
         runner = CliRunner()
 
         if is_usable:
-            with patch('xaitk_saliency.utils.bin.sal_on_coco_dets.is_usable', False):
-                result = runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file)])
+            real_import = builtins.__import__
+
+            # mock import function that acts as if kwcoco is not installed
+            def mock_import(name: str, *args: Any, **kw: Any) -> None:
+                if name == 'kwcoco':
+                    raise ModuleNotFoundError
+                return real_import(name, *args, **kw)
+
+            # monkeypatch import function
+            builtins.__import__ = mock_import
+
+            del sys.modules['xaitk_saliency.utils.bin.sal_on_coco_dets']
+            from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as fail_sal_on_coco_dets
+
+            result = runner.invoke(fail_sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file)])
         else:
             result = runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file)])
 
@@ -109,20 +123,4 @@ class TestSalOnCocoDets:
         # check that config file was created
         assert output_config.check(file=1)
         # check that no output was generated
-        assert not output_dir.check(dir=1)
-
-    def test_mismatched_labels(self, tmpdir: py.path.local) -> None:
-        """
-        Test that exception is thrown when provided detections and detector
-        have mismatched class labels.
-        """
-
-        dets_file = os.path.join(DATA_DIR, 'mismatched_dets.json')
-
-        output_dir = tmpdir.join('out')
-
-        runner = CliRunner()
-        result = runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file), "-v"])
-
-        assert isinstance(result.exception, MismatchedLabelsError)
         assert not output_dir.check(dir=1)

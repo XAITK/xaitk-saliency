@@ -110,6 +110,21 @@ class TestOcclusionBasedPerturb:
             EXPECTED_MASKS_4x6
         )
 
+    def test_window_size_agnostic(self) -> None:
+        """
+        Test that the number of masks remains the same, with  a given stride,
+        as window size changes.
+        """
+        img = np.empty((21, 21))
+
+        impl_2x2 = SlidingWindow(window_size=(3, 2), stride=(2, 2))
+        masks_2x2 = impl_2x2.perturb(img)
+
+        impl_3x3 = SlidingWindow(window_size=(244, 72), stride=(2, 2))
+        masks_3x3 = impl_3x3.perturb(img)
+
+        assert len(masks_2x2) == len(masks_3x3)
+
 
 # Common expected masks for 6x6 tests
 EXPECTED_MASKS_6x6_rect = np.array([

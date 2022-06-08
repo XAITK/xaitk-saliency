@@ -68,6 +68,17 @@
         {
             "id": 4,
             "image_id": 3,
+            "category_id": 0,
+            "bbox": [
+                0,
+                0,
+                5,
+                5
+            ]
+        },
+        {
+            "id": 5,
+            "image_id": 3,
             "category_id": 1,
             "bbox": [
                 50,
@@ -78,7 +89,7 @@
             "score": 1.0
         },
         {
-            "id": 5,
+            "id": 6,
             "image_id": 3,
             "category_id": 2,
             "bbox": [

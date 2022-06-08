@@ -318,7 +318,6 @@ an algorithm, which is concerned only with the inputs and outputs.
 Additionally, the algorithm can be flexibly determined by the user; that is, the user is free to choose and configure
 the algorithm as needed for the problem domain.
 
-
 The saliency algorithms can also be organized according to their respective tasks:
 
 .. list-table:: Saliency Algorithms by Task
@@ -328,14 +327,18 @@ The saliency algorithms can also be organized according to their respective task
    * - Task
      - Saliency Algorithm(s)
    * - Image classification
-     - Occlusion-based Saliency [1]; Randomized Input Sampling for Explanation (RISE) [2]
+     - :ref:`Occlusion-based Saliency <Class: SlidingWindowStack>` [1];
+       :ref:`Randomized Input Sampling for Explanation (RISE) <Class: RISEStack>` [2]
    * - Image similarity
-     - Similarity Based Saliency Maps (SBSM) [3]
+     - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SBSMStack>` [3]
    * - Object detection
-     - Detector-RISE (D-RISE) [4]
+     - :ref:`Detector-RISE (D-RISE) <Class: DRISEStack>` [4]
+   * - Reinforcement learning
+     - :ref:`Perturbation-based Saliency <Class: SquaredDifferenceScoring>` [5]
 
 
 1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
 2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.
-3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops 2019 Jun (pp. 95-98).
+3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. In CVPR Workshops 2019 Jun (pp. 95-98).
 4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
+5. Greydanus S, Koul A, Dodge J, Fern A. Visualizing and understanding atari agents. In International conference on machine learning 2018 Jul 3 (pp. 1792-1801). PMLR.

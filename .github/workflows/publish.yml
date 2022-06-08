@@ -1,0 +1,14 @@
+# Re-use the publishing workflow from smqtk-core
+name: Publish
+
+on:
+  push:
+    tags:
+      # Only run on tags with official version tag release format (e.g. v1.0.1)
+      - "v[0-9].[0-9]+.[0-9]+"
+
+jobs:
+  reuse-core-publish:
+    uses: Kitware/SMQTK-Core/.github/workflows/publish.yml@master
+    secrets:
+      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
