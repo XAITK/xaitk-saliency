@@ -11,3 +11,5 @@ CI
 
 * Fix the publish workflow to use appropriate values and version for the
   containing org and this repository.
+
+* Update CI workflows to also run for ``update-to-v*`` branches.
