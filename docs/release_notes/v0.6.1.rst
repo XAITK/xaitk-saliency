@@ -1,8 +1,7 @@
 v0.6.1
 ======
-
-Updates / New Features
-----------------------
+This patch specializes the release CI workflow for this organization and
+repository as opposed to previously relying on the remote workflow.
 
 Fixes
 -----
