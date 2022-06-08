@@ -1,0 +1,14 @@
+v0.6.1
+======
+This patch specializes the release CI workflow for this organization and
+repository as opposed to previously relying on the remote workflow.
+
+Fixes
+-----
+
+CI
+
+* Fix the publish workflow to use appropriate values and version for the
+  containing org and this repository.
+
+* Update CI workflows to also run for ``update-to-v*`` branches.
