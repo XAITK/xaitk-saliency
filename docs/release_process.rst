@@ -63,7 +63,9 @@ and functionalities.
       $ git merge --log --no-ff upstream/release
       $ git push upstream master
 
-7. Update version reference in the `XAITK/xaitk.github.io home page`_ to the
+8. `Draft a new release on GitHub`_ for the new version.
+
+9. Update version reference in the `XAITK/xaitk.github.io home page`_ to the
    new version.
 
 Patch Release
@@ -120,7 +122,9 @@ If a patch release for an older release version is being created, see the
       $ git merge --log --no-ff upstream/release
       $ git push upstream master
 
-8. If this patch release now represents the highest version of the package,
+8. `Draft a new release on GitHub`_ for the new version.
+
+9. If this patch release now represents the highest version of the package,
    update version reference in the `XAITK/xaitk.github.io home page`_ to the
    new version.
 
@@ -159,22 +163,33 @@ current package version.
 .. code-block:: bash
 
    $ git checkout HASH
-   # VERSION="v$(poetry version -s)"
+   $ VERSION="v$(poetry version -s)"
    $ git tag -a "$VERSION" -F docs/release_notes/"$VERSION".rst
    $ git push UPSTREAM "$VERSION"
 
+Draft a new release on Github
+-----------------------------
 After creating and pushing a new version tag, a GitHub "release" should be
 made.
-Navigate to the `releases page on GitHub`_ and click the ``Draft a new
-release`` button in the upper right.
-The newly added tag should be selected in the "Choose a tag" drop-down.
-The "Release Title" should be the version tag (i.e. "v#.#.#").
-Copy and paste this version's release notes into the ``Describe this release``
-text box.
-Remember to check the ``This is a pre-release`` check-box if appropriate.
-Click the ``Public release`` button at the bottom of the page when complete.
+
+a. Navigate to the GitHub `Releases page`_ for the xaitk-saliency repository.
+
+b. Click the "Draft a new release" button (or go `here
+   <https://github.com/XAITK/xaitk-saliency/releases/new>`_).
+
+c. Select from the "Choose a tag" drop down the tag version just created and
+   pushed
+
+d. Enter the version number as the title, e.g. "v1.2.3".
+
+e. Copy and paste the release notes for this version into the description
+   field.
+
+f. Select the "This is a pre-release" check-box if applicable.
+
+g. Click the "Publish Release" button to create the GitHub release!
 
 
 .. _Poetry's version command: https://python-poetry.org/docs/cli/#version
-.. _releases page on GitHub: https://github.com/XAITK/xaitk-saliency/releases
+.. _Releases page: https://github.com/XAITK/xaitk-saliency/releases
 .. _XAITK/xaitk.github.io home page: https://github.com/XAITK/xaitk.github.io/edit/master/_pages/home.md#L12
