@@ -4,15 +4,19 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Dependencies
+
+* Updated ``notebook`` dependency due to a vulnerability alert.
+
 Fixes
 -----
 
 Docs
 
-* Add missing step to the release process about creating the release on
+* Added missing step to the release process about creating the release on
   GitHub's Releases section.
 
 Examples
 
-* Add a note to each example about restarting the runtime for compatibility
+* Added a note to each example about restarting the runtime for compatibility
   with Colab, as well as a step to create a data directory if necessary.
