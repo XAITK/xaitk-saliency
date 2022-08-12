@@ -2,13 +2,11 @@ from click.testing import CliRunner
 import os
 import py
 import pytest
-import builtins
-import sys
-from typing import Any
+import unittest.mock as mock
 
 from tests import DATA_DIR
 
-from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets
+from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
 
 from importlib.util import find_spec
 
@@ -26,34 +24,17 @@ class TestSalOnCocoDetsNotUsable:
     information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
     """
 
+    @mock.patch("xaitk_saliency.utils.bin.sal_on_coco_dets.is_usable", False)
     def test_warning(self, tmpdir: py.path.local) -> None:
         """
         Test that proper warning is displayed when required dependencies are
         not installed.
         """
-
         output_dir = tmpdir.join('out')
 
         runner = CliRunner()
 
-        if is_usable:
-            real_import = builtins.__import__
-
-            # mock import function that acts as if kwcoco is not installed
-            def mock_import(name: str, *args: Any, **kw: Any) -> None:
-                if name == 'kwcoco':
-                    raise ModuleNotFoundError
-                return real_import(name, *args, **kw)
-
-            # monkeypatch import function
-            builtins.__import__ = mock_import
-
-            del sys.modules['xaitk_saliency.utils.bin.sal_on_coco_dets']
-            from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as fail_sal_on_coco_dets
-
-            result = runner.invoke(fail_sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file)])
-        else:
-            result = runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file)])
+        result = runner.invoke(sal_on_coco_dets_cmd, [str(dets_file), str(output_dir), str(config_file)])
 
         assert result.output == "This tool requires additional dependencies, please install 'xaitk-saliency[tools]'\n"
         assert not output_dir.check(dir=1)
@@ -71,11 +52,12 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring.
         """
-
         output_dir = tmpdir.join('out')
 
         runner = CliRunner()
-        runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file), "-v"])
+        runner.invoke(sal_on_coco_dets_cmd,
+                      [str(dets_file), str(output_dir), str(config_file),
+                       "-v"])
 
         # expected created directories for image saliency maps
         img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
@@ -92,11 +74,12 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring with the overlay image option.
         """
-
         output_dir = tmpdir.join('out')
 
         runner = CliRunner()
-        runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file), "--overlay-image"])
+        runner.invoke(sal_on_coco_dets_cmd,
+                      [str(dets_file), str(output_dir), str(config_file),
+                       "--overlay-image"])
 
         # expected created directories for image saliency maps
         img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
@@ -112,13 +95,14 @@ class TestSalOnCocoDets:
         """
         Test the generate configuration file option.
         """
-
         output_dir = tmpdir.join('out')
 
         output_config = tmpdir.join('gen_conf.json')
 
         runner = CliRunner()
-        runner.invoke(sal_on_coco_dets, [str(dets_file), str(output_dir), str(config_file), "-g", str(output_config)])
+        runner.invoke(sal_on_coco_dets_cmd,
+                      [str(dets_file), str(output_dir), str(config_file),
+                       "-g", str(output_config)])
 
         # check that config file was created
         assert output_config.check(file=1)

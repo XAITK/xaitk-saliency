@@ -8,6 +8,8 @@ Dependencies
 
 * Updated ``notebook`` dependency due to a vulnerability alert.
 
+* Periodic update of locked dep versions within abstract version constraints.
+
 Fixes
 -----
 
