@@ -10,6 +10,8 @@ Dependencies
 
 * Periodic update of locked dep versions within abstract version constraints.
 
+* Update sphinx versions to fix local documentation building issue.
+
 Fixes
 -----
 
