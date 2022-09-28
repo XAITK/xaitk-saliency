@@ -63,10 +63,10 @@ mypy = ">=0.812"
 types-setuptools = "^57.0.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
-Sphinx = "^3.5.3"
-sphinx-rtd-theme = "^0.5.1"
-sphinx-prompt = "^1.4.0"
-livereload = "^2.6.3"
+Sphinx = "*"
+sphinx-rtd-theme = "*"
+sphinx-prompt = "*"
+livereload = "*"
 # Testing
 coverage = "^5.5"
 pytest = "^6.2.2"
