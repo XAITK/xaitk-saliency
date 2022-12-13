@@ -9,13 +9,13 @@ from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 class StubImpl (PerturbImage):
 
-    def perturb(
+    def perturb(  # type: ignore[empty-body]
         self,
         ref_image: np.ndarray
     ) -> np.ndarray:
         """ Stub impl. """
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
         """ Stub impl. """
 
 

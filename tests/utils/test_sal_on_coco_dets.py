@@ -1,6 +1,6 @@
 from click.testing import CliRunner
 import os
-import py
+import py  # type: ignore
 import pytest
 import unittest.mock as mock
 

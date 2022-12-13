@@ -8,7 +8,7 @@ from xaitk_saliency.interfaces.gen_descriptor_sim_sal import GenerateDescriptorS
 
 
 class StubImpl (GenerateDescriptorSimilaritySaliency):
-    def generate(
+    def generate(  # type: ignore[empty-body]
         self,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
@@ -17,7 +17,7 @@ class StubImpl (GenerateDescriptorSimilaritySaliency):
     ) -> np.ndarray:
         """ Stub impl """
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
         """ Stub impl """
 
 
