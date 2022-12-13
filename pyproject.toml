@@ -31,48 +31,71 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
+# <3.10 being dictated currently by smqtk-detection, which could use some TLC to open up.
 python = ">=3.7,<3.10"
-numpy = "^1.20.3"
-scikit-image = "^0.18.1"
-scikit-learn = "^0.24.2"
+numpy = [
+    { version = ">=1.21.1", python = "<3.8" },
+    { version = ">=1.23.5", python = ">=3.8" }
+]
+scikit-image = ">=0.18.1"
+scikit-learn = ">=0.24.2"
+#scikit-learn = ">=1.2"
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
 smqtk-detection = ">=0.19.0"
-scipy = "^1.6.3"
-click = "^8.0.3"
+scipy = [
+    { version = ">=1.6.3", python = "<3.8" },
+    { version = ">=1.8.1", python = ">=3.8" }
+]
+click = ">=8.0.3"
 # Optionals for "example" extra
-jupyter = { version = "^1.0.0", optional = true }
-matplotlib = { version="^3.4.1", optional = true }
-papermill = { version = "^2.3.3", optional = true }
-torch = { version = "^1.9.0", optional = true }
-torchvision = { version = "^0.10.0", optional = true }
-tqdm = { version = "^4.45.0", optional = true }
+jupyter = { version = ">=1.0.0", optional = true }
+matplotlib = { version=">=3.4.1", optional = true }
+papermill = { version = ">=2.3.3", optional = true }
+torch = { version = ">=1.9.0", optional = true }
+torchvision = { version = ">=0.10.0", optional = true }
+tqdm = { version = ">=4.45.0", optional = true }
 # Optionals for "tools" extra"
 kwcoco = { version = "~0.2.18", optional = true}
 
 [tool.poetry.extras]
 example_deps = [ "jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
-tools = [ "kwcoco" ]
+tools = [ "kwcoco", "matplotliba" ]
 
 [tool.poetry.dev-dependencies]
 # CI
-flake8 = "^3.9.0"
-flake8-mutable = "^1.2.0"
-mypy = ">=0.812"
-types-setuptools = "^57.0.0"
+flake8 = [
+    # Hinge because 6.0 minimum supported python version is 3.8.1
+    { version = ">=5", python = "<3.8.1" },
+    { version = ">=6", python = ">=3.8.1" }
+]
+flake8-mutable = ">=1.2"
+mypy = ">=0.991"
+types-setuptools = ">=57.0.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
-Sphinx = "*"
-sphinx-rtd-theme = "*"
-sphinx-prompt = "*"
-livereload = "*"
+Sphinx = [
+    # Hinge because, while sphinx >=5.3 supports python <3.8.1, it requires an
+    # importlib-metadata version higher than what flake8 ^5 supports, which is
+    # the version of flake8 required for python version <3.8.1.
+    { version = ">=4.3.2", python = "<3.8.1" },
+    { version = ">=5.3", python = ">=3.8.1"}
+]
+sphinx-rtd-theme = ">=1.1.1"
+sphinx-prompt = ">=1.5"
+livereload = ">=2.6.3"
 # Testing
-coverage = "^5.5"
-pytest = "^6.2.2"
-pytest-cov = "^2.11.1"
+coverage = ">=6.5.0"
+pytest = ">=7.2.0"
+pytest-cov = ">=4.0.0"
 # Utility
-ipython = "^7.31.1"
+ipython = [
+    # As a utility, it is useful to use the latest version in one environment.
+    { version = ">=7.34.0", python = "<3.8" },
+    # Major version 8 drops support for py3.7
+    { version = ">=8.6.0", python = ">=3.8" }
+]
 
 [tool.poetry.scripts]
 sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
