@@ -55,15 +55,19 @@ class TestSalOnCocoDets:
         output_dir = tmpdir.join('out')
 
         runner = CliRunner()
+        # TODO: Assign return value to a "result" variable for later
         runner.invoke(sal_on_coco_dets_cmd,
-                      [str(dets_file), str(output_dir), str(config_file),
-                       "-v"])
+                      [str(dets_file), str(output_dir),
+                       str(config_file), "-v"])
 
         # expected created directories for image saliency maps
         img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
         # detection ids that belong to each image
         img_dets = [[1, 2, 3], [4, 5]]
 
+        # TODO: This command is failing in reality but not being caught. This
+        #       test needs to be fixed in the future.
+        # assert result.exit_code == 0
         assert sorted(output_dir.listdir()) == sorted(img_dirs)
         for img_dir, det_ids in zip(img_dirs, img_dets):
             map_files = [img_dir.join(f"det_{det_id}.jpeg") for det_id in det_ids]
