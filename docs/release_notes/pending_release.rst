@@ -4,6 +4,13 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI
+
+* Updated codecov action version to 3.
+
+* Added explicit use of codecov token to facilitate successful coverage
+  submission.
+
 Dependencies
 
 * Updated ``notebook`` dependency due to a vulnerability alert.
