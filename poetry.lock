@@ -2575,12 +2575,12 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 
 [extras]
 example-deps = ["jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm"]
-tools = ["kwcoco"]
+tools = ["kwcoco", "matplotlib"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.10"
-content-hash = "b3821463292c6c645f27060a44a9dc7fead9206de2aab19f336c9d1d3db38f0c"
+content-hash = "6377251806dc3b420fc1975af6b38c43520f29178df56c43b9ca3aa622917c37"
 
 [metadata.files]
 alabaster = [

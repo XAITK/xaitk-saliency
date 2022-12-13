@@ -61,7 +61,7 @@ kwcoco = { version = "~0.2.18", optional = true}
 
 [tool.poetry.extras]
 example_deps = [ "jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
-tools = [ "kwcoco", "matplotliba" ]
+tools = [ "kwcoco", "matplotlib" ]
 
 [tool.poetry.dev-dependencies]
 # CI
