@@ -38,8 +38,10 @@ numpy = [
     { version = ">=1.23.5", python = ">=3.8" }
 ]
 scikit-image = ">=0.18.1"
-scikit-learn = ">=0.24.2"
-#scikit-learn = ">=1.2"
+scikit-learn = [
+    { version = ">=0.24.2", python = "<3.8" },
+    { version = ">=1.2", python = ">=3.8" }
+]
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
