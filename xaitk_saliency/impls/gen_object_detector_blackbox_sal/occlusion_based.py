@@ -133,9 +133,9 @@ def _dets_to_formatted_mat(
         will be padded with rows of ones, except for the objectness which is set
         to zero.
     """
-    labels = []  # type: Sequence[Hashable]
+    labels: List[Hashable] = []
     num_classes = 0
-    dets_mat_list = []  # type: List[np.ndarray]
+    dets_mat_list: List[np.ndarray] = []
     for img_idx, img_dets in enumerate(dets):
 
         img_bboxes = np.array([])

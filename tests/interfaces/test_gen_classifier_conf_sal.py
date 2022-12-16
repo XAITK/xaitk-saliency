@@ -8,7 +8,7 @@ from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifier
 
 
 class StubImpl (GenerateClassifierConfidenceSaliency):
-    def generate(
+    def generate(  # type: ignore[empty-body]
         self,
         image_conf: np.ndarray,
         perturbed_conf: np.ndarray,
@@ -16,7 +16,7 @@ class StubImpl (GenerateClassifierConfidenceSaliency):
     ) -> np.ndarray:
         """ Stub impl """
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
         """ Stub impl """
 
 

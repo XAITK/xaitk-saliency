@@ -8,7 +8,7 @@ from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProp
 
 
 class StubImpl (GenerateDetectorProposalSaliency):
-    def generate(
+    def generate(  # type: ignore[empty-body]
         self,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
@@ -16,7 +16,7 @@ class StubImpl (GenerateDetectorProposalSaliency):
     ) -> np.ndarray:
         """ Stub impl """
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
         """ Stub impl """
 
 

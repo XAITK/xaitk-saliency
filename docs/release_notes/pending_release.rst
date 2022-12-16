@@ -17,7 +17,10 @@ Dependencies
 
 * Periodic update of locked dep versions within abstract version constraints.
 
-* Update sphinx versions to fix local documentation building issue.
+* Updated sphinx versions to fix local documentation building issue.
+
+* Updated some abstract dependencies to be more future-open for latest valid
+  package version compatibility.
 
 Fixes
 -----
