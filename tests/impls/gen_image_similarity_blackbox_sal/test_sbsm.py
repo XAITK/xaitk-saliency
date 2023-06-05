@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Iterable
+from typing import Iterable, Optional
 import gc
 
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
@@ -54,7 +54,7 @@ class TestBlackBoxSBSM:
 
             def generate_arrays_from_images(
                 self,
-                img_mat_iter: Iterable[np.ndarray]
+                img_mat_iter: Iterable[Optional[np.ndarray]]
             ) -> Iterable[np.ndarray]:
                 # return repeatable random feature vectors
                 rng = np.random.default_rng(0)
