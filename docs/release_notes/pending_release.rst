@@ -15,6 +15,8 @@ CI
 * Added explicit use of codecov token to facilitate successful coverage
   submission.
 
+* Updated publish/release CI workflow.
+
 Dependencies
 
 * Updated ``notebook`` dependency due to a vulnerability alert.
