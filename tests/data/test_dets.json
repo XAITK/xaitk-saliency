@@ -74,7 +74,8 @@
                 0,
                 5,
                 5
-            ]
+            ],
+            "__comment__": "Missing 'score' or 'pred', so should not be considered for input for saliency measurement."
         },
         {
             "id": 5,

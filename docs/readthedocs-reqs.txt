@@ -1,2 +1,2 @@
 # Additional requirements for building our documentation in read-the-docs build
-sphinx-prompt==1.4.0
+sphinx-prompt

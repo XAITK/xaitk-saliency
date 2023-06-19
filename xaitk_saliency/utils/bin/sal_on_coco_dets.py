@@ -2,8 +2,6 @@ import click  # type: ignore
 import os
 from PIL import Image  # type: ignore
 import json
-import matplotlib.pyplot as plt  # type: ignore
-from matplotlib.patches import Rectangle  # type: ignore
 import numpy as np
 from typing import TextIO
 import logging
@@ -15,6 +13,8 @@ from xaitk_saliency import GenerateObjectDetectorBlackboxSaliency
 
 try:
     import kwcoco  # type: ignore
+    import matplotlib.pyplot as plt  # type: ignore
+    from matplotlib.patches import Rectangle  # type: ignore
     from xaitk_saliency.utils.coco import parse_coco_dset
     is_usable = True
 except ImportError:

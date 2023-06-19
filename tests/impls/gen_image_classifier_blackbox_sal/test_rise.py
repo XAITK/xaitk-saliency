@@ -86,10 +86,13 @@ class TestSpecializationRise:
         # normalized in the [-1,1] range as the generation stage does nothing
         # given the constant blackbox response.
         inst = RISEStack(5, 8, 0.5, seed=0)
+        # Results may be sensitive to changes in scikit-image. Version 0.19
+        # introduces some changes to the resize function. Difference is
+        # expected to only be marginal (see tolerance to np.allclose below).
         res = inst.generate(test_image, test_bb)
 
         exp_res = np.load(DATA_DIR / "exp_rise_stack_res.npy")
-        assert np.allclose(exp_res, res)
+        assert np.allclose(exp_res, res, atol=2e-7)
 
     def test_fill_prop(self) -> None:
         """

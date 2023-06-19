@@ -2,47 +2,39 @@ import numpy as np
 import os
 import pytest
 from PIL import Image  # type: ignore
-import builtins
-import sys
-from typing import Any
+
+import xaitk_saliency.utils.coco
 
 from tests import DATA_DIR
 
 try:
     import kwcoco  # type: ignore
     from xaitk_saliency.utils.coco import parse_coco_dset
-    is_usable = True
 except ImportError:
-    is_usable = False
+    # Won't use above imports when not importable
+    pass
 
 
-class TestGenCocoSalNotUsable:
+@pytest.mark.skipif(xaitk_saliency.utils.coco.is_usable, reason="coco utils usable")
+class TestParseCocoDsetNotUsable:
 
-    def test_error(self) -> None:
+    def test_func_not_exposed(self) -> None:
         """
-        Test that proper error is raised when required dependencies are not
-        installed.
+        Test that if we try to import the `parse_coco_dset` function when
+        kwcoco is not installed, we get an import error, due to the function
+        being hidden behind and if-else conditioned on kwcoco's successful
+        import.
         """
+        # no error
+        import xaitk_saliency.utils.coco  # noqa: F401
 
-        if is_usable:
-            real_import = builtins.__import__
-
-            # mock import function that acts as if kwcoco is not installed
-            def mock_import(name: str, *args: Any, **kw: Any) -> None:
-                if name == 'kwcoco':
-                    raise ModuleNotFoundError
-                return real_import(name, *args, **kw)
-
-            # monkeypatch import function
-            builtins.__import__ = mock_import
-
-            del sys.modules['xaitk_saliency.utils.coco']
-
+        # now the error
         with pytest.raises(ImportError):
             from xaitk_saliency.utils.coco import parse_coco_dset  # noqa: F401
 
 
-@pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
+@pytest.mark.skipif(not xaitk_saliency.utils.coco.is_usable,
+                    reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestParseCocoDset:
 
     def test_dset_parse(self) -> None:
