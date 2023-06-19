@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Build
+
+* New minimum supported python changed to `python = "^3.8"`.
+
 CI
 
 * Updated codecov action version to 3.
@@ -19,8 +23,10 @@ Dependencies
 
 * Updated sphinx versions to fix local documentation building issue.
 
-* Updated some abstract dependencies to be more future-open for latest valid
-  package version compatibility.
+* Updated python minimum requirement to 3.8 (up from 3.6). This involved a
+  number of updates and bifurcations of abstract requirements, an update to
+  pinned versions for development/CI, and expansion of CI to cover python
+  versions 3.10 and 3.11 (latest current release).
 
 Fixes
 -----

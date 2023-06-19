@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict, Any, Iterable
+from typing import Dict, Any, Iterable, Optional
 import unittest.mock as mock
 import gc
 
@@ -90,7 +90,7 @@ class TestPerturbationOcclusion:
 
             def generate_arrays_from_images(
                 self,
-                img_mat_iter: Iterable[np.ndarray]
+                img_mat_iter: Iterable[Optional[np.ndarray]]
             ) -> Iterable[np.ndarray]:
                 for _ in img_mat_iter:
                     yield np.ones((25))

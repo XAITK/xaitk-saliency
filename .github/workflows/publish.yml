@@ -22,7 +22,7 @@ defaults:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    container: python:3.7
+    container: python:3.8
     # This should only be run for tags on the "official" repository org.
     if: github.repository_owner == 'XAITK'
     steps:
@@ -41,7 +41,7 @@ jobs:
           path: |
             ~/.cache/pypoetry/virtualenvs/
             ~/.local
-          key: python-3.7-${{ hashFiles('poetry.lock') }}
+          key: python-3.8-${{ hashFiles('poetry.lock') }}
 
       - name: Setup Environment
         # Using non-relative path for correct behavior when used as a remote
