@@ -27,12 +27,12 @@ jobs:
     if: github.repository_owner == 'XAITK'
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: env-cache
         with:
           # Confirmed that the `.local` directory doesn't exist until the
@@ -48,9 +48,22 @@ jobs:
         # workflow.
         uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
 
+      # Ensure there is alignment with the tag reference and the reported
+      # version of the package
+      - name: Ensure synchronized pacakge and ref
+        run: |
+          PACKAGE_VERSION="v$(poetry version -s)"
+          if [[ "${{ github.ref_name }}" != "${PACKAGE_VERSION}" ]]
+          then
+            echo "ERROR: Git tag reference and package version are NOT synonymous."
+            echo "       Package version: ${PACKAGE_VERSION}"
+            echo "       Git ref name   : ${{ github.ref_name }}"
+            exit 1
+          fi
+
       - name: Publish
         env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN}}
         run: |
           if [[ -z "$POETRY_PYPI_TOKEN_PYPI" ]]
           then
@@ -58,5 +71,4 @@ jobs:
             exit 1
           fi
           echo "Publishing new tag: ${{ github.ref_name }}"
-          git checkout ${{ github.ref_name }}
           poetry publish --build
