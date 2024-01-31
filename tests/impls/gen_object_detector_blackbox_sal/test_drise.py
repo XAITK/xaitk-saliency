@@ -37,7 +37,7 @@ class TestBlackBoxDRISE:
             assert isinstance(inst_g, DRISEScoring)
             assert inst_p.n == 123
             assert inst_p.s == 8
-            assert inst_p.p1 == 0.73
+            assert np.allclose(inst_p.p1, .73)
             assert inst_p.seed == 98
             assert inst_p.threads == 5
             assert inst_g.get_config() == {}

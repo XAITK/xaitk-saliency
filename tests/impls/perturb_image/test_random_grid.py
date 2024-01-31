@@ -21,7 +21,7 @@ class TestRandomGrid:
 
         assert impl.n == test_n
         assert impl.s == test_s
-        assert impl.p1 == test_p1
+        assert np.allclose(impl.p1, test_p1)
         assert impl.seed == test_seed
         assert impl.threads == test_threads
 
@@ -41,7 +41,7 @@ class TestRandomGrid:
         for inst in configuration_test_helper(impl):
             assert inst.n == test_n
             assert inst.s == test_s
-            assert inst.p1 == test_p1
+            assert np.allclose(impl.p1, test_p1)
             assert inst.seed == test_seed
             assert inst.threads == test_threads
 

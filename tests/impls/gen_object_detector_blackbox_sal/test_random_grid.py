@@ -38,7 +38,7 @@ class TestBlackBoxRandomGrid:
             assert isinstance(inst_g, DRISEScoring)
             assert inst_p.n == 55
             assert inst_p.s == (15, 8)
-            assert inst_p.p1 == 0.34
+            assert np.allclose(inst_p.p1, 0.34)
             assert inst_p.seed == 7
             assert inst_p.threads == 2
             assert inst_g.get_config() == {}

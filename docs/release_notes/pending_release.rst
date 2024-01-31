@@ -15,3 +15,7 @@ Utils
 
 Fixes
 -----
+
+Tests
+
+* Update various floating point equality comparisons to not use exact match.
