@@ -53,7 +53,8 @@ class TestRandomGrid:
         impl1 = RandomGrid(n=3, s=(5, 4), p1=0.5)
         impl2 = RandomGrid(n=3, s=(5, 4), p1=0.5)
 
-        img = np.random.randint(0, 255, size=(20, 20), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(20, 20), dtype=np.uint8)
 
         masks1 = impl1(img)
         masks2 = impl2(img)
@@ -68,7 +69,8 @@ class TestRandomGrid:
         impl1 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
         impl2 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
 
-        img = np.random.randint(0, 255, size=(10, 10), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
 
         masks1 = impl1(img)
         masks2 = impl2(img)
@@ -80,8 +82,8 @@ class TestRandomGrid:
         Test that perturbation generation is idempotent, at least when seeded
         and single-threaded.
         """
-
-        img = np.random.randint(0, 255, size=(10, 10), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(1, 2), p1=0.4, seed=1, threads=0)
 
@@ -95,8 +97,8 @@ class TestRandomGrid:
         Test mask generation on a one-channel image of a known size. Number
         of channels should not affect output masks.
         """
-
-        img = np.random.randint(0, 255, size=(4, 6), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
 
@@ -112,8 +114,8 @@ class TestRandomGrid:
         Test mask generation on a three-channel image of a known size. Number
         of channels should not affect output masks.
         """
-
-        img = np.random.randint(0, 255, size=(4, 6, 3), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(4, 6, 3), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
 
@@ -129,11 +131,11 @@ class TestRandomGrid:
         Test that a single implementation can be used for images of varying
         sizes.
         """
-
         impl = RandomGrid(n=5, s=(3, 4), p1=0.2, seed=42, threads=0)
 
-        img_small = np.random.randint(0, 255, size=(5, 7), dtype=np.uint8)
-        img_large = np.random.randint(0, 255, size=(55, 77), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img_small = rng.integers(0, 255, size=(5, 7), dtype=np.uint8)
+        img_large = rng.integers(0, 255, size=(55, 77), dtype=np.uint8)
 
         masks_small = impl(img_small)
         masks_large = impl(img_large)
@@ -148,8 +150,8 @@ class TestRandomGrid:
         """
         Test that using threading does not affect results.
         """
-
-        img = np.random.randint(0, 255, size=(4, 6), dtype=np.uint8)
+        rng = np.random.default_rng(seed=0)
+        img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=1)
 

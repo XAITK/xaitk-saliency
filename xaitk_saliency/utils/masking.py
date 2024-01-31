@@ -227,7 +227,8 @@ def benchmark_occlude_image(
     `[H x W [x C]]`.
     """
     img_mat = np.ones((*img_shape, img_channels), dtype=np.uint8)
-    masks = (np.random.rand(num_masks, *img_shape[:2]) < 0.5)
+    rng = np.random.default_rng(seed=0)
+    masks = (rng.standard_normal((num_masks, *img_shape[:2])) < 0.5)
     fill_1c: int = 0
     fill_mc = [0] * img_channels
     perf_counter = time.perf_counter
