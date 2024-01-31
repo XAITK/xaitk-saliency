@@ -58,11 +58,11 @@ class TestOcclusionScoring:
         Test basic scoring with a single class for broadcasting sanity check.
         """
         impl = OcclusionScoring()
-        np.random.seed(2)
+        rng = np.random.default_rng(2)
         # Three Perturbation masks of height and width 10px for 1 class
-        image_confs_1_class_ = np.random.rand(1)
-        pertb_confs_1_class_ = np.random.rand(3, 1)
-        mask_confs_1_class_ = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
+        image_confs_1_class_ = rng.standard_normal((1))
+        pertb_confs_1_class_ = rng.standard_normal((3, 1))
+        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype='int')
 
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
         assert sal.shape == (1, 10, 10)
@@ -85,10 +85,10 @@ class TestOcclusionScoring:
         Test scoring for 20 classes.
         """
         impl = OcclusionScoring()
-        np.random.seed(2)
+        rng = np.random.default_rng(2)
         # Three Perturbation masks of height and width 10px for 20 classes
-        image_confs_1_class_ = np.random.rand(20)
-        pertb_confs_1_class_ = np.random.rand(3, 20)
-        mask_confs_1_class_ = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
+        image_confs_1_class_ = rng.standard_normal((20))
+        pertb_confs_1_class_ = rng.standard_normal((3, 20))
+        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype='int')
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
         assert sal.shape == (20, 10, 10)

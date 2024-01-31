@@ -467,7 +467,8 @@ class TestWeightRegionsByScalar:
         based on the input data types.
         E.g. when input is float32, output is *not* float64, but still float32.
         """
-        scalar_vec = np.random.randn(100, 10).astype(scalar_type)
+        rng = np.random.default_rng(seed=0)
+        scalar_vec = rng.standard_normal((100, 10)).astype(scalar_type)
         masks = np.ones((100, 224, 224)).astype(mask_type)
         output = weight_regions_by_scalar(scalar_vec, masks, inv_masks, normalize)
         assert output.dtype == expected_output_type

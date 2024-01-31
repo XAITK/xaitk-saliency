@@ -23,9 +23,10 @@ class TestDRISEScoring:
         Test basic scoring with a single feature for broadcasting sanity check.
         """
         impl = DRISEScoring()
-        ref_dets = np.random.rand(2, 7)
-        pert_dets = np.random.rand(10, 3, 7)
-        pert_mask = np.random.randint(
+        rng = np.random.default_rng(seed=0)
+        ref_dets = rng.standard_normal((2, 7))
+        pert_dets = rng.standard_normal((10, 3, 7))
+        pert_mask = rng.integers(
             low=0, high=2, size=(10, 15, 25), dtype='int')
         sal = impl.generate(ref_dets, pert_dets, pert_mask)
         assert sal.shape == (2, 15, 25)
@@ -52,9 +53,10 @@ class TestDRISEScoring:
         Test size mismatch between perturbed detections and masks.
         """
         impl = DRISEScoring()
-        ref_dets = np.random.rand(2, 7)
-        pert_dets = np.random.rand(9, 3, 7)  # ONE LESS than pert mask mat.
-        pert_mask = np.random.randint(
+        rng = np.random.default_rng(seed=0)
+        ref_dets = rng.standard_normal((2, 7))
+        pert_dets = rng.standard_normal((9, 3, 7))  # ONE LESS than pert mask mat.
+        pert_mask = rng.integers(
             low=0, high=2, size=(10, 15, 25), dtype='int')
         with pytest.raises(
             ValueError,
@@ -68,9 +70,10 @@ class TestDRISEScoring:
         Test mismatch in number of classes between perturbed and reference detections.
         """
         impl = DRISEScoring()
-        ref_dets = np.random.rand(2, 8)  # ONE MORE than pert dets mat.
-        pert_dets = np.random.rand(10, 3, 7)
-        pert_mask = np.random.randint(
+        rng = np.random.default_rng(seed=0)
+        ref_dets = rng.standard_normal((2, 8))  # ONE MORE than pert dets mat.
+        pert_dets = rng.standard_normal((10, 3, 7))
+        pert_mask = rng.integers(
             low=0, high=2, size=(10, 15, 25), dtype='int')
         with pytest.raises(
             ValueError,
