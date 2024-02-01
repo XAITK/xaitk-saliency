@@ -18,6 +18,6 @@ Fixes
 
 Tests
 
-* Update various floating point equality comparisons to not use exact match.
+* Fix various floating point equality comparisons to not use exact match.
 
 * Fix random number usage from numpy to use `np.random.default_rng`.
