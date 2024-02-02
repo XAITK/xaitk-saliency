@@ -31,7 +31,7 @@ class TestRiseScoring:
         """
         inst = RISEScoring(p1=0.747)
         for inst_i in configuration_test_helper(inst):
-            assert inst_i.p1 == 0.747
+            assert np.allclose(inst_i.p1, 0.747)
 
     def test_bad_alignment(self) -> None:
         """
