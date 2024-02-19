@@ -112,9 +112,11 @@ def sal_on_coco_dets(
     # The outputs of pase_coco_dset() are constructed using gid_to_aids, so we
     # can assume the order of image and annotation ids in gid_to_aids here
     # correspond correctly to that of the generated saliency maps.
+    img_skip_counter = 0
     for img_idx, (img_id, det_ids) in enumerate(dets_dset.gid_to_aids.items()):
         # skip if there are no dets for this image
         if len(det_ids) == 0:
+            img_skip_counter += 1
             continue  # pragma: no cover
 
         img_file = dets_dset.get_image_fpath(img_id)
@@ -131,9 +133,14 @@ def sal_on_coco_dets(
 
         os.makedirs(sub_dir, exist_ok=True)
 
+        sal_skip_counter = 0
         for sal_idx, det_id in enumerate(det_ids):
+            ann = dets_dset.anns[det_id]
+            if not ('score' in ann or 'prob' in ann):
+                sal_skip_counter += 1
+                continue
 
-            sal_map = img_sal_maps[img_idx][sal_idx]
+            sal_map = img_sal_maps[img_idx - img_skip_counter][sal_idx - sal_skip_counter]
 
             fig = plt.figure()
             plt.axis('off')
