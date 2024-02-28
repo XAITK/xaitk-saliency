@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI/CD
+
+* Add python 3.12 to test matrix
+
 Docker
 
 * Update Dockerfile install of poetry, and make separate & specific directory
