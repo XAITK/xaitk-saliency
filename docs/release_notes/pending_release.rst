@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI/CD
+
+* Changed CodeCov version from v3 to v4.
+
 Docker
 
 * Update Dockerfile install of poetry, and make separate & specific directory
