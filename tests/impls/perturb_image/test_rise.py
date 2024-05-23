@@ -16,7 +16,7 @@ class TestRISEPerturbation:
         impl = RISEGrid(n=ex_n, s=ex_s, p1=ex_p1)
         assert impl.n == ex_n
         assert impl.s == ex_s
-        assert impl.p1 == ex_p1
+        assert np.allclose(impl.p1, ex_p1)
 
     def test_init_outofrange_p1(self) -> None:
         """
@@ -42,7 +42,7 @@ class TestRISEPerturbation:
         for inst in configuration_test_helper(impl):
             assert inst.n == ex_n
             assert inst.s == ex_s
-            assert inst.p1 == ex_p1
+            assert np.allclose(inst.p1, ex_p1)
 
     def test_if_random(self) -> None:
         """

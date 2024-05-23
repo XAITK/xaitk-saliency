@@ -57,11 +57,11 @@ class TestSimilarityScoring:
         Test that we appropriately error when the input reference descriptors
         are not the same dimensionality.
         """
-        np.random.seed(0)
-        test_ref_descr = np.random.rand(16)
-        test_query_descrs = np.random.rand(5, 15)  # Different than above
-        test_pert_descrs = np.random.rand(32, 16)
-        test_masks = np.random.rand(32, 16, 16)
+        rng = np.random.default_rng(seed=0)
+        test_ref_descr = rng.standard_normal(16)
+        test_query_descrs = rng.standard_normal((5, 15))  # Different than above
+        test_pert_descrs = rng.standard_normal((32, 16))
+        test_masks = rng.standard_normal((32, 16, 16))
 
         impl = SimilarityScoring()
 
@@ -76,11 +76,11 @@ class TestSimilarityScoring:
         Test that we appropriately error when the input perturbation
         descriptors and mask arrays are not equal in first-dimension length.
         """
-        np.random.seed(0)
-        test_ref_descr = np.random.rand(16)
-        test_query_descrs = np.random.rand(1, 16)
-        test_pert_descrs = np.random.rand(32, 16)
-        test_masks = np.random.rand(30, 16, 16)  # Different than above
+        rng = np.random.default_rng(seed=0)
+        test_ref_descr = rng.standard_normal(16)
+        test_query_descrs = rng.standard_normal((1, 16))
+        test_pert_descrs = rng.standard_normal((32, 16))
+        test_masks = rng.standard_normal((30, 16, 16))  # Different than above
 
         impl = SimilarityScoring()
 
@@ -96,11 +96,11 @@ class TestSimilarityScoring:
         Test basic scoring with a single feature for broadcasting sanity check.
         """
         impl = SimilarityScoring()
-        np.random.seed(2)
-        ref_feat = np.random.rand(2048)
-        query_feats = np.random.rand(2, 2048)
-        pertb_feats = np.random.rand(3, 2048)
-        pertb_mask = np.random.randint(low=0, high=2, size=(3, 10, 10), dtype='int')
+        rng = np.random.default_rng(2)
+        ref_feat = rng.standard_normal(2048)
+        query_feats = rng.standard_normal((2, 2048))
+        pertb_feats = rng.standard_normal((3, 2048))
+        pertb_mask = rng.integers(low=0, high=2, size=(3, 10, 10), dtype='int')
         sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
         assert sal.shape == (2, 10, 10)
 
@@ -123,10 +123,10 @@ class TestSimilarityScoring:
         Test scoring for features of 512 dims.
         """
         impl = SimilarityScoring()
-        np.random.seed(2)
-        ref_feat = np.random.rand(512)
-        query_feats = np.random.rand(1, 512)
-        pertb_feats = np.random.rand(15, 512)
-        pertb_mask = np.random.randint(low=0, high=2, size=(15, 10, 10), dtype='int')
+        rng = np.random.default_rng(2)
+        ref_feat = rng.standard_normal(512)
+        query_feats = rng.standard_normal((1, 512))
+        pertb_feats = rng.standard_normal((15, 512))
+        pertb_mask = rng.integers(low=0, high=2, size=(15, 10, 10), dtype='int')
         sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
         assert sal.shape == (1, 10, 10)

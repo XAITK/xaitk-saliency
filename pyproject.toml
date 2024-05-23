@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.7.0"
+version = "0.8.0"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
@@ -29,22 +29,33 @@ classifiers = [
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
 ]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-numpy = ">=1.22"
+numpy = [
+    {version = ">=1.22,<1.26", python = ">=3.8,<3.12"},
+    {version = ">=1.26", python = ">=3.12"}
+]
 scikit-image = [
     # Hinge because minimum support 0.20.0 for py3.11
     { version = ">=0.18.1", python = "<3.11" },
-    { version = ">=0.20.0", python = ">=3.11" }
+    { version = ">=0.20.0", python = ">=3.11, <3.12" },
+    { version = ">=0.22.0", python = ">=3.12" }
 ]
-scikit-learn = ">=1.2"
+scikit-learn = [
+    {version = ">=1.2, <1.4", python = ">=3.8,<3.12"},
+    {version = ">=1.4", python = ">=3.12"}
+]
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
 smqtk-detection = ">=0.19.0"
-scipy = ">=1.8.1"
+scipy = [
+    {version = ">=1.8.1,<1.9", python = ">=3.8,<3.11"},
+    {version = ">=1.9", python = "^3.11"}
+]
 click = ">=8.0.3"
 setuptools = "*"
 # Optionals for "example" extra
@@ -56,10 +67,12 @@ torchvision = {version = ">=0.10.0", optional = true}
 tqdm = { version = ">=4.45.0", optional = true }
 # Optionals for "tools" extra"
 kwcoco = { version = ">=0.2.18", optional = true}
+pyyaml = {version = ">=6.0.1", optional = true, python = ">=3.12"}
+shapely = {version = ">=2.0.2", optional = true, python = ">=3.12"}
 
 [tool.poetry.extras]
 example_deps = [ "jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
-tools = [ "kwcoco", "matplotlib" ]
+tools = [ "kwcoco", "matplotlib", "pyyaml", "shapely" ]
 
 [tool.poetry.dev-dependencies]
 # CI

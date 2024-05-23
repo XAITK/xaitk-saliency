@@ -35,10 +35,10 @@ class TestSpecializationRise:
             assert isinstance(inst_g, RISEScoring)
             assert inst_p.n == 444
             assert inst_p.s == 33
-            assert inst_p.p1 == .22
+            assert np.allclose(inst_p.p1, .22)
             assert inst_p.seed == 42
             assert inst_p.threads == 99
-            assert inst_g.p1 == .22
+            assert np.allclose(inst_g.p1, .22)
             assert inst_i.get_config()['debiased'] is True
 
     def test_configuration_not_debiased(self) -> None:
@@ -58,8 +58,8 @@ class TestSpecializationRise:
             inst_g = inst_i._po._generator
             assert isinstance(inst_p, RISEGrid)
             assert isinstance(inst_g, RISEScoring)
-            assert inst_p.p1 == .22
-            assert inst_g.p1 == 0.0
+            assert np.allclose(inst_p.p1, .22)
+            assert np.allclose(inst_g.p1, 0.0)
             assert inst_i.get_config()['debiased'] is False
 
     def test_generation_rgb(self) -> None:
