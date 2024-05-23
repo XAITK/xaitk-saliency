@@ -1,6 +1,8 @@
 v0.8.0
 ======
 
+Updated dependencies to support Python 3.12 along with a few other smaller bug fixes.
+
 Updates / New Features
 ----------------------
 
