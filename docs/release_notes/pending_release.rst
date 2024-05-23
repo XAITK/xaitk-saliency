@@ -8,6 +8,8 @@ CI/CD
 
 * Changed CodeCov version from v3 to v4.
 
+* Add python 3.12 to test matrix
+
 Docker
 
 * Update Dockerfile install of poetry, and make separate & specific directory
