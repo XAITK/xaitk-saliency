@@ -4,6 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+CI/CD
+
+* Updated to use `checkout@v4` and `cache@v4` instead of `*@v2`.
+
 Fixes
 -----
 
