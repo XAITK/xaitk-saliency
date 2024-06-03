@@ -16,7 +16,7 @@ class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
         # later `*.get_impl()` requests.
-        gc.collect()
+        gc.collect()  # pragma: no cover
 
     def test_configuration(self) -> None:
         """
