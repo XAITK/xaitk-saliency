@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.8.0"
+version = "0.8.1"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
@@ -34,9 +34,11 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
+# Python capped to <3.13 because of:
+# https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
-    {version = ">=1.22,<1.26", python = ">=3.8,<3.12"},
-    {version = ">=1.26", python = ">=3.12"}
+    {version = ">=1.22,<1.25", python = "~3.8"}, # CVE-2021-34141
+    {version = ">=1.22,^1.25", python = ">=3.9,<3.13" } # CVE-2021-34141
 ]
 scikit-image = [
     # Hinge because minimum support 0.20.0 for py3.11
@@ -53,25 +55,25 @@ smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
 smqtk-detection = ">=0.19.0"
 scipy = [
-    {version = ">=1.8.1,<1.9", python = ">=3.8,<3.11"},
+    {version = "<1.11.1", python = "~3.8.1"}, # Can't satisfy CVE-2023-25399 because it is too restrictive
     {version = ">=1.9", python = "^3.11"}
 ]
 click = ">=8.0.3"
 setuptools = "*"
 # Optionals for "example" extra
-jupyter = { version = ">=1.0.0", optional = true }
+notebook = { version = ">=7.0.7", optional = true }
 matplotlib = { version=">=3.4.1", optional = true }
 papermill = { version = ">=2.3.3", optional = true }
 torch = {version = ">=1.9.0,!=2.0.1", optional = true}
 torchvision = {version = ">=0.10.0", optional = true}
-tqdm = { version = ">=4.45.0", optional = true }
+tqdm = { version = "4.66.3", optional = true } # CVE-2024-34062
 # Optionals for "tools" extra"
 kwcoco = { version = ">=0.2.18", optional = true}
 pyyaml = {version = ">=6.0.1", optional = true, python = ">=3.12"}
 shapely = {version = ">=2.0.2", optional = true, python = ">=3.12"}
 
 [tool.poetry.extras]
-example_deps = [ "jupyter", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
+example_deps = [ "notebook", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
 tools = [ "kwcoco", "matplotlib", "pyyaml", "shapely" ]
 
 [tool.poetry.dev-dependencies]
@@ -101,7 +103,7 @@ coverage = ">=6.5.0"
 pytest = ">=7.2.0"
 pytest-cov = ">=4.0.0"
 # Utility
-ipython = ">=8.6.0"
+notebook = ">=7.0.7"
 
 [tool.poetry.scripts]
 sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
