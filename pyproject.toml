@@ -38,7 +38,8 @@ python = "^3.8"
 # https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
     {version = ">=1.22,<1.25", python = "~3.8"}, # CVE-2021-34141
-    {version = ">=1.22,^1.25", python = ">=3.9,<3.13" } # CVE-2021-34141
+    {version = ">=1.22,^1.25", python = ">=3.9,<3.12" }, # CVE-2021-34141
+    {version = "^1.26", python = ">=3.12,<3.13" } # py3.12 only supports >= 1.26
 ]
 scikit-image = [
     # Hinge because minimum support 0.20.0 for py3.11
