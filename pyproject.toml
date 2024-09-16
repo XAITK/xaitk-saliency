@@ -48,8 +48,8 @@ scikit-image = [
     { version = ">=0.22.0", python = ">=3.12" }
 ]
 scikit-learn = [
-    {version = ">=1.2, <1.4", python = ">=3.8,<3.12"},
-    {version = ">=1.4", python = ">=3.12"}
+    {version = ">=1.2", python = "<3.9"},
+    {version = ">=1.5", python = ">=3.9"}
 ]
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
