@@ -1,0 +1,12 @@
+v0.8.3
+======
+
+A quick hotfix to address scikit-learn compatability issues.
+
+Updates / New Features
+----------------------
+
+Fixes
+-----
+
+* Increased scikit-learn lower bound to address CVE-2024-5206
