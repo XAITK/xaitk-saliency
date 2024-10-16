@@ -8,7 +8,7 @@ name = "xaitk_saliency"
 # REMEMBER: `distutils.version.*Version` types can be used to compare versions
 # from strings like this.
 # This package prefers to use the strict numbering standard when possible.
-version = "0.8.3"
+version = "0.9.0"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
