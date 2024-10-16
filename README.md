@@ -50,6 +50,7 @@ https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
 See [here for more installation documentation](
 https://xaitk-saliency.readthedocs.io/en/latest/installation.html).
 
+<!-- :auto getting-started: -->
 ## Getting Started
 We provide a number of examples based on Jupyter notebooks in the `./examples/`
 directory to show usage of the `xaitk-saliency` package in a number of
@@ -57,7 +58,9 @@ different contexts.
 
 Contributions are welcome!
 See the [CONTRIBUTING.md](./CONTRIBUTING.md) file for details.
+<!-- :auto getting-started: -->
 
+<!-- :auto documentation: -->
 ## Documentation
 Documentation snapshots for releases as well as the latest master are hosted on
 [ReadTheDocs](https://xaitk-saliency.readthedocs.io/en/latest/).
@@ -74,6 +77,28 @@ poetry run make html
 # Open in your favorite browser!
 firefox _build/html/index.html
 ```
+<!-- :auto documentation: -->
+
+<!-- :auto developer-tools: -->
+## Developer tools
+
+**pre-commit hooks**
+pre-commit hooks are used to ensure that any code meets all linting and
+formatting guidelines required. After installing, this will always run before
+ committing to ensure that any commits are following the standards, but you
+ can also manually run the check without committing. If you want to commit
+ despite there being errors, you can add `--no-verify` to your commit command.
+
+Installing pre-commit hooks:
+```bash
+# Ensure that all dependencies are installed
+poetry install --sync --with dev-linting,dev-testing,dev-docs
+# Initialize pre-commit for the repository
+poetry run pre-commit install
+# Run pre-commit check on all files
+poetry run pre-commit run --all-files
+```
+<!-- :auto developer-tools: -->
 
 ## XAITK Saliency Demonstration Tool
 This [associated project](https://github.com/XAITK/xaitk-saliency-web-demo)
@@ -91,3 +116,19 @@ This tool uses the [trame framework](https://kitware.github.io/trame/).
 [image2]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-classification-sliding-window.jpg
 [image3]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-detection-retina.jpg
 [image4]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-similarity-1.jpg
+
+## License
+[BSD-3-Clause](./LICENSE)
+
+<!-- :auto contacts: -->
+## Contacts
+
+**Principal Investigator**: Brian Hu (Kitware) @brian.hu
+
+**Product Owner**: Austin Whitesell (MITRE) @awhitesell
+
+**Scrum Master / Tech Lead**: Brandon RichardWebster (Kitware) @b.richardwebster
+
+**Deputy Tech Lead**: Emily Veenhuis (Kitware) @emily.veenhuis
+
+<!-- :auto contacts: -->

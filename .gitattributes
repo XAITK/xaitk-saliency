@@ -1,1 +1,13 @@
+# :auto shared:
 *.rst conflict-marker-size=79
+**.pt filter=lfs diff=lfs merge=lfs -text
+**.pth filter=lfs diff=lfs merge=lfs -text
+**.pkl filter=lfs diff=lfs merge=lfs -text
+**.png filter=lfs diff=lfs merge=lfs -text
+**.jpg filter=lfs diff=lfs merge=lfs -text
+**.jpeg filter=lfs diff=lfs merge=lfs -text
+**.tiff filter=lfs diff=lfs merge=lfs -text
+**.bin filter=lfs diff=lfs merge=lfs -text
+**.tiff filter=lfs diff=lfs merge=lfs -text
+**.npy filter=lfs diff=lfs merge=lfs -text
+# :auto shared:

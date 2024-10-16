@@ -1,22 +1,18 @@
-from typing import Sequence, Hashable, Iterator
+from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
 from smqtk_core.configuration import configuration_test_helper
-
 from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.slidingwindow import SlidingWindowStack
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
 class TestSpecializationSlidingWindow:
-
     def test_configuration(self) -> None:
-        """
-        Test standard config things.
-        """
+        """Test standard config things."""
         inst = SlidingWindowStack(
             window_size=(8, 9),
             stride=(19, 14),
@@ -32,11 +28,10 @@ class TestSpecializationSlidingWindow:
             assert inst_i._po._threads == 99
 
     def test_generation_rgb(self) -> None:
-        """
-        Test basic generation functionality with dummy image and blackbox
-        """
+        """Test basic generation functionality with dummy image and blackbox"""
+
         class TestBlackBox(ClassifyImage):
-            """ Dummy blackbox that yields a constant result. """
+            """Dummy blackbox that yields a constant result."""
 
             def get_labels(self) -> Sequence[Hashable]:
                 return [0]
@@ -60,11 +55,10 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_generation_gray(self) -> None:
-        """
-        Test basic generation functionality with dummy image and blackbox
-        """
+        """Test basic generation functionality with dummy image and blackbox"""
+
         class TestBlackBox(ClassifyImage):
-            """ Dummy blackbox that yields a constant result. """
+            """Dummy blackbox that yields a constant result."""
 
             def get_labels(self) -> Sequence[Hashable]:
                 return [0]

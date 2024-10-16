@@ -1,22 +1,17 @@
 import gc
-from typing import Dict, Any
 import unittest.mock as mock
+from typing import Any, Dict
 
 import numpy as np
-
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 
-class StubImpl (PerturbImage):
-
-    def perturb(  # type: ignore[empty-body]
-        self,
-        ref_image: np.ndarray
-    ) -> np.ndarray:
-        """ Stub impl. """
+class StubImpl(PerturbImage):
+    def perturb(self, ref_image: np.ndarray) -> np.ndarray:  # type: ignore[empty-body]
+        """Stub impl."""
 
     def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
-        """ Stub impl. """
+        """Stub impl."""
 
 
 def teardown_module() -> None:

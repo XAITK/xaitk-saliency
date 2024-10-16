@@ -1,0 +1,13 @@
+###############################################################################
+# Stage -- Documentation
+###############################################################################
+# 
+# Overrides:
+# 
+# 1) Install "tools" extras
+###############################################################################
+.docs-setup:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    - poetry install --sync --only main,dev-docs,dev-testing --extras tools
+    - !reference [.needs-headless-opencv, before_script]

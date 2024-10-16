@@ -1,0 +1,14 @@
+###############################################################################
+# Stage -- Build
+###############################################################################
+# 
+# Overrides:
+# 
+# 1) Installed "tools" extras
+#    - Intentionally did not include maite-cpu as to not override torch gpu
+#
+###############################################################################
+
+build:cache:
+  script:
+    - poetry install --sync --only main,dev-linting,dev-testing,dev-docs --extras tools
