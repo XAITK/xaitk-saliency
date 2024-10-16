@@ -12,5 +12,11 @@ CI/CD
 
 * Dropped scanning for ``Python 3.8`` and changed default to ``Python 3.9``.
 
+Documentation
+
+* ``ReadTheDocs`` now uses ``Python 3.9``.
+
+* ``ReadTheDocs`` now uses poetry install.
+
 Fixes
 -----
