@@ -33,11 +33,10 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 # Python capped to <3.13 because of:
 # https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
-    {version = ">=1.22,<1.25", python = "~3.8"}, # CVE-2021-34141
     {version = ">=1.22,^1.25", python = ">=3.9,<3.12" }, # CVE-2021-34141
     {version = "^1.26", python = ">=3.12,<3.13" } # py3.12 only supports >= 1.26
 ]
@@ -47,22 +46,16 @@ scikit-image = [
     { version = ">=0.20.0", python = ">=3.11, <3.12" },
     { version = ">=0.22.0", python = ">=3.12" }
 ]
-scikit-learn = [
-    {version = ">=1.2", python = "<3.9"},
-    {version = ">=1.5", python = ">=3.9"}
-]
+scikit-learn = ">=1.5.0"
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
 smqtk-detection = ">=0.19.0"
-scipy = [
-    {version = "<1.11.1", python = "~3.8.1"}, # Can't satisfy CVE-2023-25399 because it is too restrictive
-    {version = ">=1.9", python = "^3.11"}
-]
+scipy = ">=1.9" # CVE-2023-25399
 click = ">=8.0.3"
 setuptools = "*"
 # Optionals for "example" extra
-notebook = { version = ">=7.0.7", optional = true }
+notebook = { version = ">=7.2.2", optional = true }
 matplotlib = { version=">=3.4.1", optional = true }
 papermill = { version = ">=2.3.3", optional = true }
 torch = {version = ">=1.9.0,!=2.0.1", optional = true}
@@ -79,23 +72,13 @@ tools = [ "kwcoco", "matplotlib", "pyyaml", "shapely" ]
 
 [tool.poetry.dev-dependencies]
 # CI
-flake8 = [
-    # Hinge because 6.0 minimum supported python version is 3.8.1
-    { version = ">=5", python = "<3.8.1" },
-    { version = ">=6", python = ">=3.8.1" }
-]
+flake8 = ">=6"
 flake8-mutable = ">=1.2"
 mypy = ">=0.991"
 types-setuptools = ">=57.0.0"
 # Docs
 # - Also see: `docs/readthedocs-reqs.txt` for use by RTD
-Sphinx = [
-    # Hinge because, while sphinx >=5.3 supports python <3.8.1, it requires an
-    # importlib-metadata version higher than what flake8 ^5 supports, which is
-    # the version of flake8 required for python version <3.8.1.
-    { version = ">=4.3.2", python = "<3.8.1" },
-    { version = ">=5.3", python = ">=3.8.1"}
-]
+Sphinx = ">=5.3"
 sphinx-rtd-theme = ">=1.1.1"
 sphinx-prompt = ">=1.5"
 livereload = ">=2.6.3"
