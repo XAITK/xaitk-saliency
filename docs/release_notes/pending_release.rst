@@ -20,3 +20,7 @@ Documentation
 
 Fixes
 -----
+
+Notebooks
+
+* Added ``pandas`` to ``examples/MNIST_scikit_saliency.ipynb``.
