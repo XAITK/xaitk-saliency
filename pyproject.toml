@@ -46,7 +46,7 @@ scikit-image = [
     { version = ">=0.20.0", python = ">=3.11, <3.12" },
     { version = ">=0.22.0", python = ">=3.12" }
 ]
-scikit-learn = ">=1.5"
+scikit-learn = ">=1.5.0"
 smqtk-classifier = ">=0.17.0"
 smqtk-core = ">=0.18.0"
 smqtk-descriptors = ">=0.16.0"
@@ -55,7 +55,7 @@ scipy = ">=1.9" # CVE-2023-25399
 click = ">=8.0.3"
 setuptools = "*"
 # Optionals for "example" extra
-notebook = { version = ">=7.0.7", optional = true }
+notebook = { version = ">=7.2.2", optional = true }
 matplotlib = { version=">=3.4.1", optional = true }
 papermill = { version = ">=2.3.3", optional = true }
 torch = {version = ">=1.9.0,!=2.0.1", optional = true}
