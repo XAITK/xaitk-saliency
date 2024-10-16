@@ -28,7 +28,7 @@ defaults:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    container: python:3.8
+    container: python:3.9
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
           path: |
             ~/.cache/pypoetry/virtualenvs/
             ~/.local
-          key: python-3.8-${{ hashFiles('poetry.lock') }}
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
         uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
@@ -54,7 +54,7 @@ jobs:
 
   typecheck:
     runs-on: ubuntu-latest
-    container: python:3.8
+    container: python:3.9
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
@@ -71,7 +71,7 @@ jobs:
           path: |
             ~/.cache/pypoetry/virtualenvs/
             ~/.local
-          key: python-3.8-${{ hashFiles('poetry.lock') }}
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
         uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8","3.9","3.10","3.11","3.12"]
+        python-version: ["3.9","3.10","3.11","3.12"]
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
             "",  # no extras
