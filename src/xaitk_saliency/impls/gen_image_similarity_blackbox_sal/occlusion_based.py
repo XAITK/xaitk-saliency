@@ -63,7 +63,6 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
         return self._generator(ref_feat, query_feats, pert_feats, pert_masks)
 
-
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
         cfg = super().get_default_config()

@@ -41,6 +41,5 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-
     def get_config(self) -> dict:
         return {}

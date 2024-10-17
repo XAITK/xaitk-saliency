@@ -66,7 +66,6 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # add a small eps to prevent divide by zero errors
         return inter_area / (box_a_area + np.transpose(box_b_area) - inter_area + np.finfo(float).eps)
 
-
     def generate(
         self,
         ref_dets: np.ndarray,
@@ -116,7 +115,6 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
 
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
-
 
     def get_config(self) -> dict:
         return {}

@@ -27,7 +27,9 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         main-thread in-line.
     """
 
-    def __init__(self, window_size: tuple[int, int] = (50, 50), stride: tuple[int, int] = (20, 20), threads: int = 0) -> None:
+    def __init__(
+        self, window_size: tuple[int, int] = (50, 50), stride: tuple[int, int] = (20, 20), threads: int = 0
+    ) -> None:
         self._po = PerturbationOcclusion(
             perturber=SlidingWindow(
                 window_size=window_size,

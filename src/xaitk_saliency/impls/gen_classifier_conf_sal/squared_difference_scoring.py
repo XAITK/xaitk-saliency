@@ -37,6 +37,5 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         sal -= sal.min()
         return sal / sal.max()
 
-
     def get_config(self) -> dict:
         return {}

@@ -37,7 +37,9 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         or `None`, work will be performed on the main-thread in-line.
     """
 
-    def __init__(self, perturber: PerturbImage, generator: GenerateClassifierConfidenceSaliency, threads: int = 0) -> None:
+    def __init__(
+        self, perturber: PerturbImage, generator: GenerateClassifierConfidenceSaliency, threads: int = 0
+    ) -> None:
         self._perturber = perturber
         self._generator = generator
         self._threads = threads
