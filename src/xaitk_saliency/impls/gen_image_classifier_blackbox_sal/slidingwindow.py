@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -27,7 +27,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         main-thread in-line.
     """
 
-    def __init__(self, window_size: Tuple[int, int] = (50, 50), stride: Tuple[int, int] = (20, 20), threads: int = 0):
+    def __init__(self, window_size: tuple[int, int] = (50, 50), stride: tuple[int, int] = (20, 20), threads: int = 0) -> None:
         self._po = PerturbationOcclusion(
             perturber=SlidingWindow(
                 window_size=window_size,
@@ -49,7 +49,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         return self._po.generate(ref_image, blackbox)
 
     @classmethod
-    def get_default_config(cls) -> Dict[str, Any]:
+    def get_default_config(cls) -> dict[str, Any]:
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -58,7 +58,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         # It turns out that our configuration here is nearly equivalent to that
         # given and retrieved from the SlidingWindow implementation that is
         # known set to the internal ``PerturbationOcclusion.perturber``.

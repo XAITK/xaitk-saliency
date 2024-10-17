@@ -1,7 +1,7 @@
 import gc
 import unittest.mock as mock
 from collections.abc import Iterable
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -23,19 +23,19 @@ class TestPerturbationOcclusion:
         class StubPI(PerturbImage):
             perturb = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
+            def get_config(self) -> dict[str, Any]:
                 return {"stub_param": self.p}
 
         class StubGen(GenerateDescriptorSimilaritySaliency):
             generate = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
+            def get_config(self) -> dict[str, Any]:
                 return {"stub_param": self.p}
 
         inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)

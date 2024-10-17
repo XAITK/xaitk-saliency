@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, Dict, Optional, Type, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
 import numpy as np
 from smqtk_core.configuration import from_config_dict, make_default_config, to_config_dict
@@ -40,7 +40,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         generator: GenerateDescriptorSimilaritySaliency,
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: Optional[int] = None,
-    ):
+    ) -> None:
         self._perturber = perturber
         self._generator = generator
         self._threads = threads
@@ -61,19 +61,18 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
         pert_feats = np.array(list(blackbox.generate_arrays_from_images(pert_imgs)))
 
-        sal_map = self._generator(ref_feat, query_feats, pert_feats, pert_masks)
+        return self._generator(ref_feat, query_feats, pert_feats, pert_masks)
 
-        return sal_map
 
     @classmethod
-    def get_default_config(cls) -> Dict[str, Any]:
+    def get_default_config(cls) -> dict[str, Any]:
         cfg = super().get_default_config()
         cfg["perturber"] = make_default_config(PerturbImage.get_impls())
         cfg["generator"] = make_default_config(GenerateDescriptorSimilaritySaliency.get_impls())
         return cfg
 
     @classmethod
-    def from_config(cls: Type[C], config_dict: Dict, merge_default: bool = True) -> C:
+    def from_config(cls: type[C], config_dict: dict, merge_default: bool = True) -> C:
         config_dict = dict(config_dict)  # shallow-copy
         config_dict["perturber"] = from_config_dict(config_dict["perturber"], PerturbImage.get_impls())
         config_dict["generator"] = from_config_dict(
@@ -82,7 +81,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         )
         return super().from_config(config_dict, merge_default=merge_default)
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         return {
             "perturber": to_config_dict(self._perturber),
             "generator": to_config_dict(self._generator),

@@ -11,7 +11,7 @@ from tests import DATA_DIR
 
 deps = ["kwcoco"]
 specs = [find_spec(dep) for dep in deps]
-is_usable = all([spec is not None for spec in specs])
+is_usable = all(spec is not None for spec in specs)
 
 dets_file = os.path.join(DATA_DIR, "test_dets.json")
 config_file = os.path.join(DATA_DIR, "config.json")

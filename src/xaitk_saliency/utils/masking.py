@@ -1,7 +1,7 @@
 import itertools
 import time
 from collections.abc import Generator, Iterable, Sequence
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import numpy as np
 from smqtk_descriptors.utils import parallel_map
@@ -81,7 +81,7 @@ def occlude_image_batch(
         raise ValueError(
             f"Input image shape and mask image shape did not match: {ref_image_shape[:2]} != {masks.shape[1:]}",
         )
-    s: Tuple = (...,)
+    s: tuple = (...,)
     if ref_image.ndim > 2:
         s = (..., None)  # add channel axis for multiplication
     # Basically `np.empty_like` but tacking on the num-masks-dim to the front
@@ -180,7 +180,7 @@ def occlude_image_streaming(
     """
     # Just the [H x W] component.
     img_shape = ref_image.shape[:2]
-    s: Tuple = (...,)
+    s: tuple = (...,)
     if ref_image.ndim > 2:
         s = (..., None)  # add channel axis for multiplication
 
@@ -201,18 +201,17 @@ def occlude_image_streaming(
         for i, mask in enumerate(masks):
             yield work_func(i, mask)
     else:
-        for img in parallel_map(
+        yield from parallel_map(
             work_func,
             itertools.count(),
             masks,
             cores=threads,
             use_multiprocessing=False,
-        ):
-            yield img
+        )
 
 
 def benchmark_occlude_image(
-    img_shape: Tuple[int, int] = (224, 224),
+    img_shape: tuple[int, int] = (224, 224),
     img_channels: int = 3,
     num_masks: int = 1000,
     threading_tests: Sequence[int] = (0, 1, 2),

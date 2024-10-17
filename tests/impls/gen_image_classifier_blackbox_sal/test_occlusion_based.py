@@ -1,7 +1,7 @@
 import gc
 import unittest.mock as mock
 from collections.abc import Hashable, Iterator, Sequence
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -25,19 +25,19 @@ class TestPerturbationOcclusion:
         class StubPI(PerturbImage):
             perturb = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
+            def get_config(self) -> dict[str, Any]:
                 return {"stub_param": self.p}
 
         class StubGen(GenerateClassifierConfidenceSaliency):
             generate = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
+            def get_config(self) -> dict[str, Any]:
                 return {"stub_param": self.p}
 
         test_threads = 87

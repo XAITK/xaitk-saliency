@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
@@ -40,12 +40,12 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     def __init__(
         self,
-        window_size: Tuple[int, int] = (50, 50),
-        stride: Tuple[int, int] = (20, 20),
+        window_size: tuple[int, int] = (50, 50),
+        stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: Optional[int] = None,
-    ):
+    ) -> None:
         self._po = PerturbationOcclusion(
             perturber=SlidingWindow(window_size=window_size, stride=stride),
             generator=SimilarityScoring(proximity_metric=proximity_metric),
@@ -70,7 +70,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return self._po.generate(ref_image, query_images, blackbox)
 
     @classmethod
-    def get_default_config(cls) -> Dict[str, Any]:
+    def get_default_config(cls) -> dict[str, Any]:
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -79,7 +79,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         c_p = self._po._perturber.get_config()
         c_g = self._po._generator.get_config()
         c = dict(c_p, **c_g)

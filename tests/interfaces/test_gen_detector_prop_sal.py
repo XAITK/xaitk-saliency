@@ -1,6 +1,6 @@
 import gc
 import unittest.mock as mock
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
@@ -15,7 +15,7 @@ class StubImpl(GenerateDetectorProposalSaliency):
     ) -> np.ndarray:
         """Stub impl"""
 
-    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
+    def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
         """Stub impl"""
 
 

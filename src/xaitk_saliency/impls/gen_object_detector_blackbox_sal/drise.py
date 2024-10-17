@@ -1,6 +1,6 @@
 import abc
 from collections.abc import Sequence
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from smqtk_detection import DetectImageObjects
@@ -31,7 +31,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
         self,
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: Optional[int] = 0,
-    ):
+    ) -> None:
         self._po = PerturbationOcclusion(self._get_perturber(), DRISEScoring(), fill=fill, threads=threads)
 
     @abc.abstractmethod
@@ -65,7 +65,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
             objectness,
         )
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         cfg = self._po._perturber.get_config()
         cfg["fill"] = self._po.fill
         return cfg
@@ -102,7 +102,7 @@ class DRISEStack(_BaseDRISE):
         seed: Optional[int] = None,
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: Optional[int] = 0,
-    ):
+    ) -> None:
         self._perturber = RISEGrid(n=n, s=s, p1=p1, seed=seed, threads=threads)
 
         super().__init__(fill, threads)
@@ -137,12 +137,12 @@ class RandomGridStack(_BaseDRISE):
     def __init__(
         self,
         n: int,
-        s: Tuple[int, int],
+        s: tuple[int, int],
         p1: float,
         seed: Optional[int] = None,
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: int = 0,
-    ):
+    ) -> None:
         self._perturber = RandomGrid(n=n, s=s, p1=p1, seed=seed, threads=threads)
 
         super().__init__(fill, threads)

@@ -96,12 +96,12 @@ class TestFormatDetection:
             format_detection(test_bbox_mat, test_class_mat, test_objnes_v)
 
     @pytest.mark.parametrize(
-        "bbox_type,clf_type,expected_type",
+        ("bbox_type", "clf_type", "expected_type"),
         [
-            [np.float32, np.float32, np.float32],
-            [np.float32, np.uint8, np.float32],
-            [np.uint8, np.float16, np.float16],
-            [np.uint8, np.uint8, np.uint8],
+            (np.float32, np.float32, np.float32),
+            (np.float32, np.uint8, np.float32),
+            (np.uint8, np.float16, np.float16),
+            (np.uint8, np.uint8, np.uint8),
         ],
     )
     def test_against_type_upcasting(self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype) -> None:
@@ -116,13 +116,13 @@ class TestFormatDetection:
         assert output.dtype == expected_type
 
     @pytest.mark.parametrize(
-        "bbox_type,clf_type,obj_type,expected_type",
+        ("bbox_type", "clf_type", "obj_type", "expected_type"),
         [
-            [np.float32, np.float32, np.float32, np.float32],
-            [np.float32, np.uint8, np.uint8, np.float32],
-            [np.uint8, np.float16, np.float16, np.float16],
-            [np.uint8, np.uint8, np.float16, np.float16],
-            [np.uint8, np.uint8, np.uint8, np.uint8],
+            (np.float32, np.float32, np.float32, np.float32),
+            (np.float32, np.uint8, np.uint8, np.float32),
+            (np.uint8, np.float16, np.float16, np.float16),
+            (np.uint8, np.uint8, np.float16, np.float16),
+            (np.uint8, np.uint8, np.uint8, np.uint8),
         ],
     )
     def test_against_type_upcasting_obj(

@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
@@ -25,7 +25,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
     def __init__(
         self,
         p1: float = 0.0,
-    ):
+    ) -> None:
         """
         Generate RISE-based saliency maps with optional p1 de-biasing.
 
@@ -58,11 +58,10 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
 
         # Ensure saliency map in range [-1, 1]
-        sal = np.clip(sal, -1, 1)
+        return np.clip(sal, -1, 1)
 
-        return sal
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         return {
             "p1": self.p1,
         }

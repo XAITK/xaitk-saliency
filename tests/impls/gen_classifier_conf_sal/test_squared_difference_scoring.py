@@ -12,7 +12,8 @@ class TestSquaredDifferenceScoring:
 
         impl = SquaredDifferenceScoring()
 
-        assert impl.is_usable() and isinstance(impl, GenerateClassifierConfidenceSaliency)
+        assert impl.is_usable()
+        assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
         """

@@ -1,6 +1,5 @@
 import logging
 from collections.abc import Generator
-from typing import Tuple
 
 import numpy as np
 from PIL import Image  # type: ignore
@@ -21,7 +20,7 @@ else:
 
     def parse_coco_dset(
         dets_dset: kwcoco.CocoDataset,
-    ) -> Generator[Tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
+    ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
         """
         Generate reference image, bounding box, and class score matrices, for
         use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
@@ -47,7 +46,7 @@ else:
         min_cid = min(cids)
         num_classes = max(cids) - min_cid + 1
 
-        for img_i, (img_id, det_ids) in enumerate(gid_to_aids.items()):
+        for _img_i, (img_id, det_ids) in enumerate(gid_to_aids.items()):
             bboxes = np.empty((0, 4))
             scores = np.empty((0, num_classes))
 

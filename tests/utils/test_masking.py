@@ -442,7 +442,7 @@ class TestWeightRegionsByScalar:
     @pytest.mark.parametrize("inv_masks", [True, False])
     @pytest.mark.parametrize("normalize", [True, False])
     @pytest.mark.parametrize(
-        "scalar_type,mask_type,expected_output_type",
+        ("scalar_type", "mask_type", "expected_output_type"),
         [
             (np.float32, np.bool_, np.float32),
             (np.float32, np.int16, np.float32),

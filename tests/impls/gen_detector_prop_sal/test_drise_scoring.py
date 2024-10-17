@@ -13,7 +13,8 @@ class TestDRISEScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""
         impl = DRISEScoring()
-        assert impl.is_usable() and isinstance(impl, GenerateDetectorProposalSaliency)
+        assert impl.is_usable()
+        assert isinstance(impl, GenerateDetectorProposalSaliency)
 
     def test_shape_sanity(self) -> None:
         """Test basic scoring with a single feature for broadcasting sanity check."""

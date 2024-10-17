@@ -41,7 +41,7 @@ for d in watch_dirs:
     for g in watch_globs:
         server.watch(os.path.join(d, g), rebuild_cmd)
 # Watch source python files.
-for dirpath, dirnames, filenames in os.walk(watch_source_dir):
+for dirpath, _dirnames, _filenames in os.walk(watch_source_dir):
     server.watch(os.path.join(dirpath, "*.py"), rebuild_cmd)
 # Optionally change to host="0.0.0.0" to make available outside localhost.
 server.serve(root=rebuild_root)

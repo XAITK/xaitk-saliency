@@ -31,7 +31,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
     """
 
-    def __init__(self, proximity_metric: str = "euclidean"):
+    def __init__(self, proximity_metric: str = "euclidean") -> None:
         try:
             # Attempting to use chosen comparison metric
             cdist([[1], [1]], [[1], [1]], proximity_metric)
@@ -73,9 +73,8 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
 
         # Ensure saliency map in range [-1, 1]
-        sal = np.clip(sal, -1, 1)
+        return np.clip(sal, -1, 1)
 
-        return sal
 
     def get_config(self) -> dict:
         return {

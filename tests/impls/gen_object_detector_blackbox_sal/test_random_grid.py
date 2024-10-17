@@ -1,5 +1,4 @@
 from collections.abc import Hashable, Iterable
-from typing import Dict, Tuple
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -44,7 +43,7 @@ class TestBlackBoxRandomGrid:
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],
-            ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
+            ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
                         (AxisAlignedBoundingBox((2, 2), (10, 15)), {"class0": 0.2, "class1": 0.8}),

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -27,11 +27,11 @@ class SlidingWindow(PerturbImage):
 
     def __init__(
         self,
-        window_size: Tuple[int, int] = (50, 50),
-        stride: Tuple[int, int] = (20, 20),
-    ):
-        self.window_size: Tuple[int, int] = (int(window_size[0]), int(window_size[1]))
-        self.stride: Tuple[int, int] = (int(stride[0]), int(stride[1]))
+        window_size: tuple[int, int] = (50, 50),
+        stride: tuple[int, int] = (20, 20),
+    ) -> None:
+        self.window_size: tuple[int, int] = (int(window_size[0]), int(window_size[1]))
+        self.stride: tuple[int, int] = (int(stride[0]), int(stride[1]))
 
     def perturb(self, ref_image: np.ndarray) -> np.ndarray:
         win_h, win_w = self.window_size
@@ -68,7 +68,7 @@ class SlidingWindow(PerturbImage):
         return masks
 
     @classmethod
-    def get_default_config(cls) -> Dict[str, Any]:
+    def get_default_config(cls) -> dict[str, Any]:
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -77,7 +77,7 @@ class SlidingWindow(PerturbImage):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         return {
             "window_size": list(self.window_size),
             "stride": list(self.stride),

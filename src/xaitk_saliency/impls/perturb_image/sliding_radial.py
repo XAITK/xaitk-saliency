@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 from scipy.ndimage.filters import gaussian_filter
@@ -37,10 +37,10 @@ class SlidingRadial(PerturbImage):
 
     def __init__(
         self,
-        radius: Tuple[float, float] = (50, 50),
-        stride: Tuple[int, int] = (20, 20),
-        sigma: Optional[Tuple[float, float]] = None,
-    ):
+        radius: tuple[float, float] = (50, 50),
+        stride: tuple[int, int] = (20, 20),
+        sigma: Optional[tuple[float, float]] = None,
+    ) -> None:
         self.radius = (radius[0], radius[1])
         self.stride = (int(stride[0]), int(stride[1]))
         self.sigma = (sigma[0], sigma[1]) if sigma else None
@@ -70,7 +70,7 @@ class SlidingRadial(PerturbImage):
         return masks
 
     @classmethod
-    def get_default_config(cls) -> Dict[str, Any]:
+    def get_default_config(cls) -> dict[str, Any]:
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -79,7 +79,7 @@ class SlidingRadial(PerturbImage):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         return {
             "radius": list(self.radius),
             "stride": list(self.stride),

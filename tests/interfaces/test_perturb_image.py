@@ -1,6 +1,6 @@
 import gc
 import unittest.mock as mock
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
@@ -10,7 +10,7 @@ class StubImpl(PerturbImage):
     def perturb(self, ref_image: np.ndarray) -> np.ndarray:  # type: ignore[empty-body]
         """Stub impl."""
 
-    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
+    def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
         """Stub impl."""
 
 

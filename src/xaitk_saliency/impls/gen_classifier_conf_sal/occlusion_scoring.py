@@ -39,9 +39,8 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
 
         # Ensure saliency map in range [-1, 1]
-        sal = np.clip(sal, -1, 1)
+        return np.clip(sal, -1, 1)
 
-        return sal
 
     def get_config(self) -> dict:
         return {}

@@ -13,7 +13,8 @@ class TestSimilarityScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""
         impl = SimilarityScoring()
-        assert impl.is_usable() and isinstance(impl, GenerateDescriptorSimilaritySaliency)
+        assert impl.is_usable()
+        assert isinstance(impl, GenerateDescriptorSimilaritySaliency)
 
     def test_default_param(self) -> None:
         """Test default construction."""

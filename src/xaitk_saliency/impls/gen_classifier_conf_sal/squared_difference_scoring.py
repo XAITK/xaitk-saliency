@@ -35,9 +35,8 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
 
         # Normalize saliency map to [0,1]
         sal -= sal.min()
-        sal = sal / sal.max()
+        return sal / sal.max()
 
-        return sal
 
     def get_config(self) -> dict:
         return {}

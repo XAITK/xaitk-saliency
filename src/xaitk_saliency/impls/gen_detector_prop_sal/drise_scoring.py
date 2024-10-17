@@ -64,9 +64,8 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         box_b_area = (x22 - x21 + 1) * (y22 - y21 + 1)
 
         # add a small eps to prevent divide by zero errors
-        iou = inter_area / (box_a_area + np.transpose(box_b_area) - inter_area + np.finfo(float).eps)
+        return inter_area / (box_a_area + np.transpose(box_b_area) - inter_area + np.finfo(float).eps)
 
-        return iou
 
     def generate(
         self,
@@ -116,9 +115,8 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
 
         # Ensure saliency map in range [-1, 1]
-        sal = np.clip(sal, -1, 1)
+        return np.clip(sal, -1, 1)
 
-        return sal
 
     def get_config(self) -> dict:
         return {}
