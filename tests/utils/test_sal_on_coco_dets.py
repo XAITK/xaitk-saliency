@@ -5,9 +5,9 @@ from importlib.util import find_spec
 import py  # type: ignore
 import pytest
 from click.testing import CliRunner
-from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
 
 from tests import DATA_DIR
+from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
 
 deps = ["kwcoco"]
 specs = [find_spec(dep) for dep in deps]

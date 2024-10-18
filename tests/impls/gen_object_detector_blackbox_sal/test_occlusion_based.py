@@ -7,6 +7,7 @@ import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection import DetectImageObjects
 from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
+
 from xaitk_saliency import GenerateDetectorProposalSaliency, PerturbImage
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based import PerturbationOcclusion
 from xaitk_saliency.utils.masking import occlude_image_batch

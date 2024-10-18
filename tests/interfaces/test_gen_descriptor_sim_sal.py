@@ -3,6 +3,7 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+
 from xaitk_saliency.interfaces.gen_descriptor_sim_sal import GenerateDescriptorSimilaritySaliency
 
 

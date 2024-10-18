@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
-from xaitk_saliency import GenerateClassifierConfidenceSaliency
-from xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring import SquaredDifferenceScoring
 
 from tests import EXPECTED_MASKS_4x6
+from xaitk_saliency import GenerateClassifierConfidenceSaliency
+from xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring import SquaredDifferenceScoring
 
 
 class TestSquaredDifferenceScoring:

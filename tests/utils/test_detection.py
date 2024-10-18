@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from xaitk_saliency.utils.detection import format_detection
 
 

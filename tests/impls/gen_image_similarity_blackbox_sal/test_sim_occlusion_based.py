@@ -6,6 +6,7 @@ from typing import Any, Optional
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency, PerturbImage
 from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based import PerturbationOcclusion
 from xaitk_saliency.utils.masking import occlude_image_batch

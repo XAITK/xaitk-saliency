@@ -3,10 +3,10 @@ import os
 import numpy as np
 import pytest
 from smqtk_core.configuration import configuration_test_helper
-from xaitk_saliency import GenerateDescriptorSimilaritySaliency
-from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
 
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
+from xaitk_saliency import GenerateDescriptorSimilaritySaliency
+from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
 
 
 class TestSimilarityScoring:

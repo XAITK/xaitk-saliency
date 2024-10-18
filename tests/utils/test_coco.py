@@ -2,13 +2,14 @@ import os
 
 import numpy as np
 import pytest
-import xaitk_saliency.utils.coco
 from PIL import Image  # type: ignore
 
+import xaitk_saliency.utils.coco
 from tests import DATA_DIR
 
 try:
     import kwcoco  # type: ignore
+
     from xaitk_saliency.utils.coco import parse_coco_dset
 except ImportError:
     # Won't use above imports when not importable

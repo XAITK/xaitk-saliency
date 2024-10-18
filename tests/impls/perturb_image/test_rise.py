@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from smqtk_core.configuration import configuration_test_helper
+
 from xaitk_saliency.impls.perturb_image.rise import RISEGrid
 
 

@@ -1,5 +1,6 @@
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
+
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.impls.perturb_image.sliding_radial import SlidingRadial
 

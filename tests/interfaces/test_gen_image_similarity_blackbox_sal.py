@@ -3,6 +3,7 @@ import unittest.mock as mock
 import numpy as np
 import pytest
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+
 from xaitk_saliency import GenerateImageSimilarityBlackboxSaliency
 from xaitk_saliency.exceptions import ShapeMismatchError
 

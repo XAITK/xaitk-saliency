@@ -1,9 +1,9 @@
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
-from xaitk_saliency import PerturbImage
-from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 from tests import EXPECTED_MASKS_4x6
+from xaitk_saliency import PerturbImage
+from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
 class TestOcclusionBasedPerturb:

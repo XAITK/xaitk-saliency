@@ -5,9 +5,9 @@ from typing import Optional
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
-from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import SBSMStack, SimilarityScoring, SlidingWindow
 
 from tests import DATA_DIR
+from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import SBSMStack, SimilarityScoring, SlidingWindow
 
 
 class TestBlackBoxSBSM:

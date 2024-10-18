@@ -3,10 +3,10 @@ import re
 
 import numpy as np
 import pytest
-from xaitk_saliency import GenerateDetectorProposalSaliency
-from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
+from xaitk_saliency import GenerateDetectorProposalSaliency
+from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 
 
 class TestDRISEScoring:

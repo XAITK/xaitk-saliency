@@ -4,6 +4,7 @@ from typing import Callable
 import numpy as np
 import numpy.typing as npt
 import pytest
+
 from xaitk_saliency.utils.masking import (
     benchmark_occlude_image,
     occlude_image_batch,

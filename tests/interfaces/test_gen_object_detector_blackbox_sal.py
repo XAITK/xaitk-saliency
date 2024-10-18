@@ -3,6 +3,7 @@ import unittest.mock as mock
 import numpy as np
 import pytest
 from smqtk_detection import DetectImageObjects
+
 from xaitk_saliency.exceptions import ShapeMismatchError
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
 

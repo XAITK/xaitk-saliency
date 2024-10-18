@@ -2,10 +2,10 @@ import os
 
 import numpy as np
 import pytest
-from xaitk_saliency import GenerateClassifierConfidenceSaliency
-from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
+from xaitk_saliency import GenerateClassifierConfidenceSaliency
+from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 
 
 class TestOcclusionScoring:

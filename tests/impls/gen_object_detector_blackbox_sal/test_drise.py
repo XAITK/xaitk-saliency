@@ -4,9 +4,9 @@ import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection import DetectImageObjects
 from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
-from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, DRISEStack, RISEGrid
 
 from tests import DATA_DIR
+from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, DRISEStack, RISEGrid
 
 
 class TestBlackBoxDRISE:
