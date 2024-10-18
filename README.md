@@ -8,7 +8,6 @@
 [![badge-unittests](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-unittests.yml)
 [![badge-notebooks](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-example-notebooks.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-example-notebooks.yml)
 [![codecov](https://codecov.io/gh/XAITK/xaitk-saliency/branch/master/graph/badge.svg?token=VHRNXYCNCG)](https://codecov.io/gh/XAITK/xaitk-saliency)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/XAITK/xaitk-saliency.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/XAITK/xaitk-saliency/context:python)
 
 # XAITK - Saliency
 The `xaitk-saliency` package is an open source, Explainable AI (XAI) framework
