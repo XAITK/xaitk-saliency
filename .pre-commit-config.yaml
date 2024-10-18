@@ -7,33 +7,25 @@ repos:
     - id: check-added-large-files
 -   repo: local
     hooks:
-      - id: black
-        name: black
-        entry: poetry run black --config pyproject.toml
-        types: [file, python]
-        language: system
       - id: ruff-lint
         name: ruff-lint
-        entry: poetry run ruff check --config pyproject.toml --fix
-        types: [file, python]
+        entry: poetry run ruff check --config pyproject.toml --fix --force-exclude
+        require_serial: true
         language: system
-      - id: ruff-format
-        name: ruff-format
-        entry: poetry run ruff format --config pyproject.toml
-        types: [file, python]
-        language: system
-      - id: mypy
-        name: mypy
-        entry: poetry run mypy --config-file pyproject.toml
-        types: [file, python]
-        language: system
-      - id: flake8
-        name: flake8
-        entry: poetry run pflake8
-        types: [file, python]
-        language: system
+        types_or: [python, pyi, jupyter]
       - id: sphinx-lint
         name: sphinx-lint
         entry: poetry run sphinx-lint --enable all --disable leaked-markup --jobs 1 --max-line-length 120 -i docs/_implementations docs
         types: [rst]
+        language: system
+      - id: ruff-format
+        name: ruff-format
+        entry: poetry run ruff format --config pyproject.toml --force-exclude
+        require_serial: true
+        language: system
+        types_or: [python, pyi, jupyter]
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy --config-file pyproject.toml
+        types: [file, python]
         language: system

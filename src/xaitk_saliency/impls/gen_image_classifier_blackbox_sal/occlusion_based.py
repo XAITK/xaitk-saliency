@@ -38,7 +38,10 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
     """
 
     def __init__(
-        self, perturber: PerturbImage, generator: GenerateClassifierConfidenceSaliency, threads: int = 0
+        self,
+        perturber: PerturbImage,
+        generator: GenerateClassifierConfidenceSaliency,
+        threads: int = 0,
     ) -> None:
         self._perturber = perturber
         self._generator = generator

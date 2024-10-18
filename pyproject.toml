@@ -235,11 +235,12 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
   "S101",  # Allow asserts in tests
+  "SLF001",  # Allow private member access for introspection in tests
   "D100", "D101", "D102", "D103", "D104", "D105", "D107"  # Allow missing docstring in test dir
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["xaitk_jatic"]
+known-first-party = ["xaitk_saliency"]
 
 [tool.ruff.lint.mccabe]
 # Flag errors (`C901`) whenever the complexity level exceeds 5.
