@@ -29,7 +29,8 @@ notebooks:
           "SimilarityScoring.ipynb",
           "SuperPixelSaliency.ipynb",
           "VIAME_OcclusionSaliency.ipynb",
-          "SerializedDetectionSaliency.ipynb",
+          # Shared memory issue on GitLab
+          # "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
