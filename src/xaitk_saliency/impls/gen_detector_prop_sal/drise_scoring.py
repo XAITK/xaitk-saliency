@@ -42,10 +42,14 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         :return: iou(np.array), Shape: [A,B].
         """
         # check input box shape and dimensions
-        assert box_a.ndim == 2
-        assert box_b.ndim == 2
-        assert box_a.shape[1] == 4
-        assert box_b.shape[1] == 4
+        if box_a.ndim != 2:
+            raise ValueError("box_a.ndim should be 2.")
+        if box_b.ndim != 2:
+            raise ValueError("box_b.ndim should be 2.")
+        if box_a.shape[1] != 4:
+            raise ValueError("box_a.shape[1] should be 4.")
+        if box_b.shape[1] != 4:
+            raise ValueError("box_b.shape[1] should be 4.")
 
         x11, y11, x12, y12 = np.split(box_a, 4, axis=1)
         x21, y21, x22, y22 = np.split(box_b, 4, axis=1)
