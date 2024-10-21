@@ -1,21 +1,20 @@
-from click.testing import CliRunner
 import os
-import py  # type: ignore
-import pytest
 import unittest.mock as mock
-
-from tests import DATA_DIR
-
-from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
-
 from importlib.util import find_spec
 
-deps = ['kwcoco']
-specs = [find_spec(dep) for dep in deps]
-is_usable = all([spec is not None for spec in specs])
+import py  # type: ignore
+import pytest
+from click.testing import CliRunner
 
-dets_file = os.path.join(DATA_DIR, 'test_dets.json')
-config_file = os.path.join(DATA_DIR, 'config.json')
+from tests import DATA_DIR
+from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
+
+deps = ["kwcoco"]
+specs = [find_spec(dep) for dep in deps]
+is_usable = all(spec is not None for spec in specs)
+
+dets_file = os.path.join(DATA_DIR, "test_dets.json")
+config_file = os.path.join(DATA_DIR, "config.json")
 
 
 class TestSalOnCocoDetsNotUsable:
@@ -30,7 +29,7 @@ class TestSalOnCocoDetsNotUsable:
         Test that proper warning is displayed when required dependencies are
         not installed.
         """
-        output_dir = tmpdir.join('out')
+        output_dir = tmpdir.join("out")
 
         runner = CliRunner()
 
@@ -52,12 +51,10 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring.
         """
-        output_dir = tmpdir.join('out')
+        output_dir = tmpdir.join("out")
 
         runner = CliRunner()
-        result = runner.invoke(sal_on_coco_dets_cmd,
-                               [str(dets_file), str(output_dir),
-                                str(config_file), "-v"])
+        result = runner.invoke(sal_on_coco_dets_cmd, [str(dets_file), str(output_dir), str(config_file), "-v"])
 
         # expected created directories for image saliency maps
         img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
@@ -75,12 +72,13 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring with the overlay image option.
         """
-        output_dir = tmpdir.join('out')
+        output_dir = tmpdir.join("out")
 
         runner = CliRunner()
-        result = runner.invoke(sal_on_coco_dets_cmd,
-                               [str(dets_file), str(output_dir), str(config_file),
-                                "--overlay-image"])
+        result = runner.invoke(
+            sal_on_coco_dets_cmd,
+            [str(dets_file), str(output_dir), str(config_file), "--overlay-image"],
+        )
 
         # expected created directories for image saliency maps
         img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
@@ -94,17 +92,16 @@ class TestSalOnCocoDets:
             assert sorted(img_dir.listdir()) == sorted(map_files)
 
     def test_config_gen(self, tmpdir: py.path.local) -> None:
-        """
-        Test the generate configuration file option.
-        """
-        output_dir = tmpdir.join('out')
+        """Test the generate configuration file option."""
+        output_dir = tmpdir.join("out")
 
-        output_config = tmpdir.join('gen_conf.json')
+        output_config = tmpdir.join("gen_conf.json")
 
         runner = CliRunner()
-        runner.invoke(sal_on_coco_dets_cmd,
-                      [str(dets_file), str(output_dir), str(config_file),
-                       "-g", str(output_config)])
+        runner.invoke(
+            sal_on_coco_dets_cmd,
+            [str(dets_file), str(output_dir), str(config_file), "-g", str(output_config)],
+        )
 
         # check that config file was created
         assert output_config.check(file=1)

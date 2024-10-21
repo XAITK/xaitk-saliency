@@ -1,23 +1,23 @@
 import gc
-from typing import Dict, Any
 import unittest.mock as mock
+from typing import Any
 
 import numpy as np
 
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 
 
-class StubImpl (GenerateClassifierConfidenceSaliency):
+class StubImpl(GenerateClassifierConfidenceSaliency):
     def generate(  # type: ignore[empty-body]
         self,
         image_conf: np.ndarray,
         perturbed_conf: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """ Stub impl """
+        """Stub impl"""
 
-    def get_config(self) -> Dict[str, Any]:  # type: ignore[empty-body]
-        """ Stub impl """
+    def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
+        """Stub impl"""
 
 
 def teardown_module() -> None:

@@ -1,9 +1,0 @@
-[flake8]
-exclude =
-    __pycache__,
-    .eggs,
-    docs
-
-# While a max length of 79 is encouraged, sometimes going over makes more sense
-# for overall clarity.
-max-line-length = 120

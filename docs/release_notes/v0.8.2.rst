@@ -1,7 +1,7 @@
 v0.8.2
 ======
 
-A quick hotfix to resolve Python 3.12 `numpy` dependencies.
+A quick hotfix to resolve Python 3.12 ``numpy`` dependencies.
 
 Updates / New Features
 ----------------------
@@ -9,4 +9,4 @@ Updates / New Features
 Fixes
 -----
 
-* Added `numpy` pin `^1.26` for Python 3.12.
+* Added ``numpy`` pin ``^1.26`` for Python 3.12.

@@ -1,51 +1,45 @@
-import numpy as np
-from typing import Dict, Any, Iterable, Optional
-import unittest.mock as mock
 import gc
+import unittest.mock as mock
+from collections.abc import Iterable
+from typing import Any, Optional
 
-from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+import numpy as np
 from smqtk_core.configuration import configuration_test_helper
+from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 
-from xaitk_saliency import PerturbImage, GenerateDescriptorSimilaritySaliency
+from xaitk_saliency import GenerateDescriptorSimilaritySaliency, PerturbImage
 from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based import PerturbationOcclusion
 from xaitk_saliency.utils.masking import occlude_image_batch
 
 
 class TestPerturbationOcclusion:
-
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
         # later `*.get_impl()` requests.
         gc.collect()  # pragma: no cover
 
     def test_configuration(self) -> None:
-        """
-        Test configuration suite using stub implementations.
-        """
+        """Test configuration suite using stub implementations."""
 
-        class StubPI (PerturbImage):
+        class StubPI(PerturbImage):
             perturb = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
-                return {'stub_param': self.p}
+            def get_config(self) -> dict[str, Any]:
+                return {"stub_param": self.p}
 
-        class StubGen (GenerateDescriptorSimilaritySaliency):
+        class StubGen(GenerateDescriptorSimilaritySaliency):
             generate = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
-                return {'stub_param': self.p}
+            def get_config(self) -> dict[str, Any]:
+                return {"stub_param": self.p}
 
-        inst = PerturbationOcclusion(
-            StubPI(4),
-            StubGen(8),
-            threads=27
-        )
+        inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == 27
             assert isinstance(inst_i._perturber, StubPI)
@@ -54,23 +48,18 @@ class TestPerturbationOcclusion:
             assert inst_i._generator.p == 8
 
     def test_generate_success(self) -> None:
-        """
-        Test successfully invoking _generate().
-        """
-        class StubPI (PerturbImage):
-            """
-            Stub perturber that returns masks of ones.
-            """
+        """Test successfully invoking _generate()."""
+
+        class StubPI(PerturbImage):
+            """Stub perturber that returns masks of ones."""
 
             def perturb(self, ref_image: np.ndarray) -> np.ndarray:
                 return np.ones((3, *ref_image.shape[:2]), dtype=bool)
 
             get_config = None  # type: ignore
 
-        class StubGen (GenerateDescriptorSimilaritySaliency):
-            """
-            Stub saliency generator that returns zeros with correct shape.
-            """
+        class StubGen(GenerateDescriptorSimilaritySaliency):
+            """Stub saliency generator that returns zeros with correct shape."""
 
             def generate(
                 self,
@@ -83,17 +72,12 @@ class TestPerturbationOcclusion:
 
             get_config = None  # type: ignore
 
-        class StubDescGen (ImageDescriptorGenerator):
-            """
-            Stub image descriptor generator that returns known feature vectors.
-            """
+        class StubDescGen(ImageDescriptorGenerator):
+            """Stub image descriptor generator that returns known feature vectors."""
 
-            def generate_arrays_from_images(
-                self,
-                img_mat_iter: Iterable[Optional[np.ndarray]]
-            ) -> Iterable[np.ndarray]:
+            def generate_arrays_from_images(self, img_mat_iter: Iterable[Optional[np.ndarray]]) -> Iterable[np.ndarray]:
                 for _ in img_mat_iter:
-                    yield np.ones((25))
+                    yield np.ones(25)
 
             get_config = None  # type: ignore
 
@@ -106,15 +90,11 @@ class TestPerturbationOcclusion:
 
         # Call with default fill
         with mock.patch(
-            'xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch',
-            wraps=occlude_image_batch
+            "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
+            wraps=occlude_image_batch,
         ) as m_occ_img:
             inst = PerturbationOcclusion(test_pi, test_gen)
-            test_result = inst._generate(
-                test_ref_img,
-                test_query_imgs,
-                test_desc_gen
-            )
+            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
@@ -123,21 +103,17 @@ class TestPerturbationOcclusion:
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
             assert "fill" in m_kwargs
-            assert m_kwargs['fill'] is None
+            assert m_kwargs["fill"] is None
 
         # test with specified fill
         test_fill = 72
         with mock.patch(
-            'xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch',
-            wraps=occlude_image_batch
+            "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
+            wraps=occlude_image_batch,
         ) as m_occ_img:
             inst = PerturbationOcclusion(test_pi, test_gen)
             inst.fill = test_fill
-            test_result = inst._generate(
-                test_ref_img,
-                test_query_imgs,
-                test_desc_gen
-            )
+            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
@@ -146,4 +122,4 @@ class TestPerturbationOcclusion:
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
             assert "fill" in m_kwargs
-            assert m_kwargs['fill'] == test_fill
+            assert m_kwargs["fill"] == test_fill

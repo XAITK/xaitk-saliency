@@ -1,4 +1,4 @@
-from typing import Iterator, Sequence, Hashable
+from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
 from smqtk_classifier import ClassifyImage
@@ -6,25 +6,21 @@ from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DI
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
 from smqtk_core.configuration import configuration_test_helper
 
+from tests import DATA_DIR
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise import (
     RISEGrid,
     RISEScoring,
     RISEStack,
 )
 
-from tests import DATA_DIR
-
 
 class TestSpecializationRise:
-
     def test_configuration(self) -> None:
-        """
-        Test standard config things.
-        """
+        """Test standard config things."""
         inst = RISEStack(
             n=444,
             s=33,
-            p1=.22,
+            p1=0.22,
             seed=42,
             threads=99,
         )
@@ -35,20 +31,18 @@ class TestSpecializationRise:
             assert isinstance(inst_g, RISEScoring)
             assert inst_p.n == 444
             assert inst_p.s == 33
-            assert np.allclose(inst_p.p1, .22)
+            assert np.allclose(inst_p.p1, 0.22)
             assert inst_p.seed == 42
             assert inst_p.threads == 99
-            assert np.allclose(inst_g.p1, .22)
-            assert inst_i.get_config()['debiased'] is True
+            assert np.allclose(inst_g.p1, 0.22)
+            assert inst_i.get_config()["debiased"] is True
 
     def test_configuration_not_debiased(self) -> None:
-        """
-        Test configuration when debiased is set to False.
-        """
+        """Test configuration when debiased is set to False."""
         inst = RISEStack(
             n=444,
             s=33,
-            p1=.22,
+            p1=0.22,
             seed=42,
             threads=99,
             debiased=False,
@@ -58,16 +52,15 @@ class TestSpecializationRise:
             inst_g = inst_i._po._generator
             assert isinstance(inst_p, RISEGrid)
             assert isinstance(inst_g, RISEScoring)
-            assert np.allclose(inst_p.p1, .22)
+            assert np.allclose(inst_p.p1, 0.22)
             assert np.allclose(inst_g.p1, 0.0)
-            assert inst_i.get_config()['debiased'] is False
+            assert inst_i.get_config()["debiased"] is False
 
     def test_generation_rgb(self) -> None:
-        """
-        Test basic generation functionality with dummy image and blackbox
-        """
+        """Test basic generation functionality with dummy image and blackbox"""
+
         class TestBlackBox(ClassifyImage):
-            """ Dummy blackbox that yields a constant result. """
+            """Dummy blackbox that yields a constant result."""
 
             def get_labels(self) -> Sequence[Hashable]:
                 return [0]

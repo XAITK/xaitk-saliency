@@ -1,26 +1,17 @@
-import numpy as np
-from typing import Iterable, Tuple, Dict, Hashable
+from collections.abc import Hashable, Iterable
 
+import numpy as np
+from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection import DetectImageObjects
 from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
-from smqtk_core.configuration import configuration_test_helper
-
-from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import (
-    RandomGrid,
-    DRISEScoring,
-    RandomGridStack
-)
-
 
 from tests import DATA_DIR
+from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, RandomGrid, RandomGridStack
 
 
 class TestBlackBoxRandomGrid:
-
     def test_configuration(self) -> None:
-        """
-        Test configuration suite.
-        """
+        """Test configuration suite."""
 
         inst = RandomGridStack(
             n=55,
@@ -44,23 +35,20 @@ class TestBlackBoxRandomGrid:
             assert inst_g.get_config() == {}
 
     def test_generation_rgb(self) -> None:
-        """
-        Test basic generation functionality with dummy inputs.
-        """
-        class TestDetector (DetectImageObjects):
-            """
-            Dummy detector that returns consant detections.
-            """
+        """Test basic generation functionality with dummy inputs."""
+
+        class TestDetector(DetectImageObjects):
+            """Dummy detector that returns consant detections."""
 
             def detect_objects(
                 self,
-                img_iter: Iterable[np.ndarray]
-            ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
+                img_iter: Iterable[np.ndarray],
+            ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((2, 2), (10, 15)), {'class0': 0.2, 'class1': 0.8}),
-                        (AxisAlignedBoundingBox((7, 7), (20, 25)), {'class0': 0.7, 'class1': 0.3}),
-                        (AxisAlignedBoundingBox((9, 9), (15, 20)), {'class0': 0.5, 'class1': 0.5}),
+                        (AxisAlignedBoundingBox((2, 2), (10, 15)), {"class0": 0.2, "class1": 0.8}),
+                        (AxisAlignedBoundingBox((7, 7), (20, 25)), {"class0": 0.7, "class1": 0.3}),
+                        (AxisAlignedBoundingBox((9, 9), (15, 20)), {"class0": 0.5, "class1": 0.5}),
                     ]
 
             get_config = None  # type: ignore
@@ -68,28 +56,12 @@ class TestBlackBoxRandomGrid:
         test_det = TestDetector()
         test_image = np.full([32, 32, 3], fill_value=255, dtype=np.uint8)
 
-        test_bboxes = np.array([
-            [6, 5, 12, 19],
-            [17, 18, 31, 22]
-        ])
+        test_bboxes = np.array([[6, 5, 12, 19], [17, 18, 31, 22]])
 
-        test_scores = np.array([
-            [0.9, 0.1],
-            [0.4, 0.6]
-        ])
+        test_scores = np.array([[0.9, 0.1], [0.4, 0.6]])
 
-        inst = RandomGridStack(
-            n=5,
-            s=(2, 8),
-            p1=0.6,
-            seed=42
-        )
-        res = inst.generate(
-            test_image,
-            test_bboxes,
-            test_scores,
-            test_det
-        )
+        inst = RandomGridStack(n=5, s=(2, 8), p1=0.6, seed=42)
+        res = inst.generate(test_image, test_bboxes, test_scores, test_det)
 
         exp_res = np.load(DATA_DIR / "exp_random_grid_stack_res.npy")
         assert np.allclose(exp_res, res)

@@ -30,7 +30,8 @@ Documentation
   use-case where the ``GenerateImageClassifierBlackboxSaliency`` interface API
   is not appropriate, i.e. already have masks computed.
 
-* Added support for doc building on Windows by adding a platform check so that "make.bat" is called for and not "make html".
+* Added support for doc building on Windows by adding a platform check so that
+  ``make.bat`` is called for and not ``make html``.
 
 Interfaces
 
@@ -42,7 +43,7 @@ Interfaces
 * Added support for positive and negative saliency values as output by the
   saliency map generation interfaces.
 
-* Updated ``PerturbImage`` interface to take in `numpy.ndarray` as the image
+* Updated ``PerturbImage`` interface to take in ``numpy.ndarray`` as the image
   data structure.
 
 * Added new, higher-level ``GenerateImageClassifierBlackboxSaliency`` interface
