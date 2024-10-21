@@ -1,4 +1,4 @@
-name: CI Example Notebooks
+name: Notebook Testing
 
 # Controls when the action will run.
 on:

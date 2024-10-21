@@ -34,7 +34,7 @@ jobs:
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
             "",  # no extras
-            "tools",
+            "tools example_deps",
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
@@ -56,25 +56,18 @@ jobs:
           # `pip install --user` is invoked below, so we can be confident that
           # only our python stuff is being captured in this cache (intentional).
           path: |
-            ~/.cache/pypoetry/virtualenvs/
-            ~/.local
+            ~/.cache
           key: python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-${{ matrix.opt-extra }}
           restore-keys: |
             python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
-        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
-        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
-      - name: Optionally install additional requirements
-        env:
-          OPT_EXTRA: ${{ matrix.opt-extra }}
-        run: |
-          if [[ -n "$OPT_EXTRA" ]]
-          then
-            poetry install --extras "$OPT_EXTRA"
-          fi
-      - name: Run Unittests
+        uses: ./.github/actions/test-stage
+      # - name: Synchronize Poetry Environment
+      #   run: poetry install --sync --only main,dev-linting,dev-testing --extras "$OPT_EXTRA"
+        with:
+          extras: "$OPT_EXTRA"
+      - name: Unit Testing
         run: poetry run pytest
-
       - name: CodeCov report submission
         uses: codecov/codecov-action@v4
         with:
