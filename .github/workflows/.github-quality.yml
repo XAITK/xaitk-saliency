@@ -1,0 +1,195 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Linting
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+      - release
+  pull_request:
+    branches:
+      - master
+      - release
+      - update-to-v*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# NOTE: Github actions does not support anchors apparently. Forgive duplication of job
+#       steps.
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Lint with Flake8
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run pflake8
+
+  mypy:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Typecheck with MyPy
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run mypy --config-file pyproject.toml src/ tests/
+
+  black:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Lint with Black
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run black --check --config pyproject.toml src/ tests/ examples/
+
+  ruff-lint:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Lint with Ruff
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run ruff check --config pyproject.toml
+
+  ruff-format:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Format check with Ruff
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run ruff format --config pyproject.toml --check
+
+  sphinx-lint:
+    runs-on: ubuntu-latest
+    container: python:3.9
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          # Confirmed that the `.local` directory doesn't exist until the
+          # `pip install --user` is invoked below, so we can be confident that
+          # only our python stuff is being captured in this cache (intentional).
+          path: |
+            ~/.cache/pypoetry/virtualenvs/
+            ~/.local
+          key: python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        # See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#example-using-a-public-action-in-a-subdirectory
+        uses: Kitware/SMQTK-Core/.github/actions/python-poetry-setup@master
+      - name: Lint docs with Spinx-lint
+        run: |
+          poetry install --sync --only main,dev-linting,dev-testing
+          poetry run sphinx-lint --enable all --disable leaked-markup --max-line-length 120 -i docs/_implementations docs
