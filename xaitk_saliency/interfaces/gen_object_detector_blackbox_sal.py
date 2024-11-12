@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import abc
 from typing import Optional
@@ -6,6 +8,7 @@ from smqtk_core import Plugfigurable
 from smqtk_detection import DetectImageObjects
 
 from xaitk_saliency.exceptions import ShapeMismatchError
+logger = logging.getLogger(__name__)
 
 
 class GenerateObjectDetectorBlackboxSaliency (Plugfigurable):
@@ -143,6 +146,10 @@ class GenerateObjectDetectorBlackboxSaliency (Plugfigurable):
             blackbox,
             objectness,
         )
+
+        if len(output) == 0:
+            logging.info("No detections found for image. Check DetectImageObjects and saliency configuation")
+            return output
 
         # Check that the saliency heatmaps' shape matches the reference image.
         if output.shape[1:] != ref_image.shape[:2]:
