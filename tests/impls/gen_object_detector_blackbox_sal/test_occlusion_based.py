@@ -12,6 +12,10 @@ from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based impor
 from xaitk_saliency.utils.masking import occlude_image_batch
 
 
+def _perturb(ref_image: np.ndarray) -> np.ndarray:
+    return np.ones((6, *ref_image.shape[:2]), dtype=bool)
+
+
 class TestPerturbationOcclusion:
 
     def teardown(self) -> None:
@@ -62,70 +66,40 @@ class TestPerturbationOcclusion:
         Test successfully invoking _generate().
         """
 
-        class StubPI (PerturbImage):
-            """
-            Stub perturber that returns masks of ones.
-            """
-
-            def perturb(self, ref_image: np.ndarray) -> np.ndarray:
-                return np.ones((6, *ref_image.shape[:2]), dtype=bool)
-
-            get_config = None  # type: ignore
-
-        class StubGen (GenerateDetectorProposalSaliency):
-            """
-            Stub saliency generator that returns zeros with correct shape.
-            """
-
-            def generate(
-                self,
-                ref_dets: np.ndarray,
-                pert_dets: np.ndarray,
-                pert_masks: np.ndarray
-            ) -> np.ndarray:
-                return np.zeros((ref_dets.shape[0], *pert_masks.shape[1:]), dtype=np.float16)
-
-            get_config = None  # type: ignore
-
-        class StubDetector (DetectImageObjects):
-            """
-            Stub object detector that returns known detections.
-            """
-
-            def detect_objects(
-                self,
-                img_iter: Iterable[np.ndarray]
-            ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
-                for i, _ in enumerate(img_iter):
-                    # Return different number of detections for each image to
-                    # test padding functinality
-                    yield [(
-                        AxisAlignedBoundingBox((0, 0), (1, 1)),
-                        {'class0': 0.0, 'class1': 0.9}
-                    ) for _ in range(i)]
-
-            get_config = None  # type: ignore
-
-        test_pi = StubPI()
-        test_gen = StubGen()
-        test_detector = StubDetector()
+        def detect_objects(
+            img_iter: Iterable[np.ndarray]
+        ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
+            for i, _ in enumerate(img_iter):
+                # Return different number of detections for each image to
+                # test padding functinality
+                yield [(
+                    AxisAlignedBoundingBox((0, 0), (1, 1)),
+                    {'class0': 0.0, 'class1': 0.9}
+                ) for _ in range(i)]
 
         test_image = np.ones((64, 64, 3), dtype=np.uint8)
 
         test_bboxes = np.ones((3, 4))
         test_scores = np.ones((3, 2))
 
+        m_perturb = mock.Mock(spec=PerturbImage)
+        m_perturb.return_value = _perturb(test_image)
+        m_gen = mock.Mock(spec=GenerateDetectorProposalSaliency)
+        m_gen.return_value = np.zeros((3, 64, 64))
+        m_detector = mock.Mock(spec=DetectImageObjects)
+        m_detector.detect_objects = detect_objects
+
         # Call with default fill
         with mock.patch(
             'xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch',
             wraps=occlude_image_batch
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst = PerturbationOcclusion(m_perturb, m_gen)
             test_result = inst._generate(
                 test_image,
                 test_bboxes,
                 test_scores,
-                test_detector
+                m_detector,
             )
 
             assert test_result.shape == (3, 64, 64)
@@ -143,13 +117,13 @@ class TestPerturbationOcclusion:
             'xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch',
             wraps=occlude_image_batch
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst = PerturbationOcclusion(m_perturb, m_gen)
             inst.fill = test_fill
             test_result = inst._generate(
                 test_image,
                 test_bboxes,
                 test_scores,
-                test_detector
+                m_detector,
             )
 
             assert test_result.shape == (3, 64, 64)
@@ -160,3 +134,40 @@ class TestPerturbationOcclusion:
             m_kwargs = m_occ_img.call_args[-1]
             assert "fill" in m_kwargs
             assert m_kwargs['fill'] == test_fill
+
+    def test_empty_detections(self) -> None:
+        """
+        Test invoking _generate() with empty detections.
+        """
+
+        def detect_objects(
+            img_iter: Iterable[np.ndarray]
+        ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
+            for i, _ in enumerate(img_iter):
+                # Return 0 detections for each image
+                yield []
+
+        m_detector = mock.Mock(spec=DetectImageObjects)
+        m_detector.detect_objects = detect_objects
+
+        test_image = np.ones((64, 64, 3), dtype=np.uint8)
+
+        test_bboxes = np.ones((3, 4))
+        test_scores = np.ones((3, 2))
+
+        m_perturb = mock.Mock(spec=PerturbImage)
+        m_perturb.return_value = _perturb(test_image)
+        m_gen = mock.Mock(spec=GenerateDetectorProposalSaliency)
+        m_gen.return_value = np.zeros((3, 64, 64))
+        m_detector = mock.Mock(spec=DetectImageObjects)
+        m_detector.detect_objects = detect_objects
+
+        inst = PerturbationOcclusion(m_perturb, m_gen)
+        test_result = inst._generate(
+            test_image,
+            test_bboxes,
+            test_scores,
+            m_detector,
+        )
+
+        assert len(test_result) == 0
