@@ -301,3 +301,38 @@ def test_call_alias() -> None:
         None  # no objectness passed
     )
     assert test_ret == expected_return
+
+
+def test_return_empty_map() -> None:
+    """
+    Test that an empty array of maps is returned properly
+    """
+    m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
+    m_detector = mock.Mock(spec=DetectImageObjects)
+
+    # test reference detections inputs with matching lengths
+    test_bboxes = np.ones((5, 4), dtype=float)
+    test_scores = np.ones((5, 3), dtype=float)
+
+    # 2-channel image as just HxW should work
+    test_image = np.ones((256, 256), dtype=np.uint8)
+
+    expected_return = np.array([])
+    m_impl._generate.return_value = expected_return
+
+    test_ret = GenerateObjectDetectorBlackboxSaliency.generate(
+        m_impl,
+        test_image,
+        test_bboxes,
+        test_scores,
+        m_detector,
+    )
+
+    m_impl._generate.assert_called_with(
+        test_image,
+        test_bboxes,
+        test_scores,
+        m_detector,
+        None  # no objectness passed
+    )
+    assert len(test_ret) == 0

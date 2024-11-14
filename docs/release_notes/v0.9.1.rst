@@ -1,0 +1,20 @@
+v0.9.1
+======
+
+Fixed a bug where if no detections were found in an image, then the generator would fail.
+
+Updates / New Features
+----------------------
+
+Documentation
+
+* Removed a deprecated badge from the README.
+
+Implementations
+
+* Added a check to exit early if no detections were found in `PerturbationOcclusion`
+
+* Added a check to exit early if no saliency maps were generated in `GenerateObjectDetectorBlackboxSaliency`
+
+Fixes
+-----

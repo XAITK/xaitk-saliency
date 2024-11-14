@@ -75,6 +75,9 @@ class PerturbationOcclusion (GenerateObjectDetectorBlackboxSaliency):
 
         pert_dets_mat = _dets_to_formatted_mat(pert_dets)
 
+        if pert_dets_mat.shape[1] == 0:
+            return np.array([])
+
         return self._generator(
             ref_dets_mat,
             pert_dets_mat,

@@ -17,3 +17,4 @@ Release Notes
    release_notes/v0.8.2
    release_notes/v0.8.3
    release_notes/v0.9.0
+   release_notes/v0.9.1
