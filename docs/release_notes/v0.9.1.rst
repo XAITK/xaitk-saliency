@@ -1,6 +1,8 @@
 v0.9.1
 ======
 
+Fixed a bug where if no detections were found in an image, then the generator would fail.
+
 Updates / New Features
 ----------------------
 
