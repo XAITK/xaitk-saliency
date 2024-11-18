@@ -1,0 +1,12 @@
+v0.9.2
+======
+
+This is a quick hotfix to remove a pinned version of ``tqdm``.
+
+Updates / New Features
+----------------------
+
+Fixes
+-----
+
+* Removed an accidental ``tqdm`` pin and put it as a lower-bound.
