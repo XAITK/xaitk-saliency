@@ -1,0 +1,10 @@
+name: "quality-stage"
+description: "Setup user python environment with poetry and enable caching."
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment
+      uses: ./.github/actions/build-stage
+    - name: Synchronize Poetry Environment
+      run: poetry install --sync --only main,linting,tests
+      shell: bash

@@ -1,0 +1,135 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Unit Testing
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+      - release
+  pull_request:
+    branches:
+      - master
+      - release
+      - update-to-v*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# NOTE: Github actions does not support anchors apparently. Forgive duplication of job
+#       steps.
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9","3.10","3.11","3.12"]
+        # Extras for included, optional plugin support (space-separated lists)
+        opt-extra: [
+            "",  # no extras
+            "tools",
+        ]
+      # We want all python versions tested even if one of them happens to fail
+      fail-fast: false
+
+    container: python:${{ matrix.python-version }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v4
+        id: env-cache
+        with:
+          path: |
+            ~/.cache
+          key: python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-${{ matrix.opt-extra }}
+          restore-keys: |
+            python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        uses: ./.github/actions/test-stage
+        with:
+          extras: "${{ matrix.opt-extra }}"
+      - name: Unit Testing
+        run: poetry run pytest
+      - name: CodeCov report submission
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: coverage.xml
+          flags: unittests
+  notebooks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        notebook-file: [
+            "atari_deepRL_saliency.ipynb",
+            "DRISE.ipynb",
+            "MNIST_scikit_saliency.ipynb",
+            "OcclusionSaliency.ipynb",
+            "Radial_Image_Perturbation.ipynb",
+            "SimilarityScoring.ipynb",
+            "SuperPixelSaliency.ipynb",
+            "VIAME_OcclusionSaliency.ipynb",
+            "SerializedDetectionSaliency.ipynb",
+            # Model comparison example is excluded due to computational complexity
+            #"ModelComparisonWithSaliency.ipynb",
+        ]
+      # We want all python versions tested even if one of them happens to fail
+      fail-fast: false
+
+    # Just one python version, using our base supported version.
+    container:
+      image: python:3.9
+      options: "--shm-size 2GB"
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      # Cache local python environment artifacts for the current python version
+      # and poetry lockfile hash.
+      - uses: actions/cache@v2
+        id: env-cache
+        with:
+          path: |
+            ~/.cache
+          # Using a different key due to additional things the notebook
+          # examples ad-hoc install.
+          key: python-3.9-${{ hashFiles('poetry.lock') }}-Examples
+          restore-keys: |
+            python-3.9-${{ hashFiles('poetry.lock') }}
+      - name: Setup Environment
+        uses: ./.github/actions/test-stage
+        with:
+          extras: "tools example_deps"
+      - uses: actions/cache@v2
+        id: notebook-data-cache
+        with:
+          path: |
+            ~/.cache/
+            examples/data/
+          key: python-3.9-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
+          # pretty unique, no restore-keys.
+      - name: Run Notebook
+        run: |
+          cd examples
+          poetry run papermill \
+            --progress-bar \
+            -k python3 \
+            --stdout-file - --stderr-file - \
+            "${{ matrix.notebook-file }}" /dev/null

@@ -1,0 +1,37 @@
+name: "build-stage"
+description: "Setup user python environment with poetry and enable caching."
+runs:
+  using: "composite"
+  steps:
+    - name: Install Git LFS
+      run: |
+        apt-get -qq update
+        apt-get -qq install -y git-lfs
+      shell: bash
+    - name: Environment Variables
+      run: |
+        export PIP_CACHE_DIR="$GITHUB_WORKSPACE/.cache/pip"
+        export POETRY_CACHE_DIR="$GITHUB_WORKSPACE/.cache/poetry"
+        echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      shell: bash
+    - name: Setup Poetry
+      run: |
+        pip install --root-user-action=ignore --upgrade pip -q
+        pip install --root-user-action=ignore --user -U poetry -q
+      shell: bash
+    - name: Configure Poetry
+      run: |
+        poetry config --local virtualenvs.in-project true
+        poetry config --local virtualenvs.prefer-active-python true
+      shell: bash
+    - name: Versions of things used here
+      run: |
+        python --version
+        poetry -q run python --version
+        pip --version
+        poetry --version
+        poetry check
+      shell: bash
+    - name: Install Environment
+      run: poetry install --sync --only main,linting,tests,docs
+      shell: bash

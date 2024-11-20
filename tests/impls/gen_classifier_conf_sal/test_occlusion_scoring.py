@@ -3,19 +3,17 @@ import os
 import numpy as np
 import pytest
 
-from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
-from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from tests import DATA_DIR, EXPECTED_MASKS_4x6
+from xaitk_saliency import GenerateClassifierConfidenceSaliency
+from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 
 
 class TestOcclusionScoring:
-
     def test_init_(self) -> None:
-        """
-        Test if implementation is usable.
-        """
+        """Test if implementation is usable."""
         impl = OcclusionScoring()
-        assert impl.is_usable() and isinstance(impl, GenerateClassifierConfidenceSaliency)
+        assert impl.is_usable()
+        assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
         """
@@ -29,8 +27,7 @@ class TestOcclusionScoring:
         impl = OcclusionScoring()
         with pytest.raises(
             ValueError,
-            match=r"Number of classes in original image and perturbed image "
-                  r"do not match"
+            match=r"Number of classes in original image and perturbed image do not match",
         ):
             impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
 
@@ -48,47 +45,40 @@ class TestOcclusionScoring:
         impl = OcclusionScoring()
         with pytest.raises(
             ValueError,
-            match=r"Number of perturbation masks and respective "
-                  r"confidence lengths do not match"
+            match=r"Number of perturbation masks and respective confidence lengths do not match",
         ):
             impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
 
     def test_1class_scores(self) -> None:
-        """
-        Test basic scoring with a single class for broadcasting sanity check.
-        """
+        """Test basic scoring with a single class for broadcasting sanity check."""
         impl = OcclusionScoring()
         rng = np.random.default_rng(2)
         # Three Perturbation masks of height and width 10px for 1 class
-        image_confs_1_class_ = rng.standard_normal((1))
+        image_confs_1_class_ = rng.standard_normal(1)
         pertb_confs_1_class_ = rng.standard_normal((3, 1))
-        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype='int')
+        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype="int")
 
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
         assert sal.shape == (1, 10, 10)
 
     def test_standard_1class_scores(self) -> None:
-        """
-        Test basic scoring on known values and non-square masks.
-        """
+        """Test basic scoring on known values and non-square masks."""
         impl = OcclusionScoring()
         # Three Perturbation masks of size 4 x 6 for 1 class
         image_confs_1_class_ = np.array([0.6])
         pertb_confs_1_class_ = np.array([[0.3], [0.65], [0.12], [0.18], [0.36], [0.42]])
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, EXPECTED_MASKS_4x6)
-        standard_sal = np.load(os.path.join(DATA_DIR, 'OccScorSal.npy'))
+        standard_sal = np.load(os.path.join(DATA_DIR, "OccScorSal.npy"))
         assert sal.shape == (1, 4, 6)
         assert np.allclose(standard_sal, sal)
 
     def test_20class_scores(self) -> None:
-        """
-        Test scoring for 20 classes.
-        """
+        """Test scoring for 20 classes."""
         impl = OcclusionScoring()
         rng = np.random.default_rng(2)
         # Three Perturbation masks of height and width 10px for 20 classes
-        image_confs_1_class_ = rng.standard_normal((20))
+        image_confs_1_class_ = rng.standard_normal(20)
         pertb_confs_1_class_ = rng.standard_normal((3, 20))
-        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype='int')
+        mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype="int")
         sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
         assert sal.shape == (20, 10, 10)

@@ -1,0 +1,37 @@
+###############################################################################
+# Stage -- Unit Testing
+###############################################################################
+#
+# Overrides:
+#
+# 1) Installed "tools" and "example_deps" extras
+# 2) xaitk-saliency specific notebooks.
+#
+###############################################################################
+
+.test-setup:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    - poetry install --sync --only main,tests --extras "tools example_deps"
+
+notebooks:
+  tags:
+    - single-gpu
+  parallel:
+    matrix:
+      # Sequences combinatorically combine within a list entry
+      - NOTEBOOK_DIR: "examples"
+        NOTEBOOK_FILE: [
+          "atari_deepRL_saliency.ipynb",
+          "DRISE.ipynb",
+          "MNIST_scikit_saliency.ipynb",
+          "OcclusionSaliency.ipynb",
+          "Radial_Image_Perturbation.ipynb",
+          "SimilarityScoring.ipynb",
+          "SuperPixelSaliency.ipynb",
+          "VIAME_OcclusionSaliency.ipynb",
+          # # Shared memory issue on GitLab
+          # "SerializedDetectionSaliency.ipynb",
+          # Model comparison example is excluded due to computational complexity
+          #"ModelComparisonWithSaliency.ipynb",
+        ]

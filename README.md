@@ -2,11 +2,14 @@
 
 <hr/>
 
+<!-- :auto badges: -->
 [![PyPI - Python Version](https://img.shields.io/pypi/v/xaitk-saliency)](https://pypi.org/project/xaitk-saliency/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/xaitk-saliency)
 [![Documentation Status](https://readthedocs.org/projects/xaitk-saliency/badge/?version=latest)](https://xaitk-saliency.readthedocs.io/en/latest/?badge=latest)
-[![badge-unittests](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-unittests.yml)
-[![badge-notebooks](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-example-notebooks.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-example-notebooks.yml)
+<!-- :auto badges: -->
+<!-- TODO: re-enable these later. -->
+<!-- [![badge-unittests](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-unittests.yml)
+[![badge-notebooks](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-example-notebooks.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-example-notebooks.yml) -->
 [![codecov](https://codecov.io/gh/XAITK/xaitk-saliency/branch/master/graph/badge.svg?token=VHRNXYCNCG)](https://codecov.io/gh/XAITK/xaitk-saliency)
 
 # XAITK - Saliency
@@ -36,44 +39,65 @@ https://en.wikipedia.org/wiki/Strategy_pattern) and [Adapter](
 https://en.wikipedia.org/wiki/Adapter_pattern) patterns to allow for
 modular integration into systems and applications.
 
+<!-- :auto installation: -->
 ## Installation
-Install the latest release via pip:
+Ensure the source tree is acquired locally before proceeding.
+
+To install the current version via `pip`:
 ```bash
 pip install xaitk-saliency
 ```
 
-Some plugins may require additional dependencies in order to be utilized at
-runtime.
-Such details are described [here](
-https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
+Alternatively, you can use [Poetry](https://python-poetry.org/):
+```bash
+poetry install
+```
 
-See [here for more installation documentation](
-https://xaitk-saliency.readthedocs.io/en/latest/installation.html).
+Certain plugins may require additional runtime dependencies. Details on these requirements can be found [here](https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
 
+For more detailed installation instructions, visit the [installation documentation](https://xaitk-saliency.readthedocs.io/en/latest/installation.html).
+<!-- :auto installation: -->
+
+<!-- :auto getting-started: -->
 ## Getting Started
-We provide a number of examples based on Jupyter notebooks in the `./examples/`
-directory to show usage of the `xaitk-saliency` package in a number of
-different contexts.
+Explore usage examples of the `xaitk-saliency` package in various contexts using the Jupyter notebooks provided in the `./examples/` directory.
 
-Contributions are welcome!
-See the [CONTRIBUTING.md](./CONTRIBUTING.md) file for details.
+Contributions are encouraged! For more details, refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) file.
+<!-- :auto getting-started: -->
 
+<!-- :auto documentation: -->
 ## Documentation
-Documentation snapshots for releases as well as the latest master are hosted on
-[ReadTheDocs](https://xaitk-saliency.readthedocs.io/en/latest/).
+Documentation for both release snapshots and the latest master branch is available on [ReadTheDocs](https://xaitk-saliency.readthedocs.io/en/latest/).
 
-The sphinx-based documentation may also be built locally for the most
-up-to-date reference:
+To build the Sphinx-based documentation locally for the latest reference:
 ```bash
 # Install dependencies
-poetry install
-# Navigate to the documentation root.
+poetry install --sync --with linting,tests,docs
+# Navigate to the documentation root
 cd docs
-# Build the docs.
+# Build the documentation
 poetry run make html
-# Open in your favorite browser!
+# Open the generated documentation in your browser
 firefox _build/html/index.html
 ```
+<!-- :auto documentation: -->
+
+<!-- :auto developer-tools: -->
+## Developer Tools
+
+### Pre-commit Hooks
+Pre-commit hooks ensure that code complies with required linting and formatting guidelines. These hooks run automatically before commits but can also be executed manually. To bypass checks during a commit, use the `--no-verify` flag.
+
+To install and use pre-commit hooks:
+```bash
+# Install required dependencies
+poetry install --sync --with linting,tests,docs
+# Initialize pre-commit hooks for the repository
+poetry run pre-commit install
+# Run pre-commit checks on all files
+poetry run pre-commit run --all-files
+```
+<!-- :auto developer-tools: -->
 
 ## XAITK Saliency Demonstration Tool
 This [associated project](https://github.com/XAITK/xaitk-saliency-web-demo)
@@ -91,3 +115,19 @@ This tool uses the [trame framework](https://kitware.github.io/trame/).
 [image2]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-classification-sliding-window.jpg
 [image3]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-detection-retina.jpg
 [image4]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-similarity-1.jpg
+
+<!-- :auto license: -->
+## License
+[Apache 2.0](./LICENSE)
+<!-- :auto license: -->
+
+All development prior to Nov 19, 2024 falls under [BSD-3-Clause](./LICENSE.old)
+
+<!-- :auto contacts: -->
+## Contacts
+
+**Principal Investigator**: Brian Hu (Kitware) @brian.hu
+**Product Owner**: Austin Whitesell (MITRE) @awhitesell
+**Scrum Master / Tech Lead**: Brandon RichardWebster (Kitware) @b.richardwebster
+**Deputy Tech Lead**: Emily Veenhuis (Kitware) @emily.veenhuis
+<!-- :auto contacts: -->

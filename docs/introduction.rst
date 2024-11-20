@@ -2,7 +2,7 @@ Introduction
 ============
 
 The xaitk-saliency package implements a class of XAI algorithms known
-as `saliency algorithms`. A basic machine learning application pipeline is shown in Figure 1:
+as ``saliency algorithms``. A basic machine learning application pipeline is shown in Figure 1:
 
 .. figure:: figures/intro-fig-01.png
 
@@ -22,10 +22,10 @@ the AI. Figure 3 shows sample saliency maps for text and images.
 
 .. figure:: figures/intro-fig-03.png
 
-   Figure 3: Sample saliency maps for text (left, from `Tuckey et al.
-   <https://arxiv.org/abs/1907.05664>`_) and images (right, from `Dong et
-   al. <https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content
-   -Based_Image_Retrieval_CVPRW_2019_paper.html>`_).
+   Figure 3: Sample saliency maps for text (left, from [Tuckey et al.]
+   (https://arxiv.org/abs/1907.05664)) and images (right, from [Dong et
+   al.](https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content
+   -Based_Image_Retrieval_CVPRW_2019_paper.html)).
 
 .. note:: The xaitk-saliency toolkit currently focuses on providing saliency
           maps for images.
@@ -269,7 +269,8 @@ In general, pros and cons of black-box approaches are:
 Pros
 """"
 
-* A black-box XAI **does not depend on the AI method, only the inputs and outputs**. (It is said to be *model-agnostic*.) In Figure 7,
+* A black-box XAI **does not depend on the AI method, only the inputs and outputs**.
+  (It is said to be *model-agnostic*.) In Figure 7,
   the AI (in yellow) can be anything: a CNN, a decision tree, or
   random number generator. This independence is the primary appeal of
   black-box methods, and has several implications:
@@ -308,7 +309,8 @@ Saliency Algorithms
 The xaitk-saliency package currently provides several black-box XAI algorithms.
 These algorithms follow a general pattern that consists of two sequential steps: **image perturbation** followed by
 **heatmap generation**.
-**Image perturbation** involves generating perturbed versions of the input image by applying a set of perturbation masks.
+**Image perturbation** involves generating perturbed versions of the input image by applying a set of perturbation
+masks.
 **Heatmap generation** involves generating saliency heatmaps based on how the black-box model outputs change as a result
 of image perturbation.
 This technical design choice allows for modularization of the image perturbation and heatmap generation
@@ -337,8 +339,13 @@ The saliency algorithms can also be organized according to their respective task
      - :ref:`Perturbation-based Saliency <Class: SquaredDifferenceScoring>` [5]
 
 
-1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
-2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.
-3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. In CVPR Workshops 2019 Jun (pp. 95-98).
-4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
-5. Greydanus S, Koul A, Dodge J, Fern A. Visualizing and understanding atari agents. In International conference on machine learning 2018 Jul 3 (pp. 1792-1801). PMLR.
+1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint
+arXiv:1311.2901. 2013.
+2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv
+preprint arXiv:1806.07421. 2018 Jun 19.
+3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. In CVPR Workshops 2019
+Jun (pp. 95-98).
+4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of
+object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
+5. Greydanus S, Koul A, Dodge J, Fern A. Visualizing and understanding atari agents. In International
+conference on machine learning 2018 Jul 3 (pp. 1792-1801). PMLR.

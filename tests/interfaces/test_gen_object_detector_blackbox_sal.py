@@ -1,17 +1,15 @@
 import unittest.mock as mock
+
 import numpy as np
 import pytest
-
 from smqtk_detection import DetectImageObjects
 
-from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
 from xaitk_saliency.exceptions import ShapeMismatchError
+from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
 
 
 def test_generate_checks_success() -> None:
-    """
-    Tests successful passage though the wrapper method.
-    """
+    """Tests successful passage though the wrapper method."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
     # mock implementation result, number of maps should match number of input detections
     m_impl._generate.return_value = np.empty((5, 256, 256))
@@ -33,13 +31,7 @@ def test_generate_checks_success() -> None:
         m_detector,
     )
 
-    m_impl._generate.assert_called_with(
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        None  # no objectness passed
-    )
+    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, None)  # no objectness passed
 
     # multi-channel image shoudl work with whatever channel dim size
     test_image = np.ones((256, 256, 7), dtype=np.uint8)
@@ -51,13 +43,7 @@ def test_generate_checks_success() -> None:
         m_detector,
     )
 
-    m_impl._generate.assert_called_with(
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        None  # no objectness passed
-    )
+    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, None)  # no objectness passed
 
     # With objectness
     GenerateObjectDetectorBlackboxSaliency.generate(
@@ -66,22 +52,14 @@ def test_generate_checks_success() -> None:
         test_bboxes,
         test_scores,
         m_detector,
-        test_objectness
+        test_objectness,
     )
 
-    m_impl._generate.assert_called_with(
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        test_objectness
-    )
+    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, test_objectness)
 
 
 def test_generate_checks_image_shape() -> None:
-    """
-    Test that the input image shape conforms to our assumption.
-    """
+    """Test that the input image shape conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
 
     m_detector = mock.Mock(spec=DetectImageObjects)
@@ -91,10 +69,7 @@ def test_generate_checks_image_shape() -> None:
 
     # a single vector is not considered an image
     test_image = np.ones((256,), dtype=np.uint8)
-    with pytest.raises(
-        ValueError,
-        match=r"^Input image matrix has an unexpected number of dimensions: 1$"
-    ):
+    with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 1$"):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
             test_image,
@@ -105,10 +80,7 @@ def test_generate_checks_image_shape() -> None:
 
     # image with more than 3 dimenstions
     test_image = np.ones((256, 256, 3, 2), dtype=np.uint8)
-    with pytest.raises(
-        ValueError,
-        match=r"^Input image matrix has an unexpected number of dimensions: 4$"
-    ):
+    with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 4$"):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
             test_image,
@@ -119,9 +91,7 @@ def test_generate_checks_image_shape() -> None:
 
 
 def test_generate_checks_detection_inputs_length() -> None:
-    """
-    Test that the reference detection inputs must all have the same length.
-    """
+    """Test that the reference detection inputs must all have the same length."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
     m_detector = mock.Mock(spec=DetectImageObjects)
 
@@ -132,16 +102,9 @@ def test_generate_checks_detection_inputs_length() -> None:
     test_scores = np.ones((5, 3), dtype=float)
     with pytest.raises(
         ValueError,
-        match=r"^Number of input bounding boxes and scores do not match: "
-              r"\(bboxes\) 4 != 5 \(scores\)$"
+        match=r"^Number of input bounding boxes and scores do not match: \(bboxes\) 4 != 5 \(scores\)$",
     ):
-        GenerateObjectDetectorBlackboxSaliency.generate(
-            m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
-            m_detector
-        )
+        GenerateObjectDetectorBlackboxSaliency.generate(m_impl, test_image, test_bboxes, test_scores, m_detector)
 
     # Mismatched number of bboxes and scores, with objectness
     test_bboxes = np.ones((5, 4), dtype=float)
@@ -150,8 +113,8 @@ def test_generate_checks_detection_inputs_length() -> None:
     with pytest.raises(
         ValueError,
         match=r"^Number of input bounding boxes, scores, and objectness "
-              r"scores do not match: \(bboxes\) 5 != 4 \(scores\) and/or "
-              r"\(bboxes\) 5 != 5 \(objectness\)$"
+        r"scores do not match: \(bboxes\) 5 != 4 \(scores\) and/or "
+        r"\(bboxes\) 5 != 5 \(objectness\)$",
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
@@ -159,7 +122,7 @@ def test_generate_checks_detection_inputs_length() -> None:
             test_bboxes,
             test_scores,
             m_detector,
-            test_objectness
+            test_objectness,
         )
 
     # Different number of objectness scores
@@ -169,8 +132,8 @@ def test_generate_checks_detection_inputs_length() -> None:
     with pytest.raises(
         ValueError,
         match=r"^Number of input bounding boxes, scores, and objectness "
-              r"scores do not match: \(bboxes\) 5 != 5 \(scores\) and/or "
-              r"\(bboxes\) 5 != 4 \(objectness\)$"
+        r"scores do not match: \(bboxes\) 5 != 5 \(scores\) and/or "
+        r"\(bboxes\) 5 != 4 \(objectness\)$",
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
@@ -178,14 +141,12 @@ def test_generate_checks_detection_inputs_length() -> None:
             test_bboxes,
             test_scores,
             m_detector,
-            test_objectness
+            test_objectness,
         )
 
 
 def test_generate_checks_bboxes_width() -> None:
-    """
-    Test that the input bounding boxes must have a width of 4.
-    """
+    """Test that the input bounding boxes must have a width of 4."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
 
     m_detector = mock.Mock(spec=DetectImageObjects)
@@ -194,10 +155,7 @@ def test_generate_checks_bboxes_width() -> None:
     test_scores = np.ones((2, 3), dtype=float)
 
     test_image = np.ones((256, 256), dtype=np.uint8)
-    with pytest.raises(
-        ValueError,
-        match=r"^Input bounding boxes matrix has width of 3, should have width of 4$"
-    ):
+    with pytest.raises(ValueError, match=r"^Input bounding boxes matrix has width of 3, should have width of 4$"):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
             test_image,
@@ -226,8 +184,8 @@ def test_generate_checks_output_shape_mismatch() -> None:
     with pytest.raises(
         ShapeMismatchError,
         match=r"^Output saliency heatmaps did not have matching height and "
-              r"width shape components: \(ref\) \(256, 256\) != \(128, 128\) "
-              r"\(output\)$"
+        r"width shape components: \(ref\) \(256, 256\) != \(128, 128\) "
+        r"\(output\)$",
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
@@ -260,7 +218,7 @@ def test_generate_checks_output_quantity_mismatch() -> None:
     with pytest.raises(
         ShapeMismatchError,
         match=r"^Quantity of output heatmaps does not match the quantity of "
-              r"input reference detections: \(input\) 3 != 2 \(output\)$"
+        r"input reference detections: \(input\) 3 != 2 \(output\)$",
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
@@ -272,9 +230,7 @@ def test_generate_checks_output_quantity_mismatch() -> None:
 
 
 def test_call_alias() -> None:
-    """
-    Test that __call__ is just an alias to the generate method.
-    """
+    """Test that __call__ is just an alias to the generate method."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
     m_img = mock.Mock(spec=np.ndarray)
     m_detector = mock.Mock(spec=DetectImageObjects)
@@ -282,7 +238,7 @@ def test_call_alias() -> None:
     test_bboxes = np.ones((3, 4), dtype=float)
     test_scores = np.ones((3, 3), dtype=float)
 
-    expected_return = 'test return'
+    expected_return = "test return"
     m_impl.generate.return_value = expected_return
 
     test_ret = GenerateObjectDetectorBlackboxSaliency.__call__(
@@ -293,13 +249,7 @@ def test_call_alias() -> None:
         m_detector,
     )
 
-    m_impl.generate.assert_called_once_with(
-        m_img,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        None  # no objectness passed
-    )
+    m_impl.generate.assert_called_once_with(m_img, test_bboxes, test_scores, m_detector, None)  # no objectness passed
     assert test_ret == expected_return
 
 
@@ -333,6 +283,6 @@ def test_return_empty_map() -> None:
         test_bboxes,
         test_scores,
         m_detector,
-        None  # no objectness passed
+        None,  # no objectness passed
     )
     assert len(test_ret) == 0
