@@ -3,11 +3,6 @@ description: "Setup user python environment with poetry and enable caching."
 runs:
   using: "composite"
   steps:
-    - name: Install Git LFS
-      run: |
-        apt-get -qq update
-        apt-get -qq install -y git-lfs
-      shell: bash
     - name: Environment Variables
       run: |
         export PIP_CACHE_DIR="$GITHUB_WORKSPACE/.cache/pip"

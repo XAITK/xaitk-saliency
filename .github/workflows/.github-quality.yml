@@ -30,10 +30,16 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.9
     steps:
+      - name: Install Git LFS
+        run: |
+          apt-get -qq update
+          apt-get -qq install -y git-lfs
+        shell: bash
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
       - uses: actions/cache@v4
@@ -54,10 +60,16 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.9
     steps:
+      - name: Install Git LFS
+        run: |
+          apt-get -qq update
+          apt-get -qq install -y git-lfs
+        shell: bash
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
       - uses: actions/cache@v4
@@ -78,10 +90,16 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.9
     steps:
+      - name: Install Git LFS
+        run: |
+          apt-get -qq update
+          apt-get -qq install -y git-lfs
+        shell: bash
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
       - uses: actions/cache@v4
@@ -102,10 +120,16 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.9
     steps:
+      - name: Install Git LFS
+        run: |
+          apt-get -qq update
+          apt-get -qq install -y git-lfs
+        shell: bash
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
       - uses: actions/cache@v4
