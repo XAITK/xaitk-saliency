@@ -1,25 +1,20 @@
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 
+from tests import EXPECTED_MASKS_4x6
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
-from tests import EXPECTED_MASKS_4x6
 
 
 class TestOcclusionBasedPerturb:
-
     def test_init_default(self) -> None:
-        """
-        Test empty construction since we provide defaults.
-        """
+        """Test empty construction since we provide defaults."""
         impl = SlidingWindow()
         assert impl.window_size == (50, 50)
         assert impl.stride == (20, 20)
 
     def test_init_valued(self) -> None:
-        """
-        Test that constructor values pass.
-        """
+        """Test that constructor values pass."""
         ex_w = (777, 776)
         ex_s = (444, 445)
         impl = SlidingWindow(window_size=ex_w, stride=ex_s)
@@ -53,10 +48,7 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_4x6
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
 
     def test_perturb_3channel(self) -> None:
         """
@@ -70,10 +62,7 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_4x6
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
 
     def test_perturb_3channel_nonsquare(self) -> None:
         """
@@ -88,10 +77,7 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(3, 2), stride=(3, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_6x6_rect
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_6x6_rect)
 
     def test_perturb_4channel(self) -> None:
         """
@@ -105,10 +91,7 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_4x6
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
 
     def test_window_size_agnostic(self) -> None:
         """
@@ -127,41 +110,56 @@ class TestOcclusionBasedPerturb:
 
 
 # Common expected masks for 6x6 tests
-EXPECTED_MASKS_6x6_rect = np.array([
-    [[0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1],
-     [0, 0, 1, 1, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1],
-     [1, 1, 0, 0, 1, 1]],
-    [[1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 1, 1],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0],
-     [1, 1, 1, 1, 0, 0]],
-], dtype=bool)
+EXPECTED_MASKS_6x6_rect = np.array(
+    [
+        [
+            [0, 0, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+        ],
+        [
+            [1, 1, 0, 0, 1, 1],
+            [1, 1, 0, 0, 1, 1],
+            [1, 1, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+        ],
+        [
+            [1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+        ],
+        [
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 1],
+            [0, 0, 1, 1, 1, 1],
+        ],
+        [
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 0, 0, 1, 1],
+            [1, 1, 0, 0, 1, 1],
+            [1, 1, 0, 0, 1, 1],
+        ],
+        [
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 0, 0],
+        ],
+    ],
+    dtype=bool,
+)

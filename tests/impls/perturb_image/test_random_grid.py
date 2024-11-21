@@ -1,5 +1,4 @@
 import numpy as np
-
 from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency.impls.perturb_image.random_grid import RandomGrid
@@ -7,9 +6,7 @@ from xaitk_saliency.impls.perturb_image.random_grid import RandomGrid
 
 class TestRandomGrid:
     def test_init_valued(self) -> None:
-        """
-        Test that constructor values pass.
-        """
+        """Test that constructor values pass."""
 
         test_n = 837
         test_s = (34, 12)
@@ -26,9 +23,7 @@ class TestRandomGrid:
         assert impl.threads == test_threads
 
     def test_standard_config(self) -> None:
-        """
-        Test values in implementation config.
-        """
+        """Test values in implementation config."""
 
         test_n = 123
         test_s = (55, 44)
@@ -46,9 +41,7 @@ class TestRandomGrid:
             assert inst.threads == test_threads
 
     def test_if_random(self) -> None:
-        """
-        Test that the perturbations are randomized.
-        """
+        """Test that the perturbations are randomized."""
 
         impl1 = RandomGrid(n=3, s=(5, 4), p1=0.5)
         impl2 = RandomGrid(n=3, s=(5, 4), p1=0.5)
@@ -62,9 +55,7 @@ class TestRandomGrid:
         assert not np.array_equal(masks1, masks2)
 
     def test_seed(self) -> None:
-        """
-        Test that using a seed generates the same masks.
-        """
+        """Test that using a seed generates the same masks."""
 
         impl1 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
         impl2 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
@@ -104,10 +95,7 @@ class TestRandomGrid:
 
         masks = impl(img)
 
-        assert np.allclose(
-            masks,
-            EXPECTED_MASKS_4X6
-        )
+        assert np.allclose(masks, EXPECTED_MASKS_4X6)
 
     def test_perturb_3_channel(self) -> None:
         """
@@ -121,10 +109,7 @@ class TestRandomGrid:
 
         masks = impl(img)
 
-        assert np.allclose(
-            masks,
-            EXPECTED_MASKS_4X6
-        )
+        assert np.allclose(masks, EXPECTED_MASKS_4X6)
 
     def test_multiple_image_size(self) -> None:
         """
@@ -147,9 +132,7 @@ class TestRandomGrid:
         assert masks_large.shape[1:] == img_large.shape
 
     def test_threading(self) -> None:
-        """
-        Test that using threading does not affect results.
-        """
+        """Test that using threading does not affect results."""
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
 
@@ -157,23 +140,23 @@ class TestRandomGrid:
 
         masks = impl(img)
 
-        assert np.allclose(
-            masks,
-            EXPECTED_MASKS_4X6
-        )
+        assert np.allclose(masks, EXPECTED_MASKS_4X6)
 
 
-EXPECTED_MASKS_4X6 = np.array([
+EXPECTED_MASKS_4X6 = np.array(
     [
-        [0.3750, 0.3750, 0.6250, 0.7500, 0.7500, 0.8125],
-        [0.6250, 0.6250, 0.3750, 0.2500, 0.2500, 0.4375],
-        [0.5625, 0.5625, 0.1875, 0.0000, 0.0000, 0.2500],
-        [0.1875, 0.1875, 0.0625, 0.0000, 0.0000, 0.2500]
+        [
+            [0.3750, 0.3750, 0.6250, 0.7500, 0.7500, 0.8125],
+            [0.6250, 0.6250, 0.3750, 0.2500, 0.2500, 0.4375],
+            [0.5625, 0.5625, 0.1875, 0.0000, 0.0000, 0.2500],
+            [0.1875, 0.1875, 0.0625, 0.0000, 0.0000, 0.2500],
+        ],
+        [
+            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
+            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
+            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
+            [0.4375, 0.8125, 0.8125, 0.4375, 0.1875, 0.0625],
+        ],
     ],
-
-    [
-        [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-        [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-        [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-        [0.4375, 0.8125, 0.8125, 0.4375, 0.1875, 0.0625]
-    ]], dtype=np.float32)
+    dtype=np.float32,
+)

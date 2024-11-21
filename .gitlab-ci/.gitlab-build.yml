@@ -1,0 +1,13 @@
+###############################################################################
+# Stage -- Build
+###############################################################################
+#
+# Overrides:
+#
+# 1) Installed "tools" and "example_deps" extras
+#
+###############################################################################
+
+build:cache:
+  script:
+    - poetry install --sync --only main,linting,tests,docs --extras "tools example_deps"

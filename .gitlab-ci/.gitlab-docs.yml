@@ -1,0 +1,14 @@
+###############################################################################
+# Stage -- Documentation
+###############################################################################
+#
+# Overrides:
+#
+# 1) Installed "tools" and "example_deps" extras
+#
+###############################################################################
+.docs-setup:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    - poetry install --sync --only main,docs,tests --extras "tools example_deps"
+    - !reference [.needs-headless-opencv, before_script]
