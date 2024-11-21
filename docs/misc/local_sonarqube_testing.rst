@@ -11,7 +11,7 @@ needed to run the server ("Docker Host Requirements" section).
 As part of the setup of the repository/project you will need to create a token
 for running scans with.
 The below assumes that you have saved this locally somewhere for reference,
-like the example file `~/sonarqube-local-token`.
+like the example file ``~/sonarqube-local-token``.
 
 From the above you will learn that you will need to run the ``sonar-scanner``
 separately from running the local server.
