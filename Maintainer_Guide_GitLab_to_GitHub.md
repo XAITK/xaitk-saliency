@@ -1,8 +1,7 @@
 
 # Maintainer Workflow: Synchronizing GitLab and GitHub Repositories
 
-This guide is intended for maintainers of both the GitLab and GitHub repositories. The GitHub repository (`master`) serves as the **primary** codebase, while the GitLab repository (`origin`) is the **secondary** repository. However, due to JATIC program requirements, primary development must occur on GitLab. This process provides a workaround to ensure that GitHub (`master`) remains the primary codebase while complying with development requirements on GitLab.
-
+This guide is intended for maintainers of both the GitLab and GitHub repositories. The GitHub repository (`<remote>`) serves as the **primary** codebase, while the GitLab repository (`origin`) is the **secondary** repository. However, due to JATIC program requirements, primary development must occur on GitLab. This process provides a workaround to ensure that GitHub (`<remote>`) remains the primary codebase while complying with development requirements on GitLab.
 
 ## Steps
 
@@ -13,10 +12,10 @@ This guide is intended for maintainers of both the GitLab and GitHub repositorie
    ```
    > This step only needs to be done once.
 
-2. **Add Upstream Remote**
-   Add the GitHub repository as an upstream remote named `master`:
+2. **Add Upstream Remote Repository**
+   Add the GitHub repository as an upstream remote repository named `<remote>`:
    ```bash
-   git remote add master git@github.com:XAITK/xaitk-saliency.git
+   git remote add <remote> git@github.com:XAITK/xaitk-saliency.git
    ```
    > This step only needs to be done once.
 
@@ -28,23 +27,23 @@ This guide is intended for maintainers of both the GitLab and GitHub repositorie
    git pull origin main
    ```
 
-4. **Push to Master Remote**
-   Push your `main` branch to the `master` remote:
+4. **Push to <Remote> Remote Repository**
+   Push your `main` branch to the `<remote>` remote:
    ```bash
-   git push master main
+   git push <remote> main
    ```
 
 5. **Create a Pull Request**
-   Open a pull request from `main` to the target branch on the `master` remote.
+   Open a pull request from `main` to the target branch on the `<remote>` remote repository.
 
 6. **Follow Contribution Guidelines**
    Refer to [CONTRIBUTING.md](CONTRIBUTING.md) for details on pull request code reviews and merging.
 
 7. **Mirror Updates to Origin**
-   Ensure `origin/master` mirrors `master/master`.
+   Ensure `origin/master` mirrors `<remote>/master`.
    > This process happens automatically but may take a few minutes to reflect changes.
 
-8. **Update Local Master**
+8. **Update Local Master Branch**
    Sync your local `master` branch with `origin/master`:
    ```bash
    git fetch origin
@@ -59,7 +58,7 @@ This guide is intended for maintainers of both the GitLab and GitHub repositorie
    ```
 
 10. **Rebase Master onto Main**
-    Rebase `master` onto `main`:
+    Rebase `<remote>` onto `main`:
     ```bash
     git rebase master
     ```
