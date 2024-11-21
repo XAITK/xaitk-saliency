@@ -1,36 +1,24 @@
-import numpy as np
-from typing import Iterable, Optional
 import gc
+from collections.abc import Iterable
+from typing import Optional
 
-from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+import numpy as np
 from smqtk_core.configuration import configuration_test_helper
-
-from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import (
-    SBSMStack,
-    SlidingWindow,
-    SimilarityScoring
-)
+from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 
 from tests import DATA_DIR
+from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import SBSMStack, SimilarityScoring, SlidingWindow
 
 
 class TestBlackBoxSBSM:
-
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
         # later `*.get_impl()` requests.
         gc.collect()  # pragma: no cover
 
     def test_configuration(self) -> None:
-        """
-        Test configuration suite.
-        """
-        inst = SBSMStack(
-            window_size=(10, 7),
-            stride=(9, 3),
-            proximity_metric='rogerstanimoto',
-            threads=15
-        )
+        """Test configuration suite."""
+        inst = SBSMStack(window_size=(10, 7), stride=(9, 3), proximity_metric="rogerstanimoto", threads=15)
 
         for inst_i in configuration_test_helper(inst):
             inst_p = inst_i._po._perturber
@@ -40,22 +28,16 @@ class TestBlackBoxSBSM:
             assert isinstance(inst_g, SimilarityScoring)
             assert inst_p.window_size == (10, 7)
             assert inst_p.stride == (9, 3)
-            assert inst_g.proximity_metric == 'rogerstanimoto'
+            assert inst_g.proximity_metric == "rogerstanimoto"
             assert inst_i._po._threads == 15
 
     def test_generation_rgb(self) -> None:
-        """
-        Test basic generation functionality with dummy inputs.
-        """
-        class TestDescriptorGenerator (ImageDescriptorGenerator):
-            """
-            Dummy descriptor generator that returns known feature vectors.
-            """
+        """Test basic generation functionality with dummy inputs."""
 
-            def generate_arrays_from_images(
-                self,
-                img_mat_iter: Iterable[Optional[np.ndarray]]
-            ) -> Iterable[np.ndarray]:
+        class TestDescriptorGenerator(ImageDescriptorGenerator):
+            """Dummy descriptor generator that returns known feature vectors."""
+
+            def generate_arrays_from_images(self, img_mat_iter: Iterable[Optional[np.ndarray]]) -> Iterable[np.ndarray]:
                 # return repeatable random feature vectors
                 rng = np.random.default_rng(0)
                 for _ in img_mat_iter:
@@ -67,17 +49,9 @@ class TestBlackBoxSBSM:
         test_ref_img = np.full((25, 32, 3), fill_value=255, dtype=np.uint8)
         test_query_imgs = [np.full((27, 28), fill_value=255, dtype=np.uint8)] * 2
 
-        inst = SBSMStack(
-            window_size=(4, 5),
-            stride=(2, 3),
-            proximity_metric='euclidean'
-        )
+        inst = SBSMStack(window_size=(4, 5), stride=(2, 3), proximity_metric="euclidean")
 
-        sal_maps = inst.generate(
-            test_ref_img,
-            test_query_imgs,
-            test_desc_gen
-        )
+        sal_maps = inst.generate(test_ref_img, test_query_imgs, test_desc_gen)
 
         assert sal_maps.shape == (2, 25, 32)
 

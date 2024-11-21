@@ -1,0 +1,17 @@
+name: "test-stage"
+description: "Setup user python environment with poetry and enable caching."
+
+inputs:
+  extras:
+    description: "Parameterize the 'extras' required for testing"
+    required: true
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment
+      uses: ./.github/actions/build-stage
+    - name: Synchronize Poetry Environment
+      run: poetry install --sync --only main,linting,tests --extras "${{ inputs.extras }}"
+      shell: bash

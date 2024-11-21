@@ -1,13 +1,14 @@
-import numpy as np
-from typing import Iterable, Tuple, Dict, Any, Hashable
-import unittest.mock as mock
 import gc
+import unittest.mock as mock
+from collections.abc import Hashable, Iterable
+from typing import Any, Dict, Tuple
 
+import numpy as np
+from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection import DetectImageObjects
 from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
-from smqtk_core.configuration import configuration_test_helper
 
-from xaitk_saliency import PerturbImage, GenerateDetectorProposalSaliency
+from xaitk_saliency import GenerateDetectorProposalSaliency, PerturbImage
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based import PerturbationOcclusion
 from xaitk_saliency.utils.masking import occlude_image_batch
 
@@ -17,43 +18,36 @@ def _perturb(ref_image: np.ndarray) -> np.ndarray:
 
 
 class TestPerturbationOcclusion:
-
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
         # later `*.get_impl()` requests.
         gc.collect()  # pragma: no cover
 
     def test_configuration(self) -> None:
-        """
-        Test configuration suite using known simple implementations.
-        """
+        """Test configuration suite using known simple implementations."""
 
-        class StubPI (PerturbImage):
+        class StubPI(PerturbImage):
             perturb = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
-                return {'stub_param': self.p}
+            def get_config(self) -> dict[str, Any]:
+                return {"stub_param": self.p}
 
-        class StubGen (GenerateDetectorProposalSaliency):
+        class StubGen(GenerateDetectorProposalSaliency):
             generate = None  # type: ignore
 
-            def __init__(self, stub_param: int):
+            def __init__(self, stub_param: int) -> None:
                 self.p = stub_param
 
-            def get_config(self) -> Dict[str, Any]:
-                return {'stub_param': self.p}
+            def get_config(self) -> dict[str, Any]:
+                return {"stub_param": self.p}
 
         test_threads = 87
         test_spi_p = 0
         test_sgn_p = 1
-        inst = PerturbationOcclusion(
-            StubPI(test_spi_p),
-            StubGen(test_sgn_p),
-            threads=87
-        )
+        inst = PerturbationOcclusion(StubPI(test_spi_p), StubGen(test_sgn_p), threads=87)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == test_threads
             assert isinstance(inst_i._perturber, StubPI)
@@ -62,20 +56,21 @@ class TestPerturbationOcclusion:
             assert inst_i._generator.p == test_sgn_p
 
     def test_generate_success(self) -> None:
-        """
-        Test successfully invoking _generate().
-        """
+        """Test successfully invoking _generate()."""
 
         def detect_objects(
-            img_iter: Iterable[np.ndarray]
+            img_iter: Iterable[np.ndarray],
         ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
             for i, _ in enumerate(img_iter):
                 # Return different number of detections for each image to
                 # test padding functinality
-                yield [(
-                    AxisAlignedBoundingBox((0, 0), (1, 1)),
-                    {'class0': 0.0, 'class1': 0.9}
-                ) for _ in range(i)]
+                yield [
+                    (
+                        AxisAlignedBoundingBox((0, 0), (1, 1)),
+                        {"class0": 0.0, "class1": 0.9},
+                    )
+                    for _ in range(i)
+                ]
 
         test_image = np.ones((64, 64, 3), dtype=np.uint8)
 
@@ -91,8 +86,8 @@ class TestPerturbationOcclusion:
 
         # Call with default fill
         with mock.patch(
-            'xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch',
-            wraps=occlude_image_batch
+            "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch",
+            wraps=occlude_image_batch,
         ) as m_occ_img:
             inst = PerturbationOcclusion(m_perturb, m_gen)
             test_result = inst._generate(
@@ -109,13 +104,13 @@ class TestPerturbationOcclusion:
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
             assert "fill" in m_kwargs
-            assert m_kwargs['fill'] is None
+            assert m_kwargs["fill"] is None
 
         # Call with a specified fill value
         test_fill = [123, 21, 42]
         with mock.patch(
-            'xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch',
-            wraps=occlude_image_batch
+            "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch",
+            wraps=occlude_image_batch,
         ) as m_occ_img:
             inst = PerturbationOcclusion(m_perturb, m_gen)
             inst.fill = test_fill
@@ -133,7 +128,7 @@ class TestPerturbationOcclusion:
             # Using [-1] indexing for compatibility with python 3.7
             m_kwargs = m_occ_img.call_args[-1]
             assert "fill" in m_kwargs
-            assert m_kwargs['fill'] == test_fill
+            assert m_kwargs["fill"] == test_fill
 
     def test_empty_detections(self) -> None:
         """
@@ -141,7 +136,7 @@ class TestPerturbationOcclusion:
         """
 
         def detect_objects(
-            img_iter: Iterable[np.ndarray]
+            img_iter: Iterable[np.ndarray],
         ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
             for i, _ in enumerate(img_iter):
                 # Return 0 detections for each image
