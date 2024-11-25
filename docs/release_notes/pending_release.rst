@@ -8,6 +8,8 @@ Code
 
 * Updated hundreds of typing and linting needs.
 
+* Added MC-RISE classification saliency algorithm.
+
 Documentation
 
 * Removed a deprecated badge from the README.

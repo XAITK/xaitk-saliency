@@ -14,6 +14,11 @@ trade-offs, or results implications.
 Image Perturbation
 ------------------
 
+Class: MCRISEGrid
+---------------
+.. autoclass:: xaitk_saliency.impls.perturb_image.mc_rise.MCRISEGrid
+  :members:
+
 Class: RandomGrid
 -----------------
 .. autoclass:: xaitk_saliency.impls.perturb_image.random_grid.RandomGrid
@@ -43,6 +48,11 @@ Class: DRISEScoring
 .. autoclass:: xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring.DRISEScoring
   :members:
 
+Class: MCRISEScoring
+------------------
+.. autoclass:: xaitk_saliency.impls.gen_classifier_conf_sal.mc_rise_scoring.MCRISEScoring
+  :members:
+
 Class: OcclusionScoring
 -----------------------
 .. autoclass:: xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring.OcclusionScoring
@@ -69,6 +79,11 @@ End-to-End Saliency Generation
 
 Image Classification
 --------------------
+
+Class: MCRISEStack
+~~~~~~~~~~~~~~~~
+.. autoclass:: xaitk_saliency.impls.gen_image_classifier_blackbox_sal.mc_rise.MCRISEStack
+  :members:
 
 Class: PerturbationOcclusion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
