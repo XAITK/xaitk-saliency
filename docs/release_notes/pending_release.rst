@@ -14,6 +14,9 @@ Documentation
 
 * Updated linting for documents.
 
+* Added ``Maintainer_Guide_GitLab_to_GitHub.md`` to provide detailed guidelines.
+  for synchronizing GitHub and GitLab repositories.
+
 Dependencies
 
 * Updated the minimum supported ``scipy`` to address vulnerability.
