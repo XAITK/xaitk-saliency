@@ -12,7 +12,7 @@ class CustomFloatSnapshotExtension(AmberSnapshotExtension):
         snapshot = "\n".join(line for line in snapshot.splitlines() if not line.strip().startswith("#"))
 
         # Extract array strings using regex
-        array_pattern = r"array\((\[.*?\])\)"
+        array_pattern = r"array\((\[[^\]]*\])\)"
         matches = re.findall(array_pattern, snapshot, flags=re.S)
 
         # Parse each array string into a NumPy array
