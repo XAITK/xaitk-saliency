@@ -1,6 +1,9 @@
 v0.10.0
 =======
 
+Massive overhaul to improve typing and linting to support the CDAO JATIC program,
+as well as adding a new saliency algorithm called ``MC-RISE`` to the repertoire.
+
 Updates / New Features
 ----------------------
 
