@@ -1,3 +1,16 @@
+"""
+Module for generating visual saliency heatmaps from image classifiers.
+
+This module provides the `GenerateImageClassifierBlackboxSaliency` class, which is used to generate per-class visual
+saliency heatmaps for an image classifier black-box. The saliency maps indicate which regions of the image are most
+influential in the classifier's decision-making process for each class label.
+
+The `GenerateImageClassifierBlackboxSaliency` class takes a reference image and a classifier that implements the
+`smqtk_classifier.ClassifyImage` interface, and outputs saliency heatmaps for each predicted class. These heatmaps are
+used to interpret the classifier's behavior, by showing how different parts of the image contribute to the classifier's
+confidence in each class.
+"""
+
 import abc
 
 import numpy as np
@@ -64,11 +77,11 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
             raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
         output = self._generate(ref_image, blackbox)
         # Check that the saliency heatmaps' shape matches the reference image.
-        if output.shape[1:] != ref_image.shape[:2]:
+        if output.shape[-2:] != ref_image.shape[:2]:
             raise ShapeMismatchError(
                 f"Output saliency heatmaps did not have matching height and "
                 f"width shape components: "
-                f"(ref) {ref_image.shape[:2]} != {output.shape[1:]} (output)",
+                f"(ref) {ref_image.shape[:2]} != {output.shape[-2:]} (output)",
             )
         return output
 
