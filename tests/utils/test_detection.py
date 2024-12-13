@@ -5,7 +5,6 @@ from xaitk_saliency.utils.detection import format_detection
 
 
 class TestFormatDetection:
-
     def test_default_objectness_fill(self) -> None:
         """
         Test that when objectness scores are not provided the expected default
@@ -20,13 +19,11 @@ class TestFormatDetection:
         assert set(combined_mat[:, 4]) == {1}
 
     def test_explicit_objectness(self) -> None:
-        """
-        Test that input objectness vector is represented in the output.
-        """
+        """Test that input objectness vector is represented in the output."""
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
-        test_obj_v = np.tile([.1, .2, .3, .4], 4)
+        test_obj_v = np.tile([0.1, 0.2, 0.3, 0.4], 4)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
         # that the output objectness column is equivalent to the input.
         assert np.allclose(combined_mat[:, 4], test_obj_v)
@@ -39,7 +36,7 @@ class TestFormatDetection:
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
-        test_obj_v = np.tile([.1, .2, .3, .4], 4).reshape(16, 1)
+        test_obj_v = np.tile([0.1, 0.2, 0.3, 0.4], 4).reshape(16, 1)
         combined_mat = format_detection(test_bbox_mat, test_class_mat, test_obj_v)
         # Test that the output objectness column is equivalent to the input.
         # NOTE: "close" is sensitive to shape, so (16,) is not equal to (16,1)
@@ -48,17 +45,16 @@ class TestFormatDetection:
         assert np.allclose(combined_mat[:, 4], test_obj_v.reshape(16))
 
     def test_input_nonimpact(self) -> None:
-        """
-        Test that the invocation of the function does not change the input.
-        """
+        """Test that the invocation of the function does not change the input."""
+
         def gen_fresh_bbox() -> np.ndarray:
             return np.tile([1, 2, 3, 4], 16).reshape(16, 4)
 
         def gen_fresh_clss() -> np.ndarray:
-            return np.tile([.5, .6, .7, .8, .9, .0], 16).reshape(16, 6)
+            return np.tile([0.5, 0.6, 0.7, 0.8, 0.9, 0.0], 16).reshape(16, 6)
 
         def gen_fresh_objness() -> np.ndarray:
-            return np.tile([.1, .3, .5, .7], 4)
+            return np.tile([0.1, 0.3, 0.5, 0.7], 4)
 
         test_bbox_mat = gen_fresh_bbox()
         test_class_mat = gen_fresh_clss()
@@ -81,8 +77,7 @@ class TestFormatDetection:
         test_class_mat = rng.standard_normal((14, 8))
         with pytest.raises(
             ValueError,
-            match=r"along dimension 0, the array at index 0 has size 16 and "
-                  r"the array at index 2 has size 14"
+            match=r"along dimension 0, the array at index 0 has size 16 and the array at index 2 has size 14",
         ):
             format_detection(test_bbox_mat, test_class_mat)
 
@@ -94,24 +89,23 @@ class TestFormatDetection:
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
-        test_objnes_v = rng.standard_normal((11))
+        test_objnes_v = rng.standard_normal(11)
         with pytest.raises(
             ValueError,
-            match=r"along dimension 0, the array at index 0 has size 16 and "
-                  r"the array at index 1 has size 11"
+            match=r"along dimension 0, the array at index 0 has size 16 and the array at index 1 has size 11",
         ):
             format_detection(test_bbox_mat, test_class_mat, test_objnes_v)
 
     @pytest.mark.parametrize(
-        "bbox_type,clf_type,expected_type",
-        [[np.float32, np.float32, np.float32],
-         [np.float32, np.uint8, np.float32],
-         [np.uint8, np.float16, np.float16],
-         [np.uint8, np.uint8, np.uint8]]
+        ("bbox_type", "clf_type", "expected_type"),
+        [
+            (np.float32, np.float32, np.float32),
+            (np.float32, np.uint8, np.float32),
+            (np.uint8, np.float16, np.float16),
+            (np.uint8, np.uint8, np.uint8),
+        ],
     )
-    def test_against_type_upcasting(
-        self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype
-    ) -> None:
+    def test_against_type_upcasting(self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype) -> None:
         """
         Test that the output is not of a type that is larger than is input.
         E.g. when input is float32, output is *not* float64, but still float32.
@@ -123,16 +117,21 @@ class TestFormatDetection:
         assert output.dtype == expected_type
 
     @pytest.mark.parametrize(
-        "bbox_type,clf_type,obj_type,expected_type",
-        [[np.float32, np.float32, np.float32, np.float32],
-         [np.float32, np.uint8, np.uint8, np.float32],
-         [np.uint8, np.float16, np.float16, np.float16],
-         [np.uint8, np.uint8, np.float16, np.float16],
-         [np.uint8, np.uint8, np.uint8, np.uint8]]
+        ("bbox_type", "clf_type", "obj_type", "expected_type"),
+        [
+            (np.float32, np.float32, np.float32, np.float32),
+            (np.float32, np.uint8, np.uint8, np.float32),
+            (np.uint8, np.float16, np.float16, np.float16),
+            (np.uint8, np.uint8, np.float16, np.float16),
+            (np.uint8, np.uint8, np.uint8, np.uint8),
+        ],
     )
     def test_against_type_upcasting_obj(
-        self, bbox_type: np.dtype, clf_type: np.dtype, obj_type: np.dtype,
-        expected_type: np.dtype
+        self,
+        bbox_type: np.dtype,
+        clf_type: np.dtype,
+        obj_type: np.dtype,
+        expected_type: np.dtype,
     ) -> None:
         """
         Same as ``test_against_type_upcasting`` but including the objectness

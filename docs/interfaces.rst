@@ -12,15 +12,17 @@ We explicitly do not require an abstraction for the black-box operations to fit 
 This is intended to allow for applications using these interfaces while leveraging existing functionality, which only
 need to perform data formatting to fit the input defined here.
 Note, however, that some interfaces are defined for certain black-box concepts as part of the SMQTK ecosystem (e.g.
-in `SMQTK-Descriptors <https://github.com/Kitware/SMQTK-Descriptors>`_, `SMQTK-Classifier <https://github
-.com/Kitware/SMQTK-Classifier>`_, `SMQTK-Relevancy <https://github.com/Kitware/SMQTK-Relevancy>`_, and other SMQTK-*
-modules).
+in [SMQTK-Descriptors](https://github.com/Kitware/SMQTK-Descriptors), [SMQTK-Classifier](https://github
+.com/Kitware/SMQTK-Classifier), [SMQTK-Relevancy](https://github.com/Kitware/SMQTK-Relevancy), and other ``SMQTK-*
+modules``).
 
 
-These interfaces are based on the plugin and configuration features provided by `SMQTK-Core <https://github.com/Kitware/SMQTK-Core>`_, to allow convenient hooks
+These interfaces are based on the plugin and configuration features provided by
+[SMQTK-Core](https://github.com/Kitware/SMQTK-Core), to allow convenient hooks
 into implementation, discoverability, and factory generation from runtime configuration.
-This allows for both opaque discovery of interface implementations from a class-method on the interface class object,
-as well as instantiation of a concrete instance via a JSON-like configuration fed in from an outside resource.
+This allows for both opaque discovery of interface implementations from a class-method on
+the interface class object, as well as instantiation of a concrete instance via a JSON-like
+configuration fed in from an outside resource.
 
 .. figure:: figures/api-docs-fig-01.png
 
@@ -195,7 +197,11 @@ For Jupyter Notebook examples of xaitk-saliency interfaces, see the :file:`examp
 References
 ----------
 
-1. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops 2019 Jun (pp. 95-98).
-2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv preprint arXiv:1806.07421. 2018 Jun 19.
-3. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint arXiv:1311.2901. 2013.
-4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
+1. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. InCVPR Workshops
+2019 Jun (pp. 95-98).
+2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models.
+arXiv preprint arXiv:1806.07421. 2018 Jun 19.
+3. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint
+arXiv:1311.2901. 2013.
+4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation
+of object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.

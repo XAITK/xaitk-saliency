@@ -1,5 +1,5 @@
-import pytest
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency.impls.perturb_image.rise import RISEGrid
@@ -7,9 +7,7 @@ from xaitk_saliency.impls.perturb_image.rise import RISEGrid
 
 class TestRISEPerturbation:
     def test_init_valued(self) -> None:
-        """
-        Test that constructor values pass.
-        """
+        """Test that constructor values pass."""
         ex_n = 1000
         ex_s = 8
         ex_p1 = 0.5
@@ -19,19 +17,11 @@ class TestRISEPerturbation:
         assert np.allclose(impl.p1, ex_p1)
 
     def test_init_outofrange_p1(self) -> None:
-        """
-        Test catching an out of range p1 value.
-        """
-        with pytest.raises(
-            ValueError,
-            match=r"Input p1 value of -0\.3 is not within the expected \[0,1\] range\."
-        ):
+        """Test catching an out of range p1 value."""
+        with pytest.raises(ValueError, match=r"Input p1 value of -0\.3 is not within the expected \[0,1\] range\."):
             RISEGrid(10, 8, p1=-0.3)
 
-        with pytest.raises(
-            ValueError,
-            match=r"Input p1 value of 5 is not within the expected \[0,1\] range\."
-        ):
+        with pytest.raises(ValueError, match=r"Input p1 value of 5 is not within the expected \[0,1\] range\."):
             RISEGrid(10, 8, p1=5)
 
     def test_standard_config(self) -> None:
@@ -45,17 +35,13 @@ class TestRISEPerturbation:
             assert np.allclose(inst.p1, ex_p1)
 
     def test_if_random(self) -> None:
-        """
-        Test that the perturbations are randomized
-        """
+        """Test that the perturbations are randomized"""
         impl1 = RISEGrid(n=1000, s=8, p1=0.5)
         impl2 = RISEGrid(n=1000, s=8, p1=0.5)
         assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
-        """
-        Test that passing a seed generates equivalent masks
-        """
+        """Test that passing a seed generates equivalent masks"""
         impl1 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         impl2 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
@@ -73,10 +59,7 @@ class TestRISEPerturbation:
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_4x6
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
 
     def test_call_idempotency(self) -> None:
         """
@@ -112,10 +95,7 @@ class TestRISEPerturbation:
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(
-            actual_masks,
-            EXPECTED_MASKS_4x6
-        )
+        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
 
     def test_multiple_image_sizes(self) -> None:
         """
@@ -136,17 +116,20 @@ class TestRISEPerturbation:
 
 # Common expected masks for 4x6 tests
 # These assume seed=42, serial generation with threads=0
-EXPECTED_MASKS_4x6 = np.array([
+EXPECTED_MASKS_4x6 = np.array(
     [
-        [0.03703703, 0.18518518, 0.33333330, 0.48148150, 0.62962960, 0.55555546],
-        [0.05555555, 0.27777780, 0.50000000, 0.72222227, 0.94444450, 0.83333325],
-        [0.03703703, 0.18518520, 0.33333330, 0.48148150, 0.62962970, 0.55555550],
-        [0.01851852, 0.09259260, 0.16666669, 0.24074079, 0.31481487, 0.27777780]
+        [
+            [0.03703703, 0.18518518, 0.33333330, 0.48148150, 0.62962960, 0.55555546],
+            [0.05555555, 0.27777780, 0.50000000, 0.72222227, 0.94444450, 0.83333325],
+            [0.03703703, 0.18518520, 0.33333330, 0.48148150, 0.62962970, 0.55555550],
+            [0.01851852, 0.09259260, 0.16666669, 0.24074079, 0.31481487, 0.27777780],
+        ],
+        [
+            [0.83333330, 0.94444440, 0.72222220, 0.50000000, 0.27777773, 0.05555552],
+            [0.55555550, 0.62962960, 0.48148146, 0.33333330, 0.18518515, 0.03703701],
+            [0.27777780, 0.31481487, 0.24074076, 0.16666669, 0.09259259, 0.01851851],
+            [0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000],
+        ],
     ],
-    [
-        [0.83333330, 0.94444440, 0.72222220, 0.50000000, 0.27777773, 0.05555552],
-        [0.55555550, 0.62962960, 0.48148146, 0.33333330, 0.18518515, 0.03703701],
-        [0.27777780, 0.31481487, 0.24074076, 0.16666669, 0.09259259, 0.01851851],
-        [0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000]
-    ]
-], dtype=np.float32)
+    dtype=np.float32,
+)

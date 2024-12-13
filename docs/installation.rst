@@ -3,8 +3,9 @@ Installation
 
 There are two ways to obtain the xaitk-saliency package.
 The simplest is to install via the :command:`pip` command.
-Alternatively, the source tree can be acquired and be locally developed using
-`Poetry`_ (`installation`_ and `usage`_).
+Alternatively, you can use `Poetry`_ (`installation`_ and `usage`_) to acquire the source tree and
+develop locally.
+
 
 .. _installation: Poetry-installation_
 .. _usage: Poetry-usage_
@@ -44,7 +45,7 @@ Quick Start
 Installing Python Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This project uses `Poetry`_ for dependency management, environment consistency,
-package building, version management, and publishing to PYPI.
+package building, version management, and publishing to PyPI.
 Dependencies are `abstractly defined`_ in the :file:`pyproject.toml` file, as
 well as `specifically pinned versions`_ in the :file:`poetry.lock` file, both
 of which can be found in the root of the source tree.
@@ -58,7 +59,7 @@ specified in the :file:`pyproject.toml` file, with versions specified
 
 .. prompt:: bash
 
-    poetry install
+    poetry install --sync --with linting,tests,docs
 
 
 Building the Documentation
@@ -95,7 +96,7 @@ Within the :file:`docs/` directory is a small Python script called
     poetry run python sphinx_server.py
 
 This will run a small process that watches the :file:`docs/` folder contents,
-as well as the source files in :file:`xaitk_saliency/`, for changes.
+as well as the source files in :file:`src/xaitk_saliency/`, for changes.
 :command:`make html` is re-run automatically when changes are detected.
 This will serve the resulting HTML files at http://localhost:5500.
 Having this URL open in a browser will provide you with an up-to-date
