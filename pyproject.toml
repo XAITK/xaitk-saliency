@@ -25,8 +25,8 @@ classifiers = [
 # :auto package-meta:
 # package-specific meta, don't put this in "generated package-meta"
 authors = ["Kitware, Inc. <xaitk@kitware.com>"]
-version = "0.9.2"
-license = "BSD-3-Clause"
+version = "0.10.0"
+license = "Apache-2.0"
 description = """\
     Visual saliency map generation interfaces and baseline implementations \
     for explainable AI."""
