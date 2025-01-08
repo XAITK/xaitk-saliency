@@ -4,14 +4,12 @@ requires = ["poetry-core>=1.9"]
 build-backend = "poetry.core.masonry.api"
 # :auto build-system:
 
+# :auto package-meta:
 [tool.poetry]
 name = "xaitk-saliency"
-version = "0.10.0"
-description = "Visual saliency map generation interfaces and baseline implementations for explainable AI."
 license = "Apache-2.0"
 documentation = "https://xaitk-saliency.readthedocs.io/"
 readme = "README.md"
-authors = ["Kitware, Inc. <xaitk@kitware.com>"]
 packages = [{include = "xaitk_saliency", from="src"}]
 classifiers = [
     'Development Status :: 3 - Alpha',
@@ -25,6 +23,11 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
 ]
+# :auto package-meta:
+# package-specific meta, don't put this in "generated package-meta"
+authors = ["Kitware, Inc. <xaitk@kitware.com>"]
+version = "0.10.0"
+description = "Visual saliency map generation interfaces and baseline implementations for explainable AI."
 
 [tool.poetry.dependencies]
 # :auto python-version:
