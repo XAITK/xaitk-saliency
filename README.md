@@ -45,12 +45,12 @@ Ensure the source tree is acquired locally before proceeding.
 
 To install the current version via `pip`:
 ```bash
-pip install xaitk-saliency
+pip install xaitk-saliency[<extra1>,<extra2>,..]
 ```
 
 Alternatively, you can use [Poetry](https://python-poetry.org/):
 ```bash
-poetry install
+poetry install --with main,linting,tests,docs --extras "<extra1> <extra2> ..."
 ```
 
 Certain plugins may require additional runtime dependencies. Details on these requirements can be found [here](https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
@@ -72,7 +72,7 @@ Documentation for both release snapshots and the latest master branch is availab
 To build the Sphinx-based documentation locally for the latest reference:
 ```bash
 # Install dependencies
-poetry install --sync --with linting,tests,docs
+poetry install --sync --with main,linting,tests,docs
 # Navigate to the documentation root
 cd docs
 # Build the documentation
@@ -91,7 +91,7 @@ Pre-commit hooks ensure that code complies with required linting and formatting 
 To install and use pre-commit hooks:
 ```bash
 # Install required dependencies
-poetry install --sync --with linting,tests,docs
+poetry install --sync --with main,linting,tests,docs
 # Initialize pre-commit hooks for the repository
 poetry run pre-commit install
 # Run pre-commit checks on all files
@@ -127,7 +127,10 @@ All development prior to Nov 19, 2024 falls under [BSD-3-Clause](./LICENSE.old)
 ## Contacts
 
 **Principal Investigator**: Brian Hu (Kitware) @brian.hu
+
 **Product Owner**: Austin Whitesell (MITRE) @awhitesell
+
 **Scrum Master / Tech Lead**: Brandon RichardWebster (Kitware) @b.richardwebster
+
 **Deputy Tech Lead**: Emily Veenhuis (Kitware) @emily.veenhuis
 <!-- :auto contacts: -->

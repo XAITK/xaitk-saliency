@@ -1,6 +1,6 @@
 # :auto build-system:
 [build-system]
-requires = ["poetry-core>=1.9"]
+requires = ["poetry-core>=1.9,<2.0"]
 build-backend = "poetry.core.masonry.api"
 # :auto build-system:
 
@@ -8,9 +8,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "xaitk-saliency"
 license = "Apache-2.0"
-documentation = "https://xaitk-saliency.readthedocs.io/"
 readme = "README.md"
 packages = [{include = "xaitk_saliency", from="src"}]
+documentation = "https://xaitk-saliency.readthedocs.io/"
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
