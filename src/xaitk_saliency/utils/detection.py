@@ -1,3 +1,5 @@
+"""This module provides the `format_detection` function to format detections for `xaitk-saliency`."""
+
 from typing import Optional
 
 import numpy as np

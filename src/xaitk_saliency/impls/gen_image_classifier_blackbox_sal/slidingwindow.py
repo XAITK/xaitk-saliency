@@ -1,3 +1,6 @@
+"""Encapsulation of the perturbation-occlusion method using specifically
+sliding windows and the occlusion-scoring method."""
+
 from collections.abc import Sequence
 from typing import Any, Optional, Union
 
@@ -16,15 +19,6 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
     sliding windows and the occlusion-scoring method.
     See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
     for more details.
-
-    :param window_size: The block window size as a tuple with format
-        `(height, width)`.
-    :param stride: The sliding window striding step as a tuple with format
-        `(height_step, width_step)`.
-    :param threads: Optional number threads to use to enable parallelism in
-        applying perturbation masks to an input image.
-        If 0, a negative value, or `None`, work will be performed on the
-        main-thread in-line.
     """
 
     def __init__(
@@ -33,6 +27,19 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         stride: tuple[int, int] = (20, 20),
         threads: int = 0,
     ) -> None:
+        """
+        Initialization of the perturbation-occlusion method using specifically
+        sliding windows and the occlusion-scoring method.
+
+        :param window_size: The block window size as a tuple with format
+            `(height, width)`.
+        :param stride: The sliding window striding step as a tuple with format
+            `(height_step, width_step)`.
+        :param threads: Optional number threads to use to enable parallelism in
+            applying perturbation masks to an input image.
+            If 0, a negative value, or `None`, work will be performed on the
+            main-thread in-line.
+        """
         self._po = PerturbationOcclusion(
             perturber=SlidingWindow(
                 window_size=window_size,
@@ -44,6 +51,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     @property
     def fill(self) -> Optional[Union[int, Sequence[int]]]:
+        """Gets the fill value"""
         return self._po.fill
 
     @fill.setter
@@ -55,6 +63,16 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
+        """
+        Returns the default configuration for the SlidingWindowStack.
+
+        This method provides a default configuration dictionary, specifying default
+        values for key parameters in the factory. It can be used to create an instance
+        of the factory with preset configurations.
+
+        Returns:
+            dict[str, Any]: A dictionary containing default configuration parameters.
+        """
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -64,11 +82,18 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
+        """
+        Get the configuration dictionary of the SlidingWindowStack instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         # It turns out that our configuration here is nearly equivalent to that
         # given and retrieved from the SlidingWindow implementation that is
         # known set to the internal ``PerturbationOcclusion.perturber``.
         # noinspection PyProtectedMember
-        c = self._po._perturber.get_config()
+        po_config = self._po.get_config()
+        c = po_config["perturber"][po_config["perturber"]["type"]]
         # noinspection PyProtectedMember
-        c["threads"] = self._po._threads
+        c["threads"] = po_config["threads"]
         return c

@@ -1,7 +1,9 @@
+"""This module provides utility functions for `xaitk-saliency`."""
+
 import itertools
 import time
 from collections.abc import Generator, Iterable, Sequence
-from typing import Optional, Union
+from typing import Callable, Optional, Union
 
 import numpy as np
 from smqtk_descriptors.utils import parallel_map
@@ -10,7 +12,7 @@ from smqtk_descriptors.utils import parallel_map
 UINT8_ONE = np.uint8(1)
 
 
-def occlude_image_batch(
+def occlude_image_batch(  # noqa: C901
     ref_image: np.ndarray,
     masks: np.ndarray,
     fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
@@ -120,7 +122,7 @@ def occlude_image_batch(
     return occ_img_mats
 
 
-def occlude_image_streaming(
+def occlude_image_streaming(  # noqa: C901
     ref_image: np.ndarray,
     masks: Iterable[np.ndarray],
     fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
@@ -229,53 +231,67 @@ def benchmark_occlude_image(
     perf_counter = time.perf_counter
     print(f"Image shape={img_mat.shape}, masks={masks.shape}, fill_1c={fill_1c}, fill_{img_channels}c={fill_mc}")
 
-    def log_line(op: str, mode: str, cores: int, fill: str, seconds: float) -> None:
-        print(f"{op:12s}{mode:16s}{cores:2d}  {fill:9s}{seconds} s")
-
     s = perf_counter()
     occlude_image_batch(img_mat, masks)
     e = perf_counter()
-    log_line("Batch", "main", 0, "no-fill", e - s)
-    for threads in threading_tests:
-        s = perf_counter()
-        occlude_image_batch(img_mat, masks, threads=threads)
-        e = perf_counter()
-        log_line("Batch", "threads", threads, "no-fill", e - s)
-    for threads in threading_tests:
-        s = perf_counter()
-        np.asarray(list(occlude_image_streaming(img_mat, masks, threads=threads)))
-        e = perf_counter()
-        log_line("Streaming", "threads", threads, "no-fill", e - s)
+    _log_line("Batch", "main", 0, "no-fill", e - s)
+    _benchmark_threads_helper(
+        img_mat=img_mat,
+        masks=masks,
+        img_channels=img_channels,
+        threading_tests=threading_tests,
+        perf_counter=perf_counter,
+    )
 
     s = perf_counter()
     occlude_image_batch(img_mat, masks, fill=fill_1c)
     e = perf_counter()
-    log_line("Batch", "main", 0, "fill-1c", e - s)
-    for threads in threading_tests:
-        s = perf_counter()
-        occlude_image_batch(img_mat, masks, fill=fill_1c, threads=threads)
-        e = perf_counter()
-        log_line("Batch", "threads", threads, "fill-1c", e - s)
-    for threads in threading_tests:
-        s = perf_counter()
-        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_1c, threads=threads)))
-        e = perf_counter()
-        log_line("Streaming", "threads", threads, "fill-1c", e - s)
+    _log_line("Batch", "main", 0, "fill-1c", e - s)
+    _benchmark_threads_helper(
+        img_mat=img_mat,
+        masks=masks,
+        img_channels=img_channels,
+        threading_tests=threading_tests,
+        perf_counter=perf_counter,
+        fill=fill_1c,
+    )
 
     s = perf_counter()
     occlude_image_batch(img_mat, masks, fill=fill_mc)
     e = perf_counter()
-    log_line("Batch", "main", 0, f"fill-{img_channels}c", e - s)
+    _log_line("Batch", "main", 0, f"fill-{img_channels}c", e - s)
+    _benchmark_threads_helper(
+        img_mat=img_mat,
+        masks=masks,
+        img_channels=img_channels,
+        threading_tests=threading_tests,
+        perf_counter=perf_counter,
+        fill=fill_mc,
+    )
+
+
+def _log_line(op: str, mode: str, cores: int, fill: str, seconds: float) -> None:
+    print(f"{op:12s}{mode:16s}{cores:2d}  {fill:9s}{seconds} s")
+
+
+def _benchmark_threads_helper(
+    img_mat: np.ndarray,
+    masks: np.ndarray,
+    img_channels: int,
+    threading_tests: Sequence[int],
+    perf_counter: Callable,
+    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
+) -> None:
     for threads in threading_tests:
         s = perf_counter()
-        occlude_image_batch(img_mat, masks, fill=fill_mc, threads=threads)
+        occlude_image_batch(img_mat, masks, fill=fill, threads=threads)
         e = perf_counter()
-        log_line("Batch", "threads", threads, f"fill-{img_channels}c", e - s)
+        _log_line("Batch", "threads", threads, f"fill-{img_channels}c", e - s)
     for threads in threading_tests:
         s = perf_counter()
-        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill_mc, threads=threads)))
+        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill, threads=threads)))
         e = perf_counter()
-        log_line("Streaming", "threads", threads, f"fill-{img_channels}c", e - s)
+        _log_line("Streaming", "threads", threads, f"fill-{img_channels}c", e - s)
 
 
 def weight_regions_by_scalar(
@@ -311,10 +327,7 @@ def weight_regions_by_scalar(
     :return: A numpy array representing the weighted heatmap.
     """
     # upcast to common type
-    if scalar_vec.dtype < masks.dtype:
-        scalar_vec = scalar_vec.astype(max(scalar_vec.dtype, masks.dtype))
-    elif masks.dtype < scalar_vec.dtype:
-        masks = masks.astype(max(scalar_vec.dtype, masks.dtype))
+    scalar_vec, masks = _upcast_to_common_type(scalar_vec=scalar_vec, masks=masks)
 
     if inv_masks:
         masks = UINT8_ONE - masks
@@ -340,3 +353,14 @@ def weight_regions_by_scalar(
         sal_across_masks /= mask_sum
 
     return sal_across_masks
+
+
+def _upcast_to_common_type(
+    scalar_vec: np.ndarray,
+    masks: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    if scalar_vec.dtype < masks.dtype:
+        scalar_vec = scalar_vec.astype(max(scalar_vec.dtype, masks.dtype))
+    elif masks.dtype < scalar_vec.dtype:
+        masks = masks.astype(max(scalar_vec.dtype, masks.dtype))
+    return scalar_vec, masks

@@ -1,6 +1,12 @@
+"""
+This module provides the `sal_on_coco_dets` CLI script to generate saliency maps
+for detections in a COCO dataset for `xaitk-saliency`.
+"""
+
 import json
 import logging
 import os
+from collections.abc import Iterable, Sequence
 from typing import TextIO
 
 import click  # type: ignore
@@ -145,30 +151,49 @@ def sal_on_coco_dets(
         sub_dir = os.path.join(output_dir, img_name)
 
         os.makedirs(sub_dir, exist_ok=True)
+        _save_sal_maps(
+            dets_dset=dets_dset,
+            det_ids=det_ids,
+            img_sal_maps=img_sal_maps,
+            img_idx=img_idx - img_skip_counter,
+            ref_img=ref_img,
+            sub_dir=sub_dir,
+            overlay_image=overlay_image,
+        )
 
-        sal_skip_counter = 0
-        for sal_idx, det_id in enumerate(det_ids):
-            ann = dets_dset.anns[det_id]
-            if not ("score" in ann or "prob" in ann):
-                sal_skip_counter += 1
-                continue
 
-            sal_map = img_sal_maps[img_idx - img_skip_counter][sal_idx - sal_skip_counter]
+def _save_sal_maps(
+    dets_dset: kwcoco.CocoDataset,
+    det_ids: Iterable[int],
+    img_sal_maps: Sequence[np.ndarray],
+    img_idx: int,
+    ref_img: np.ndarray,
+    sub_dir: str,
+    overlay_image: bool,
+) -> None:
+    sal_skip_counter = 0
+    for sal_idx, det_id in enumerate(det_ids):
+        ann = dets_dset.anns[det_id]
+        if not ("score" in ann or "prob" in ann):
+            sal_skip_counter += 1
+            continue
 
-            fig = plt.figure()
-            plt.axis("off")
-            if overlay_image:
-                gray_img = np.asarray(Image.fromarray(ref_img).convert("L"))
-                plt.imshow(gray_img, alpha=0.7, cmap="gray")
+        sal_map = img_sal_maps[img_idx][sal_idx - sal_skip_counter]
 
-                bbox = dets_dset.anns[det_id]["bbox"]
-                plt.gca().add_patch(
-                    Rectangle((bbox[0], bbox[1]), bbox[2], bbox[3], linewidth=1, edgecolor="r", facecolor="none"),
-                )
-                plt.imshow(sal_map, cmap="jet", alpha=0.3)
-                plt.colorbar()
-            else:
-                plt.imshow(sal_map, cmap="jet")
-                plt.colorbar()
-            plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
-            plt.close(fig)
+        fig = plt.figure()
+        plt.axis("off")
+        if overlay_image:
+            gray_img = np.asarray(Image.fromarray(ref_img).convert("L"))
+            plt.imshow(gray_img, alpha=0.7, cmap="gray")
+
+            bbox = dets_dset.anns[det_id]["bbox"]
+            plt.gca().add_patch(
+                Rectangle((bbox[0], bbox[1]), bbox[2], bbox[3], linewidth=1, edgecolor="r", facecolor="none"),
+            )
+            plt.imshow(sal_map, cmap="jet", alpha=0.3)
+            plt.colorbar()
+        else:
+            plt.imshow(sal_map, cmap="jet")
+            plt.colorbar()
+        plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
+        plt.close(fig)

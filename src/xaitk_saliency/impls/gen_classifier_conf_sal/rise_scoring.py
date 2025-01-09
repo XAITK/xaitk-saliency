@@ -1,3 +1,5 @@
+"""Implementation of RISEScoring scorer"""
+
 from typing import Any
 
 import numpy as np
@@ -40,10 +42,23 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
 
     def generate(
         self,
-        image_conf: np.ndarray,
+        _: np.ndarray,
         perturbed_conf: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
+        """
+        Generate saliency maps
+
+        :param image_conf: np.ndarray
+            Reference confidence lengths from the reference image
+        :param perturbed_conf: np.ndarray
+            Perturbed confidence lengths from the reference image
+        :param perturbed_masks: np.ndarray
+            Perturbation masks `numpy.ndarray` over the reference image.
+
+        :return: np.ndarray
+            Generated visual saliency heatmap.
+        """
         if len(perturbed_conf) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective confidence lengths do not match.")
 
@@ -61,6 +76,12 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict[str, Any]:
+        """
+        Get the configuration dictionary of the RISEScoring instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {
             "p1": self.p1,
         }

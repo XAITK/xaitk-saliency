@@ -1,3 +1,5 @@
+"""This module provides the `GenerateDescriptorSimilaritySaliency` interface for `xaitk-saliency`."""
+
 import abc
 
 import numpy as np

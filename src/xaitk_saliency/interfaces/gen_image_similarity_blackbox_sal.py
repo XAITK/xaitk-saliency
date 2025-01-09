@@ -1,3 +1,5 @@
+"""This module provides the `GenerateImageSimilarityBlackboxSaliency` interface for `xaitk-saliency`."""
+
 import abc
 from collections.abc import Sequence
 

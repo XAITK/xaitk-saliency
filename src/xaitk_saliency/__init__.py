@@ -1,3 +1,5 @@
+"""Define the xaitk-saliency package"""
+
 import pkg_resources
 
 from .interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency  # noqa: F401
