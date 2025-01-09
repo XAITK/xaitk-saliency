@@ -45,7 +45,7 @@ Ensure the source tree is acquired locally before proceeding.
 
 To install the current version via `pip`:
 ```bash
-pip install xaitk-saliency[<extra1>,<extra2>,..]
+pip install xaitk-saliency[<extra1>,<extra2>,...]
 ```
 
 Alternatively, you can use [Poetry](https://python-poetry.org/):
