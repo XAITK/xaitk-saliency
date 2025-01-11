@@ -62,38 +62,33 @@ def test_generate_checks_image_shape() -> None:
     """Test that the input image shape conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
 
-    m_detector = mock.Mock(spec=DetectImageObjects)
-
     m_bboxes = mock.Mock(spec=np.ndarray)
     m_scores = mock.Mock(spec=np.ndarray)
 
     # a single vector is not considered an image
     test_image = np.ones((256,), dtype=np.uint8)
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 1$"):
-        GenerateObjectDetectorBlackboxSaliency.generate(
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
             test_image,
             m_bboxes,
             m_scores,
-            m_detector,
         )
 
     # image with more than 3 dimenstions
     test_image = np.ones((256, 256, 3, 2), dtype=np.uint8)
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 4$"):
-        GenerateObjectDetectorBlackboxSaliency.generate(
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
             test_image,
             m_bboxes,
             m_scores,
-            m_detector,
         )
 
 
 def test_generate_checks_detection_inputs_length() -> None:
     """Test that the reference detection inputs must all have the same length."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
-    m_detector = mock.Mock(spec=DetectImageObjects)
 
     test_image = np.ones((64, 64))
 
@@ -104,7 +99,7 @@ def test_generate_checks_detection_inputs_length() -> None:
         ValueError,
         match=r"^Number of input bounding boxes and scores do not match: \(bboxes\) 4 != 5 \(scores\)$",
     ):
-        GenerateObjectDetectorBlackboxSaliency.generate(m_impl, test_image, test_bboxes, test_scores, m_detector)
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(m_impl, test_image, test_bboxes, test_scores)
 
     # Mismatched number of bboxes and scores, with objectness
     test_bboxes = np.ones((5, 4), dtype=float)
@@ -116,12 +111,11 @@ def test_generate_checks_detection_inputs_length() -> None:
         r"scores do not match: \(bboxes\) 5 != 4 \(scores\) and/or "
         r"\(bboxes\) 5 != 5 \(objectness\)$",
     ):
-        GenerateObjectDetectorBlackboxSaliency.generate(
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
             test_image,
             test_bboxes,
             test_scores,
-            m_detector,
             test_objectness,
         )
 
@@ -135,12 +129,11 @@ def test_generate_checks_detection_inputs_length() -> None:
         r"scores do not match: \(bboxes\) 5 != 5 \(scores\) and/or "
         r"\(bboxes\) 5 != 4 \(objectness\)$",
     ):
-        GenerateObjectDetectorBlackboxSaliency.generate(
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
             test_image,
             test_bboxes,
             test_scores,
-            m_detector,
             test_objectness,
         )
 
@@ -149,19 +142,16 @@ def test_generate_checks_bboxes_width() -> None:
     """Test that the input bounding boxes must have a width of 4."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
 
-    m_detector = mock.Mock(spec=DetectImageObjects)
-
     test_bboxes = np.ones((2, 3), dtype=float)
     test_scores = np.ones((2, 3), dtype=float)
 
     test_image = np.ones((256, 256), dtype=np.uint8)
     with pytest.raises(ValueError, match=r"^Input bounding boxes matrix has width of 3, should have width of 4$"):
-        GenerateObjectDetectorBlackboxSaliency.generate(
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
             test_image,
             test_bboxes,
             test_scores,
-            m_detector,
         )
 
 
@@ -254,9 +244,7 @@ def test_call_alias() -> None:
 
 
 def test_return_empty_map() -> None:
-    """
-    Test that an empty array of maps is returned properly
-    """
+    """Test that an empty array of maps is returned properly"""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
     m_detector = mock.Mock(spec=DetectImageObjects)
 

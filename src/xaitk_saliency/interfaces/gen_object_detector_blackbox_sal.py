@@ -1,3 +1,5 @@
+"""This module provides the `GenerateObjectDetectorBlackboxSaliency` interface for `xaitk-saliency`."""
+
 import abc
 import logging
 from typing import Optional
@@ -116,28 +118,12 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
             `W` are the height and width respectively of the input reference
             image.
         """
-
-        if ref_image.ndim not in (2, 3):
-            raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
-
-        if bboxes.shape[1] != 4:
-            raise ValueError(f"Input bounding boxes matrix has width of {bboxes.shape[1]}, should have width of 4")
-
-        # Check that reference detection inputs have matching shapes
-        if objectness is None:
-            if len(bboxes) != len(scores):
-                raise ValueError(
-                    f"Number of input bounding boxes and scores do not match: "
-                    f"(bboxes) {len(bboxes)} != {len(scores)} (scores)",
-                )
-        else:
-            if len(bboxes) != len(scores) or len(bboxes) != len(objectness):
-                raise ValueError(
-                    f"Number of input bounding boxes, scores, and objectness "
-                    f"scores do not match: (bboxes) {len(bboxes)} != "
-                    f"{len(scores)} (scores) and/or (bboxes) {len(bboxes)} != "
-                    f"{len(objectness)} (objectness)",
-                )
+        self._verify_generate_inputs(
+            ref_image,
+            bboxes,
+            scores,
+            objectness,
+        )
 
         output = self._generate(
             ref_image,
@@ -168,6 +154,33 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
             )
 
         return output
+
+    def _verify_generate_inputs(
+        self,
+        ref_image: np.ndarray,
+        bboxes: np.ndarray,
+        scores: np.ndarray,
+        objectness: Optional[np.ndarray] = None,
+    ) -> None:
+        if ref_image.ndim not in (2, 3):
+            raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
+
+        if bboxes.shape[1] != 4:
+            raise ValueError(f"Input bounding boxes matrix has width of {bboxes.shape[1]}, should have width of 4")
+
+        # Check that reference detection inputs have matching shapes
+        if objectness is None and (len(bboxes) != len(scores)):
+            raise ValueError(
+                f"Number of input bounding boxes and scores do not match: "
+                f"(bboxes) {len(bboxes)} != {len(scores)} (scores)",
+            )
+        if objectness is not None and (len(bboxes) != len(scores) or len(bboxes) != len(objectness)):
+            raise ValueError(
+                f"Number of input bounding boxes, scores, and objectness "
+                f"scores do not match: (bboxes) {len(bboxes)} != "
+                f"{len(scores)} (scores) and/or (bboxes) {len(bboxes)} != "
+                f"{len(objectness)} (objectness)",
+            )
 
     def __call__(
         self,

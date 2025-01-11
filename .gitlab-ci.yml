@@ -4,7 +4,6 @@ include:
     file: ".gitlab-ci.yml"
 
   # job overrides specific to this repo
-  - local: .gitlab-ci/.gitlab-build.yml
   - local: .gitlab-ci/.gitlab-docs.yml
   - local: .gitlab-ci/.gitlab-test.yml
   - local: .gitlab-ci/.gitlab-security.yml

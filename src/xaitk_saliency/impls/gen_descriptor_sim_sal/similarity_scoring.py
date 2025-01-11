@@ -1,3 +1,5 @@
+"""Implementation of SimilarityScoring scorer"""
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
@@ -18,26 +20,29 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
     The resulting saliency maps are relative to the reference image.
     As such, each map denotes regions in the reference image that make it more
     or less similar to the corresponding query image.
-
-    :param proximity_metric: The type of comparison metric used
-        to determine proximity in feature space. The type of comparison
-        metric supported is restricted by scipy's cdist() function. The
-        following metrics are supported in scipy.
-
-        ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
-        ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
-        ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’, ‘rogerstanimoto’,
-        ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’,
-        ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
     """
 
     def __init__(self, proximity_metric: str = "euclidean") -> None:
+        """
+        Initialization for SimilarityScoring
+
+        :param proximity_metric: The type of comparison metric used
+            to determine proximity in feature space. The type of comparison
+            metric supported is restricted by scipy's cdist() function. The
+            following metrics are supported in scipy.
+
+            ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
+            ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
+            ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’, ‘rogerstanimoto’,
+            ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’,
+            ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
+        """
         try:
             # Attempting to use chosen comparison metric
             cdist([[1], [1]], [[1], [1]], proximity_metric)
             self.proximity_metric: str = proximity_metric
-        except ValueError:
-            raise ValueError("Chosen comparison metric not supported or may not be available in scipy")
+        except ValueError as err:
+            raise ValueError("Chosen comparison metric not supported or may not be available in scipy") from err
 
     def generate(
         self,
@@ -46,6 +51,21 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
+        """
+        Generate visual saliency heatmaps for similarity from vectors
+
+        :param ref_descr: np.ndarray
+            Feature vectors from the reference image
+        :param query_descrs: np.ndarray
+            Query vectors from the reference image
+        :param perturbed_descrs: np.ndarray
+            Perturbed vectors from the reference image
+        :param perturbed_masks: np.ndarray
+            Perturbation masks `numpy.ndarray` over the reference image.
+
+        :return: np.ndarray
+            Generated visual saliency heatmap.
+        """
         if len(perturbed_descrs) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective feature vector do not match.")
 
@@ -76,6 +96,12 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
+        """
+        Get the configuration dictionary of the SimilarityScoring instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {
             "proximity_metric": self.proximity_metric,
         }

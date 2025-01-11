@@ -1,3 +1,9 @@
+"""
+This module defines `SBSMStack`, which implements the perturbation-occlusion method using specifically the
+sliding window image perturbation and similarity scoring algorithms to generate similarity-based visual
+saliency maps
+"""
+
 from collections.abc import Sequence
 from typing import Any, Optional, Union
 
@@ -17,25 +23,6 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
     generate similarity-based visual saliency maps.
     See the documentation of :class:`SlidingWindow` and
     :class:`SimilarityScoring` for details.
-
-    :param window_size: The block window size as a tuple with format
-        `(height, width)`.
-    :param stride: The sliding window striding step as a tuple with format
-        `(height_step, width_step)`.
-    :param proximity_metric: The type of comparison metric used
-        to determine proximity in feature space. The type of comparison
-        metric supported is restricted by scipy's cdist() function. The
-        following metrics are supported in scipy.
-
-        ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
-        ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
-        ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’, ‘rogerstanimoto’,
-        ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’,
-        ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
-    :param threads: Optional number threads to use to enable parallelism in
-        applying perturbation masks to an input image.
-        If 0, a negative value, or `None`, work will be performed on the
-        main-thread in-line.
     """
 
     def __init__(
@@ -46,6 +33,29 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
         threads: Optional[int] = None,
     ) -> None:
+        """
+        Encapsulation of the perturbation-occlusion method using specifically the
+        sliding window image perturbation
+
+        :param window_size: The block window size as a tuple with format
+            `(height, width)`.
+        :param stride: The sliding window striding step as a tuple with format
+            `(height_step, width_step)`.
+        :param proximity_metric: The type of comparison metric used
+            to determine proximity in feature space. The type of comparison
+            metric supported is restricted by scipy's cdist() function. The
+            following metrics are supported in scipy.
+
+            ‘braycurtis’, ‘canberra’, ‘chebyshev’, ‘cityblock’, ‘correlation’,
+            ‘cosine’, ‘dice’, ‘euclidean’, ‘hamming’, ‘jaccard’, ‘jensenshannon’,
+            ‘kulsinski’, ‘mahalanobis’, ‘matching’, ‘minkowski’, ‘rogerstanimoto’,
+            ‘russellrao’, ‘seuclidean’, ‘sokalmichener’, ‘sokalsneath’,
+            ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
+        :param threads: Optional number threads to use to enable parallelism in
+            applying perturbation masks to an input image.
+            If 0, a negative value, or `None`, work will be performed on the
+            main-thread in-line.
+        """
         self._po = PerturbationOcclusion(
             perturber=SlidingWindow(window_size=window_size, stride=stride),
             generator=SimilarityScoring(proximity_metric=proximity_metric),
@@ -55,6 +65,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     @property
     def fill(self) -> Optional[Union[int, Sequence[int], np.ndarray]]:
+        """Gets the fill value"""
         return self._po.fill
 
     @fill.setter
@@ -71,6 +82,16 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
+        """
+        Returns the default configuration for the SBSMStack.
+
+        This method provides a default configuration dictionary, specifying default
+        values for key parameters in the factory. It can be used to create an instance
+        of the factory with preset configurations.
+
+        Returns:
+            dict[str, Any]: A dictionary containing default configuration parameters.
+        """
         # Minor override to curry tuple defaults into lists, which are the
         # JSON-parsed types. This is to allow successful equality between
         # default, get_config() and JSON-parsed outputs.
@@ -80,9 +101,18 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
-        c_p = self._po._perturber.get_config()
-        c_g = self._po._generator.get_config()
-        c = dict(c_p, **c_g)
-        c["fill"] = self._po.fill
-        c["threads"] = self._po._threads
+        """
+        Get the configuration dictionary of the SBSMStack instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
+        po_config = self._po.get_config()
+        c = {
+            **po_config["perturber"][po_config["perturber"]["type"]],
+            **po_config["generator"][po_config["generator"]["type"]],
+        }
+        c["fill"] = po_config["fill"]
+        c["threads"] = po_config["threads"]
+        print(c)
         return c

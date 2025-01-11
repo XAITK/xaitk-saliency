@@ -1,3 +1,5 @@
+"""Implementation of OcclusionScoring scorer"""
+
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 
@@ -21,7 +23,25 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
     the maximum value in mask after rounding while 0 replaces the rest.
     """
 
-    def generate(self, image_conf: np.ndarray, perturbed_conf: np.ndarray, perturbed_masks: np.ndarray) -> np.ndarray:
+    def generate(
+        self,
+        image_conf: np.ndarray,
+        perturbed_conf: np.ndarray,
+        perturbed_masks: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Generate saliency maps
+
+        :param image_conf: np.ndarray
+            Reference confidence lengths from the reference image
+        :param perturbed_conf: np.ndarray
+            Perturbed confidence lengths from the reference image
+        :param perturbed_masks: np.ndarray
+            Perturbation masks `numpy.ndarray` over the reference image.
+
+        :return: np.ndarray
+            Generated visual saliency heatmap.
+        """
         if len(image_conf) != len(perturbed_conf[0]):
             raise ValueError("Number of classes in original image and perturbed image do not match.")
 
@@ -42,4 +62,10 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
+        """
+        Get the configuration dictionary of the OcclusionScoring instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {}

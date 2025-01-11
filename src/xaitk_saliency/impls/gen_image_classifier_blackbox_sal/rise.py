@@ -1,3 +1,6 @@
+"""Encapsulation of the perturbation-occlusion method using specifically the
+RISE implementations of the component algorithms."""
+
 from collections.abc import Sequence
 from typing import Any, Optional, Union
 
@@ -22,24 +25,6 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
     This implementation shares the `p1` probability with the internal
     `RISEScoring` instance use, effectively causing this implementation to
     utilize debiased RISE.
-
-    :param n:
-        Number of random masks used in the algorithm. E.g. 1000.
-    :param s:
-        Spatial resolution of the small masking grid. E.g. 8.
-        Assumes square grid.
-    :param p1:
-        Probability of the grid cell being set to 1 (otherwise 0).
-        This should be a float value in the [0, 1] range. E.g. 0.5.
-    :param seed:
-        A seed to pass into the constructed random number generator to allow
-        for reproducibility
-    :param threads: The number of threads to utilize when generating masks.
-        If this is <=0 or None, no threading is used and processing
-        is performed in-line serially.
-    :param debiased: If we should pass the provided debiasing parameter to the
-        RISE saliency map generation algorithm. See the :meth:`.RISEScoring`
-        documentation for more details on debiasing.
     """
 
     def __init__(
@@ -51,6 +36,28 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         threads: int = 0,
         debiased: bool = True,
     ) -> None:
+        """
+        Initialization of the perturbation-occlusion method using specifically the
+        RISE implementations of the component algorithms.
+
+        :param n:
+            Number of random masks used in the algorithm. E.g. 1000.
+        :param s:
+            Spatial resolution of the small masking grid. E.g. 8.
+            Assumes square grid.
+        :param p1:
+            Probability of the grid cell being set to 1 (otherwise 0).
+            This should be a float value in the [0, 1] range. E.g. 0.5.
+        :param seed:
+            A seed to pass into the constructed random number generator to allow
+            for reproducibility
+        :param threads: The number of threads to utilize when generating masks.
+            If this is <=0 or None, no threading is used and processing
+            is performed in-line serially.
+        :param debiased: If we should pass the provided debiasing parameter to the
+            RISE saliency map generation algorithm. See the :meth:`.RISEScoring`
+            documentation for more details on debiasing.
+        """
         self._debiased = debiased  # retain for config output
         self._po = PerturbationOcclusion(
             RISEGrid(n=n, s=s, p1=p1, seed=seed, threads=threads),
@@ -60,6 +67,7 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
 
     @property
     def fill(self) -> Optional[Union[int, Sequence[int]]]:
+        """Gets the fill value"""
         return self._po.fill
 
     @fill.setter
@@ -70,10 +78,17 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         return self._po.generate(ref_image, blackbox)
 
     def get_config(self) -> dict[str, Any]:
+        """
+        Get the configuration dictionary of the RISEStack instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         # It turns out that our configuration here is equivalent to that given
         # and retrieved from the RISEGrid implementation that is known set to
         # the internal ``PerturbationOcclusion.perturber``.
         # noinspection PyProtectedMember
-        c = self._po._perturber.get_config()
+        po_config = self._po.get_config()
+        c = po_config["perturber"][po_config["perturber"]["type"]]
         c["debiased"] = self._debiased
         return c
