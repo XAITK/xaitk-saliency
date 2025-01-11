@@ -12,7 +12,7 @@ runs:
     - name: Setup Poetry
       run: |
         pip install --root-user-action=ignore --upgrade pip -q
-        pip install --root-user-action=ignore --user -U poetry -q
+        pip install --root-user-action=ignore --user -U "poetry<2.0" -q
       shell: bash
     - name: Configure Poetry
       run: |
