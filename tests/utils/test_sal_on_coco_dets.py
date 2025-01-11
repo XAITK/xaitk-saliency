@@ -7,13 +7,11 @@ import pytest
 from click.testing import CliRunner
 
 from tests import DATA_DIR
+from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
 
 deps = ["kwcoco"]
 specs = [find_spec(dep) for dep in deps]
 is_usable = all(spec is not None for spec in specs)
-
-if is_usable:
-    from xaitk_saliency.utils.bin.sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets_cmd
 
 dets_file = os.path.join(DATA_DIR, "test_dets.json")
 config_file = os.path.join(DATA_DIR, "config.json")
