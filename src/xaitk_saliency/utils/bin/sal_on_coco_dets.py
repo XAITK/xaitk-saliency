@@ -163,7 +163,7 @@ def sal_on_coco_dets(
 
 
 def _save_sal_maps(
-    dets_dset: kwcoco.CocoDataset,
+    dets_dset: "kwcoco.CocoDataset",
     det_ids: Iterable[int],
     img_sal_maps: Sequence[np.ndarray],
     img_idx: int,
