@@ -1,0 +1,15 @@
+v0.11.0
+=======
+
+Improved linting, formating, and dependency management.
+
+Updates / New Features
+----------------------
+
+CI/CD
+
+* Updated and applied ruff configuration.
+
+
+Fixes
+-----
