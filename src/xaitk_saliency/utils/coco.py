@@ -1,3 +1,5 @@
+"""This module provides the `parse_coco_dset` function to load a COCO dataset for `xaitk-saliency`."""
+
 import logging
 from collections.abc import Generator
 

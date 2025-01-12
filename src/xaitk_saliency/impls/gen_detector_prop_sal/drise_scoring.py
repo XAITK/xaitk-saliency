@@ -1,3 +1,5 @@
+"""Implementation of DRISE scorer"""
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
@@ -76,6 +78,19 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
+        """
+        Generate visual saliency heatmaps from black-box object detector predictions
+
+        :param ref_dets: np.ndarray
+            Reference detections from the reference image
+        :param perturbed_dets: np.ndarray
+            Pertured detections generated from the reference image
+        :param perturbed_masks: np.ndarray
+            Perturbation masks `numpy.ndarray` over the reference image.
+
+        :return: np.ndarray
+            Generated visual saliency heatmap.
+        """
         if len(perturbed_dets) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective detections vector do not match.")
 
@@ -121,4 +136,10 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
+        """
+        Get the configuration dictionary of the DRISEScoring instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {}

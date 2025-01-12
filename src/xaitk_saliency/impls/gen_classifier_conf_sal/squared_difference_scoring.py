@@ -1,3 +1,5 @@
+"""Implementation of SimilarityScoring scorer"""
+
 import numpy as np
 
 from xaitk_saliency import GenerateClassifierConfidenceSaliency
@@ -22,7 +24,25 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
     https://arxiv.org/abs/1711.00138
     """
 
-    def generate(self, reference: np.ndarray, perturbed: np.ndarray, perturbed_masks: np.ndarray) -> np.ndarray:
+    def generate(
+        self,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
+        perturbed_masks: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Generate saliency heatmaps from black-box confidence predictions
+
+        :param reference: np.ndarray
+            Reference predictions from the reference image
+        :param perturbed: np.ndarray
+            Perturbed predictions from the reference image
+        :param perturbed_masks: np.ndarray
+            Perturbation masks `numpy.ndarray` over the reference image.
+
+        :return: np.ndarray
+            Generated visual saliency heatmap.
+        """
         if len(reference) != len(perturbed[0]):
             raise ValueError("Number of classes in original image and perturbed image do not match.")
 
@@ -38,4 +58,10 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         return sal / sal.max()
 
     def get_config(self) -> dict:
+        """
+        Get the configuration dictionary of the SquaredDifferenceScoring instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {}

@@ -1,3 +1,8 @@
+"""
+This module defines the `PerturbationOcclusion` class, which implements a generator composed of
+modular perturbation and occlusion-based algorithms
+"""
+
 from collections.abc import Sequence
 from typing import Any, Optional, TypeVar, Union
 
@@ -27,14 +32,6 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
     `PerturbImage` implementation.
     This is a parameter to be set during runtime as this is most often driven
     by the black-box algorithm used, if at all.
-
-    :param perturber: PerturbImage implementation instance for generating
-        masks that will dictate occlusion.
-    :param generator: Implementation instance for generating saliency masks
-        given occlusion masks and classifier outputs.
-    :param threads: Optional number threads to use to enable parallelism in
-        applying perturbation masks to an input image. If 0, a negative value,
-        or `None`, work will be performed on the main-thread in-line.
     """
 
     def __init__(
@@ -43,6 +40,17 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         generator: GenerateClassifierConfidenceSaliency,
         threads: int = 0,
     ) -> None:
+        """
+        Initialization of a generator for modular perturbation and occlusion-based algorithms.
+
+        :param perturber: PerturbImage implementation instance for generating
+            masks that will dictate occlusion.
+        :param generator: Implementation instance for generating saliency masks
+            given occlusion masks and classifier outputs.
+        :param threads: Optional number threads to use to enable parallelism in
+            applying perturbation masks to an input image. If 0, a negative value,
+            or `None`, work will be performed on the main-thread in-line.
+        """
         self._perturber = perturber
         self._generator = generator
         self._threads = threads
@@ -76,6 +84,16 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
+        """
+        Returns the default configuration for the PerturbationOcclusion.
+
+        This method provides a default configuration dictionary, specifying default
+        values for key parameters in the factory. It can be used to create an instance
+        of the factory with preset configurations.
+
+        Returns:
+            dict[str, Any]: A dictionary containing default configuration parameters.
+        """
         cfg = super().get_default_config()
         cfg["perturber"] = make_default_config(PerturbImage.get_impls())
         cfg["generator"] = make_default_config(GenerateClassifierConfidenceSaliency.get_impls())
@@ -83,6 +101,16 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     @classmethod
     def from_config(cls: type[C], config_dict: dict, merge_default: bool = True) -> C:
+        """
+        Create a PerturbationOcclusion instance from a configuration dictionary.
+
+        Args:
+            config_dict (dict): Configuration dictionary with perturber details.
+            merge_default (bool): Whether to merge with the default configuration.
+
+        Returns:
+            PerturbationOcclusion: An instance of PerturbationOcclusion.
+        """
         config_dict = dict(config_dict)  # shallow-copy
         config_dict["perturber"] = from_config_dict(config_dict["perturber"], PerturbImage.get_impls())
         config_dict["generator"] = from_config_dict(
@@ -92,6 +120,12 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
+        """
+        Get the configuration dictionary of the PerturbationOcclusion instance.
+
+        Returns:
+            dict[str, Any]: Configuration dictionary.
+        """
         return {
             "perturber": to_config_dict(self._perturber),
             "generator": to_config_dict(self._generator),

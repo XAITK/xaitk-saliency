@@ -14,6 +14,35 @@ from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based impo
 from xaitk_saliency.utils.masking import occlude_image_streaming
 
 
+class StubPI(PerturbImage):
+    """Stub impl that returns known constant masks."""
+
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def perturb(self, ref_image: np.ndarray) -> np.ndarray:
+        return np.ones((6, *ref_image.shape[:2]), dtype=bool)
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
+class StubGen(GenerateClassifierConfidenceSaliency):
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def generate(
+        self,
+        image_conf: np.ndarray,
+        _: np.ndarray,
+        perturbed_masks: np.ndarray,
+    ) -> np.ndarray:
+        return np.zeros((image_conf.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
@@ -22,25 +51,6 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using known simple implementations."""
-
-        class StubPI(PerturbImage):
-            perturb = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
-
-        class StubGen(GenerateClassifierConfidenceSaliency):
-            generate = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
-
         test_threads = 87
         test_spi_p = 0
         test_sgn_p = 1
@@ -55,30 +65,6 @@ class TestPerturbationOcclusion:
     def test_generate_success(self) -> None:
         """Test successfully invoking _generate"""
 
-        # Stub PerturbImage implementation that just returns ones.
-        class StubPI(PerturbImage):
-            """Stub impl that returns known constant masks."""
-
-            def perturb(self, ref_image: np.ndarray) -> np.ndarray:
-                return np.ones((6, *ref_image.shape[:2]), dtype=bool)
-
-            get_config = None  # type: ignore
-
-        # Stub saliency map generator that just returns zeros, but the shape
-        # should be correct as documented by the interface.
-        class StubGen(GenerateClassifierConfidenceSaliency):
-            """Stub impl that returns constant heatmaps."""
-
-            def generate(
-                self,
-                image_conf: np.ndarray,
-                perturbed_conf: np.ndarray,
-                perturbed_masks: np.ndarray,
-            ) -> np.ndarray:
-                return np.zeros((image_conf.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
-
-            get_config = None  # type: ignore
-
         # Stub classifier blackbox that returns two class predictions.
         class StubClassifier(ClassifyImage):
             """Stub that returns a constant classification result."""
@@ -92,8 +78,8 @@ class TestPerturbationOcclusion:
 
             get_config = None  # type: ignore
 
-        test_pi = StubPI()
-        test_gen = StubGen()
+        test_pi = StubPI(0)
+        test_gen = StubGen(0)
         test_classifier = StubClassifier()
 
         test_image = np.ones((64, 64, 3), dtype=np.uint8)

@@ -1,7 +1,7 @@
 import gc
 import unittest.mock as mock
 from collections.abc import Hashable, Iterable
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -17,6 +17,26 @@ def _perturb(ref_image: np.ndarray) -> np.ndarray:
     return np.ones((6, *ref_image.shape[:2]), dtype=bool)
 
 
+class StubPI(PerturbImage):
+    perturb = None  # type: ignore
+
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
+class StubGen(GenerateDetectorProposalSaliency):
+    generate = None  # type: ignore
+
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
@@ -25,24 +45,6 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using known simple implementations."""
-
-        class StubPI(PerturbImage):
-            perturb = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
-
-        class StubGen(GenerateDetectorProposalSaliency):
-            generate = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
 
         test_threads = 87
         test_spi_p = 0
@@ -60,7 +62,7 @@ class TestPerturbationOcclusion:
 
         def detect_objects(
             img_iter: Iterable[np.ndarray],
-        ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
+        ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
             for i, _ in enumerate(img_iter):
                 # Return different number of detections for each image to
                 # test padding functinality
@@ -131,14 +133,12 @@ class TestPerturbationOcclusion:
             assert m_kwargs["fill"] == test_fill
 
     def test_empty_detections(self) -> None:
-        """
-        Test invoking _generate() with empty detections.
-        """
+        """Test invoking _generate() with empty detections."""
 
         def detect_objects(
             img_iter: Iterable[np.ndarray],
-        ) -> Iterable[Iterable[Tuple[AxisAlignedBoundingBox, Dict[Hashable, float]]]]:
-            for i, _ in enumerate(img_iter):
+        ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
+            for _i, _ in enumerate(img_iter):
                 # Return 0 detections for each image
                 yield []
 

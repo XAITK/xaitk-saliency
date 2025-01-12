@@ -12,6 +12,26 @@ from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based impo
 from xaitk_saliency.utils.masking import occlude_image_batch
 
 
+class StubPI(PerturbImage):
+    perturb = None  # type: ignore
+
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
+class StubGen(GenerateDescriptorSimilaritySaliency):
+    generate = None  # type: ignore
+
+    def __init__(self, stub_param: int) -> None:
+        self.p = stub_param
+
+    def get_config(self) -> dict[str, Any]:
+        return {"stub_param": self.p}
+
+
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
@@ -20,24 +40,6 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using stub implementations."""
-
-        class StubPI(PerturbImage):
-            perturb = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
-
-        class StubGen(GenerateDescriptorSimilaritySaliency):
-            generate = None  # type: ignore
-
-            def __init__(self, stub_param: int) -> None:
-                self.p = stub_param
-
-            def get_config(self) -> dict[str, Any]:
-                return {"stub_param": self.p}
 
         inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)
         for inst_i in configuration_test_helper(inst):
@@ -63,9 +65,9 @@ class TestPerturbationOcclusion:
 
             def generate(
                 self,
-                ref_descr: np.ndarray,
+                _: np.ndarray,
                 query_descrs: np.ndarray,
-                perturbed_descrs: np.ndarray,
+                __: np.ndarray,
                 perturbed_masks: np.ndarray,
             ) -> np.ndarray:
                 return np.zeros((query_descrs.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
