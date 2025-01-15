@@ -245,3 +245,6 @@ incremental = false
 module = "tests.*"
 ignore_errors = true
 # :auto mypy:
+
+# :auto pyright:
+# :auto pyright:
