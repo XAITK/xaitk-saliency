@@ -4,10 +4,10 @@ from collections.abc import Hashable, Iterator, Sequence
 from typing import Any
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
-from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
+from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
+from typing_extensions import override
 
 from xaitk_saliency import GenerateClassifierConfidenceSaliency, PerturbImage
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -31,13 +31,14 @@ class StubGen(GenerateClassifierConfidenceSaliency):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def generate(
         self,
-        image_conf: np.ndarray,
-        _: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        return np.zeros((image_conf.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
+        return np.zeros((reference.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
 
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}

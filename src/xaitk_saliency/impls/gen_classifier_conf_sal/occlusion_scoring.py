@@ -25,16 +25,16 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
 
     def generate(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
         Generate saliency maps
 
-        :param image_conf: np.ndarray
+        :param reference: np.ndarray
             Reference confidence lengths from the reference image
-        :param perturbed_conf: np.ndarray
+        :param perturbed: np.ndarray
             Perturbed confidence lengths from the reference image
         :param perturbed_masks: np.ndarray
             Perturbation masks `numpy.ndarray` over the reference image.
@@ -42,15 +42,15 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         :return: np.ndarray
             Generated visual saliency heatmap.
         """
-        if len(image_conf) != len(perturbed_conf[0]):
+        if len(reference) != len(perturbed[0]):
             raise ValueError("Number of classes in original image and perturbed image do not match.")
 
-        if len(perturbed_conf) != len(perturbed_masks):
+        if len(perturbed) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective confidence lengths do not match.")
 
         # Iterating through each class confidence and compare it with
         # its perturbed twin
-        diff = image_conf - perturbed_conf
+        diff = reference - perturbed
 
         # Weighting perturbed regions with respective difference in confidence
         sal = weight_regions_by_scalar(diff, perturbed_masks)

@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
+from typing_extensions import override
 
 from xaitk_saliency import GenerateDetectorProposalSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
@@ -72,6 +73,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # add a small eps to prevent divide by zero errors
         return inter_area / (box_a_area + np.transpose(box_b_area) - inter_area + np.finfo(float).eps)
 
+    @override
     def generate(
         self,
         ref_dets: np.ndarray,

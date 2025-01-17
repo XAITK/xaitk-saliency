@@ -1,6 +1,7 @@
 """Implementation of SimilarityScoring scorer"""
 
 import numpy as np
+from typing_extensions import override
 
 from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
@@ -24,6 +25,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
     https://arxiv.org/abs/1711.00138
     """
 
+    @override
     def generate(
         self,
         reference: np.ndarray,

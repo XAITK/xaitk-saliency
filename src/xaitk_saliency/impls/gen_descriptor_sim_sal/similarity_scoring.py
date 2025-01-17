@@ -38,8 +38,13 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
             ‘sqeuclidean’, ‘wminkowski’, ‘yule’.
         """
         try:
+            # NOTE: cdist attempts to type-check with the wrong overloaded function
+            # and hence throws an error for a str input for the metric, although it is
+            # supported by the function as per the docs here:
+            # https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cdist.html
+
             # Attempting to use chosen comparison metric
-            cdist([[1], [1]], [[1], [1]], proximity_metric)
+            cdist([[1], [1]], [[1], [1]], proximity_metric)  # type: ignore
             self.proximity_metric: str = proximity_metric
         except ValueError as err:
             raise ValueError("Chosen comparison metric not supported or may not be available in scipy") from err
@@ -74,11 +79,11 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
 
         # Computing original proximity between reference image feature vector
         # and each query image feature vector.
-        original_proximity = cdist(ref_descr.reshape(1, -1), query_descrs, metric=self.proximity_metric)
+        original_proximity = cdist(ref_descr.reshape(1, -1), query_descrs, metric=self.proximity_metric)  # type: ignore
 
         # Computing proximity between query feature vectors and perturbed
         # reference image feature vectors.
-        perturbed_proximity = cdist(query_descrs, perturbed_descrs, metric=self.proximity_metric)
+        perturbed_proximity = cdist(query_descrs, perturbed_descrs, metric=self.proximity_metric)  # type: ignore
 
         # Iterating through each distance and compare it with
         # its perturbed twin

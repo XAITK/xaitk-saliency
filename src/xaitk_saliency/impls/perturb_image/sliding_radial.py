@@ -6,7 +6,7 @@ on input images.
 from typing import Any, Optional
 
 import numpy as np
-from scipy.ndimage.filters import gaussian_filter
+from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage

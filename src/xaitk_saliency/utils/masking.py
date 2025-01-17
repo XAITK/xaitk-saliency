@@ -6,7 +6,7 @@ from collections.abc import Generator, Iterable, Sequence
 from typing import Callable, Optional, Union
 
 import numpy as np
-from smqtk_descriptors.utils import parallel_map
+from smqtk_descriptors.utils.parallel import parallel_map
 
 # Lowest volume to convert `1` value.
 UINT8_ONE = np.uint8(1)

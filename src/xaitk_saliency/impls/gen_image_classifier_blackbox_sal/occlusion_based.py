@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from typing import Any, Optional, TypeVar, Union
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 from smqtk_core.configuration import (
     from_config_dict,
     make_default_config,

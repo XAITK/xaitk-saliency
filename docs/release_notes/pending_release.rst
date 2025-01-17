@@ -6,3 +6,5 @@ Updates / New Features
 
 Fixes
 -----
+
+* Fixed ``pyright`` errors.

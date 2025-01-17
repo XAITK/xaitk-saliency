@@ -2,11 +2,11 @@
 
 import itertools
 from collections.abc import Generator, Iterable, Sequence
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
-from smqtk_descriptors.utils import parallel_map
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
+from smqtk_descriptors.utils.parallel import parallel_map
 from typing_extensions import override
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.mc_rise_scoring import MCRISEScoring
@@ -34,7 +34,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         s: int,
         p1: float,
         fill_colors: Sequence[Sequence[int]],
-        seed: int = None,
+        seed: Optional[int],
         threads: int = 0,
     ) -> None:
         """
@@ -66,8 +66,10 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         for fill_color in fill_colors:
             if len(fill_color) != len(fill_colors[0]):
                 raise ValueError("All fill colors must have the same number of channels")
-
-        self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), seed=seed, threads=threads)
+        if seed is not None:
+            self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), seed=seed, threads=threads)
+        else:
+            self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), threads=threads)
         self._generator = MCRISEScoring(k=len(fill_colors), p1=p1)
         self._threads = threads
         self._fill_colors = fill_colors
@@ -98,7 +100,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         ref_image: np.ndarray,
         masks: Iterable[np.ndarray],
         fill_values: Iterable[np.ndarray],
-        threads: int = None,
+        threads: Optional[int],
     ) -> Generator[np.ndarray, None, None]:
         if threads is None or threads < 1:
             for i, (mask, fill) in enumerate(zip(masks, fill_values)):
@@ -163,8 +165,8 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         # Compose classification results into a matrix for the generator
         # algorithm.
         return self._generator(
-            image_conf=ref_conf_vec,
-            perturbed_conf=pert_conf_mat,
+            reference=ref_conf_vec,
+            perturbed=pert_conf_mat,
             perturbed_masks=k_perturbation_masks,
         )
 

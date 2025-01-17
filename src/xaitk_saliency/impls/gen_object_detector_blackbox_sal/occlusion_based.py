@@ -13,7 +13,7 @@ from smqtk_core.configuration import (
     to_config_dict,
 )
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
-from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 
 from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency

@@ -2,8 +2,8 @@ from collections.abc import Hashable, Iterable
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
-from smqtk_detection import DetectImageObjects
-from smqtk_detection.utils.bbox import AxisAlignedBoundingBox
+from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
+from smqtk_image_io.bbox import AxisAlignedBoundingBox
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, RandomGrid, RandomGridStack
