@@ -4,5 +4,10 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Examples
+
+* Added the ``MC-RISE`` example notebook that demonstrates the MC-RISE saliency
+  algorithm on a sample image from the GTSRB dataset.
+
 Fixes
 -----
