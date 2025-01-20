@@ -73,7 +73,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         self._fill_colors = fill_colors
 
     @staticmethod
-    def _work_func(*, ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:
+    def _work_func(ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:
         s: tuple = (...,)
         if ref_image.ndim > 2:
             s = (..., None)  # add channel axis for multiplication
@@ -104,12 +104,15 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
             for i, (mask, fill) in enumerate(zip(masks, fill_values)):
                 yield MCRISEStack._work_func(ref_image=ref_image, i_=i, m=mask, f=fill)
         else:
+            ref_image = np.stack([ref_image for _ in fill_values], axis=0)
+            # NOTE: Never pass by keyword to avoid the iterables being wrongly
+            # zipped and assigned to kwargs.
             yield from parallel_map(
                 MCRISEStack._work_func,
-                ref_image=ref_image,
-                i_=itertools.count(),
-                m=masks,
-                f=fill_values,
+                ref_image,
+                itertools.count(),
+                masks,
+                fill_values,
                 cores=threads,
                 use_multiprocessing=False,
             )

@@ -1,0 +1,15 @@
+v0.12.0
+=======
+
+Bug fix for ``MC-RISE`` when threading is utilized, plus exemplar notebook demonstrating its use.
+
+Updates / New Features
+----------------------
+
+Examples
+
+* Added the ``MC-RISE`` example notebook that demonstrates the MC-RISE saliency
+  algorithm on a sample image from the GTSRB dataset.
+
+Fixes
+-----
