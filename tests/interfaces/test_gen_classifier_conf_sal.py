@@ -3,18 +3,21 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 
 
 class StubImpl(GenerateClassifierConfidenceSaliency):
-    def generate(  # type: ignore[empty-body]
+    @override
+    def generate(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Stub impl"""
+        return np.zeros((1, 1))
 
     def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
         """Stub impl"""

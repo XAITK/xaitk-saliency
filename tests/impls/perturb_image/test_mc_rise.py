@@ -9,7 +9,7 @@ from xaitk_saliency.impls.perturb_image.mc_rise import MCRISEGrid
 
 @pytest.fixture
 def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
-    return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())
+    return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
 class TestMCRISEPerturbation:

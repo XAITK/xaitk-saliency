@@ -5,7 +5,7 @@ from collections.abc import Sequence
 from typing import Any, Optional, Union
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring import RISEScoring
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion

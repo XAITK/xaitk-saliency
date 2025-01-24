@@ -5,7 +5,7 @@ from typing_extensions import override
 
 import numpy as np
 from skimage.transform import resize
-from smqtk_descriptors.utils import parallel_map
+from smqtk_descriptors.utils.parallel import parallel_map
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
@@ -22,7 +22,7 @@ class MCRISEGrid(PerturbImage):
         s: int,
         p1: float,
         k: int,
-        seed: int = None,
+        seed: Optional[int] = None,
         threads: Optional[int] = 4,
     ) -> None:
         """

@@ -6,7 +6,7 @@ from typing import Optional
 
 import numpy as np
 from smqtk_core import Plugfigurable
-from smqtk_detection import DetectImageObjects
+from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.exceptions import ShapeMismatchError
 

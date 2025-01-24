@@ -14,7 +14,7 @@ confidence in each class.
 import abc
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 from smqtk_core import Plugfigurable
 
 from xaitk_saliency.exceptions import ShapeMismatchError
