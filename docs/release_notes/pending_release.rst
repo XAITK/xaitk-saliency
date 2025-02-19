@@ -11,6 +11,8 @@ Documentation
 
 * Updated ``implementations.rst`` to use ``autosummary``
 
+* Moved ``examples`` directory to ``docs/examples``
+
 Fixes
 -----
 

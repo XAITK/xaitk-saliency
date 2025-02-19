@@ -18,7 +18,7 @@ notebooks:
   parallel:
     matrix:
       # Sequences combinatorically combine within a list entry
-      - NOTEBOOK_DIR: "examples"
+      - NOTEBOOK_DIR: "docs/examples"
         NOTEBOOK_FILE: [
           "atari_deepRL_saliency.ipynb",
           "DRISE.ipynb",
