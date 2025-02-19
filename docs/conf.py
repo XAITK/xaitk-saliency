@@ -39,6 +39,7 @@ extensions = [
     "sphinx-prompt",
     "sphinx_copybutton",
     "sphinx_click",
+    "myst_nb",
 ]
 
 suppress_warnings = [
@@ -59,3 +60,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "sphinx_rtd_theme"
 html_static_path: list[str] = list()  # ['_static']
+
+# ---MyST-NB settings---------------------------------------------------------
+jupyter_execute_notebooks = "off"
