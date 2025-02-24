@@ -13,6 +13,8 @@ Documentation
 
 * Moved ``examples`` directory to ``docs/examples``
 
+* Updated ``DRISE.ipynb`` and ``OcclusionSaliency.ipynb`` to be XAITK tutorials.
+
 Fixes
 -----
 

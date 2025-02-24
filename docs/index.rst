@@ -31,10 +31,10 @@ Documentation Contents:
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tutorial
+   :caption: Tutorials
 
-   drise_tutorial
-   occlusion_tutorial
+   examples/OcclusionSaliency.ipynb
+   examples/DRISE.ipynb
 
 .. toctree::
    :maxdepth: 1
