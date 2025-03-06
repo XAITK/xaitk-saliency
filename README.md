@@ -118,7 +118,7 @@ poetry run pre-commit run --all-files
 ```
 <!-- :auto developer-tools: -->
 
-## XAITK Saliency Demonstration Tool
+## Example: A First Look at xaitk-saliency
 This [associated project](https://github.com/XAITK/xaitk-saliency-web-demo)
 provides a local web-application that provides a demonstration of visual
 saliency generation in a user-interface.

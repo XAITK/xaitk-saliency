@@ -6,8 +6,8 @@
 Welcome to xaitk-saliency's documentation!
 ==========================================
 
-Welcome to the documentation for XAITK-Saliency. As part of the Explainable
-AI Toolkit (XAITK), XAITK-Saliency is an open source, explainable AI framework for visual saliency algorithm interfaces
+Welcome to the documentation for xaitk-saliency. As part of the Explainable
+AI Toolkit (XAITK), xaitk-saliency is an open source, explainable AI framework for visual saliency algorithm interfaces
 and implementations, built for analytics and autonomy applications.
 The xaitk-saliency package provides saliency algorithms for a wide range of image understanding
 tasks, including image classification, image similarity, object detection, and reinforcement
