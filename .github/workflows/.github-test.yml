@@ -33,8 +33,10 @@ jobs:
         python-version: ["3.9","3.10","3.11","3.12"]
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
-            "",  # no extras
-            "tools",
+            # Once optional dependencies have been updated, this needs to be re-enabled
+            # "",  # no extras
+            "tools example_deps",
+
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
@@ -115,7 +117,7 @@ jobs:
           lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: env-cache
         with:
           path: |
@@ -129,17 +131,17 @@ jobs:
         uses: ./.github/actions/test-stage
         with:
           extras: "tools example_deps"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: notebook-data-cache
         with:
           path: |
             ~/.cache/
-            examples/data/
+            docs/examples/data/
           key: python-3.9-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
           # pretty unique, no restore-keys.
       - name: Run Notebook
         run: |
-          cd examples
+          cd docs/examples
           poetry run papermill \
             --progress-bar \
             -k python3 \

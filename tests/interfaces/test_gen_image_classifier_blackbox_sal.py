@@ -2,7 +2,7 @@ import unittest.mock as mock
 
 import numpy as np
 import pytest
-from smqtk_classifier import ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 
 from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import (
     GenerateImageClassifierBlackboxSaliency,

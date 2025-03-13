@@ -9,7 +9,7 @@ from collections.abc import Sequence
 from typing import Any, Optional, Union
 
 import numpy as np
-from smqtk_detection import DetectImageObjects
+from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based import PerturbationOcclusion

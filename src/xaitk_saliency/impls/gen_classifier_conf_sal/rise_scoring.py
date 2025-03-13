@@ -4,6 +4,7 @@ from typing import Any
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
+from typing_extensions import override
 
 from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
@@ -40,18 +41,19 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
             raise ValueError(f"Input p1 value of {p1} is not within the expected [0,1] range.")
         self.p1 = p1
 
+    @override
     def generate(
         self,
-        _: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
         Generate saliency maps
 
-        :param image_conf: np.ndarray
+        :param reference: np.ndarray
             Reference confidence lengths from the reference image
-        :param perturbed_conf: np.ndarray
+        :param perturbed: np.ndarray
             Perturbed confidence lengths from the reference image
         :param perturbed_masks: np.ndarray
             Perturbation masks `numpy.ndarray` over the reference image.
@@ -59,7 +61,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         :return: np.ndarray
             Generated visual saliency heatmap.
         """
-        if len(perturbed_conf) != len(perturbed_masks):
+        if len(perturbed) != len(perturbed_masks):
             raise ValueError("Number of perturbation masks and respective confidence lengths do not match.")
 
         # The RISE method does not use the difference of confidences, but just
@@ -67,7 +69,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         # used here.
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar(perturbed_conf, perturbed_masks - self.p1, inv_masks=False, normalize=False)
+        sal = weight_regions_by_scalar(perturbed, perturbed_masks - self.p1, inv_masks=False, normalize=False)
 
         # Normalize final saliency map
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)

@@ -3,12 +3,14 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.gen_descriptor_sim_sal import GenerateDescriptorSimilaritySaliency
 
 
 class StubImpl(GenerateDescriptorSimilaritySaliency):
-    def generate(  # type: ignore[empty-body]
+    @override
+    def generate(
         self,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
@@ -16,6 +18,7 @@ class StubImpl(GenerateDescriptorSimilaritySaliency):
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Stub impl"""
+        return np.zeros((1, 1))
 
     def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
         """Stub impl"""

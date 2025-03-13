@@ -29,7 +29,7 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
         self,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
         Generate visual saliency heatmap matrices for each reference

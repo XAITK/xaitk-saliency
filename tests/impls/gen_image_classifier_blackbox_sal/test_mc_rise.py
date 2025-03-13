@@ -2,11 +2,10 @@ from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
 import pytest
-from smqtk_classifier import ClassifyImage
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
-from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
+from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
-from syrupy import SnapshotAssertion
+from syrupy.assertion import SnapshotAssertion
 
 from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.mc_rise import (
@@ -18,7 +17,7 @@ from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.mc_rise import (
 
 @pytest.fixture
 def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
-    return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())
+    return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())  # type: ignore
 
 
 class TestMCRise:

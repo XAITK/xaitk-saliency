@@ -38,7 +38,7 @@ class TestParseCocoDset:
     def test_dset_parse(self) -> None:
         """Test that a dummy detection file is parsed correctly."""
         dets_file = os.path.join(DATA_DIR, "test_dets.json")
-        test_dset = kwcoco.CocoDataset(dets_file)
+        test_dset = kwcoco.CocoDataset(dets_file)  # type: ignore
 
         test_img_files = ["test_image1.png", "test_image2.png"]
         test_imgs = [np.array(Image.open(os.path.join(DATA_DIR, f))) for f in test_img_files]
@@ -53,7 +53,7 @@ class TestParseCocoDset:
             np.array([[0.0, 1.0, 0.0], [0.2, 0.5, 0.3]]),
         ]
 
-        for i, (img, bboxes, scores) in enumerate(parse_coco_dset(test_dset)):
+        for i, (img, bboxes, scores) in enumerate(parse_coco_dset(test_dset)):  # type: ignore
             assert np.array_equal(img, test_imgs[i])
             assert np.array_equal(bboxes, test_bboxes[i])
             assert np.array_equal(scores, test_scores[i])

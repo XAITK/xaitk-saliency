@@ -1,8 +1,9 @@
 from typing import Any, Dict, Optional, Tuple
+from typing_extensions import override
 
 import numpy as np
 from skimage.transform import resize
-from smqtk_descriptors.utils import parallel_map
+from smqtk_descriptors.utils.parallel import parallel_map
 
 from xaitk_saliency import PerturbImage
 
@@ -45,9 +46,10 @@ class RandomGrid(PerturbImage):
         self.seed = seed
         self.threads = threads
 
+    @override
     def perturb(
         self,
-        ref_img: np.ndarray,
+        ref_image: np.ndarray,
     ) -> np.ndarray:
         num_masks = self.n
         s = np.array(self.s)
@@ -56,7 +58,7 @@ class RandomGrid(PerturbImage):
         grid_rng = np.random.default_rng(self.seed)
         shift_rng = np.random.default_rng(self.seed)
 
-        img_shape = np.array(ref_img.shape[:2])
+        img_shape = np.array(ref_image.shape[:2])
 
         # Pad grid by one cell in both dimensions to allow for shifting
         grid_size = (img_shape // s) + 1
