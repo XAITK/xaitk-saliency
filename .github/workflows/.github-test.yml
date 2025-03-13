@@ -136,12 +136,12 @@ jobs:
         with:
           path: |
             ~/.cache/
-            examples/data/
+            docs/examples/data/
           key: python-3.9-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
           # pretty unique, no restore-keys.
       - name: Run Notebook
         run: |
-          cd examples
+          cd docs/examples
           poetry run papermill \
             --progress-bar \
             -k python3 \
