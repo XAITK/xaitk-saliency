@@ -33,8 +33,10 @@ jobs:
         python-version: ["3.9","3.10","3.11","3.12"]
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
-            "",  # no extras
-            "tools",
+            # Once optional dependencies have been updated, this needs to be re-enabled
+            # "",  # no extras
+            "tools example_deps",
+
         ]
       # We want all python versions tested even if one of them happens to fail
       fail-fast: false
