@@ -117,7 +117,7 @@ jobs:
           lfs: true
       # Cache local python environment artifacts for the current python version
       # and poetry lockfile hash.
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: env-cache
         with:
           path: |
@@ -131,7 +131,7 @@ jobs:
         uses: ./.github/actions/test-stage
         with:
           extras: "tools example_deps"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: notebook-data-cache
         with:
           path: |
