@@ -15,6 +15,8 @@ Documentation
 
 * Updated ``DRISE.ipynb`` and ``OcclusionSaliency.ipynb`` to be XAITK tutorials.
 
+* Corrected Google Colab links in example notebooks
+
 Fixes
 -----
 
