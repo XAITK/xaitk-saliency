@@ -45,5 +45,5 @@ Gallery
 Next Steps
 ----------
 
-To learn more about xaitk-saliency, read the :doc:`Overview <./introduction>` or dive right into a
-:doc:`Tutorial <./xaitk_tutorial>`.
+To learn more about xaitk-saliency, read the :doc:`Overview <./xaitk_explanation>` or dive right into a
+:doc:`Tutorial <./examples/OcclusionSaliency>`.

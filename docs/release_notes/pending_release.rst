@@ -25,6 +25,8 @@ Documentation
 
 * Updated ``index.rst``, ``installation.rst``, and ``README.md``  based on ``devel-jatic``.
 
+* Replaced ``introduction.rst``  with ``xaitk_explanation.rst`` for Explanation section of docs.
+
 Fixes
 -----
 

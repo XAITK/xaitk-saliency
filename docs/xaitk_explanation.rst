@@ -1,5 +1,5 @@
-Introduction
-============
+Concepts of Saliency and Explainability in AI
+=============================================
 
 The xaitk-saliency package implements a class of XAI algorithms known
 as ``saliency algorithms``. A basic machine learning application pipeline is shown in Figure 1:
@@ -84,6 +84,9 @@ To avoid confusion, we need some definitions:
 * **Explainable AI algorithms, or XAI**, is what we attach to
   the AI system to generate explanations (as in Figure 2). The XAI may itself
   use CNNs, but these details are typically hidden from the XAI user.
+
+Understanding White-Box and Black-Box Explainability
+----------------------------------------------------
 
 To answer questions such as the ones raised above, the XAI
 must have some way of interacting with the AI. There are two popular
@@ -303,8 +306,8 @@ Cons
   anything inside the AI.
 
 
-Saliency Algorithms
--------------------
+How Saliency Algorithms Work: Image Perturbation and Heatmaps
+-------------------------------------------------------------
 
 The xaitk-saliency package currently provides several black-box XAI algorithms.
 These algorithms follow a general pattern that consists of two sequential steps: **image perturbation** followed by
@@ -322,30 +325,26 @@ the algorithm as needed for the problem domain.
 
 The saliency algorithms can also be organized according to their respective tasks:
 
-.. list-table:: Saliency Algorithms by Task
-   :widths: 1,9
-   :header-rows: 1
+- :ref:`Image Classification <Interface: GenerateImageClassifierBlackboxSaliency>`
 
-   * - Task
-     - Saliency Algorithm(s)
-   * - Image classification
-     - :ref:`Occlusion-based Saliency <Class: SlidingWindowStack>` [1];
-       :ref:`Randomized Input Sampling for Explanation (RISE) <Class: RISEStack>` [2]
-   * - Image similarity
-     - :ref:`Similarity Based Saliency Maps (SBSM) <Class: SBSMStack>` [3]
-   * - Object detection
-     - :ref:`Detector-RISE (D-RISE) <Class: DRISEStack>` [4]
-   * - Reinforcement learning
-     - :ref:`Perturbation-based Saliency <Class: SquaredDifferenceScoring>` [5]
+- :ref:`Image Similarity <Interface: GenerateImageSimilarityBlackboxSaliency>`
 
+- :ref:`Object Detection <Interface: GenerateObjectDetectorBlackboxSaliency>`
+
+References
+----------
 
 1. Zeiler MD, Fergus R. Visualizing and understanding convolutional networks (2013). arXiv preprint
 arXiv:1311.2901. 2013.
+
 2. Petsiuk V, Das A, Saenko K. Rise: Randomized input sampling for explanation of black-box models. arXiv
 preprint arXiv:1806.07421. 2018 Jun 19.
+
 3. Dong B, Collins R, Hoogs A. Explainability for Content-Based Image Retrieval. In CVPR Workshops 2019
 Jun (pp. 95-98).
+
 4. Petsiuk V, Jain R, Manjunatha V, Morariu VI, Mehra A, Ordonez V, Saenko K. Black-box explanation of
 object detectors via saliency maps. arXiv preprint arXiv:2006.03204. 2020 Jun 5.
+
 5. Greydanus S, Koul A, Dodge J, Fern A. Visualizing and understanding atari agents. In International
 conference on machine learning 2018 Jul 3 (pp. 1792-1801). PMLR.

@@ -51,9 +51,8 @@ Documentation Contents:
    :maxdepth: 1
    :caption: Explanation
 
-   introduction
+   xaitk_explanation
    design
-   faq
 
 .. toctree::
    :maxdepth: 1
@@ -69,6 +68,7 @@ Documentation Contents:
 
    interfaces
    implementations
+   faq
    glossary
    release_notes
    style_sheet
