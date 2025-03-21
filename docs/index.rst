@@ -48,6 +48,7 @@ Documentation Contents:
    :maxdepth: 1
    :caption: How-To
 
+   examples/SwappableImplementations.ipynb
    review_process
    release_process
 

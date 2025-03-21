@@ -17,6 +17,8 @@ Documentation
 
 * Corrected Google Colab links in example notebooks
 
+* Created ``SwappableImplementations.ipynb`` as a How To guide.
+
 Fixes
 -----
 

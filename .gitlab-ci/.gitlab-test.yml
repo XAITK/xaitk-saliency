@@ -22,13 +22,14 @@ notebooks:
         NOTEBOOK_FILE: [
           "atari_deepRL_saliency.ipynb",
           "DRISE.ipynb",
+          "MC_RISE.ipynb",
           "MNIST_scikit_saliency.ipynb",
           "OcclusionSaliency.ipynb",
           "Radial_Image_Perturbation.ipynb",
           "SimilarityScoring.ipynb",
           "SuperPixelSaliency.ipynb",
+          "SwappableImplementations.ipynb",
           "VIAME_OcclusionSaliency.ipynb",
-          "MC_RISE.ipynb",
           # # Shared memory issue on GitLab
           # "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
