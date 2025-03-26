@@ -40,6 +40,8 @@ Documentation
 * Added autodoc entry for ``SaliencyMetric`` and ``Entropy`` classes under
   ``interfaces.rst`` and ``implementations.rst`` respectively.
 
+* Added ``xaitk_how_to_topics.rst`` to documentation.
+
 Fixes
 -----
 

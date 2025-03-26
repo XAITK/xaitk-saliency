@@ -58,7 +58,7 @@ Documentation Contents:
    :maxdepth: 1
    :caption: How-To
 
-   examples/SwappableImplementations.ipynb
+   xaitk_how_to_topics
    review_process
    release_process
 
