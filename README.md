@@ -82,6 +82,11 @@ firefox _build/html/index.html
 ```
 <!-- :auto documentation: -->
 
+<!-- :auto contributing: -->
+
+
+<!-- :auto contributing: -->
+
 <!-- :auto developer-tools: -->
 ## Developer Tools
 
@@ -134,3 +139,7 @@ All development prior to Nov 19, 2024 falls under [BSD-3-Clause](./LICENSE.old)
 
 **Deputy Tech Lead**: Emily Veenhuis (Kitware) @emily.veenhuis
 <!-- :auto contacts: -->
+
+<!-- :auto acknowledgment: -->
+
+<!-- :auto acknowledgment: -->

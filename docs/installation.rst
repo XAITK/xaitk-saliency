@@ -1,3 +1,5 @@
+.. :auto introduction:
+
 Installation
 ============
 
@@ -9,6 +11,11 @@ develop locally.
 
 .. _installation: Poetry-installation_
 .. _usage: Poetry-usage_
+
+.. :auto introduction:
+
+
+.. :auto install-commands:
 
 
 From :command:`pip`
@@ -24,10 +31,18 @@ provide the ``-U``/``--upgrade`` `option`__.
 
 __ Pip-install-upgrade_
 
+.. :auto install-commands:
+
+.. :auto from-source:
+
 
 From Source
 -----------
 The following assumes `Poetry`_ is already installed.
+
+.. :auto from-source:
+
+.. :auto quick-start:
 
 Quick Start
 ^^^^^^^^^^^
@@ -40,6 +55,10 @@ Quick Start
     poetry run pytest
     cd docs
     poetry run make html
+
+.. :auto quick-start:
+
+.. :auto dev-deps:
 
 
 Installing Python Dependencies
@@ -61,6 +80,10 @@ specified in the :file:`pyproject.toml` file, with versions specified
 
     poetry install --sync --with linting,tests,docs
 
+.. :auto dev-deps:
+
+.. :auto build-docs:
+
 
 Building the Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,6 +102,10 @@ HTML format documentation rooted at :file:`docs/_build/html/index.html`.
 Calling the command ``make help`` here will show the other documentation
 formats that may be available (although be aware that some of them require
 additional dependencies such as :program:`TeX` or :program:`LaTeX`).
+
+.. :auto build-docs:
+
+.. :auto live-preview:
 
 
 Live Preview
@@ -102,6 +129,10 @@ This will serve the resulting HTML files at http://localhost:5500.
 Having this URL open in a browser will provide you with an up-to-date
 preview of the rendered documentation.
 
+.. :auto live-preview:
+
+.. :auto installation-links:
+
 
 .. _Pip-install-upgrade: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-U
 .. _Poetry: https://python-poetry.org
@@ -111,3 +142,5 @@ preview of the rendered documentation.
 .. _Poetry-dependencies: https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
 .. _Sphinx: http://sphinx-doc.org/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
+
+.. :auto installation-links:
