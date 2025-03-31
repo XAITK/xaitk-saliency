@@ -18,6 +18,10 @@ This documentation is structured to provide you with straightforward and practic
 you can effectively leverage the toolkit to enhance the robustness and reliability of your computer vision applications
 in facing real-world challenges.
 
+.. :auto acknowledgment:
+
+.. :auto acknowledgment:
+
 Documentation Contents:
 =======================
 
