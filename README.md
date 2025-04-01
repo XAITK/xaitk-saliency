@@ -113,13 +113,9 @@ can be utilized in a user-interface to facilitate model and results
 exploration.
 This tool uses the [trame framework](https://kitware.github.io/trame/).
 
-| ![image1] | ![image2] | ![image3] | ![image4] |
+| ![image1](https://raw.githubusercontent.com/XAITK/xaitk-saliency-web-demo/main/gallery/xaitk-classification-rise-4.jpg) | ![image2](https://raw.githubusercontent.com/XAITK/xaitk-saliency-web-demo/main/gallery/xaitk-classification-sliding-window.jpg) | ![image3](https://raw.githubusercontent.com/XAITK/xaitk-saliency-web-demo/main/gallery/xaitk-detection-retina.jpg) | ![image4](https://raw.githubusercontent.com/XAITK/xaitk-saliency-web-demo/main/gallery/xaitk-similarity-1.jpg) |
 |:---------:|:---------:|:---------:|:---------:|
 
-[image1]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-classification-rise-4.jpg
-[image2]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-classification-sliding-window.jpg
-[image3]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-detection-retina.jpg
-[image4]: https://github.com/XAITK/xaitk-saliency-web-demo/blob/main/gallery/xaitk-similarity-1.jpg
 
 <!-- :auto license: -->
 ## License
