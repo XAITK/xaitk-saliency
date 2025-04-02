@@ -5992,4 +5992,4 @@ tools = ["kwcoco", "matplotlib", "pyyaml", "shapely"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b1cdab4e41cebafde1047fd0d9a4858ecccc9b605ef25bba23337a03f1320789"
+content-hash = "52399ed937ceaf1979d1d3b38519724f45b08f1b06242571ed99a350a2ea751e"
