@@ -41,16 +41,16 @@ modular integration into systems and applications.
 
 <!-- :auto installation: -->
 ## Installation
-Ensure the source tree is acquired locally before proceeding.
+`xaitk-saliency` installation has been tested on Unix and Linux systems.
 
 To install the current version via `pip`:
 ```bash
 pip install xaitk-saliency[<extra1>,<extra2>,...]
 ```
 
-Alternatively, you can use [Poetry](https://python-poetry.org/):
+To install the current version via `conda-forge`:
 ```bash
-poetry install --with main,linting,tests,docs --extras "<extra1> <extra2> ..."
+conda install -c conda-forge xaitk-saliency
 ```
 
 Certain plugins may require additional runtime dependencies. Details on these requirements can be found [here](https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
@@ -61,13 +61,11 @@ For more detailed installation instructions, visit the [installation documentati
 <!-- :auto getting-started: -->
 ## Getting Started
 Explore usage examples of the `xaitk-saliency` package in various contexts using the Jupyter notebooks provided in the `./docs/examples/` directory.
-
-Contributions are encouraged! For more details, refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) file.
 <!-- :auto getting-started: -->
 
 <!-- :auto documentation: -->
 ## Documentation
-Documentation for both release snapshots and the latest master branch is available on [ReadTheDocs](https://xaitk-saliency.readthedocs.io/en/latest/).
+Documentation for both release snapshots and the latest main branch is available on [ReadTheDocs](https://xaitk-saliency.readthedocs.io/en/latest/).
 
 To build the Sphinx-based documentation locally for the latest reference:
 ```bash
@@ -83,14 +81,30 @@ firefox _build/html/index.html
 <!-- :auto documentation: -->
 
 <!-- :auto contributing: -->
+## Contributing
+Contributions are encouraged!
 
+The following points help ensure contributions follow development practices.
 
+- Follow the [JATIC Design Principles](https://cdao.pages.jatic.net/public/program/design-principles/).
+- Adopt the Git Flow branching strategy.
+- Detailed release information is available in [docs/release_process.rst](./docs/release_process.rst).
+- Additional contribution guidelines and issue reporting steps can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
 <!-- :auto contributing: -->
 
 <!-- :auto developer-tools: -->
-## Developer Tools
+### Developer Tools
 
-### Pre-commit Hooks
+Ensure the source tree is acquired locally before proceeding.
+
+#### Poetry Install
+
+You can install using [Poetry](https://python-poetry.org/):
+```bash
+poetry install --with main,linting,tests,docs --extras "<extra1> <extra2> ..."
+```
+
+#### Pre-commit Hooks
 Pre-commit hooks ensure that code complies with required linting and formatting guidelines. These hooks run automatically before commits but can also be executed manually. To bypass checks during a commit, use the `--no-verify` flag.
 
 To install and use pre-commit hooks:
@@ -127,15 +141,22 @@ All development prior to Nov 19, 2024 falls under [BSD-3-Clause](./LICENSE.old)
 <!-- :auto contacts: -->
 ## Contacts
 
-**Principal Investigator**: Brian Hu (Kitware) @brian.hu
+**Principal Investigator / Product Owner**: Brian Hu (Kitware) @brian.hu
 
-**Product Owner**: Austin Whitesell (MITRE) @awhitesell
+**Scrum Master / Maintainer**: Brandon RichardWebster (Kitware) @b.richardwebster
 
-**Scrum Master / Tech Lead**: Brandon RichardWebster (Kitware) @b.richardwebster
+**Deputy Scrum Master / Maintainer**: Emily Veenhuis (Kitware) @emily.veenhuis
 
-**Deputy Tech Lead**: Emily Veenhuis (Kitware) @emily.veenhuis
+**Project Manager**: Keith Fieldhouse (Kitware) @keith.fieldhouse
+
+**Program Representative**: Austin Whitesell (MITRE) @awhitesell
 <!-- :auto contacts: -->
 
 <!-- :auto acknowledgment: -->
+Acknowledgment
+--------------
 
+This material is based upon work supported by the Chief Digital and Artificial Intelligence Office under Contract No.
+519TC-23-9-2032. The views and conclusions contained herein are those of the author(s) and should not be interpreted as
+necessarily representing the official policies or endorsements, either expressed or implied, of the U.S. Government.
 <!-- :auto acknowledgment: -->
