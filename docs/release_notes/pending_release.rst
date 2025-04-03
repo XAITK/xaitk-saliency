@@ -19,6 +19,8 @@ Documentation
 
 * Created ``SwappableImplementations.ipynb`` as a How To guide.
 
+* Updated ``index.rst``, ``installation.rst``, and ``README.md``  based on ``devel-jatic``.
+
 Fixes
 -----
 
