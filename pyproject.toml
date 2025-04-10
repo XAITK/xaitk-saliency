@@ -234,10 +234,6 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 # :auto ruff:
 
-# :auto mypy:
-# remove this section, including the auto mypy comment
-# :auto mypy:
-
 # :auto pyright:
 [tool.pyright]
 pythonVersion = "3.9"
