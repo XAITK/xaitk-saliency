@@ -9,19 +9,19 @@ regions that the AI model deems "important" for its predictions.
 
 Saliency methods are typically categorized as:
 
-* **White-box:** Require access to the internal state of the AI model.
+* **White-box:** Requiring access to the internal state of the AI model.
 
-* **Black-box:** Operate without any knowledge of the model internals.
+* **Black-box:** Operating without any knowledge of the model internals.
 
 Because black-box methods are often better suited to testing and evaluation (T&E) scenarios—where internal model
 access may be restricted—**xaitk-saliency prioritizes black-box saliency techniques.**
 
 Example: A First Look at xaitk-saliency
 ---------------------------------------
-This `associated project <https://github.com/XAITK/xaitk-saliency-web-demo>`_ features a local web application
-that demonstrates visual saliency generation via an interactive user interface. This provides an example of how
-saliency maps produced by xaitk-saliency can be utilized in a user interface to facilitate model predictions and
-reasoning.  The application is built using the `trame framework <https://kitware.github.io/trame/>`_.
+This `associated project <https://github.com/XAITK/xaitk-saliency-web-demo>`_ features a local web application that
+demonstrates visual saliency generation through a user interface (UI). It provides an example of how saliency
+maps produced byxaitk-saliencycan be integrated into a UI to support model prediction exploration and reasoning.
+The application is built using the `trame framework <https://kitware.github.io/trame/>`_.
 
 Gallery
 ^^^^^^^
