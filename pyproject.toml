@@ -92,7 +92,8 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 "impls.gen_object_detector_blackbox_sal.drise" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise"
 "impls.gen_object_detector_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based"
 "impls.gen_image_similarity_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based"
-"image.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
+"impls.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
+"impls.image_saliency_metric.entropy" = "xaitk_saliency.impls.image_saliency_metric.entropy"
 
 # :auto linting:
 # Linting

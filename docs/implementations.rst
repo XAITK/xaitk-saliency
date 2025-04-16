@@ -79,3 +79,13 @@ Object Detection
 
     xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based
     xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise
+
+Saliency Metric
+---------------
+
+.. autosummary::
+    :toctree: _implementations
+    :template: custom-module-template.rst
+    :recursive:
+
+    xaitk_saliency.impls.image_saliency_metric.entropy

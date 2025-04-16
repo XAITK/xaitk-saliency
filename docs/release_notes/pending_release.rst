@@ -4,6 +4,14 @@ Pending Release Notes
 Updates / New Features
 ----------------------
 
+Interfaces
+
+* Added ``ImageSaliencyMetric`` metric interface class.
+
+Implementations
+
+* Added ``Entropy`` metric implementation class.
+
 CI/CD
 
 * Removed ``mypy`` check and dependency.
@@ -28,6 +36,9 @@ Documentation
 * Replaced ``introduction.rst``  with ``xaitk_explanation.rst`` for Explanation section of docs.
 
 * Added ``ROADMAP.md``.
+
+* Added autodoc entry for ``ImageSaliencyMetric`` and ``Entropy`` classes under
+  ``interfaces.rst`` and ``implementations.rst`` respectively.
 
 Fixes
 -----
