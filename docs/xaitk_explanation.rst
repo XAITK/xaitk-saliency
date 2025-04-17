@@ -1,3 +1,4 @@
+
 Concepts of Saliency and Explainability in AI
 =============================================
 
@@ -51,10 +52,10 @@ image.
    al. <https://proceedings.neurips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf>`_
 
 
-This operation is "all or nothing" at both ends: the entire image must
-be processed, and the entire vector must be output. There is no
-mechanism by which a subset of the output can be traced back to a
-subset of the input. Yet it seems reasonable to ask questions such as:
+This process is all-or-nothing: the model must process the entire image
+and output the full prediction vector. There is no mechanism by which a
+subset of the output can be traced back to a subset of the input. Yet
+it seems reasonable to ask questions such as:
 
 * The input image is a camel; why did the system give a higher
   likelihood to "horse" than "camel"?
@@ -74,7 +75,7 @@ At some level, these questions require a degree of *introspection*;
 the system must produce not only the output, but also some information
 about **how** the output was produced.
 
-To avoid confusion, we need some definitions:
+Before diving deeper, let’s define a few key terms for clarity:
 
 * The **AI algorithm, or AI,** is the algorithm whose output we are trying to
   explain. An AI operates according to its **AI model**; contemporary
@@ -82,8 +83,8 @@ To avoid confusion, we need some definitions:
   include decision trees and support vector machines.
 
 * **Explainable AI algorithms, or XAI**, is what we attach to
-  the AI system to generate explanations (as in Figure 2). The XAI may itself
-  use CNNs, but these details are typically hidden from the XAI user.
+  the AI system to generate explanations (as in Figure 2). XAI methods may use
+  CNNs internally, but this is abstracted away from the user.
 
 Understanding White-Box and Black-Box Explainability
 ----------------------------------------------------
@@ -309,26 +310,36 @@ Cons
 How Saliency Algorithms Work: Image Perturbation and Heatmaps
 -------------------------------------------------------------
 
-The xaitk-saliency package currently provides several black-box XAI algorithms.
-These algorithms follow a general pattern that consists of two sequential steps: **image perturbation** followed by
-**heatmap generation**.
-**Image perturbation** involves generating perturbed versions of the input image by applying a set of perturbation
-masks.
-**Heatmap generation** involves generating saliency heatmaps based on how the black-box model outputs change as a result
-of image perturbation.
-This technical design choice allows for modularization of the image perturbation and heatmap generation
-components of the algorithm.
-By formulating the algorithms in this manner, the exact operation of the black-box model is not needed by
-an algorithm, which is concerned only with the inputs and outputs.
-Additionally, the algorithm can be flexibly determined by the user; that is, the user is free to choose and configure
-the algorithm as needed for the problem domain.
+The **xaitk-saliency** package is designed around **black-box XAI algorithms**,
+which are especially useful when internal access to the AI model is
+limited or unavailable.
 
-The saliency algorithms can also be organized according to their respective tasks:
+Black-box saliency methods generally follow a two-step process:
+
+1) **Image perturbation:** Generate modified versions of the input image using a
+set of masks or transformations.
+
+2) **Heatmap generation:** Analyze how the AI model's output changes in response
+to those inputs, and convert that information into a visual saliency map.
+
+This separation of functionality makes the system modular. The image perturbation
+and heatmap generation components are decoupled, which makes it easier to reuse,
+replace, or extend them. Because these algorithms operate solely on the model’s
+inputs and outputs, they do not require access to the model’s internal structure,
+making them suitable for a wide variety of use cases.
+
+.. note::
+
+   The xaitk-saliency framework **focuses on black-box saliency** techniques. This
+   approach is particularly well-suited to testing and evaluation (T&E) environments
+   where models are treated as opaque systems.
+
+Users can configure these components independently, enabling custom combinations of
+perturbation strategies and saliency scorers. The framework currently supports the
+following tasks:
 
 - :ref:`Image Classification <Interface: GenerateImageClassifierBlackboxSaliency>`
-
 - :ref:`Image Similarity <Interface: GenerateImageSimilarityBlackboxSaliency>`
-
 - :ref:`Object Detection <Interface: GenerateObjectDetectorBlackboxSaliency>`
 
 References
