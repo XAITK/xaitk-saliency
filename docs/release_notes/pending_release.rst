@@ -27,6 +27,8 @@ Documentation
 
 * Replaced ``introduction.rst``  with ``xaitk_explanation.rst`` for Explanation section of docs.
 
+* Added ``ROADMAP.md``.
+
 Fixes
 -----
 
