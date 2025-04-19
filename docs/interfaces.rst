@@ -192,10 +192,10 @@ Interface: GenerateObjectDetectorBlackboxSaliency
 Saliency Metrics
 ----------------
 
-Interface: ImageSaliencyMetric
+Interface: SaliencyMetric
 -----------------------------
 
-.. autoclass:: xaitk_saliency.interfaces.image_saliency_metric.ImageSaliencyMetric
+.. autoclass:: xaitk_saliency.interfaces.saliency_metric.SaliencyMetric
    :members:
 
 

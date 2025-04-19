@@ -88,4 +88,4 @@ Saliency Metric
     :template: custom-module-template.rst
     :recursive:
 
-    xaitk_saliency.impls.image_saliency_metric.entropy
+    xaitk_saliency.impls.saliency_metric.entropy

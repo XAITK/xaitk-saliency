@@ -1,5 +1,5 @@
 """
-Provides an implementation of the `ImageSaliencyMetric` interface for computing
+Provides an implementation of the `SaliencyMetric` interface for computing
 entropy over a saliency map using `scipy.stats.entropy`.
 
 Classes:
@@ -18,12 +18,12 @@ import numpy as np
 from scipy.stats import entropy
 from typing_extensions import override
 
-from xaitk_saliency.interfaces.image_saliency_metric import ImageSaliencyMetric
+from xaitk_saliency.interfaces.saliency_metric import SaliencyMetric
 
 
-class Entropy(ImageSaliencyMetric):
+class Entropy(SaliencyMetric):
     """
-    Implementation of the `ImageSaliencyMetric` interface to calculate entropy.
+    Implementation of the `SaliencyMetric` interface to calculate entropy.
 
     Entropy is a statistical measure of randomness that quantifies the amount of
     information in a saliency map. High entropy indicates complex, detailed information,

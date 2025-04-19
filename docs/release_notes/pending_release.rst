@@ -6,7 +6,7 @@ Updates / New Features
 
 Interfaces
 
-* Added ``ImageSaliencyMetric`` metric interface class.
+* Added ``SaliencyMetric`` metric interface class.
 
 Implementations
 
@@ -37,7 +37,7 @@ Documentation
 
 * Added ``ROADMAP.md``.
 
-* Added autodoc entry for ``ImageSaliencyMetric`` and ``Entropy`` classes under
+* Added autodoc entry for ``SaliencyMetric`` and ``Entropy`` classes under
   ``interfaces.rst`` and ``implementations.rst`` respectively.
 
 Fixes

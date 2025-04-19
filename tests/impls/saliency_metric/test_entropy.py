@@ -9,9 +9,9 @@ from smqtk_core.configuration import configuration_test_helper
 from syrupy.assertion import SnapshotAssertion
 
 from tests.test_utils import CustomFloatSnapshotExtension
-from xaitk_saliency.impls.image_saliency_metric.entropy import Entropy
+from xaitk_saliency.impls.saliency_metric.entropy import Entropy
 
-from .image_saliency_metric_utils import saliency_metric_assertions
+from .saliency_metric_utils import saliency_metric_assertions
 
 rng = np.random.default_rng()
 

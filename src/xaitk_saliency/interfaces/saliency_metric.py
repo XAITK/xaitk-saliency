@@ -1,11 +1,11 @@
 """
-This module defines the `ImageSaliencyMetric` abstract base class, an interface for computing
-metrics for a single saliency map input. Implementations of `ImageSaliencyMetric` should
+This module defines the `SaliencyMetric` abstract base class, an interface for computing
+metrics for a single saliency map input. Implementations of `SaliencyMetric` should
 define the specific metric computation in the `compute` method, which can be called directly or
 via the `__call__` method.
 
 Classes:
-    ImageSaliencyMetric: An interface outlining the computation of a given metric for
+    SaliencyMetric: An interface outlining the computation of a given metric for
     saliency map analysis.
 
 Dependencies:
@@ -13,7 +13,7 @@ Dependencies:
     - smqtk_core for configuration management and plugin compatibility.
 
 Example usage:
-    class SpecificMetric(ImageSaliencyMetric):
+    class SpecificMetric(SaliencyMetric):
         def compute(self, sal_map):
             # Define metric calculation logic here.
             pass
@@ -30,7 +30,7 @@ import numpy as np
 from smqtk_core import Plugfigurable
 
 
-class ImageSaliencyMetric(Plugfigurable):
+class SaliencyMetric(Plugfigurable):
     """
     This interface outlines the computation of a given metric when provided with
     a single input saliency map.
@@ -67,12 +67,12 @@ class ImageSaliencyMetric(Plugfigurable):
     @property
     def name(self) -> str:
         """
-        Returns the name of the ImageSaliencyMetric instance.
+        Returns the name of the SaliencyMetric instance.
 
         This property provides a convenient way to retrieve the name of the
         class instance, which can be useful for logging, debugging, or display purposes.
 
         Returns:
-            str: The name of the ImageSaliencyMetric instance.
+            str: The name of the SaliencyMetric instance.
         """
         return self.__class__.__name__
