@@ -60,7 +60,8 @@ Object Detection
 
 - **Applying Occlusion Saliency in VIAME**
 
-  Use occlusion-based saliency for marine species detection in VIAME.
+  Perform occlusion-based saliency analysis for classifying marine species
+  with the VIAME toolkit.
 
 `View notebook <examples/VIAME_OcclusionSaliency.html>`__.
 
@@ -81,7 +82,7 @@ Advanced Saliency Techniques
 
 - **Applying Radial Perturbations to Images**
 
-  Analyze model sensitivity by applying radial perturbations to inputs.
+  Analyze model sensitivity by applying radial perturbations to input images.
 
 `View notebook <examples/Radial_Image_Perturbation.html>`__.
 
