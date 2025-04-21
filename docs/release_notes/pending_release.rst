@@ -42,6 +42,8 @@ Documentation
 
 * Added ``xaitk_how_to_topics.rst`` to documentation.
 
+* Added ``glossary.rst``.
+
 Fixes
 -----
 
