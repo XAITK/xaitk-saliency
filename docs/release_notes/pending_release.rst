@@ -44,6 +44,8 @@ Documentation
 
 * Added ``glossary.rst``.
 
+* Created titles for notebooks that did not have a title.
+
 Fixes
 -----
 
