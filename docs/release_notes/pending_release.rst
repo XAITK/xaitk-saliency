@@ -52,3 +52,5 @@ Fixes
 -----
 
 * Fixed ``pyright`` errors.
+
+* Fixed broken notebooks pipeline not installing extras.

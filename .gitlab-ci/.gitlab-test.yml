@@ -12,6 +12,8 @@
 notebooks:
   extends: .notebooks
   rules: !reference [.notebooks, rules]
+  variables:
+    EXTRAS: "tools example_deps"
   parallel:
     matrix:
       # Sequences combinatorically combine within a list entry
