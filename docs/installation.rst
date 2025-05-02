@@ -15,12 +15,16 @@ xaitk-saliency installation has been tested on Unix and Linux systems.
 
 .. :auto install-commands:
 
+.. _pip:
+
 From :command:`pip`
 -------------------
 
 .. prompt:: bash
 
     pip install xaitk-saliency
+
+.. _conda:
 
 From :command:`conda-forge`
 ---------------------------
@@ -40,6 +44,21 @@ The following assumes `Poetry`_ (`installation`_ and `usage`_) is already instal
 `Poetry`_ is used for development of xaitk-saliency. Unlike the previous options,
 `Poetry`_ will not only allows developers to install any extras they need,
 but also install developmental dependencies like ``pytest`` and xaitk-saliency's linting tools.
+
+Please heed the following warning from Poetry's own documentation:
+
+.. warning::
+  Poetry should always be installed in a dedicated virtual environment to isolate it from the rest of your system.
+  It should in no case be installed in the environment of the project that is to be managed by Poetry. This ensures
+  that Poetry's own dependencies will not be accidentally upgraded or uninstalled. In addition, the isolated virtual
+  environment in which poetry is installed should not be activated for running poetry commands.
+
+If unfamiliar with Poetry, please take a moment to familiarize yourself using the above links, to ensure the smoothest
+introduction possible.
+
+.. note::
+  Poetry installation is only recommended for advanced xaitk-saliency users. For most users, :ref:`pip<pip>` or
+  :ref:`conda<conda>` installation is sufficient.
 
 .. :auto from-source:
 

@@ -46,6 +46,8 @@ Documentation
 
 * Created titles for notebooks that did not have a title.
 
+* Added warning to use Poetry only in a virtual environment per Poetry documentation.
+
 Fixes
 -----
 
