@@ -1,6 +1,6 @@
 # :auto build-system:
 [build-system]
-requires = ["poetry-core>=1.9,<2.0"]
+requires = ["poetry-core>=1.8.5,<2.0"]
 build-backend = "poetry.core.masonry.api"
 # :auto build-system:
 
@@ -92,7 +92,8 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 "impls.gen_object_detector_blackbox_sal.drise" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise"
 "impls.gen_object_detector_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based"
 "impls.gen_image_similarity_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based"
-"image.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
+"impls.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
+"impls.saliency_metric.entropy" = "xaitk_saliency.impls.saliency_metric.entropy"
 
 # :auto linting:
 # Linting
@@ -100,7 +101,6 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 optional = true
 
 [tool.poetry.group.linting.dependencies]
-mypy = ">=0.991,!=1.11.0"
 pre-commit = ">=2.20"
 ruff = "^0.5.6"
 types-setuptools = ">=65.6.0.1"
@@ -136,6 +136,7 @@ syrupy = ">=4.0.0"
 # Jupyter notebook testing
 notebook = ">=7.2.2"
 papermill = ">=2.4.0"
+pyright = {version=">=1.1.320",extras=["nodejs"]}
 # :auto tests:
 
 # :auto pytest:
@@ -233,20 +234,6 @@ line-ending = "auto"
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
 # :auto ruff:
-
-# :auto mypy:
-[tool.mypy]
-python_version = "3.9"
-disallow_untyped_defs = true
-ignore_errors = false
-ignore_missing_imports = true
-strict_optional = false
-incremental = false
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-ignore_errors = true
-# :auto mypy:
 
 # :auto pyright:
 [tool.pyright]

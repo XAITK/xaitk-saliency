@@ -187,6 +187,18 @@ Interface: GenerateObjectDetectorBlackboxSaliency
 .. autoclass:: xaitk_saliency.interfaces.gen_object_detector_blackbox_sal.GenerateObjectDetectorBlackboxSaliency
    :members:
 
+
+----------------
+Saliency Metrics
+----------------
+
+Interface: SaliencyMetric
+-----------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.saliency_metric.SaliencyMetric
+   :members:
+
+
 -------------
 Code Examples
 -------------
