@@ -3,7 +3,7 @@ repos:
     rev: v4.6.0
     hooks:
     - id: trailing-whitespace
-      types: [file, python]
+    - id: end-of-file-fixer
     - id: check-added-large-files
       args:
         # the unit here is acutally KiB (1024 bytes)
