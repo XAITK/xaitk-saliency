@@ -30,7 +30,7 @@ notebooks:
           "SwappableImplementations.ipynb",
           "VIAME_OcclusionSaliency.ipynb",
           # # Shared memory issue on GitLab
-          # "SerializedDetectionSaliency.ipynb",
+          "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
