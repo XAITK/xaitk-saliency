@@ -24,7 +24,7 @@ try:
     import matplotlib.pyplot as plt  # type: ignore
     from matplotlib.patches import Rectangle  # type: ignore
 
-    from xaitk_saliency.utils.coco import parse_coco_dset as parse_coco_dset
+    from xaitk_saliency.utils.coco import KWCocoUtils
 
     is_usable = True
 except ImportError:
@@ -129,7 +129,7 @@ def sal_on_coco_dets(
     img_sal_maps = [
         sal_generator(ref_img, bboxes, scores, blackbox_detector)
         # NOTE: Suppressing type hinting for unbound function call due to guarded import
-        for ref_img, bboxes, scores in parse_coco_dset(dets_dset)  # type: ignore
+        for ref_img, bboxes, scores in KWCocoUtils().parse_coco_dset(dets_dset)  # type: ignore
     ]
 
     # The outputs of pase_coco_dset() are constructed using gid_to_aids, so we

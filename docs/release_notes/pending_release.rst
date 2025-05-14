@@ -56,3 +56,5 @@ Fixes
 * Fixed ``pyright`` errors.
 
 * Fixed broken notebooks pipeline not installing extras.
+
+* Fixed ``pytest-core`` CI job.
