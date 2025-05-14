@@ -48,6 +48,8 @@ Documentation
 
 * Added warning to use Poetry only in a virtual environment per Poetry documentation.
 
+* Clarified that ``poetry<2.0`` is currently required.
+
 Fixes
 -----
 

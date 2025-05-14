@@ -41,6 +41,9 @@ From Source
 -----------
 The following assumes `Poetry`_ (`installation`_ and `usage`_) is already installed.
 
+.. note::
+  xaitk-saliency currently requires ``poetry<2.0``
+
 `Poetry`_ is used for development of xaitk-saliency. Unlike the previous options,
 `Poetry`_ will not only allows developers to install any extras they need,
 but also install developmental dependencies like ``pytest`` and xaitk-saliency's linting tools.
