@@ -58,6 +58,10 @@ Notebooks
 
 * Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
 
+Dependencies
+
+* Removed unused ``pyyaml`` and ``shapely`` dependencies.
+
 Fixes
 -----
 

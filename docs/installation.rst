@@ -153,10 +153,8 @@ description of the extra.
 
     **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
 
-    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_,
-    `matplotlib <https://matplotlib.org/>`_, `pyyaml <https://pyyaml.org/>`_, and
-    `shapely <https://shapely.readthedocs.io/en/stable/>`_.
-    Required for ``sal_on_coco_dets.py``.
+    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_ and
+    `matplotlib <https://matplotlib.org/>`_. Required for ``sal_on_coco_dets.py``.
 
 .. :auto installation-links:
 
