@@ -52,6 +52,8 @@ Documentation
 
 * Add information on ``xaitk-jatic``.
 
+* Added ``Extras`` section to ``installation.rst``.
+
 Notebooks
 
 * Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
