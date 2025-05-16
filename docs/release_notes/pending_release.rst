@@ -50,6 +50,8 @@ Documentation
 
 * Clarified that ``poetry<2.0`` is currently required.
 
+* Add information on ``xaitk-jatic``.
+
 Notebooks
 
 * Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
