@@ -64,3 +64,5 @@ Fixes
 * Fixed broken notebooks pipeline not installing extras.
 
 * Fixed ``pytest-core`` CI job.
+
+* Fixed notebook link formatting in ``xaitk_how_to_topics.rst``.
