@@ -16,6 +16,8 @@ CI/CD
 
 * Removed ``mypy`` check and dependency.
 
+* Converted perturb_image tests to use Surupy for image comparison.
+
 Documentation
 
 * Updated documentation format to have ``Quick Start``, ``Tutorial``, ``Explanation``, ``How-To``, and ``Reference``

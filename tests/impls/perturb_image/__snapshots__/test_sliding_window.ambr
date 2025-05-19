@@ -1,0 +1,137 @@
+# serializer version: 1
+# name: TestOcclusionBasedPerturb.test_perturb_1channel
+  array([[[False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False]]])
+# ---
+# name: TestOcclusionBasedPerturb.test_perturb_3channel
+  array([[[False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False]]])
+# ---
+# name: TestOcclusionBasedPerturb.test_perturb_3channel_nonsquare
+  array([[[False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False]]])
+# ---
+# name: TestOcclusionBasedPerturb.test_perturb_4channel
+  array([[[False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True],
+          [False, False,  True,  True,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True, False, False,  True,  True],
+          [ True,  True, False, False,  True,  True]],
+
+         [[ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True,  True,  True],
+          [ True,  True,  True,  True, False, False],
+          [ True,  True,  True,  True, False, False]]])
+# ---
