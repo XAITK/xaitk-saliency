@@ -145,17 +145,6 @@ preview of the rendered documentation.
 
 .. :auto live-preview:
 
-Extras
-------
-
-XAITK Saliency has two optional extras to expand functionality. The list below contains the extra name and a brief
-description of the extra.
-
-    **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
-
-    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_ and
-    `matplotlib <https://matplotlib.org/>`_. Required for ``sal_on_coco_dets.py``.
-
 .. :auto installation-links:
 
 .. _Poetry: https://python-poetry.org

@@ -32,7 +32,7 @@ repos:
       types_or: [python, pyi, jupyter]
     - id: sphinx-lint
       name: sphinx-lint
-      entry: poetry run sphinx-lint --enable all --disable leaked-markup --jobs 1 --max-line-length 120 -i docs/_implementations -i docs/maite/_implementations -i .dev/ docs
+      entry: poetry run sphinx-lint --enable all --disable leaked-markup --jobs 1 --max-line-length 120 docs
       types: [rst]
       language: system
     - id: ruff-format
