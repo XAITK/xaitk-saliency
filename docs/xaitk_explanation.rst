@@ -23,10 +23,11 @@ the AI. Figure 3 shows sample saliency maps for text and images.
 
 .. figure:: figures/intro-fig-03.png
 
-   Figure 3: Sample saliency maps for text (left, from [Tuckey et al.]
-   (https://arxiv.org/abs/1907.05664)) and images (right, from [Dong et
-   al.](https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/Dong_Explainability_for_Content
-   -Based_Image_Retrieval_CVPRW_2019_paper.html)).
+   Figure 3: Sample saliency maps for text (left, from `Tuckey et al.
+   <https://arxiv.org/abs/1907.05664>`_) and images (right, from `Dong et al.
+   <https://openaccess.thecvf.com/content_CVPRW_2019/html/Explainable_AI/
+   Dong_Explainability_for_Content-Based_Image_Retrieval_CVPRW_2019_paper.html>`_
+   ).
 
 .. note:: The xaitk-saliency toolkit currently focuses on providing saliency
           maps for images.

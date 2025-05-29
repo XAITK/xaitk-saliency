@@ -76,3 +76,5 @@ Fixes
 * Fixed ``pytest-core`` CI job.
 
 * Fixed notebook link formatting in ``xaitk_how_to_topics.rst``.
+
+* Fix various broken links in the documentation.

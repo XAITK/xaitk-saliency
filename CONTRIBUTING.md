@@ -119,10 +119,10 @@ For example, `PerturbImage` vs. `PerturbVideo` share the same verb, "perturb",
 but the subject that is to be perturbed is noted as the differentiator.
 
 Some concrete examples as can be found in this repository are:
-* [`PerturbImage`](xaitk_saliency/interfaces/perturb_image.py)
+* [`PerturbImage`](src/xaitk_saliency/interfaces/perturb_image.py)
     * verb: `Perturb`
     * noun: `Image` (input and output)
-* [`GenerateClassifierConfidenceSaliency`](xaitk_saliency/interfaces/gen_classifier_conf_sal.py)
+* [`GenerateClassifierConfidenceSaliency`](src/xaitk_saliency/interfaces/gen_classifier_conf_sal.py)
     * verb: `Generate`
     * noun(s): `ClassifierConfidence` (input) and `Saliency` (output)
 

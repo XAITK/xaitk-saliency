@@ -36,6 +36,6 @@ Locally, we have had success running a script as per the following:
 
 
 .. _Try Out SonarQube: https://docs.sonarqube.org/latest/setup/get-started-2-minutes/
-.. _install server: https://docs.sonarqube.org/latest/setup/install-server/
+.. _install server: https://docs.sonarsource.com/sonarqube-server/latest/setup-and-upgrade/install-the-server/introduction/
 .. _SonarQube DockerHub page: https://hub.docker.com/_/sonarqube?tab=description
 .. _SonarScanner: https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/

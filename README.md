@@ -19,7 +19,7 @@ The `xaitk-saliency` package is an open source, Explainable AI (XAI) framework
 for visual saliency algorithm interfaces and implementations, built for
 analytics and autonomy applications.
 
-See [here](https://xaitk-saliency.readthedocs.io/en/latest/introduction.html)
+See [here](https://xaitk-saliency.readthedocs.io/en/latest/xaitk_explanation.html)
 for a more formal introduction to the topic of XAI and visual saliency
 explanations.
 
