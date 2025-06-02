@@ -62,6 +62,8 @@ Notebooks
 
 * Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
 
+* Fixed outstanding isseues running the notebooks in Colab
+
 Dependencies
 
 * Removed unused ``pyyaml`` and ``shapely`` dependencies.
