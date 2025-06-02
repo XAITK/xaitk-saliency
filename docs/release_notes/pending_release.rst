@@ -18,6 +18,8 @@ CI/CD
 
 * Converted perturb_image tests to use Surupy for image comparison.
 
+* Added new ruff rules and updated pytest config.
+
 Documentation
 
 * Updated documentation format to have ``Quick Start``, ``Tutorial``, ``Explanation``, ``How-To``, and ``Reference``
