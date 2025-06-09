@@ -28,7 +28,8 @@ notebooks:
           "SimilarityScoring.ipynb",
           "SuperPixelSaliency.ipynb",
           "SwappableImplementations.ipynb",
-          "VIAME_OcclusionSaliency.ipynb",
+          # VIAME notebook takes longer than 60 minutes to execute (timeout limit)
+          #"VIAME_OcclusionSaliency.ipynb",
           # # Shared memory issue on GitLab
           "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
