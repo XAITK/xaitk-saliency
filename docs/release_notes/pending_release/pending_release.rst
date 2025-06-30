@@ -1,26 +1,12 @@
-Pending Release Notes
-=====================
-
-Updates / New Features
-----------------------
-
-Interfaces
-
 * Added ``SaliencyMetric`` metric interface class.
 
-Implementations
-
 * Added ``Entropy`` metric implementation class.
-
-CI/CD
 
 * Removed ``mypy`` check and dependency.
 
 * Converted perturb_image tests to use Surupy for image comparison.
 
 * Added new ruff rules and updated pytest config.
-
-Documentation
 
 * Updated documentation format to have ``Quick Start``, ``Tutorial``, ``Explanation``, ``How-To``, and ``Reference``
   sections
@@ -58,18 +44,11 @@ Documentation
 
 * Added ``Extras`` section to ``installation.rst``.
 
-Notebooks
-
 * Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
 
 * Fixed outstanding issues running the notebooks in Colab
 
-Dependencies
-
 * Removed unused ``pyyaml`` and ``shapely`` dependencies.
-
-Fixes
------
 
 * Fixed ``pyright`` errors.
 
