@@ -34,7 +34,7 @@ done
 # Use the first positional argument as the target branch name/hash
 TARGET_BRANCH_NAME="${POSITIONAL[0]}"
 
-readarray -d $'\0' -t release_notes_mods < <( git diff --name-only -z ${TARGET_BRANCH_NAME}..HEAD -- ./docs/release_notes/*.rst )
+readarray -d $'\0' -t release_notes_mods < <( git diff --name-only -z ${TARGET_BRANCH_NAME}..HEAD -- ./docs/release_notes/pending_release/*.rst )
 
 if [[ "${#release_notes_mods[@]}" -eq 0 ]]
 then
