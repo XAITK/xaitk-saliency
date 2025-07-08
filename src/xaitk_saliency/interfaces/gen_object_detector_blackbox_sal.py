@@ -1,8 +1,9 @@
 """This module provides the `GenerateObjectDetectorBlackboxSaliency` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
 import abc
 import logging
-from typing import Optional
 
 import numpy as np
 from smqtk_core import Plugfigurable
@@ -35,7 +36,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Generate per-detection visual saliency heatmaps for some object
@@ -160,7 +161,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> None:
         if ref_image.ndim not in (2, 3):
             raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
@@ -188,7 +189,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Alias to the :meth:`generate` method.
@@ -209,7 +210,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         """
         Internal method for implementing the generation logic.

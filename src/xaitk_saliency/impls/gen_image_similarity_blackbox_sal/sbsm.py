@@ -4,8 +4,10 @@ sliding window image perturbation and similarity scoring algorithms to generate 
 saliency maps
 """
 
+from __future__ import annotations
+
 from collections.abc import Sequence
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
@@ -30,8 +32,8 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-        threads: Optional[int] = None,
+        fill: int | Sequence[int] | np.ndarray | None = None,
+        threads: int | None = None,
     ) -> None:
         """
         Encapsulation of the perturbation-occlusion method using specifically the
@@ -64,12 +66,12 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         )
 
     @property
-    def fill(self) -> Optional[Union[int, Sequence[int], np.ndarray]]:
+    def fill(self) -> int | Sequence[int] | np.ndarray | None:
         """Gets the fill value"""
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: Optional[Union[int, Sequence[int], np.ndarray]]) -> None:
+    def fill(self, v: int | Sequence[int] | np.ndarray | None) -> None:
         self._po.fill = v
 
     def _generate(

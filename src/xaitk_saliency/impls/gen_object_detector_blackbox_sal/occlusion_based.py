@@ -3,8 +3,10 @@ This module defines the `PerturbationOcclusion` class, which implements a genera
 modular perturbation and occlusion-based algorithms
 """
 
+from __future__ import annotations
+
 from collections.abc import Hashable, Iterable, Sequence
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, TypeVar
 
 import numpy as np
 from smqtk_core.configuration import (
@@ -38,8 +40,8 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         self,
         perturber: PerturbImage,
         generator: GenerateDetectorProposalSaliency,
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-        threads: Optional[int] = 0,
+        fill: int | Sequence[int] | np.ndarray | None = None,
+        threads: int | None = 0,
     ) -> None:
         """
         Generator composed of modular perturbation and occlusion-based algorithms.
@@ -68,7 +70,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         ref_dets_mat = format_detection(bboxes, scores, objectness)
 

@@ -3,8 +3,10 @@ This module defines the `PerturbationOcclusion` class, which implements a genera
 modular perturbation and occlusion-based algorithms
 """
 
+from __future__ import annotations
+
 from collections.abc import Sequence
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, TypeVar
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
@@ -56,7 +58,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         self._generator = generator
         self._threads = threads
         # Optional fill color
-        self.fill: Optional[Union[int, Sequence[int]]] = None
+        self.fill: int | Sequence[int] | None = None
 
     def _generate(
         self,

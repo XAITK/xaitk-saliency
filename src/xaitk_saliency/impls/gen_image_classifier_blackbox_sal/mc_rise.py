@@ -1,8 +1,10 @@
 """Implementation of MC-RISE saliency stack"""
 
+from __future__ import annotations
+
 import itertools
 from collections.abc import Generator, Iterable, Sequence
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
@@ -34,7 +36,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         s: int,
         p1: float,
         fill_colors: Sequence[Sequence[int]],
-        seed: Optional[int],
+        seed: int | None,
         threads: int = 0,
     ) -> None:
         """
@@ -100,7 +102,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         ref_image: np.ndarray,
         masks: Iterable[np.ndarray],
         fill_values: Iterable[np.ndarray],
-        threads: Optional[int],
+        threads: int | None,
     ) -> Generator[np.ndarray, None, None]:
         if threads is None or threads < 1:
             for i, (mask, fill) in enumerate(zip(masks, fill_values)):

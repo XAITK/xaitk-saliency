@@ -80,3 +80,5 @@ Fixes
 * Fixed notebook link formatting in ``xaitk_how_to_topics.rst``.
 
 * Fix various broken links in the documentation.
+
+* Updated  Optional and Union to use | and imported futures for python < 3.10 support.

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Dict, Optional, Tuple
 from typing_extensions import override
 
@@ -37,8 +39,8 @@ class RandomGrid(PerturbImage):
         n: int,
         s: Tuple[int, int],
         p1: float,
-        seed: Optional[int] = None,
-        threads: Optional[int] = None,
+        seed: int | None = None,
+        threads: int | None = None,
     ):
         self.n = n
         self.s = s
