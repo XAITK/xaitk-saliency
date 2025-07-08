@@ -1,15 +1,9 @@
 #!/bin/bash
-
-# Wrapper to pull and invoke the "common" script of the same name from the
-# smqtk-core repository. If the environment variable "JUST_DOWNLOAD" is set to
-# a non-empty value, we will only download the cache files and not execute
-# them.
 #
 # Script to help with the XAITK-Saliency release process. Performs the following steps:
 #   - Poetry version (major, minor, or patch)
-#   - Rename release_notes/pending_release file to release_notes/version
-#   - Add reference to new release notes file in release_notes.rst
-#   - Add new release notes stub file
+#   - Combine release note fragments into one file
+#   - Clean pending_release directory
 #
 # Two git commits are created. One for the version bump and one for the new
 # release notes stub file.
@@ -17,20 +11,43 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-URL_SCRIPT="https://raw.githubusercontent.com/Kitware/SMQTK-Core/master/scripts/update_release_notes.sh"
-URL_STUB="https://raw.githubusercontent.com/Kitware/SMQTK-Core/master/scripts/.pending_notes_stub.rst"
-DL_SCRIPT="${SCRIPT_DIR}/.dl_script_cache.sh"
-DL_STUB="${SCRIPT_DIR}/.pending_notes_stub.rst"
+PROJECT_DIR="${SCRIPT_DIR}/.."
+DOCS_DIR="${PROJECT_DIR}/docs"
+RELEASE_NOTES_DIR="${DOCS_DIR}/release_notes"
+PENDING_RELEASE_NOTES_DIR="${RELEASE_NOTES_DIR}/pending_release"
 
-if [[ ! -f "$DL_SCRIPT" ]]
+# Check args
+if [ "$#" != 1 ]
 then
-  curl -sSL "$URL_SCRIPT" -o "$DL_SCRIPT"
-  curl -sSL "$URL_STUB" -o "$DL_STUB"
+  echo "Please enter valid version bump type. Options: major, minor, or patch"
+  exit 1
 fi
 
-if [[ -n "${JUST_DOWNLOAD}" ]]
+if [ "$1" != 'major' ] && [ "$1" != 'minor' ] && [ "$1" != 'patch' ]
 then
-  exit 0
+  echo "Please enter valid version bump type. Options: major, minor, or patch"
+  exit 1
 fi
 
-bash "$DL_SCRIPT" "$@"
+RELEASE_TYPE="$1"
+echo "Release type: ${RELEASE_TYPE}"
+
+# Update version
+poetry version "${RELEASE_TYPE}"
+
+# Get version
+VERSION="$(poetry version -s)"
+VERSION_STR="v${VERSION}"
+VERSION_SEPERATOR=${VERSION_STR//?/=}
+
+# Combine release notes
+bash combine_release_notes.sh "${VERSION}"
+
+# Make git commits
+git add "${PROJECT_DIR}"/pyproject.toml
+git add "${RELEASE_NOTES_DIR}"/v"${VERSION}".rst
+git commit -m "Update version number to ${VERSION}"
+
+# Clear pending_release
+git rm "${PENDING_RELEASE_NOTES_DIR}/*.rst"
+git commit -m "Clear release notes fragments"
