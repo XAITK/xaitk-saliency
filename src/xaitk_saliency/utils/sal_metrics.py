@@ -6,31 +6,7 @@ from typing import Any
 
 import numpy as np
 from scipy.ndimage import zoom
-from scipy.stats import entropy
 from skimage.transform import resize
-
-
-def compute_entropy(
-    sal_map: np.ndarray[Any, Any],
-    clip_min: int | None = None,
-    clip_max: int | None = None,
-) -> float:
-    """
-    Computes the entropy of a saliency map.
-
-    Args:
-        sal_map (np.ndarray): Predicted saliency map of shape (height, width).
-        clip_min (int | None): Minimum value to clip the saliency map. If None, no clipping is applied.
-        clip_max (int | None): Maximum value to clip the saliency map. If None, no clipping is applied.
-
-    Returns:
-        float: The entropy of the saliency map, computed as the Shannon entropy.
-    """
-    if clip_min is not None or clip_max is not None:
-        s = np.clip(sal_map, clip_min, clip_max)
-    else:
-        s = (sal_map - sal_map.min()) / max((sal_map.max() - sal_map.min()), 1e-10)
-    return entropy(s.ravel(), base=2)  # type: ignore
 
 
 def compute_ssd(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
