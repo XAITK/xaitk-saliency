@@ -28,16 +28,13 @@ notebooks:
           "SimilarityScoring.ipynb",
           "SuperPixelSaliency.ipynb",
           "SwappableImplementations.ipynb",
-          "VIAME_OcclusionSaliency.ipynb",
+          # VIAME notebook takes longer than 60 minutes to execute (timeout limit)
+          #"VIAME_OcclusionSaliency.ipynb",
           # # Shared memory issue on GitLab
-          # "SerializedDetectionSaliency.ipynb",
+          "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
-
-# Temporary allow failure for pytest-core due to missing import guards
-pytest-core:
-  allow_failure: true
 
 pytest-extras:
   allow_failure: false

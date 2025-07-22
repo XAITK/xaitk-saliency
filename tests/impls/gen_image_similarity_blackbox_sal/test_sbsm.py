@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import gc
 from collections.abc import Iterable
-from typing import Optional
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
@@ -37,7 +38,7 @@ class TestBlackBoxSBSM:
         class TestDescriptorGenerator(ImageDescriptorGenerator):
             """Dummy descriptor generator that returns known feature vectors."""
 
-            def generate_arrays_from_images(self, img_mat_iter: Iterable[Optional[np.ndarray]]) -> Iterable[np.ndarray]:
+            def generate_arrays_from_images(self, img_mat_iter: Iterable[np.ndarray | None]) -> Iterable[np.ndarray]:
                 # return repeatable random feature vectors
                 rng = np.random.default_rng(0)
                 for _ in img_mat_iter:

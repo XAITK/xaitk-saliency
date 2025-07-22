@@ -12,3 +12,11 @@ class MismatchedLabelsError(Exception):
         """Initialize MismatchedLabelsError"""
         self.message = message
         super().__init__(self.message)
+
+
+class KWCocoImportError(ImportError):
+    """KWCOCO Import Error"""
+
+    def __init__(self) -> None:
+        """Initialize KWCocoImportError"""
+        super().__init__("kwcoco must be installed. Please install via `xaitk-saliency[tools]`.")

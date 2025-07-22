@@ -4,9 +4,11 @@ implementations that use the `DRISEScoring` algorithm. `DRISEStack` and `RandomG
 of `_BaseDRISE`.
 """
 
+from __future__ import annotations
+
 import abc
 from collections.abc import Sequence
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
@@ -28,8 +30,8 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
 
     def __init__(
         self,
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-        threads: Optional[int] = 0,
+        fill: int | Sequence[int] | np.ndarray | None = None,
+        threads: int | None = 0,
     ) -> None:
         """
         Abstract class for implementations that use the `DRISEScoring` algorithm.
@@ -51,11 +53,11 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
         """
 
     @property
-    def fill(self) -> Optional[Union[int, Sequence[int], np.ndarray]]:
+    def fill(self) -> int | Sequence[int] | np.ndarray | None:
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: Optional[Union[int, Sequence[int], np.ndarray]]) -> None:
+    def fill(self, v: int | Sequence[int] | np.ndarray | None) -> None:
         self._po.fill = v
 
     def _generate(
@@ -64,7 +66,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
-        objectness: Optional[np.ndarray] = None,
+        objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         return self._po.generate(
             ref_image,
@@ -94,9 +96,9 @@ class DRISEStack(_BaseDRISE):
         n: int,
         s: int,
         p1: float,
-        seed: Optional[int] = None,
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-        threads: Optional[int] = 0,
+        seed: int | None = None,
+        fill: int | Sequence[int] | np.ndarray | None = None,
+        threads: int | None = 0,
     ) -> None:
         """
         Encapsulation of the perturbation-occlusion method using the RISE image
@@ -139,8 +141,8 @@ class RandomGridStack(_BaseDRISE):
         n: int,
         s: tuple[int, int],
         p1: float,
-        seed: Optional[int] = None,
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
+        seed: int | None = None,
+        fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int = 0,
     ) -> None:
         """

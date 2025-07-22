@@ -1,22 +1,12 @@
-Pending Release Notes
-=====================
-
-Updates / New Features
-----------------------
-
-Interfaces
-
 * Added ``SaliencyMetric`` metric interface class.
-
-Implementations
 
 * Added ``Entropy`` metric implementation class.
 
-CI/CD
-
 * Removed ``mypy`` check and dependency.
 
-Documentation
+* Converted perturb_image tests to use Surupy for image comparison.
+
+* Added new ruff rules and updated pytest config.
 
 * Updated documentation format to have ``Quick Start``, ``Tutorial``, ``Explanation``, ``How-To``, and ``Reference``
   sections
@@ -48,9 +38,26 @@ Documentation
 
 * Added warning to use Poetry only in a virtual environment per Poetry documentation.
 
-Fixes
------
+* Clarified that ``poetry<2.0`` is currently required.
+
+* Add information on ``xaitk-jatic``.
+
+* Added ``Extras`` section to ``installation.rst``.
+
+* Updated ``SerializedDetectionSaliency.ipynb`` to not have an exercise section at the end.
+
+* Fixed outstanding issues running the notebooks in Colab
+
+* Removed unused ``pyyaml`` and ``shapely`` dependencies.
 
 * Fixed ``pyright`` errors.
 
 * Fixed broken notebooks pipeline not installing extras.
+
+* Fixed ``pytest-core`` CI job.
+
+* Fixed notebook link formatting in ``xaitk_how_to_topics.rst``.
+
+* Fix various broken links in the documentation.
+
+* Updated  Optional and Union to use | and imported futures for python < 3.10 support.

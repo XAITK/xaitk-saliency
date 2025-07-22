@@ -34,20 +34,17 @@ Image Classification
 - **Classifying COVID-19 in Chest X-rays**
 
   Interpret model predictions on chest X-ray images using saliency maps.
-
-`View notebook <examples/covid_classification.html>`__.
+  `View notebook <examples/covid_classification.html>`__.
 
 - **Generating Saliency for MNIST with scikit-learn**
 
   Apply saliency techniques to scikit-learn classifiers on the MNIST dataset.
-
-`View notebook <examples/MNIST_scikit_saliency.html>`__.
+  `View notebook <examples/MNIST_scikit_saliency.html>`__.
 
 - **Comparing Saliency Across Models**
 
   Visualize and compare explanations from different classifiers.
-
-`View notebook <examples/ModelComparisonWithSaliency.html>`__.
+  `View notebook <examples/ModelComparisonWithSaliency.html>`__.
 
 Object Detection
 ----------------
@@ -55,15 +52,13 @@ Object Detection
 - **Generating Detection Saliency via Serialization**
 
   Produce saliency maps for serialized detections in COCO format.
-
-`View notebook <examples/SerializedDetectionSaliency.html>`__.
+  `View notebook <examples/SerializedDetectionSaliency.html>`__.
 
 - **Applying Occlusion Saliency in VIAME**
 
   Perform occlusion-based saliency analysis for classifying marine species
   with the VIAME toolkit.
-
-`View notebook <examples/VIAME_OcclusionSaliency.html>`__.
+  `View notebook <examples/VIAME_OcclusionSaliency.html>`__.
 
 Advanced Saliency Techniques
 ----------------------------
@@ -71,26 +66,22 @@ Advanced Saliency Techniques
 - **Swapping Saliency Techniques in a Classification Pipeline**
 
   Modularize and switch between saliency methods in an application workflow.
-
-`View notebook <examples/SwappableImplementations.html>`__.
+  `View notebook <examples/SwappableImplementations.html>`__.
 
 - **Estimating Saliency with Multi-Color RISE**
 
   Generate saliency maps with uncertainty quantification using MC-RISE.
-
-`View notebook <examples/MC_RISE.html>`__.
+  `View notebook <examples/MC_RISE.html>`__.
 
 - **Applying Radial Perturbations to Images**
 
   Analyze model sensitivity by applying radial perturbations to input images.
-
-`View notebook <examples/Radial_Image_Perturbation.html>`__.
+  `View notebook <examples/Radial_Image_Perturbation.html>`__.
 
 - **Generating Superpixel-Based Saliency Maps**
 
   Use superpixels as spatial units for interpretable saliency mapping.
-
-`View notebook <examples/SuperPixelSaliency.html>`__.
+  `View notebook <examples/SuperPixelSaliency.html>`__.
 
 Other Applications
 ------------------
@@ -98,14 +89,12 @@ Other Applications
 - **Applying Saliency to Atari Game Agents**
 
   Visualize saliency in deep reinforcement learning agents trained on Atari games.
-
-`View notebook <examples/atari_deepRL_saliency.html>`__.
+  `View notebook <examples/atari_deepRL_saliency.html>`__.
 
 - **Explaining Similarity Scores with Saliency**
 
   Use saliency maps to interpret similarity scoring systems.
-
-`View notebook <examples/SimilarityScoring.html>`__.
+  `View notebook <examples/SimilarityScoring.html>`__.
 
 Related Resources
 -----------------

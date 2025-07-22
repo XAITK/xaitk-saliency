@@ -16,11 +16,23 @@ Saliency methods are typically categorized as:
 Because black-box methods are often better suited to testing and evaluation (T&E) scenarios—where internal model
 access may be restricted—**xaitk-saliency prioritizes black-box saliency techniques.**
 
+.. note::
+  `Modular AI Trustworthy Engineering (MAITE) <https://mit-ll-ai-technology.github.io/maite/>`_ users may enable
+  XAITK-Saliency operations on MAITE models and datasets using
+  `XAITK-JATIC <https://github.com/Kitware/xaitk-jatic>`_. For example usage, view the notebooks for
+  `object detection  <jatic_detection_>`_ and `image classification <jatic_classification_>`_ after getting
+  familiarized with core XAITK-Saliency concepts.
+
+.. _jatic_detection: https://github.com/Kitware/xaitk-jatic/blob/main/docs/examples/
+   jatic-object-detector-protocol.ipynb
+.. _jatic_classification: https://github.com/Kitware/xaitk-jatic/blob/main/docs/examples/
+   jatic-image-classifier-protocol.ipynb
+
 Example: A First Look at xaitk-saliency
 ---------------------------------------
 This `associated project <https://github.com/XAITK/xaitk-saliency-web-demo>`_ features a local web application that
 demonstrates visual saliency generation through a user interface (UI). It provides an example of how saliency
-maps produced byxaitk-saliencycan be integrated into a UI to support model prediction exploration and reasoning.
+maps produced by xaitk-saliency can be integrated into a UI to support model prediction exploration and reasoning.
 The application is built using the `trame framework <https://kitware.github.io/trame/>`_.
 
 Gallery

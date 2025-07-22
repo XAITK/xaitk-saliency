@@ -1,9 +1,16 @@
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
+from syrupy.assertion import SnapshotAssertion
 
-from tests import EXPECTED_MASKS_4x6
+from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency import PerturbImage
 from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+
+
+@pytest.fixture
+def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
+    return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
 class TestOcclusionBasedPerturb:
@@ -36,7 +43,7 @@ class TestOcclusionBasedPerturb:
             assert inst.window_size == ex_w
             assert inst.stride == ex_s
 
-    def test_perturb_1channel(self) -> None:
+    def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
@@ -48,9 +55,9 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
+        snapshot_custom.assert_match(actual_masks)
 
-    def test_perturb_3channel(self) -> None:
+    def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
@@ -62,9 +69,9 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
+        snapshot_custom.assert_match(actual_masks)
 
-    def test_perturb_3channel_nonsquare(self) -> None:
+    def test_perturb_3channel_nonsquare(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with non-square window +
         stride.
@@ -77,9 +84,9 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(3, 2), stride=(3, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_6x6_rect)
+        snapshot_custom.assert_match(actual_masks)
 
-    def test_perturb_4channel(self) -> None:
+    def test_perturb_4channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
@@ -91,7 +98,7 @@ class TestOcclusionBasedPerturb:
         impl = SlidingWindow(window_size=(2, 2), stride=(2, 2))
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
+        snapshot_custom.assert_match(actual_masks)
 
     def test_window_size_agnostic(self) -> None:
         """
@@ -107,59 +114,3 @@ class TestOcclusionBasedPerturb:
         masks_3x3 = impl_3x3.perturb(img)
 
         assert len(masks_2x2) == len(masks_3x3)
-
-
-# Common expected masks for 6x6 tests
-EXPECTED_MASKS_6x6_rect = np.array(
-    [
-        [
-            [0, 0, 1, 1, 1, 1],
-            [0, 0, 1, 1, 1, 1],
-            [0, 0, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-        ],
-        [
-            [1, 1, 0, 0, 1, 1],
-            [1, 1, 0, 0, 1, 1],
-            [1, 1, 0, 0, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-        ],
-        [
-            [1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-        ],
-        [
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [0, 0, 1, 1, 1, 1],
-            [0, 0, 1, 1, 1, 1],
-            [0, 0, 1, 1, 1, 1],
-        ],
-        [
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 0, 0, 1, 1],
-            [1, 1, 0, 0, 1, 1],
-            [1, 1, 0, 0, 1, 1],
-        ],
-        [
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 0, 0],
-        ],
-    ],
-    dtype=bool,
-)

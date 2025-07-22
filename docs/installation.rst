@@ -41,6 +41,9 @@ From Source
 -----------
 The following assumes `Poetry`_ (`installation`_ and `usage`_) is already installed.
 
+.. note::
+  xaitk-saliency currently requires ``poetry<2.0``
+
 `Poetry`_ is used for development of xaitk-saliency. Unlike the previous options,
 `Poetry`_ will not only allows developers to install any extras they need,
 but also install developmental dependencies like ``pytest`` and xaitk-saliency's linting tools.
@@ -116,6 +119,17 @@ formats that may be available (although be aware that some of them require
 additional dependencies such as :program:`TeX` or :program:`LaTeX`).
 
 .. :auto build-docs:
+
+Extras
+------
+
+XAITK Saliency has two optional extras to expand functionality. The list below contains the extra name and a brief
+description of the extra.
+
+    **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
+
+    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_ and
+    `matplotlib <https://matplotlib.org/>`_. Required for ``sal_on_coco_dets.py``.
 
 .. :auto live-preview:
 

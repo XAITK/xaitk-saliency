@@ -53,22 +53,20 @@ smqtk-descriptors = ">=0.16.0"
 smqtk-detection = ">=0.19.0"
 scipy = ">=1.10.0"  # CVE-2023-25399
 click = ">=8.0.3"
-setuptools = "*"
+setuptools = ">=78.1.1"  # CVE-2025-47273
 # Optionals for "example" extra
 notebook = { version = ">=7.2.2", optional = true }
 matplotlib = { version=">=3.4.1", optional = true }
 papermill = { version = ">=2.3.3", optional = true }
-torch = {version = ">=1.9.0,!=2.0.1", optional = true}
+torch = {version = ">=2.2.0", optional = true}
 torchvision = {version = ">=0.10.0", optional = true}
 tqdm = { version = ">=4.66.3", optional = true } # CVE-2024-34062
 # Optionals for "tools" extra"
 kwcoco = { version = ">=0.2.18", optional = true}
-pyyaml = {version = ">=6.0.1", optional = true, python = ">=3.12"}
-shapely = {version = ">=2.0.2", optional = true, python = ">=3.12"}
 
 [tool.poetry.extras]
 example_deps = [ "notebook", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
-tools = [ "kwcoco", "matplotlib", "pyyaml", "shapely" ]
+tools = [ "kwcoco", "matplotlib"]
 
 
 [tool.poetry.scripts]
@@ -102,7 +100,7 @@ optional = true
 
 [tool.poetry.group.linting.dependencies]
 pre-commit = ">=2.20"
-ruff = "^0.5.6"
+ruff = "^0.11.0"
 types-setuptools = ">=65.6.0.1"
 sphinx-lint = ">=1.0.0"
 pyright = {version=">=1.1.320",extras=["nodejs"]}
@@ -149,6 +147,7 @@ addopts = [
     "--cov=./tests",                    # Also cover our tests for dead spots
     "--cov-report=term",                # Coverage report to terminal
     "--cov-report=xml:coverage.xml",    # for external tool reporting
+    "--snapshot-warn-unused",           # Prevent test failure when skipping tests
 ]
 testpaths = [
     "tests",
@@ -184,17 +183,13 @@ select = [
     "F", "E", "W", "C90", "I", "N", "D1", "D200", "D201", "D211", "D403", "D419", "UP",
     "YTT", "ANN", "S",  "BLE", "B", "A", "COM", "C4", "T10", "ISC", "ICN", "PYI", "PT", "Q",
     "RSE", "RET", "SLF", "SIM", "TID252", "ARG", "FIX", "PD", "FLY", "NPY", "RUF027",
-    "RUF100", "PERF"
+    "RUF100", "PERF", "UP045", "RUF013"
 ]
 preview = true  # needed for RUF027
 explicit-preview-rules = true
 
-ignore = [
-  "ANN101",
-  "ANN102",
-  # -- Ignore these rules, since they contradict our coding standards
-  "C408",  # JATIC guidelines prefer "list()", rather than "[]", to create an empty list
-]
+# From program suggested config
+ignore = ["ANN101","ANN102","C408","C416"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

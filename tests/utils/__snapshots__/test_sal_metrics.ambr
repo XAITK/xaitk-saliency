@@ -1,0 +1,43 @@
+# serializer version: 1
+# name: TestComputeGroundTruthCoverage.test_regression[Single random binary saliency map and downsized image mask]
+  0.5036385690673137
+# ---
+# name: TestComputeGroundTruthCoverage.test_regression[Single random binary saliency map and image mask]
+  0.5038462717214748
+# ---
+# name: TestComputeGroundTruthCoverage.test_regression[Single random downsized binary saliency map and image mask]
+  0.4919157275845174
+# ---
+# name: TestComputeIoUCoverage.test_regression[Single random binary saliency map and downsized image mask]
+  0.41187518058364636
+# ---
+# name: TestComputeIoUCoverage.test_regression[Single random binary saliency map and image mask]
+  0.33478597320083087
+# ---
+# name: TestComputeIoUCoverage.test_regression[Single random downsized binary saliency map and image mask]
+  0.401999855082965
+# ---
+# name: TestComputeSSD.test_regression[Single random input saliency and reference saliency maps]
+  1.6505363055162763
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random binary saliency map and downsized image mask]
+  0.5058850933481778
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random binary saliency map and image mask]
+  0.4994379803748823
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random continuous saliency map and binary image mask]
+  0.49620540669131535
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random continuous saliency map and downsized binary image mask]
+  0.5108586717850373
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random downsized binary saliency map and image mask]
+  0.4934267108981447
+# ---
+# name: TestComputeSaliencyCoverage.test_regression[Single random downsized continuous saliency map and binary image mask]
+  0.5114136755802363
+# ---
+# name: TestComputeXCorr.test_regression[Single random input saliency and reference saliency maps]
+  0.005532439020454301
+# ---
