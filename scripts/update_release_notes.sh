@@ -41,7 +41,7 @@ VERSION_STR="v${VERSION}"
 VERSION_SEPERATOR=${VERSION_STR//?/=}
 
 # Combine release notes
-bash combine_release_notes.sh "${VERSION}"
+bash ${SCRIPT_DIR}/combine_release_notes.sh "${VERSION}"
 
 # Make git commits
 git add "${PROJECT_DIR}"/pyproject.toml

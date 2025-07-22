@@ -1,0 +1,56 @@
+v0.13.0
+=======
+
+This release introduces a new ``SaliencyMetric`` interface and its first implementation ``Entropy``,
+along with significant updates to documentation structure, testing framework, and dependency management.
+It also includes various notebook and documentation fixes to improve usability and compatibility with Google Colab.
+
+Updates / New Features
+----------------------
+
+Metrics and Interfaces
+
+* Added ``SaliencyMetric`` metric interface class.
+* Added ``Entropy`` metric implementation class.
+* Added autodoc entry for ``SaliencyMetric`` and ``Entropy`` classes.
+* Added ``sal_metric_utils.py`` script with utility functions for computing metrics.
+
+Documentation Improvements
+
+* Updated documentation structure to include: ``Quick Start``, ``Tutorial``, ``Explanation``,
+  ``How-To``, and ``Reference``.
+* Replaced ``introduction.rst`` with ``xaitk_explanation.rst`` for the new Explanation section.
+* Updated ``index.rst``, ``installation.rst``, and ``README.md`` based on ``devel-jatic``.
+* Updated ``implementations.rst`` to use ``autosummary``.
+* Added ``xaitk_how_to_topics.rst``, ``glossary.rst``, and ``ROADMAP.md``.
+* Added warning to use Poetry only in a virtual environment, and clarified ``poetry<2.0`` requirement.
+* Added ``Extras`` section to ``installation.rst``.
+* Added information on ``xaitk-jatic``.
+
+Examples and Notebooks
+
+* Created ``SwappableImplementations.ipynb`` as a How-To guide.
+* Updated ``DRISE.ipynb`` and ``OcclusionSaliency.ipynb`` as official XAITK tutorials.
+* Updated ``SerializedDetectionSaliency.ipynb`` to remove the exercise section.
+* Moved ``examples`` directory to ``docs/examples``.
+* Created titles for notebooks missing one.
+
+Codebase and Tooling
+
+* Converted ``perturb_image`` tests to use Surupy for image comparison.
+* Added new ``ruff`` rules and updated ``pytest`` config.
+* Removed ``mypy`` check and dependency.
+* Removed unused ``pyyaml`` and ``shapely`` dependencies.
+* Updated syntax: replaced ``Optional`` and ``Union`` with ``|`` operator and added compatibility
+  import for Python < 3.10.
+
+Fixes
+-----
+
+* Fixed outstanding issues running the notebooks in Colab.
+* Corrected Google Colab links in example notebooks.
+* Fixed broken notebook link formatting in ``xaitk_how_to_topics.rst``.
+* Fixed various broken links in the documentation.
+* Fixed ``pyright`` errors.
+* Fixed broken notebooks pipeline not installing extras.
+* Fixed ``pytest-core`` CI job.
