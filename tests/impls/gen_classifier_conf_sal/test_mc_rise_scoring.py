@@ -10,7 +10,7 @@ from xaitk_saliency.impls.gen_classifier_conf_sal.mc_rise_scoring import MCRISES
 
 @pytest.fixture
 def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
-    return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())
+    return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
 class TestMCRiseScoring:

@@ -1,0 +1,13 @@
+# serializer version: 1
+# name: TestEntropy.test_regression[Full Saliency Entropy]
+  -inf
+# ---
+# name: TestEntropy.test_regression[Negative saliency entropy]
+  10.160211041784207
+# ---
+# name: TestEntropy.test_regression[None]
+  11.850504882120958
+# ---
+# name: TestEntropy.test_regression[Positive saliency entropy]
+  10.87098660720397
+# ---

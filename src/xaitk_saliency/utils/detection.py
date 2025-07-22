@@ -1,6 +1,6 @@
 """This module provides the `format_detection` function to format detections for `xaitk-saliency`."""
 
-from typing import Optional
+from __future__ import annotations
 
 import numpy as np
 
@@ -8,7 +8,7 @@ import numpy as np
 def format_detection(
     bbox_mat: np.ndarray,
     classification_mat: np.ndarray,
-    objectness: Optional[np.ndarray] = None,
+    objectness: np.ndarray | None = None,
 ) -> np.ndarray:
     """
     Combine detection and classification output, with optional objectness

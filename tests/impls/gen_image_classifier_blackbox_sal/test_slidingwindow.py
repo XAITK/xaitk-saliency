@@ -1,9 +1,8 @@
 from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
-from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T
+from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring

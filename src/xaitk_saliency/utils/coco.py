@@ -6,22 +6,29 @@ from collections.abc import Generator
 import numpy as np
 from PIL import Image  # type: ignore
 
+from xaitk_saliency.exceptions import KWCocoImportError
+
 try:
     import kwcoco  # type: ignore
 
-    is_usable = True
-except ModuleNotFoundError:
-    is_usable = False
+    kwcoco_available = True
+except ImportError:
+    kwcoco_available = False
 
 LOG = logging.getLogger(__name__)
 
 
-if not is_usable:
-    LOG.warning(f"{__name__} requires additional dependencies, please install 'xaitk-saliency[tools]'")
-else:
+class KWCocoUtils:
+    """Class for KWCoco Utility functions"""
+
+    def __init__(self) -> None:
+        """Initialize KWCocoUtils"""
+        if not self.is_usable():
+            raise KWCocoImportError
 
     def parse_coco_dset(
-        dets_dset: kwcoco.CocoDataset,
+        self,
+        dets_dset: "kwcoco.CocoDataset",
     ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
         """
         Generate reference image, bounding box, and class score matrices, for
@@ -75,3 +82,13 @@ else:
             ref_img = np.asarray(Image.open(img_file))
 
             yield ref_img, bboxes, scores
+
+    @classmethod
+    def is_usable(cls) -> bool:
+        """
+        Checks if the necessary dependencies (KWCoco) are available.
+
+        Returns:
+            bool: True if KWCoco is available; False otherwise.
+        """
+        return kwcoco_available

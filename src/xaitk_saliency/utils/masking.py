@@ -1,12 +1,14 @@
 """This module provides utility functions for `xaitk-saliency`."""
 
+from __future__ import annotations
+
 import itertools
 import time
 from collections.abc import Generator, Iterable, Sequence
-from typing import Callable, Optional, Union
+from typing import Callable
 
 import numpy as np
-from smqtk_descriptors.utils import parallel_map
+from smqtk_descriptors.utils.parallel import parallel_map
 
 # Lowest volume to convert `1` value.
 UINT8_ONE = np.uint8(1)
@@ -15,8 +17,8 @@ UINT8_ONE = np.uint8(1)
 def occlude_image_batch(  # noqa: C901
     ref_image: np.ndarray,
     masks: np.ndarray,
-    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-    threads: Optional[int] = None,
+    fill: int | Sequence[int] | np.ndarray | None = None,
+    threads: int | None = None,
 ) -> np.ndarray:
     """
     Apply a number of input occlusion masks to the given reference image,
@@ -125,8 +127,8 @@ def occlude_image_batch(  # noqa: C901
 def occlude_image_streaming(  # noqa: C901
     ref_image: np.ndarray,
     masks: Iterable[np.ndarray],
-    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-    threads: Optional[int] = None,
+    fill: int | Sequence[int] | np.ndarray | None = None,
+    threads: int | None = None,
 ) -> Generator[np.ndarray, None, None]:
     """
     Apply a number of input occlusion masks to the given reference image,
@@ -280,7 +282,7 @@ def _benchmark_threads_helper(
     img_channels: int,
     threading_tests: Sequence[int],
     perf_counter: Callable,
-    fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
+    fill: int | Sequence[int] | np.ndarray | None = None,
 ) -> None:
     for threads in threading_tests:
         s = perf_counter()

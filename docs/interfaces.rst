@@ -12,9 +12,9 @@ We explicitly do not require an abstraction for the black-box operations to fit 
 This is intended to allow for applications using these interfaces while leveraging existing functionality, which only
 need to perform data formatting to fit the input defined here.
 Note, however, that some interfaces are defined for certain black-box concepts as part of the SMQTK ecosystem (e.g.
-in [SMQTK-Descriptors](https://github.com/Kitware/SMQTK-Descriptors), [SMQTK-Classifier](https://github
-.com/Kitware/SMQTK-Classifier), [SMQTK-Relevancy](https://github.com/Kitware/SMQTK-Relevancy), and other ``SMQTK-*
-modules``).
+in `SMQTK-Descriptors <https://github.com/Kitware/SMQTK-Descriptors>`_,
+`SMQTK-Classifier <https://github.com/Kitware/SMQTK-Classifier>`_,
+`SMQTK-Relevancy <https://github.com/Kitware/SMQTK-Relevancy>`_, and other ``SMQTK-* modules``).
 
 
 These interfaces are based on the plugin and configuration features provided by
@@ -186,6 +186,18 @@ Interface: GenerateObjectDetectorBlackboxSaliency
 
 .. autoclass:: xaitk_saliency.interfaces.gen_object_detector_blackbox_sal.GenerateObjectDetectorBlackboxSaliency
    :members:
+
+
+----------------
+Saliency Metrics
+----------------
+
+Interface: SaliencyMetric
+-----------------------------
+
+.. autoclass:: xaitk_saliency.interfaces.saliency_metric.SaliencyMetric
+   :members:
+
 
 -------------
 Code Examples

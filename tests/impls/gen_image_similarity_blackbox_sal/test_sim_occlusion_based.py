@@ -1,11 +1,14 @@
+from __future__ import annotations
+
 import gc
 import unittest.mock as mock
 from collections.abc import Iterable
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+from typing_extensions import override
 
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency, PerturbImage
 from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -63,11 +66,12 @@ class TestPerturbationOcclusion:
         class StubGen(GenerateDescriptorSimilaritySaliency):
             """Stub saliency generator that returns zeros with correct shape."""
 
+            @override
             def generate(
                 self,
-                _: np.ndarray,
+                ref_descr: np.ndarray,
                 query_descrs: np.ndarray,
-                __: np.ndarray,
+                perturbed_descrs: np.ndarray,
                 perturbed_masks: np.ndarray,
             ) -> np.ndarray:
                 return np.zeros((query_descrs.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
@@ -77,7 +81,7 @@ class TestPerturbationOcclusion:
         class StubDescGen(ImageDescriptorGenerator):
             """Stub image descriptor generator that returns known feature vectors."""
 
-            def generate_arrays_from_images(self, img_mat_iter: Iterable[Optional[np.ndarray]]) -> Iterable[np.ndarray]:
+            def generate_arrays_from_images(self, img_mat_iter: Iterable[np.ndarray | None]) -> Iterable[np.ndarray]:
                 for _ in img_mat_iter:
                     yield np.ones(25)
 

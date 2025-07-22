@@ -1,15 +1,21 @@
+.. :auto introduction:
+
 Installation
 ============
 
-There are two ways to obtain the xaitk-saliency package.
+There are multiple ways to obtain the xaitk-saliency package.
 The simplest is to install via the :command:`pip` command.
-Alternatively, you can use `Poetry`_ (`installation`_ and `usage`_) to acquire the source tree and
-develop locally.
+Alternatively, you can install via :command:`conda-forge` command.
+For local development, you can use `Poetry`_.
+
+xaitk-saliency installation has been tested on Unix and Linux systems.
+
+.. :auto introduction:
 
 
-.. _installation: Poetry-installation_
-.. _usage: Poetry-usage_
+.. :auto install-commands:
 
+.. _pip:
 
 From :command:`pip`
 -------------------
@@ -18,16 +24,48 @@ From :command:`pip`
 
     pip install xaitk-saliency
 
-This method will install all of the same functionality as when installing from source.
-If you have an existing installation and would like to upgrade your version,
-provide the ``-U``/``--upgrade`` `option`__.
+.. _conda:
 
-__ Pip-install-upgrade_
+From :command:`conda-forge`
+---------------------------
 
+.. prompt:: bash
+
+    conda install -c conda-forge xaitk-saliency
+
+.. :auto install-commands:
+
+.. :auto from-source:
 
 From Source
 -----------
-The following assumes `Poetry`_ is already installed.
+The following assumes `Poetry`_ (`installation`_ and `usage`_) is already installed.
+
+.. note::
+  xaitk-saliency currently requires ``poetry<2.0``
+
+`Poetry`_ is used for development of xaitk-saliency. Unlike the previous options,
+`Poetry`_ will not only allows developers to install any extras they need,
+but also install developmental dependencies like ``pytest`` and xaitk-saliency's linting tools.
+
+Please heed the following warning from Poetry's own documentation:
+
+.. warning::
+  Poetry should always be installed in a dedicated virtual environment to isolate it from the rest of your system.
+  It should in no case be installed in the environment of the project that is to be managed by Poetry. This ensures
+  that Poetry's own dependencies will not be accidentally upgraded or uninstalled. In addition, the isolated virtual
+  environment in which poetry is installed should not be activated for running poetry commands.
+
+If unfamiliar with Poetry, please take a moment to familiarize yourself using the above links, to ensure the smoothest
+introduction possible.
+
+.. note::
+  Poetry installation is only recommended for advanced xaitk-saliency users. For most users, :ref:`pip<pip>` or
+  :ref:`conda<conda>` installation is sufficient.
+
+.. :auto from-source:
+
+.. :auto quick-start:
 
 Quick Start
 ^^^^^^^^^^^
@@ -37,23 +75,15 @@ Quick Start
     cd /where/things/should/go/
     git clone https://github.com/XAITK/xaitk-saliency.git ./
     poetry install
-    poetry run pytest
-    cd docs
-    poetry run make html
 
+.. :auto quick-start:
 
-Installing Python Dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This project uses `Poetry`_ for dependency management, environment consistency,
-package building, version management, and publishing to PyPI.
-Dependencies are `abstractly defined`_ in the :file:`pyproject.toml` file, as
-well as `specifically pinned versions`_ in the :file:`poetry.lock` file, both
-of which can be found in the root of the source tree.
+.. :auto dev-deps:
 
-.. _abstractly defined: Poetry-dependencies_
-.. _specifically pinned versions: Poetry-poetrylock_
+Installing Developer Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The following installs both installation and development dependencies as
+The following installs both core and development dependencies as
 specified in the :file:`pyproject.toml` file, with versions specified
 (including for transitive dependencies) in the :file:`poetry.lock` file:
 
@@ -61,6 +91,9 @@ specified in the :file:`pyproject.toml` file, with versions specified
 
     poetry install --sync --with linting,tests,docs
 
+.. :auto dev-deps:
+
+.. :auto build-docs:
 
 Building the Documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -73,13 +106,32 @@ Within the :file:`docs/` directory is a Unix :file:`Makefile` (for Windows
 systems, a :file:`make.bat` file with similar capabilities exists).
 This :file:`Makefile` takes care of the work required to run :program:`Sphinx`
 to convert the raw documentation to an attractive output format.
-For example, as shown in the Quick Start section (above), calling ``make html`` will generate
+For example, calling the command below will generate
 HTML format documentation rooted at :file:`docs/_build/html/index.html`.
+
+.. prompt:: bash
+
+    poetry run make html
+
 
 Calling the command ``make help`` here will show the other documentation
 formats that may be available (although be aware that some of them require
 additional dependencies such as :program:`TeX` or :program:`LaTeX`).
 
+.. :auto build-docs:
+
+Extras
+------
+
+XAITK Saliency has two optional extras to expand functionality. The list below contains the extra name and a brief
+description of the extra.
+
+    **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
+
+    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_ and
+    `matplotlib <https://matplotlib.org/>`_. Required for ``sal_on_coco_dets.py``.
+
+.. :auto live-preview:
 
 Live Preview
 """"""""""""
@@ -102,12 +154,13 @@ This will serve the resulting HTML files at http://localhost:5500.
 Having this URL open in a browser will provide you with an up-to-date
 preview of the rendered documentation.
 
+.. :auto live-preview:
 
-.. _Pip-install-upgrade: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-U
+.. :auto installation-links:
+
 .. _Poetry: https://python-poetry.org
-.. _Poetry-installation: https://python-poetry.org/docs/#installation
-.. _Poetry-usage: https://python-poetry.org/docs/basic-usage/
-.. _Poetry-poetrylock: https://python-poetry.org/docs/basic-usage/#installing-with-poetrylock
-.. _Poetry-dependencies: https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies
-.. _Sphinx: http://sphinx-doc.org/
+.. _installation: https://python-poetry.org/docs/#installation
+.. _usage: https://python-poetry.org/docs/basic-usage/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
+
+.. :auto installation-links:

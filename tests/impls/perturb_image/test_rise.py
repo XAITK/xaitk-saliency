@@ -1,8 +1,15 @@
 import numpy as np
 import pytest
 from smqtk_core.configuration import configuration_test_helper
+from syrupy.assertion import SnapshotAssertion
 
+from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency.impls.perturb_image.rise import RISEGrid
+
+
+@pytest.fixture
+def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
+    return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
 class TestRISEPerturbation:
@@ -46,7 +53,7 @@ class TestRISEPerturbation:
         impl2 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
 
-    def test_perturb_1channel(self) -> None:
+    def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
@@ -59,7 +66,7 @@ class TestRISEPerturbation:
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
+        snapshot_custom.assert_match(actual_masks)
 
     def test_call_idempotency(self) -> None:
         """
@@ -82,7 +89,7 @@ class TestRISEPerturbation:
             actual_masks2,
         )
 
-    def test_perturb_3channel(self) -> None:
+    def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
@@ -95,7 +102,7 @@ class TestRISEPerturbation:
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42, threads=0)
         actual_masks = impl.perturb(white_image)
 
-        assert np.allclose(actual_masks, EXPECTED_MASKS_4x6)
+        snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_sizes(self) -> None:
         """
@@ -112,24 +119,3 @@ class TestRISEPerturbation:
         masks_large = impl.perturb(white_image_large)
         assert len(masks_large) == 2
         assert masks_large.shape[1:] == white_image_large.shape
-
-
-# Common expected masks for 4x6 tests
-# These assume seed=42, serial generation with threads=0
-EXPECTED_MASKS_4x6 = np.array(
-    [
-        [
-            [0.03703703, 0.18518518, 0.33333330, 0.48148150, 0.62962960, 0.55555546],
-            [0.05555555, 0.27777780, 0.50000000, 0.72222227, 0.94444450, 0.83333325],
-            [0.03703703, 0.18518520, 0.33333330, 0.48148150, 0.62962970, 0.55555550],
-            [0.01851852, 0.09259260, 0.16666669, 0.24074079, 0.31481487, 0.27777780],
-        ],
-        [
-            [0.83333330, 0.94444440, 0.72222220, 0.50000000, 0.27777773, 0.05555552],
-            [0.55555550, 0.62962960, 0.48148146, 0.33333330, 0.18518515, 0.03703701],
-            [0.27777780, 0.31481487, 0.24074076, 0.16666669, 0.09259259, 0.01851851],
-            [0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.00000000],
-        ],
-    ],
-    dtype=np.float32,
-)

@@ -1,6 +1,7 @@
 import os
 import unittest.mock as mock
 from importlib.util import find_spec
+from pathlib import Path
 
 import py  # type: ignore
 import pytest
@@ -29,7 +30,7 @@ class TestSalOnCocoDetsNotUsable:
         Test that proper warning is displayed when required dependencies are
         not installed.
         """
-        output_dir = tmpdir.join("out")
+        output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()
 
@@ -51,20 +52,20 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring.
         """
-        output_dir = tmpdir.join("out")
+        output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()
         result = runner.invoke(sal_on_coco_dets_cmd, [str(dets_file), str(output_dir), str(config_file), "-v"])
 
         # expected created directories for image saliency maps
-        img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
+        img_dirs = [output_dir.join(Path(d)) for d in ["test_image1", "test_image2"]]
         # detection ids that belong to each image
         img_dets = [[1, 2, 3], [5, 6]]
 
         assert result.exit_code == 0
         assert sorted(output_dir.listdir()) == sorted(img_dirs)
         for img_dir, det_ids in zip(img_dirs, img_dets):
-            map_files = [img_dir.join(f"det_{det_id}.jpeg") for det_id in det_ids]
+            map_files = [img_dir.join(Path(f"det_{det_id}.jpeg")) for det_id in det_ids]
             assert sorted(img_dir.listdir()) == sorted(map_files)
 
     def test_coco_sal_gen_img_overlay(self, tmpdir: py.path.local) -> None:
@@ -72,7 +73,7 @@ class TestSalOnCocoDets:
         Test saliency map generation with RandomDetector, RISEGrid, and
         DRISEScoring with the overlay image option.
         """
-        output_dir = tmpdir.join("out")
+        output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()
         result = runner.invoke(
@@ -81,21 +82,21 @@ class TestSalOnCocoDets:
         )
 
         # expected created directories for image saliency maps
-        img_dirs = [output_dir.join(d) for d in ["test_image1", "test_image2"]]
+        img_dirs = [output_dir.join(Path(d)) for d in ["test_image1", "test_image2"]]
         # detection ids that belong to each image
         img_dets = [[1, 2, 3], [5, 6]]
 
         assert result.exit_code == 0
         assert sorted(output_dir.listdir()) == sorted(img_dirs)
         for img_dir, det_ids in zip(img_dirs, img_dets):
-            map_files = [img_dir.join(f"det_{det_id}.jpeg") for det_id in det_ids]
+            map_files = [img_dir.join(Path(f"det_{det_id}.jpeg")) for det_id in det_ids]
             assert sorted(img_dir.listdir()) == sorted(map_files)
 
     def test_config_gen(self, tmpdir: py.path.local) -> None:
         """Test the generate configuration file option."""
-        output_dir = tmpdir.join("out")
+        output_dir = tmpdir.join(Path("out"))
 
-        output_config = tmpdir.join("gen_conf.json")
+        output_config = tmpdir.join(Path("gen_conf.json"))
 
         runner = CliRunner()
         runner.invoke(

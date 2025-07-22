@@ -1,31 +1,49 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-    - id: trailing-whitespace
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: trailing-whitespace
+  - id: end-of-file-fixer
+  - id: check-added-large-files
+    args:
+      # the unit here is acutally KiB (1024 bytes)
+      - '--maxkb=51200'  # match github max of 50MiB
+- repo: https://github.com/hukkin/mdformat
+  rev: 0.7.22  # Use the ref you want to point at
+  hooks:
+  - id: mdformat
+    name: mdformat-lint
+    args: [--wrap=80, --number]
+    types: [markdown]
+- repo: https://github.com/hukkin/mdformat
+  rev: 0.7.22  # Use the ref you want to point at
+  hooks:
+  - id: mdformat
+    name: mdformat-format
+    args: [--wrap=80, --number, --check]
+    types: [markdown]
+- repo: local
+  hooks:
+    - id: ruff-lint
+      name: ruff-lint
+      entry: poetry run ruff check --config pyproject.toml --fix --force-exclude
+      require_serial: true
+      language: system
+      types_or: [python, pyi, jupyter]
+    - id: sphinx-lint
+      name: sphinx-lint
+      entry: poetry run sphinx-lint --enable all --disable leaked-markup --jobs 1 --max-line-length 120 docs
+      types: [rst]
+      language: system
+    - id: ruff-format
+      name: ruff-format
+      entry: poetry run ruff format --config pyproject.toml --force-exclude
+      require_serial: true
+      language: system
+      types_or: [python, pyi, jupyter]
+    - id: pyright
+      name: pyright
+      require_serial: true
+      language: system
+      entry: poetry run pyright
       types: [file, python]
-    - id: check-added-large-files
--   repo: local
-    hooks:
-      - id: ruff-lint
-        name: ruff-lint
-        entry: poetry run ruff check --config pyproject.toml --fix --force-exclude
-        require_serial: true
-        language: system
-        types_or: [python, pyi, jupyter]
-      - id: sphinx-lint
-        name: sphinx-lint
-        entry: poetry run sphinx-lint --enable all --disable leaked-markup --jobs 1 --max-line-length 120 -i docs/_implementations docs
-        types: [rst]
-        language: system
-      - id: ruff-format
-        name: ruff-format
-        entry: poetry run ruff format --config pyproject.toml --force-exclude
-        require_serial: true
-        language: system
-        types_or: [python, pyi, jupyter]
-      - id: mypy
-        name: mypy
-        entry: poetry run mypy --config-file pyproject.toml
-        types: [file, python]
-        language: system

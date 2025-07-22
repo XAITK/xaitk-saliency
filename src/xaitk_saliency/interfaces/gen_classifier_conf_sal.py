@@ -31,8 +31,8 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
@@ -58,7 +58,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
         decrease class confidence scores according to the model that generated
         input confidence values.
 
-        :param image_conf:
+        :param reference:
             Reference image predicted class-confidence vector, as a
             `numpy.ndarray`, for all classes that require saliency map
             generation.
@@ -67,7 +67,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
         :param perturbed_conf:
             Perturbed image predicted class confidence matrix.
             Classes represented in this matrix should be congruent to classes
-            represented in the `image_conf` vector.
+            represented in the `reference` vector.
             This should have a shape `[nMasks x nClasses]`, be float-typed and
             with values in the [0,1] range.
         :param perturbed_masks:
@@ -84,9 +84,9 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
 
     def __call__(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateClassifierConfidenceSaliency.generate`."""
-        return self.generate(image_conf, perturbed_conf, perturbed_masks)
+        return self.generate(reference, perturbed, perturbed_masks)

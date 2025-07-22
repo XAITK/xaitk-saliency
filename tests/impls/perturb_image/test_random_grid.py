@@ -1,7 +1,15 @@
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
+from syrupy.assertion import SnapshotAssertion
 
+from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency.impls.perturb_image.random_grid import RandomGrid
+
+
+@pytest.fixture
+def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
+    return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
 class TestRandomGrid:
@@ -83,7 +91,7 @@ class TestRandomGrid:
 
         assert np.array_equal(masks1, masks2)
 
-    def test_perturb_1_channel(self) -> None:
+    def test_perturb_1_channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test mask generation on a one-channel image of a known size. Number
         of channels should not affect output masks.
@@ -92,12 +100,11 @@ class TestRandomGrid:
         img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
+        actual_masks = impl(img)
 
-        masks = impl(img)
+        snapshot_custom.assert_match(actual_masks)
 
-        assert np.allclose(masks, EXPECTED_MASKS_4X6)
-
-    def test_perturb_3_channel(self) -> None:
+    def test_perturb_3_channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """
         Test mask generation on a three-channel image of a known size. Number
         of channels should not affect output masks.
@@ -106,10 +113,9 @@ class TestRandomGrid:
         img = rng.integers(0, 255, size=(4, 6, 3), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
+        actual_masks = impl.perturb(img)
 
-        masks = impl(img)
-
-        assert np.allclose(masks, EXPECTED_MASKS_4X6)
+        snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_size(self) -> None:
         """
@@ -131,32 +137,13 @@ class TestRandomGrid:
         assert len(masks_large) == 5
         assert masks_large.shape[1:] == img_large.shape
 
-    def test_threading(self) -> None:
+    def test_threading(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test that using threading does not affect results."""
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=1)
 
-        masks = impl(img)
+        actual_masks = impl.perturb(img)
 
-        assert np.allclose(masks, EXPECTED_MASKS_4X6)
-
-
-EXPECTED_MASKS_4X6 = np.array(
-    [
-        [
-            [0.3750, 0.3750, 0.6250, 0.7500, 0.7500, 0.8125],
-            [0.6250, 0.6250, 0.3750, 0.2500, 0.2500, 0.4375],
-            [0.5625, 0.5625, 0.1875, 0.0000, 0.0000, 0.2500],
-            [0.1875, 0.1875, 0.0625, 0.0000, 0.0000, 0.2500],
-        ],
-        [
-            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-            [0.2500, 0.7500, 0.7500, 0.2500, 0.0000, 0.0000],
-            [0.4375, 0.8125, 0.8125, 0.4375, 0.1875, 0.0625],
-        ],
-    ],
-    dtype=np.float32,
-)
+        snapshot_custom.assert_match(actual_masks)

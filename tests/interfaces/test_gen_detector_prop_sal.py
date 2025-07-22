@@ -3,18 +3,21 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
 
 
 class StubImpl(GenerateDetectorProposalSaliency):
-    def generate(  # type: ignore[empty-body]
+    @override
+    def generate(
         self,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Stub impl"""
+        return np.zeros((1, 1))
 
     def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
         """Stub impl"""

@@ -1,11 +1,13 @@
 """Encapsulation of the perturbation-occlusion method using specifically
 sliding windows and the occlusion-scoring method."""
 
+from __future__ import annotations
+
 from collections.abc import Sequence
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
-from smqtk_classifier import ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -50,12 +52,12 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         )
 
     @property
-    def fill(self) -> Optional[Union[int, Sequence[int]]]:
+    def fill(self) -> int | Sequence[int] | None:
         """Gets the fill value"""
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: Optional[Union[int, Sequence[int]]]) -> None:
+    def fill(self, v: int | Sequence[int] | None) -> None:
         self._po.fill = v
 
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:

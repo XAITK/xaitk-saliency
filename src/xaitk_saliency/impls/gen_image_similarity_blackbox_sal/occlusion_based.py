@@ -3,12 +3,15 @@ This module defines the `PerturbationOcclusion` class, which implements a genera
 modular perturbation and occlusion-based algorithms
 """
 
+from __future__ import annotations
+
 from collections.abc import Sequence
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, TypeVar
 
 import numpy as np
 from smqtk_core.configuration import from_config_dict, make_default_config, to_config_dict
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+from typing_extensions import Self
 
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency, GenerateImageSimilarityBlackboxSaliency, PerturbImage
 from xaitk_saliency.utils.masking import occlude_image_batch
@@ -30,8 +33,8 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         self,
         perturber: PerturbImage,
         generator: GenerateDescriptorSimilaritySaliency,
-        fill: Optional[Union[int, Sequence[int], np.ndarray]] = None,
-        threads: Optional[int] = None,
+        fill: int | Sequence[int] | np.ndarray | None = None,
+        threads: int | None = None,
     ) -> None:
         """
         Image similarity saliency generator composed of modular perturbation and
@@ -90,7 +93,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     @classmethod
-    def from_config(cls: type[C], config_dict: dict, merge_default: bool = True) -> C:
+    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
         """
         Create a PerturbationOcclusion instance from a configuration dictionary.
 

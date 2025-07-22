@@ -52,8 +52,8 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
-        image_conf: np.ndarray,
-        perturbed_conf: np.ndarray,
+        reference: np.ndarray,
+        perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """
@@ -61,22 +61,22 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         this interface. Instead of `[nClasses x H x W]`, saliency maps of shape
         `[kColors x nClasses x H x W]` are generated, one per color per class.
 
-        :param image_conf: np.ndarray
+        :param reference: np.ndarray
             Reference image predicted class-confidence vector, as a
             `numpy.ndarray`, for all classes that require saliency map
             generation.
             This should have a shape `[nClasses]`, be float-typed and with
             values in the [0,1] range.
-        :param perturbed_conf: np.ndarray
+        :param perturbed: np.ndarray
             Perturbed image predicted class confidence matrix.
             Classes represented in this matrix should be congruent to classes
-            represented in the `image_conf` vector.
+            represented in the `reference` vector.
             This should have a shape `[nMasks x nClasses]`, be float-typed and
             with values in the [0,1] range.
         :param perturbed_masks: np.ndarray
             Perturbation masks `numpy.ndarray` over the reference image.
             This should be parallel in association to the classification
-            results input into the `perturbed_conf` parameter.
+            results input into the `perturbed` parameter.
             This should have a shape `[kColors x nMasks x H x W]`, and values in range
             [0, 1], where a value closer to 1 indicate areas of the image that
             are *unperturbed*.
@@ -88,7 +88,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         :raises: ValueError
             If number of perturbations masks and respective confidence lengths do not match.
         """
-        if len(perturbed_conf) != perturbed_masks.shape[1]:
+        if len(perturbed) != perturbed_masks.shape[1]:
             raise ValueError("Number of perturbation masks and respective confidence lengths do not match.")
 
         sal_maps = []
@@ -98,7 +98,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         for k_masks in perturbed_masks:
             # Debias based on the MC-RISE paper
             sal = weight_regions_by_scalar(
-                scalar_vec=perturbed_conf,
+                scalar_vec=perturbed,
                 # Factoring out denominator from self.k * k_masks / self.p1 - m0 / (1 - self.p1)
                 # to avoid divide by zero. Only acts as a normalization factor
                 masks=self.k * k_masks * (1 - self.p1) - m0 * self.p1,

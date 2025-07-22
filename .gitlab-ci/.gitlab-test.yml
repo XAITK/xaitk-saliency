@@ -9,28 +9,34 @@
 #
 ###############################################################################
 
-.test-setup:
-  before_script:
-    - !reference [.shared-setup, before_script]
-    - poetry install --sync --only main,tests --extras "tools example_deps"
-
 notebooks:
+  extends: .notebooks
+  rules: !reference [.notebooks, rules]
+  variables:
+    EXTRAS: "tools example_deps"
   parallel:
     matrix:
       # Sequences combinatorically combine within a list entry
-      - NOTEBOOK_DIR: "examples"
+      - NOTEBOOK_DIR: "docs/examples"
         NOTEBOOK_FILE: [
           "atari_deepRL_saliency.ipynb",
           "DRISE.ipynb",
+          "MC_RISE.ipynb",
           "MNIST_scikit_saliency.ipynb",
           "OcclusionSaliency.ipynb",
           "Radial_Image_Perturbation.ipynb",
           "SimilarityScoring.ipynb",
           "SuperPixelSaliency.ipynb",
-          "VIAME_OcclusionSaliency.ipynb",
-          "MC_RISE.ipynb",
+          "SwappableImplementations.ipynb",
+          # VIAME notebook takes longer than 60 minutes to execute (timeout limit)
+          #"VIAME_OcclusionSaliency.ipynb",
           # # Shared memory issue on GitLab
-          # "SerializedDetectionSaliency.ipynb",
+          "SerializedDetectionSaliency.ipynb",
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
+
+pytest-extras:
+  allow_failure: false
+  variables:
+    EXTRAS: "tools example_deps"
