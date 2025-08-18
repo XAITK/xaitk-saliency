@@ -183,14 +183,16 @@ All development prior to Nov 19, 2024 falls under [BSD-3-Clause](./LICENSE.old)
 
 ## Contacts
 
-**Principal Investigator / Product Owner**: Brian Hu (Kitware) @brian.hu
+**Principal Investigator**: Brian Hu (Kitware) @brian.hu
+
+**Project Manager / Product Owner**: Keith Fieldhouse (Kitware)
+@keith.fieldhouse
 
 **Scrum Master / Maintainer**: Brandon RichardWebster (Kitware)
 @b.richardwebster
 
-**Deputy Scrum Master / Maintainer**: Emily Veenhuis (Kitware) @emily.veenhuis
-
-**Project Manager**: Keith Fieldhouse (Kitware) @keith.fieldhouse
+**Deputy Scrum Master / Deputy Maintainer**: Emily Veenhuis (Kitware)
+@emily.veenhuis
 
 **Program Representative**: Austin Whitesell (MITRE) @awhitesell
 
