@@ -90,7 +90,8 @@ jobs:
             "Radial_Image_Perturbation.ipynb",
             "SimilarityScoring.ipynb",
             "SuperPixelSaliency.ipynb",
-            "VIAME_OcclusionSaliency.ipynb",
+            # Model comparison example is excluded due to computational complexity
+            # "VIAME_OcclusionSaliency.ipynb",
             "SerializedDetectionSaliency.ipynb",
             # Model comparison example is excluded due to computational complexity
             #"ModelComparisonWithSaliency.ipynb",
