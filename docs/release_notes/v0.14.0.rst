@@ -1,0 +1,6 @@
+0.14.0
+======
+
+* Add support for python 3.13.
+
+* Dropped Python 3.9 due to EOL.
