@@ -75,7 +75,7 @@ class SlidingRadial(PerturbImage):
         center_xs_m = np.tile(center_xs, len(center_ys))
         center_ys_m = np.repeat(center_ys, len(center_xs))
 
-        for i, (center_x, center_y) in enumerate(zip(center_xs_m, center_ys_m)):
+        for i, (center_x, center_y) in enumerate(zip(center_xs_m, center_ys_m, strict=False)):
             mask = masks[i]
             coords = ellipse(center_y, center_x, *self.radius, shape=mask.shape)
             mask[coords] = 1

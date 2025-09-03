@@ -40,3 +40,9 @@ pytest-extras:
   allow_failure: false
   variables:
     EXTRAS: "tools example_deps"
+
+# This is a temporary override while we wait for devel-jatic to support 3.13
+.python-versions:
+  parallel:
+    matrix:
+      - PYTHON_VERSION: [ "3.10", "3.11", "3.12", "3.13" ]

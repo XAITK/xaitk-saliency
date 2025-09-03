@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.autosummary",
+    "sphinx.ext.imgconverter",
     "sphinx-prompt",
     "sphinx_copybutton",
     "sphinx_click",
@@ -61,5 +62,8 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "sphinx_rtd_theme"
 html_static_path: list[str] = list()  # ['_static']
 
-# ---MyST-NB settings---------------------------------------------------------
-jupyter_execute_notebooks = "off"
+# -- MyST-NB settings---------------------------------------------------------
+nb_execution_mode = "off"
+
+# -- LaTeX engine ------------------------------------------------------------
+latex_engine = "lualatex"

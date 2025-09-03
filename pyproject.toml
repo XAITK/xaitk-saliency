@@ -18,40 +18,39 @@ classifiers = [
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: Unix',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
 ]
 # :auto package-meta:
 # package-specific meta, don't put this in "generated package-meta"
 authors = ["Kitware, Inc. <xaitk@kitware.com>"]
-version = "0.13.0"
+version = "0.14.0"
 description = "Visual saliency map generation interfaces and baseline implementations for explainable AI."
 
 [tool.poetry.dependencies]
 # :auto python-version:
-python = "^3.9"
+python = "^3.10"
 # :auto python-version:
 
 # Python capped to <3.13 because of:
 # https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
-    {version = ">=1.22,^1.25", python = ">=3.9,<3.12" }, # CVE-2021-34141
-    {version = "^1.26", python = ">=3.12,<3.13" } # py3.12 only supports >= 1.26
+    {version = ">=1.22,^1.25", python = "<3.12" }, # CVE-2021-34141
+    {version = ">=2.1", python = ">=3.13" } # numpy==2.1 is the first release supporting python 3.13
 ]
 scikit-image = [
     # Hinge because minimum support 0.20.0 for py3.11
     { version = ">=0.18.1", python = "<3.11" },
-    { version = ">=0.20.0", python = ">=3.11, <3.12" },
-    { version = ">=0.22.0", python = ">=3.12" }
+    { version = ">=0.25", python = ">=3.13" }
 ]
-scikit-learn = ">=1.5.0"
-smqtk-classifier = ">=0.17.0"
-smqtk-core = ">=0.18.0"
-smqtk-descriptors = ">=0.16.0"
-smqtk-detection = ">=0.19.0"
-scipy = ">=1.10.0"  # CVE-2023-25399
+scikit-learn = ">=1.7.0"
+smqtk-classifier = ">=0.20.0"
+smqtk-core = ">=0.20.0"
+smqtk-descriptors = ">=0.20.0"
+smqtk-detection = ">=0.23.0"
+scipy = ">=1.15.0"
 click = ">=8.0.3"
 setuptools = ">=78.1.1"  # CVE-2025-47273
 # Optionals for "example" extra
@@ -173,8 +172,8 @@ extend-exclude = [
 line-length = 120
 indent-width = 4
 
-# Assume Python 3.9
-target-version = "py39"
+# Assume Python 3.10
+target-version = "py310"
 
 extend-include = ["*.ipynb"]
 
@@ -232,7 +231,7 @@ docstring-code-line-length = "dynamic"
 
 # :auto pyright:
 [tool.pyright]
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 reportMissingImports = "warning"
 typeCheckingMode = "standard"
 include = [

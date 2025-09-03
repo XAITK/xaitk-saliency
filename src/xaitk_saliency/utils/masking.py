@@ -4,8 +4,7 @@ from __future__ import annotations
 
 import itertools
 import time
-from collections.abc import Generator, Iterable, Sequence
-from typing import Callable
+from collections.abc import Callable, Generator, Iterable, Sequence
 
 import numpy as np
 from smqtk_descriptors.utils.parallel import parallel_map
@@ -343,7 +342,7 @@ def weight_regions_by_scalar(
     # split weights per class
     for i, class_scales in enumerate(np.transpose(scalar_vec)):
         # aggregate scaled masks
-        for mask, scalar in zip(masks, class_scales):
+        for mask, scalar in zip(masks, class_scales, strict=False):
             sal_across_masks[i] += mask * scalar
 
     if normalize:

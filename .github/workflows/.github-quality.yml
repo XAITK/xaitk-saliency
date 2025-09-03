@@ -28,7 +28,7 @@ defaults:
 jobs:
   pyright:
     runs-on: ubuntu-latest
-    container: python:3.9
+    container: python:3.10
     steps:
       - name: Install Git LFS
         run: |
@@ -49,7 +49,7 @@ jobs:
           # `pip install --user` is invoked below, so we can be confident that
           # only our python stuff is being captured in this cache (intentional).
           path: ~/.cache
-          key: python-3.9-${{ hashFiles('poetry.lock') }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         uses: ./.github/actions/quality-stage
       - name: Typecheck with pyright
@@ -58,7 +58,7 @@ jobs:
 
   ruff-lint:
     runs-on: ubuntu-latest
-    container: python:3.9
+    container: python:3.10
     steps:
       - name: Install Git LFS
         run: |
@@ -79,7 +79,7 @@ jobs:
           # `pip install --user` is invoked below, so we can be confident that
           # only our python stuff is being captured in this cache (intentional).
           path: ~/.cache
-          key: python-3.9-${{ hashFiles('poetry.lock') }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         uses: ./.github/actions/quality-stage
       - name: Lint with Ruff
@@ -88,7 +88,7 @@ jobs:
 
   ruff-format:
     runs-on: ubuntu-latest
-    container: python:3.9
+    container: python:3.10
     steps:
       - name: Install Git LFS
         run: |
@@ -109,7 +109,7 @@ jobs:
           # `pip install --user` is invoked below, so we can be confident that
           # only our python stuff is being captured in this cache (intentional).
           path: ~/.cache
-          key: python-3.9-${{ hashFiles('poetry.lock') }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         uses: ./.github/actions/quality-stage
       - name: Format check with Ruff
@@ -118,7 +118,7 @@ jobs:
 
   sphinx-lint:
     runs-on: ubuntu-latest
-    container: python:3.9
+    container: python:3.10
     steps:
       - name: Install Git LFS
         run: |
@@ -139,7 +139,7 @@ jobs:
           # `pip install --user` is invoked below, so we can be confident that
           # only our python stuff is being captured in this cache (intentional).
           path: ~/.cache
-          key: python-3.9-${{ hashFiles('poetry.lock') }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         uses: ./.github/actions/quality-stage
       - name: Lint docs with Spinx-lint
