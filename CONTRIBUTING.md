@@ -77,7 +77,7 @@ This repository has set up a CI workflow to execute notebooks to ensure their
 continued functionality, avoid bit-rot and avoid violation of established
 use-cases. When contributing a Jupyter notebook, as an example or otherwise, a
 reference should be added to this CI workflow
-([located here ~L27](.github/workflows/ci-example-notebooks.yml)) to enable its
+([located here ~L27](.github/workflows/.github-test.yml)) to enable its
 inclusion in the CI testing.
 
 To that end, in developing the notebook, consider its execution in this CI
