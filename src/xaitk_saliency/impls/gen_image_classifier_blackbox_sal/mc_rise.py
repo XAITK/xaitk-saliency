@@ -105,7 +105,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         threads: int | None,
     ) -> Generator[np.ndarray, None, None]:
         if threads is None or threads < 1:
-            for i, (mask, fill) in enumerate(zip(masks, fill_values)):
+            for i, (mask, fill) in enumerate(zip(masks, fill_values, strict=False)):
                 yield MCRISEStack._work_func(ref_image=ref_image, i_=i, m=mask, f=fill)
         else:
             ref_image = np.stack([ref_image for _ in fill_values], axis=0)

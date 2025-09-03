@@ -39,7 +39,7 @@ class CustomFloatSnapshotExtension(AmberSnapshotExtension):
             # Convert serialized and snapshot data to np arrays and compare within tolerance
             a = self.parse_snapshot_to_numpy_no_eval(serialized_data)
             b = self.parse_snapshot_to_numpy_no_eval(snapshot_data)
-            for array_a, array_b in zip(a, b):
+            for array_a, array_b in zip(a, b, strict=False):
                 if not all(
                     math.isclose(array_a[index], array_b[index], rel_tol=1e-4) for index in np.ndindex(array_a.shape)
                 ):

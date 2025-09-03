@@ -22,7 +22,7 @@ defaults:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    container: python:3.9
+    container: python:3.10
     # This should only be run for tags on the "official" repository org.
     if: github.repository_owner == 'XAITK'
     steps:
@@ -46,7 +46,7 @@ jobs:
           # only our python stuff is being captured in this cache (intentional).
           path: |
             ~/.cache
-          key: python-3.9-${{ hashFiles('poetry.lock') }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}
 
       - name: Setup Environment
         uses: ./.github/actions/build-stage

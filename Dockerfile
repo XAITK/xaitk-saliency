@@ -1,4 +1,4 @@
-FROM python:3.8 AS xaitk_base
+FROM python:3.10 AS xaitk_base
 
 # install poetry and configure to install to pip environment
 ENV PATH=/root/.local/bin:${PATH}
