@@ -72,7 +72,7 @@ jobs:
       - name: Unit Testing
         run: poetry run pytest
       - name: CodeCov report submission
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00  # v5.5.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
