@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9","3.10","3.11","3.12"]
+        python-version: ["3.10","3.11","3.12", "3.13"]
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
             # Once optional dependencies have been updated, this needs to be re-enabled
@@ -100,7 +100,7 @@ jobs:
 
     # Just one python version, using our base supported version.
     container:
-      image: python:3.9
+      image: python:3.10
       options: "--shm-size 2GB"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -124,9 +124,9 @@ jobs:
             ~/.cache
           # Using a different key due to additional things the notebook
           # examples ad-hoc install.
-          key: python-3.9-${{ hashFiles('poetry.lock') }}-Examples
+          key: python-3.10-${{ hashFiles('poetry.lock') }}-Examples
           restore-keys: |
-            python-3.9-${{ hashFiles('poetry.lock') }}
+            python-3.10-${{ hashFiles('poetry.lock') }}
       - name: Setup Environment
         uses: ./.github/actions/test-stage
         with:
@@ -137,7 +137,7 @@ jobs:
           path: |
             ~/.cache/
             docs/examples/data/
-          key: python-3.9-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
+          key: python-3.10-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
           # pretty unique, no restore-keys.
       - name: Run Notebook
         run: |

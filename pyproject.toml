@@ -21,6 +21,7 @@ classifiers = [
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
 ]
 # :auto package-meta:
 # package-specific meta, don't put this in "generated package-meta"
@@ -37,20 +38,19 @@ python = "^3.10"
 # https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
     {version = ">=1.22,^1.25", python = "<3.12" }, # CVE-2021-34141
-    {version = "^1.26", python = ">=3.12,<3.13" } # py3.12 only supports >= 1.26
+    {version = ">=2.1", python = ">=3.13" } # numpy==2.1 is the first release supporting python 3.13
 ]
 scikit-image = [
     # Hinge because minimum support 0.20.0 for py3.11
     { version = ">=0.18.1", python = "<3.11" },
-    { version = ">=0.20.0", python = ">=3.11, <3.12" },
-    { version = ">=0.22.0", python = ">=3.12" }
+    { version = ">=0.25", python = ">=3.13" }
 ]
-scikit-learn = ">=1.5.0"
-smqtk-classifier = ">=0.17.0"
-smqtk-core = ">=0.18.0"
-smqtk-descriptors = ">=0.16.0"
-smqtk-detection = ">=0.19.0"
-scipy = ">=1.10.0"  # CVE-2023-25399
+scikit-learn = ">=1.7.0"
+smqtk-classifier = ">=0.20.0"
+smqtk-core = ">=0.20.0"
+smqtk-descriptors = ">=0.20.0"
+smqtk-detection = ">=0.23.0"
+scipy = ">=1.15.0"
 click = ">=8.0.3"
 setuptools = ">=78.1.1"  # CVE-2025-47273
 # Optionals for "example" extra
