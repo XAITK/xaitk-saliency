@@ -1,0 +1,10 @@
+0.14.0
+======
+
+This release updates Python version support to require 3.10+ and extend testing through 3.13.
+
+Updates / New Features
+----------------------
+* Updated minimum supported Python version to ``>=3.10``.
+
+* Updated tested Python versions to ``3.10–3.13``.
