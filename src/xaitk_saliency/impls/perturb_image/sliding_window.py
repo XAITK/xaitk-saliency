@@ -73,7 +73,7 @@ class SlidingWindow(PerturbImage):
         rows_m = np.repeat(rows, len(cols))
         cols_m = np.tile(cols, len(rows))
 
-        for i, (r, c) in enumerate(zip(rows_m, cols_m)):
+        for i, (r, c) in enumerate(zip(rows_m, cols_m, strict=False)):
             # use of np.clip function here is more costly than min/max use.
             r1 = max(0, r)
             r2 = min(r + win_h, img_h)

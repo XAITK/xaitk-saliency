@@ -18,7 +18,6 @@ classifiers = [
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: Unix',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
@@ -31,13 +30,13 @@ description = "Visual saliency map generation interfaces and baseline implementa
 
 [tool.poetry.dependencies]
 # :auto python-version:
-python = "^3.9"
+python = "^3.10"
 # :auto python-version:
 
 # Python capped to <3.13 because of:
 # https://stackoverflow.com/questions/77431252/why-doesnt-poetry-select-the-good-version-of-my-dependency
 numpy = [
-    {version = ">=1.22,^1.25", python = ">=3.9,<3.12" }, # CVE-2021-34141
+    {version = ">=1.22,^1.25", python = "<3.12" }, # CVE-2021-34141
     {version = "^1.26", python = ">=3.12,<3.13" } # py3.12 only supports >= 1.26
 ]
 scikit-image = [
@@ -173,8 +172,8 @@ extend-exclude = [
 line-length = 120
 indent-width = 4
 
-# Assume Python 3.9
-target-version = "py39"
+# Assume Python 3.10
+target-version = "py310"
 
 extend-include = ["*.ipynb"]
 
@@ -232,7 +231,7 @@ docstring-code-line-length = "dynamic"
 
 # :auto pyright:
 [tool.pyright]
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 reportMissingImports = "warning"
 typeCheckingMode = "standard"
 include = [
