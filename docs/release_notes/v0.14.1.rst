@@ -1,0 +1,9 @@
+0.14.1
+======
+
+A hotfix to address an incorrect ``sckit-image`` hinge causing failure to install ``py3.11`` and ``py3.12``.
+
+Fixes
+-----
+
+* Remove ``scikit-image`` hinge and require all python version to use ``sckit-image>=0.25``.

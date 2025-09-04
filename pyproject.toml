@@ -26,7 +26,7 @@ classifiers = [
 # :auto package-meta:
 # package-specific meta, don't put this in "generated package-meta"
 authors = ["Kitware, Inc. <xaitk@kitware.com>"]
-version = "0.14.0"
+version = "0.14.1"
 description = "Visual saliency map generation interfaces and baseline implementations for explainable AI."
 
 [tool.poetry.dependencies]
@@ -40,11 +40,7 @@ numpy = [
     {version = ">=1.22,^1.25", python = "<3.12" }, # CVE-2021-34141
     {version = ">=2.1", python = ">=3.13" } # numpy==2.1 is the first release supporting python 3.13
 ]
-scikit-image = [
-    # Hinge because minimum support 0.20.0 for py3.11
-    { version = ">=0.18.1", python = "<3.11" },
-    { version = ">=0.25", python = ">=3.13" }
-]
+scikit-image = ">=0.25"
 scikit-learn = ">=1.7.0"
 smqtk-classifier = ">=0.20.0"
 smqtk-core = ">=0.20.0"
