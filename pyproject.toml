@@ -48,7 +48,7 @@ smqtk-descriptors = ">=0.20.0"
 smqtk-detection = ">=0.23.0"
 scipy = ">=1.15.0"
 click = ">=8.0.3"
-setuptools = ">=78.1.1"  # CVE-2025-47273
+setuptools = ">=78.1.1,<82.0.0"  # CVE-2025-47273
 # Optionals for "example" extra
 notebook = { version = ">=7.2.2", optional = true }
 matplotlib = { version=">=3.4.1", optional = true }
