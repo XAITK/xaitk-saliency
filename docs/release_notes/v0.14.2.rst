@@ -1,4 +1,4 @@
-0.14.1
+0.14.2
 ======
 
 A hotfix to address a couple of dependency resolution issues.
