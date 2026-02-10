@@ -1,0 +1,12 @@
+0.14.1
+======
+
+A hotfix to address a couple of dependency resolution issues.
+
+Fixes
+-----
+
+* Restrict upper bound of setuptools to ``<82.0.0`` to keep support for ``pkg_resources``
+  library. See `pypa/setuptools/issues/5174 <https://github.com/pypa/setuptools/issues/5174>`_.
+
+* Enforce ``numpy<2.0`` in the ``SerializedDetectionSaliency`` example notebook
