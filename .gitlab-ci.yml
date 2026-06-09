@@ -3,6 +3,8 @@ include:
     ref: "main"
     file: ".gitlab-ci.yml"
 
+  # override python-versions to include 3.14
+  - local: .gitlab-ci/.gitlab-shared.yml
   # job overrides specific to this repo
   - local: .gitlab-ci/.gitlab-docs.yml
   - local: .gitlab-ci/.gitlab-test.yml

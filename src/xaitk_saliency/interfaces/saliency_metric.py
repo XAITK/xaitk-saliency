@@ -27,7 +27,7 @@ from __future__ import annotations
 import abc
 
 import numpy as np
-from smqtk_core import Plugfigurable
+from smqtk_core.plugfigurable import Plugfigurable
 
 
 class SaliencyMetric(Plugfigurable):

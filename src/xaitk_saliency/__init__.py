@@ -1,6 +1,6 @@
 """Define the xaitk-saliency package"""
 
-import pkg_resources
+from importlib import metadata
 
 from .interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency  # noqa: F401
 from .interfaces.gen_descriptor_sim_sal import GenerateDescriptorSimilaritySaliency  # noqa: F401
@@ -10,7 +10,4 @@ from .interfaces.gen_image_similarity_blackbox_sal import GenerateImageSimilarit
 from .interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency  # noqa: F401
 from .interfaces.perturb_image import PerturbImage  # noqa: F401
 
-# It is known that this will fail if SMQTK-Core is not "installed" in the
-# current environment. Additional support is pending defined use-case-driven
-# requirements.
-__version__ = pkg_resources.get_distribution(__name__).version
+__version__ = metadata.version("xaitk-saliency")
