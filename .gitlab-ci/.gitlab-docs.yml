@@ -10,4 +10,4 @@
 .docs-setup:
   before_script:
     - !reference [.shared-setup, before_script]
-    - poetry install --sync --only main,docs,tests --extras "tools example_deps"
+    - poetry sync --only main,docs,tests --extras "tools example_deps"

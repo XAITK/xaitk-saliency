@@ -1,82 +1,68 @@
 [build-system]
-requires = ["poetry-core>=1.8.5,<2.0"]
+requires = ["poetry-core>=2.2.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry]
+[project]
 name = "xaitk-saliency"
-license = "Apache-2.0"
-readme = "README.md"
-packages = [{include = "xaitk_saliency", from="src"}]
-documentation = "https://xaitk-saliency.readthedocs.io/"
-classifiers = [
-    'Development Status :: 3 - Alpha',
-    'Intended Audience :: Developers',
-    'Intended Audience :: Science/Research',
-    'Operating System :: MacOS :: MacOS X',
-    'Operating System :: Unix',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Programming Language :: Python :: 3.13',
-    'Programming Language :: Python :: 3.14',
-]
-
-# package-specific meta, don't put this in "generated package-meta"
-authors = ["Kitware, Inc. <xaitk@kitware.com>"]
 version = "0.14.2"
 description = "Visual saliency map generation interfaces and baseline implementations for explainable AI."
+license = "Apache-2.0"
+readme = "README.md"
+authors = [{name = "Kitware, Inc.", email = "xaitk@kitware.com"}]
+requires-python = ">=3.10,<3.15"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "numpy>=1.24.2; python_version < '3.13'",
+    "numpy>=2.1; python_version >= '3.13'",  # numpy==2.1 is the first release supporting python 3.13
+    "scikit-image>=0.20.0; python_version < '3.14'",
+    "scikit-image>=0.26.0; python_version >= '3.14'",  # py3.14 floor; forces resolver past releases lacking cp314 wheels
+    "scikit-learn>=1.5.2; python_version < '3.14'",
+    "scikit-learn>=1.7.2; python_version >= '3.14'",  # py3.14 floor; forces resolver past releases lacking cp314 wheels
+    "scipy>=1.10.0; python_version < '3.14'",
+    "scipy>=1.16.2; python_version >= '3.14'",  # py3.14 floor; forces resolver past releases lacking cp314 wheels
+    "smqtk-classifier>=0.20.0",
+    "smqtk-core>=0.20.0",
+    "smqtk-descriptors>=0.20.0",
+    "smqtk-detection>=0.23.0",
+    "click>=8.0.3",
+    "setuptools>=78.1.1,<82.0.0",  # CVE-2025-47273, upperbound: https://github.com/pypa/setuptools/issues/5174
+]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.15"
+[project.urls]
+Documentation = "https://xaitk-saliency.readthedocs.io/"
 
-numpy = [
-    {version = ">=1.24.2", python = "<3.13" },
-    {version = ">=2.1", python = ">=3.13" } # numpy==2.1 is the first release supporting python 3.13
+[project.optional-dependencies]
+example_deps = [
+    "notebook>=7.2.2",
+    "matplotlib>=3.7.1",
+    "papermill>=2.3.3",
+    "torch>=2.7.0; python_version < '3.14'",  # CVE-2025-3000
+    "torch>=2.10.0; python_version >= '3.14'",  # py3.14 floor (CVE-2025-3000 satisfied); forces resolver past releases lacking cp314 wheels
+    "torchvision>=0.22.0; python_version < '3.14'",
+    "torchvision>=0.25.0; python_version >= '3.14'",  # py3.14 floor (paired with torch>=2.10.0); forces resolver past releases lacking cp314 wheels
+    "tqdm>=4.66.3",  # CVE-2024-34062
 ]
-scikit-image = [
-  { version = ">=0.20", python = "<3.14" },
-  { version = ">=0.26.0", python = ">=3.14,<3.15" }, # py3.14 floor; forces resolver past releases lacking cp314 wheels
+tools = [
+    "kwcoco>=0.2.18",
+    "matplotlib>=3.7.1",
 ]
-scikit-learn = [
-  { version = ">=1.5.2", python = "<3.14" },
-  { version = ">=1.7.2", python = ">=3.14,<3.15" }, # py3.14 floor; forces resolver past releases lacking cp314 wheels
-]
-smqtk-classifier = ">=0.20.0"
-smqtk-core = ">=0.20.0"
-smqtk-descriptors = ">=0.20.0"
-smqtk-detection = ">=0.23.0"
-scipy = [
-  { version = ">=1.10", python = "<3.14" },
-  { version = ">=1.16.2", python = ">=3.14,<3.15" }, # py3.14 floor; forces resolver past releases lacking cp314 wheels
-]
-click = ">=8.0.3"
-setuptools = ">=78.1.1,<82.0.0"  # CVE-2025-47273, upperbound: https://github.com/pypa/setuptools/issues/5174
-# Optionals for "example" extra
-notebook = { version = ">=7.2.2", optional = true }
-matplotlib = { version=">=3.7.1", optional = true }
-papermill = { version = ">=2.3.3", optional = true }
-torch = [
-  { version = ">=2.2.0", python = "<3.14", optional = true },
-  { version = ">=2.10.0", python = ">=3.14,<3.15", optional = true }, # py3.14 floor; forces resolver past releases lacking cp314 wheels
-]
-torchvision = [
-  { version = ">=0.10.0", python = "<3.14", optional = true},
-  { version = ">=0.25.0", python = ">=3.14,<3.15", optional = true }, # py3.14 floor (paired with torch>=2.10.0); forces resolver past releases lacking cp314 wheels
-]
-tqdm = { version = ">=4.66.3", optional = true } # CVE-2024-34062
-# Optionals for "tools" extra"
-kwcoco = { version = ">=0.2.18", optional = true}
 
-[tool.poetry.extras]
-example_deps = [ "notebook", "matplotlib", "papermill", "torch", "torchvision", "tqdm" ]
-tools = [ "kwcoco", "matplotlib"]
-
-[tool.poetry.scripts]
+[project.scripts]
 sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 
-[tool.poetry.plugins."smqtk_plugins"]
-# Add implementation sub-module exposure here.
+[project.entry-points."smqtk_plugins"]
 "impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"
 "impls.perturb_image.mc_rise" = "xaitk_saliency.impls.perturb_image.mc_rise"
 "impls.perturb_image.rise" = "xaitk_saliency.impls.perturb_image.rise"
@@ -95,6 +81,9 @@ sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
 "impls.gen_image_similarity_blackbox_sal.occlusion_based" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based"
 "impls.gen_image_similarity_blackbox_sal.sbsm" = "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm"
 "impls.saliency_metric.entropy" = "xaitk_saliency.impls.saliency_metric.entropy"
+
+[tool.poetry]
+packages = [{include = "xaitk_saliency", from = "src"}]
 
 # Linting
 [tool.poetry.group.linting]

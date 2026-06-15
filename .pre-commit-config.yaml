@@ -12,16 +12,20 @@ repos:
   rev: 0.7.22  # Use the ref you want to point at
   hooks:
   - id: mdformat
-    name: mdformat-lint
+    name: mdformat-format
     args: [--wrap=80, --number]
     types: [markdown]
+    additional_dependencies:
+      - mdformat-tables
 - repo: https://github.com/hukkin/mdformat
   rev: 0.7.22  # Use the ref you want to point at
   hooks:
   - id: mdformat
-    name: mdformat-format
+    name: mdformat-lint
     args: [--wrap=80, --number, --check]
     types: [markdown]
+    additional_dependencies:
+      - mdformat-tables
 - repo: local
   hooks:
     - id: ruff-lint

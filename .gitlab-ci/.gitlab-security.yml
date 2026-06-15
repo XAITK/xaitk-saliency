@@ -1,0 +1,8 @@
+###############################################################################
+# Stage -- Security Scanning
+###############################################################################
+
+dependency_scanning:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    - poetry sync --only main,linting,tests,docs
