@@ -13,5 +13,12 @@ runs:
     - name: Setup Environment
       uses: ./.github/actions/build-stage
     - name: Synchronize Poetry Environment
-      run: poetry sync --only main,linting,tests --extras "${{ inputs.extras }}"
+      env:
+        EXTRAS: ${{ inputs.extras }}
+      run: |
+        if [ -n "$EXTRAS" ]; then
+          poetry sync --only main,tests --extras "$EXTRAS"
+        else
+          poetry sync --only main,tests
+        fi
       shell: bash
