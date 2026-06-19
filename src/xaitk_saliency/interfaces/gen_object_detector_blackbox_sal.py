@@ -6,7 +6,7 @@ import abc
 import logging
 
 import numpy as np
-from smqtk_core import Plugfigurable
+from smqtk_core.plugfigurable import Plugfigurable
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.exceptions import ShapeMismatchError

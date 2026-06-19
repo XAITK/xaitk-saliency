@@ -12,12 +12,11 @@ runs:
     - name: Setup Poetry
       run: |
         pip install --root-user-action=ignore --upgrade pip -q
-        pip install --root-user-action=ignore --user -U "poetry<2.0" -q
+        pip install --root-user-action=ignore --user -U "poetry>=2.2.0" -q
       shell: bash
     - name: Configure Poetry
       run: |
         poetry config --local virtualenvs.in-project true
-        poetry config --local virtualenvs.prefer-active-python true
       shell: bash
     - name: Versions of things used here
       run: |
@@ -28,5 +27,5 @@ runs:
         poetry check
       shell: bash
     - name: Install Environment
-      run: poetry install --sync --only main,linting,tests,docs
+      run: poetry sync --only main,linting,tests,docs
       shell: bash

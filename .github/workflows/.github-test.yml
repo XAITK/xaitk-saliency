@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10","3.11","3.12", "3.13"]
+        python-version: ["3.10","3.11","3.12", "3.13", "3.14"]
         # Extras for included, optional plugin support (space-separated lists)
         opt-extra: [
             # Once optional dependencies have been updated, this needs to be re-enabled
@@ -78,6 +78,7 @@ jobs:
           fail_ci_if_error: true
           files: coverage.xml
           flags: unittests
+          skip_validation: true
   notebooks:
     runs-on: ubuntu-latest
     strategy:
@@ -85,11 +86,13 @@ jobs:
         notebook-file: [
             "atari_deepRL_saliency.ipynb",
             "DRISE.ipynb",
+            "MC_RISE.ipynb",
             "MNIST_scikit_saliency.ipynb",
             "OcclusionSaliency.ipynb",
             "Radial_Image_Perturbation.ipynb",
             "SimilarityScoring.ipynb",
             "SuperPixelSaliency.ipynb",
+            "SwappableImplementations.ipynb",
             # Model comparison example is excluded due to computational complexity
             # "VIAME_OcclusionSaliency.ipynb",
             "SerializedDetectionSaliency.ipynb",

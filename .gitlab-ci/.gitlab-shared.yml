@@ -1,0 +1,32 @@
+.python-versions:
+  parallel:
+    matrix:
+      - PYTHON_VERSION: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
+.shared-setup:
+  before_script:
+    # pyBSM has a series of .bin files saved as git-lfs objects,
+    # when installing from a repo directly poetry uses dulwich
+    # by default to install git repos. Dulwich does not currently
+    # support git-lfs, so instead we install git-lfs here and
+    # include a local poetry.toml in the repo to enable the use of the
+    # system-installed git (to which this git-lfs install applies) within
+    # poetry's internals instead of Dulwich. The purpose for including the
+    # poetry.toml in the repo rather than as a command here is so that it is the
+    # default used when developing locally.
+    - apt-get -qq update
+    - apt-get -qq install -y git-lfs
+
+    # For internal git dependencies
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jatic.net".insteadof "ssh://git@gitlab.jatic.net"
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jatic.net/".insteadOf "git@gitlab.jatic.net:"
+
+    # Setup poetry
+    - export PATH=${HOME}/.local/bin:${PATH}
+    - pip install --root-user-action=ignore --upgrade pip -q
+    - pip install --root-user-action=ignore --user -U "poetry>=2.2.0" -q
+    - poetry config --local virtualenvs.in-project true
+    - python --version
+    - poetry -q run python --version
+    - pip --version
+    - poetry --version
+    - poetry check

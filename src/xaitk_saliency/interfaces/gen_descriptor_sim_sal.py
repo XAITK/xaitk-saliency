@@ -3,7 +3,7 @@
 import abc
 
 import numpy as np
-from smqtk_core import Plugfigurable
+from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateDescriptorSimilaritySaliency(Plugfigurable):

@@ -43,6 +43,10 @@ VERSION_SEPERATOR=${VERSION_STR//?/=}
 # Combine release notes
 bash ${SCRIPT_DIR}/combine_release_notes.sh "${VERSION}"
 
+# Add reference to new file in release_notes.rst
+echo "   release_notes/${VERSION_STR}" >> "${DOCS_DIR}/release_notes.rst"
+echo "Reference added to release_notes.rst"
+
 # Make git commits
 git add "${PROJECT_DIR}"/pyproject.toml
 git add "${RELEASE_NOTES_DIR}"/v"${VERSION}".rst

@@ -9,6 +9,18 @@
 #
 ###############################################################################
 
+.test-setup:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    # Install dependencies: if EXTRAS equals "extras", install additional optional deps.
+    - |
+      if [ -n "$EXTRAS" ]; then
+        poetry sync --only main,tests --extras "$EXTRAS"
+      else
+        poetry sync --only main,tests
+      fi
+    - !reference [.opencv-headless, script]
+
 notebooks:
   extends: .notebooks
   rules: !reference [.notebooks, rules]
@@ -40,9 +52,3 @@ pytest-extras:
   allow_failure: false
   variables:
     EXTRAS: "tools example_deps"
-
-# This is a temporary override while we wait for devel-jatic to support 3.13
-.python-versions:
-  parallel:
-    matrix:
-      - PYTHON_VERSION: [ "3.10", "3.11", "3.12", "3.13" ]
