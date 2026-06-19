@@ -5,6 +5,9 @@ include:
 
   # job overrides specific to this repo
   - local: .gitlab-ci/.gitlab-docs.yml
+  - local: .gitlab-ci/.gitlab-quality.yml
+  - local: .gitlab-ci/.gitlab-security.yml
+  - local: .gitlab-ci/.gitlab-shared.yml
   - local: .gitlab-ci/.gitlab-test.yml
 
 trigger_compliance:

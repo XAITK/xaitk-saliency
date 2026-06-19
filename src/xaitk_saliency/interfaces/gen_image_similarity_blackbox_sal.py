@@ -4,7 +4,7 @@ import abc
 from collections.abc import Sequence
 
 import numpy as np
-from smqtk_core import Plugfigurable
+from smqtk_core.plugfigurable import Plugfigurable
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 
 from xaitk_saliency.exceptions import ShapeMismatchError

@@ -1,0 +1,14 @@
+###############################################################################
+# Stage -- Quality Assurance
+###############################################################################
+
+.quality-setup:
+  before_script:
+    - !reference [.shared-setup, before_script]
+    # Install dependencies: if EXTRAS equals "extras", install additional optional deps.
+    - |
+      if [ -n "$EXTRAS" ]; then
+        poetry sync --only main,linting,tests --extras "$EXTRAS"
+      else
+        poetry sync --only main,linting,tests
+      fi

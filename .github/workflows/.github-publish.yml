@@ -54,24 +54,27 @@ jobs:
       # Ensure there is alignment with the tag reference and the reported
       # version of the package
       - name: Ensure synchronized pacakge and ref
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
           PACKAGE_VERSION="v$(poetry version -s)"
-          if [[ "${{ github.ref_name }}" != "${PACKAGE_VERSION}" ]]
+          if [[ "$REF_NAME" != "${PACKAGE_VERSION}" ]]
           then
             echo "ERROR: Git tag reference and package version are NOT synonymous."
             echo "       Package version: ${PACKAGE_VERSION}"
-            echo "       Git ref name   : ${{ github.ref_name }}"
+            echo "       Git ref name   : ${REF_NAME}"
             exit 1
           fi
 
       - name: Publish
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN}}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           if [[ -z "$POETRY_PYPI_TOKEN_PYPI" ]]
           then
             echo "ERROR: Input pypi token was blank. Did you forget to set the appropriate secret?"
             exit 1
           fi
-          echo "Publishing new tag: ${{ github.ref_name }}"
+          echo "Publishing new tag: ${REF_NAME}"
           poetry publish --build
