@@ -1,0 +1,11 @@
+0.15.0
+======
+
+This release extends Python version support through 3.14 and updates the project's Poetry requirement.
+
+Updates / New Features
+----------------------
+
+* Added support for Python 3.14.
+
+* Upgraded to Poetry 2.2+.
