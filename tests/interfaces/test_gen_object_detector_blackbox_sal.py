@@ -8,6 +8,7 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
 
 
+@pytest.mark.core
 def test_generate_checks_success() -> None:
     """Tests successful passage though the wrapper method."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -58,6 +59,7 @@ def test_generate_checks_success() -> None:
     m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, test_objectness)
 
 
+@pytest.mark.core
 def test_generate_checks_image_shape() -> None:
     """Test that the input image shape conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -86,6 +88,7 @@ def test_generate_checks_image_shape() -> None:
         )
 
 
+@pytest.mark.core
 def test_generate_checks_detection_inputs_length() -> None:
     """Test that the reference detection inputs must all have the same length."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -138,6 +141,7 @@ def test_generate_checks_detection_inputs_length() -> None:
         )
 
 
+@pytest.mark.core
 def test_generate_checks_bboxes_width() -> None:
     """Test that the input bounding boxes must have a width of 4."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -155,6 +159,7 @@ def test_generate_checks_bboxes_width() -> None:
         )
 
 
+@pytest.mark.core
 def test_generate_checks_output_shape_mismatch() -> None:
     """
     Test that the appropriate error is raised when the output of `_generate`
@@ -186,6 +191,7 @@ def test_generate_checks_output_shape_mismatch() -> None:
         )
 
 
+@pytest.mark.core
 def test_generate_checks_output_quantity_mismatch() -> None:
     """
     Test that the appropriate error is raised when the quantity of heatmaps
@@ -219,6 +225,7 @@ def test_generate_checks_output_quantity_mismatch() -> None:
         )
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """Test that __call__ is just an alias to the generate method."""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -243,6 +250,7 @@ def test_call_alias() -> None:
     assert test_ret == expected_return
 
 
+@pytest.mark.core
 def test_return_empty_map() -> None:
     """Test that an empty array of maps is returned properly"""
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)

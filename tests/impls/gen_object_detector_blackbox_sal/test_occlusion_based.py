@@ -4,6 +4,7 @@ from collections.abc import Hashable, Iterable
 from typing import Any
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
@@ -37,6 +38,7 @@ class StubGen(GenerateDetectorProposalSaliency):
         return {"stub_param": self.p}
 
 
+@pytest.mark.core
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during

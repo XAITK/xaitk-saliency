@@ -4,6 +4,7 @@ import gc
 from collections.abc import Iterable
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 
@@ -11,6 +12,7 @@ from tests import DATA_DIR
 from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import SBSMStack, SimilarityScoring, SlidingWindow
 
 
+@pytest.mark.core
 class TestBlackBoxSBSM:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during

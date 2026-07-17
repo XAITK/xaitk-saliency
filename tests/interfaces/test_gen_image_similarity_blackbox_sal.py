@@ -8,6 +8,7 @@ from xaitk_saliency import GenerateImageSimilarityBlackboxSaliency
 from xaitk_saliency.exceptions import ShapeMismatchError
 
 
+@pytest.mark.core
 def test_generate_checks_success() -> None:
     """Test successful passage through the wrapper method."""
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
@@ -30,6 +31,7 @@ def test_generate_checks_success() -> None:
     assert np.array_equal(res, exp_res)
 
 
+@pytest.mark.core
 def test_generate_checks_image_shape() -> None:
     """Test that the input reference image conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
@@ -47,6 +49,7 @@ def test_generate_checks_image_shape() -> None:
         GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
 
 
+@pytest.mark.core
 def test_generate_checks_output_shape() -> None:
     """
     Test that the `_generate` output shape is appropriately checked against that
@@ -73,6 +76,7 @@ def test_generate_checks_output_shape() -> None:
         GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
 
 
+@pytest.mark.core
 def test_generate_checkout_num_saliency_maps() -> None:
     """
     Test that the number of output heatmaps is checked against the number of
@@ -97,6 +101,7 @@ def test_generate_checkout_num_saliency_maps() -> None:
         GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """Test that __call__ is just an alias to the generate method."""
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)

@@ -3,6 +3,7 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+import pytest
 from typing_extensions import override
 
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
@@ -31,6 +32,7 @@ def teardown_module() -> None:
     gc.collect()
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """
     Test that the __call__ instance method is an alias to invoke the generate

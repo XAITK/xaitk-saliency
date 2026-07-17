@@ -4,6 +4,7 @@ from collections.abc import Hashable, Iterator, Sequence
 from typing import Any
 
 import numpy as np
+import pytest
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
@@ -44,6 +45,7 @@ class StubGen(GenerateClassifierConfidenceSaliency):
         return {"stub_param": self.p}
 
 
+@pytest.mark.core
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during

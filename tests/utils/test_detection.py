@@ -4,6 +4,7 @@ import pytest
 from xaitk_saliency.utils.detection import format_detection
 
 
+@pytest.mark.core
 class TestFormatDetection:
     def test_default_objectness_fill(self) -> None:
         """

@@ -14,6 +14,7 @@ if KWCocoUtils.is_usable():
     import kwcoco  # type: ignore
 
 
+@pytest.mark.core
 @pytest.mark.skipif(KWCocoUtils.is_usable(), reason="coco utils usable")
 class TestParseCocoDsetNotUsable:
     @mock.patch.object(KWCocoUtils, "is_usable")
@@ -25,6 +26,7 @@ class TestParseCocoDsetNotUsable:
             KWCocoUtils()
 
 
+@pytest.mark.tools
 @pytest.mark.skipif(not KWCocoUtils.is_usable(), reason=str(KWCocoImportError()))
 class TestParseCocoDset:
     def test_dset_parse(self) -> None:

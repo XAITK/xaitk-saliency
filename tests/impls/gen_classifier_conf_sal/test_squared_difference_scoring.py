@@ -6,6 +6,7 @@ from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring import SquaredDifferenceScoring
 
 
+@pytest.mark.core
 class TestSquaredDifferenceScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""

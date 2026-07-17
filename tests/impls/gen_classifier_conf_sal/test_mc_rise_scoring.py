@@ -13,6 +13,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestMCRiseScoring:
     def test_init_outofrange_config(self) -> None:
         """Test catching an out of range config value."""

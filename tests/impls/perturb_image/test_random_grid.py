@@ -12,6 +12,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestRandomGrid:
     def test_init_valued(self) -> None:
         """Test that constructor values pass."""

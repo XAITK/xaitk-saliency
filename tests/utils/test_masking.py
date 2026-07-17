@@ -43,6 +43,7 @@ def as_uint8(v: npt.ArrayLike) -> np.ndarray:
     return np.asarray(v, dtype=np.uint8)
 
 
+@pytest.mark.core
 class TestOccludeImageCommon:
     """
     Common tests for both batch and streaming occlusion methods since each
@@ -383,6 +384,7 @@ class TestOccludeImageCommon:
             list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL, fill=fill_img))
 
 
+@pytest.mark.core
 class TestOccludeImageBatch:
     def test_catch_bad_masks_dim(self) -> None:
         """
@@ -402,6 +404,7 @@ class TestOccludeImageBatch:
             occlude_image_batch(TEST_IMAGE_GRAY, np.ones((3, 4, 2)))
 
 
+@pytest.mark.core
 class TestOccludeImageStreaming:
     def test_catch_bad_mask_shape(self) -> None:
         """
@@ -433,12 +436,14 @@ class TestOccludeImageStreaming:
             )
 
 
+@pytest.mark.core
 def test_benchmark() -> None:
     """Simple run test of the benchmark function."""
     # Reducing some parameterization just for functionality test.
     benchmark_occlude_image(img_shape=(64, 64), num_masks=100, threading_tests=[0, 1, 2])
 
 
+@pytest.mark.core
 class TestWeightRegionsByScalar:
     @pytest.mark.parametrize("inv_masks", [True, False])
     @pytest.mark.parametrize("normalize", [True, False])

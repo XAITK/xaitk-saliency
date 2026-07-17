@@ -20,6 +20,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())  # type: ignore
 
 
+@pytest.mark.core
 class TestMCRise:
     def test_configuration(self) -> None:
         """Test standard config things."""

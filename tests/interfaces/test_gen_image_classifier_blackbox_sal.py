@@ -10,6 +10,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import (
 )
 
 
+@pytest.mark.core
 def test_generate_checks_success() -> None:
     """Test successful passage through the wrapper method."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
@@ -27,6 +28,7 @@ def test_generate_checks_success() -> None:
     GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
 
 
+@pytest.mark.core
 def test_generate_checks_image_shape() -> None:
     """Test that the input image shape conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
@@ -52,6 +54,7 @@ def test_generate_checks_image_shape() -> None:
         GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
 
 
+@pytest.mark.core
 def test_generate_checks_output_mismatch() -> None:
     """Test that the `_generate` output shape appropriately checks against the
     input image shape and errors when not matching."""
@@ -71,6 +74,7 @@ def test_generate_checks_output_mismatch() -> None:
         GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """Test that __call__ is just an alias to the generate method."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
