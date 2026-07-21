@@ -1,0 +1,113 @@
+# serializer version: 1
+# name: TestMAITEObjectDetector.test_smoketest[multiclass_scores]
+  list([
+    list([
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[1 2] max_vertex=[3 4]>,
+        dict({
+          0: 0.25,
+          1: 0.0,
+          2: 0.75,
+        }),
+      ),
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[5 6] max_vertex=[7 8]>,
+        dict({
+          0: 0.95,
+          1: 0.0,
+          2: 0.0,
+        }),
+      ),
+    ]),
+  ])
+# ---
+# name: TestMAITEObjectDetector.test_smoketest[multiple images]
+  list([
+    list([
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[1 2] max_vertex=[3 4]>,
+        dict({
+          0: 0.25,
+          1: 0.0,
+          2: 0.75,
+        }),
+      ),
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[5 6] max_vertex=[7 8]>,
+        dict({
+          0: 0.95,
+          1: 0.0,
+          2: 0.0,
+        }),
+      ),
+    ]),
+    list([
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[1 2] max_vertex=[3 4]>,
+        dict({
+          0: 0.25,
+          1: 0.0,
+          2: 0.75,
+        }),
+      ),
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[5 6] max_vertex=[7 8]>,
+        dict({
+          0: 0.95,
+          1: 0.0,
+          2: 0.0,
+        }),
+      ),
+    ]),
+  ])
+# ---
+# name: TestMAITEObjectDetector.test_smoketest[no dets]
+  list([
+    list([
+    ]),
+  ])
+# ---
+# name: TestMAITEObjectDetector.test_smoketest[single 3 channel]
+  list([
+    list([
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[1 2] max_vertex=[3 4]>,
+        dict({
+          0: 0.25,
+          1: 0.0,
+          2: 0.75,
+        }),
+      ),
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[5 6] max_vertex=[7 8]>,
+        dict({
+          0: 0.95,
+          1: 0.0,
+          2: 0.0,
+        }),
+      ),
+    ]),
+  ])
+# ---
+# name: TestMAITEObjectDetector.test_smoketest[single greyscale]
+  list([
+    list([
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[1 2] max_vertex=[3 4]>,
+        dict({
+          0: 0.25,
+          1: 0.0,
+          2: 0.75,
+        }),
+      ),
+      tuple(
+        <smqtk_image_io.bbox.AxisAlignedBoundingBox min_vertex=[5 6] max_vertex=[7 8]>,
+        dict({
+          0: 0.95,
+          1: 0.0,
+          2: 0.0,
+        }),
+      ),
+    ]),
+  ])
+# ---
