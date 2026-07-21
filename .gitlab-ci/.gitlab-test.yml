@@ -47,6 +47,11 @@ notebooks:
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
+      - NOTEBOOK_DIR: "docs/interoperability/maite/examples"
+        NOTEBOOK_FILE: [
+          "maite-image-classifier-protocol.ipynb",
+          "maite-object-detector-protocol.ipynb"
+        ]
 
 pytest-extras:
   allow_failure: false
