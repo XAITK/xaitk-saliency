@@ -1,6 +1,8 @@
+<!-- markdownlint-disable MD041 -->
+
 ![xaitk-logo](./docs/figures/xaitk-wordmark-light.png)
 
-<hr/>
+______________________________________________________________________
 
 <!-- :auto badges: -->
 
@@ -12,8 +14,12 @@
 
 <!-- TODO: re-enable these later. -->
 
+<!-- markdownlint-disable MD013 -->
+
 <!-- [![badge-unittests](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-unittests.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-unittests.yml)
 [![badge-notebooks](https://github.com/xaitk/xaitk-saliency/actions/workflows/ci-example-notebooks.yml/badge.svg)](https://github.com/XAITK/xaitk-saliency/actions/workflows/ci-example-notebooks.yml) -->
+
+<!-- markdownlint-enable MD013 -->
 
 [![codecov](https://codecov.io/gh/XAITK/xaitk-saliency/branch/master/graph/badge.svg?token=VHRNXYCNCG)](https://codecov.io/gh/XAITK/xaitk-saliency)
 
@@ -23,10 +29,9 @@ The `xaitk-saliency` package is an open source, Explainable AI (XAI) framework
 for visual saliency algorithm interfaces and implementations, built for
 analytics and autonomy applications.
 
-See
-[here](https://xaitk-saliency.readthedocs.io/en/latest/xaitk_explanation.html)
-for a more formal introduction to the topic of XAI and visual saliency
-explanations.
+See our
+[introduction to XAI and visual saliency](https://xaitk-saliency.readthedocs.io/en/latest/xaitk_explanation.html)
+for a more formal treatment of the topic.
 
 This framework is a part of the
 [Explainable AI Toolkit (XAITK)](https://xaitk.org).
@@ -35,9 +40,9 @@ This framework is a part of the
 
 The `xaitk-saliency` package provides saliency algorithms for a wide range of
 image understanding tasks, including image classification, image similarity,
-object detection, and reinforcement learning. The current list of supported
-saliency algorithms can be found
-[here](https://xaitk-saliency.readthedocs.io/en/latest/introduction.html#saliency-algorithms).
+object detection, and reinforcement learning. See the
+[supported saliency algorithms](https://xaitk-saliency.readthedocs.io/en/latest/introduction.html#saliency-algorithms)
+in the documentation.
 
 ## Target Audience
 
@@ -67,8 +72,8 @@ conda install -c conda-forge xaitk-saliency
 ```
 
 Certain plugins may require additional runtime dependencies. Details on these
-requirements can be found
-[here](https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
+requirements can be found in the
+[implementations reference](https://xaitk-saliency.readthedocs.io/en/latest/implementations.html).
 
 For more detailed installation instructions, visit the
 [installation documentation](https://xaitk-saliency.readthedocs.io/en/latest/installation.html).

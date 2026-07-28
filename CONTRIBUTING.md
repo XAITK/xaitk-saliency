@@ -1,3 +1,9 @@
+<!-- markdownlint-disable MD014 -->
+
+<!-- MD014 is disabled for this file: the `$` prompt prefix in code blocks is
+     intentional, signalling to the reader that the line is a command to type
+     rather than documentation prose or output. -->
+
 # Contributing to XAITK-Saliency
 
 ## Making a Contribution
@@ -13,7 +19,7 @@ Here we describe at a high level how to contribute to XAITK-Saliency. See the
 
 3. Create a topic branch, edit files and create commits:
 
-   ```
+   ```bash
    $ git checkout -b <branch-name>
    $ <edit things>
    $ git add <file1> <file2> ...
@@ -28,7 +34,7 @@ Here we describe at a high level how to contribute to XAITK-Saliency. See the
 
 4. Push topic branch with commits to your fork in GitHub:
 
-   ```
+   ```bash
    $ git push origin HEAD -u
    ```
 

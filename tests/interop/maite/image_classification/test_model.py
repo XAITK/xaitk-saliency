@@ -114,7 +114,7 @@ class TestMAITEImageClassifier:
         )
 
         res = list(inst.classify_images(imgs))
-        res = [{k: v.item() for k, v in d.items()} for d in res]
+        res = [{k: float(v) for k, v in d.items()} for d in res]
         assert res == snapshot
 
     @pytest.mark.parametrize(
