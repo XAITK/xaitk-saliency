@@ -4,6 +4,7 @@ repos:
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
+    exclude: ^docs/_templates/
   - id: check-added-large-files
     args:
       # the unit here is acutally KiB (1024 bytes)
@@ -17,15 +18,17 @@ repos:
     types: [markdown]
     additional_dependencies:
       - mdformat-tables
-- repo: https://github.com/hukkin/mdformat
-  rev: 0.7.22  # Use the ref you want to point at
-  hooks:
-  - id: mdformat
-    name: mdformat-lint
-    args: [--wrap=80, --number, --check]
-    types: [markdown]
-    additional_dependencies:
-      - mdformat-tables
+# - repo: https://github.com/PyCQA/flake8
+#   rev: 7.3.0
+#   hooks:
+#   - id: flake8
+#     args:
+#       - '--select=FKA1'
+#       - '--kwargs-max-positional-arguments=2'
+#       - --kwargs-ignore-function-pattern-extend
+#       - ^np\..*|^pytest\..*|^random\..*|^mock\.patch.*|^patch|^re\..*|^json\..*|^os\.path\..*|^warnings\..*|^math\..*|^open|^click.option|^yaml\..*|^sys\..*|\.get$|\.replace$|\.transpose$|\.reshape$|^runner\.invoke$|^dict\.fromkeys$|^binom$
+#     additional_dependencies:
+#       - flake8-force-keyword-arguments
 - repo: local
   hooks:
     - id: ruff-lint
@@ -45,9 +48,16 @@ repos:
       require_serial: true
       language: system
       types_or: [python, pyi, jupyter]
-    - id: pyright
-      name: pyright
+    - id: pyright-internal
+      name: pyright-internal
       require_serial: true
       language: system
       entry: poetry run pyright
+      types: [file, python]
+    - id: pyright-external
+      name: pyright-external
+      require_serial: true
+      language: system
+      # nrtk uses --verifytypes xaitk_saliency --ignoreexternal
+      entry: poetry run pyright src/xaitk_saliency
       types: [file, python]

@@ -1,0 +1,60 @@
+###############################################################################
+###############################################################################
+# Stage -- VCRM Test Suite
+###############################################################################
+
+vcrm:
+  stage: vcrm
+  image: python:3.10
+  interruptible: true
+  allow_failure: true
+  needs: []
+  dependencies: []
+  variables:
+    PY_COLORS: "1"  # colors for python/pip installs
+    FORCE_COLOR: "1" # colors for pytest
+    VCRM_DIR: "${CI_PROJECT_DIR}/metarepo/XAITK/.vcrm"
+  rules:
+    # If changes are make to an active merge request.
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: on_success
+    - when: never  # explicit fail-exclude terminal condition.
+
+  before_script:
+    - apt-get -qq update
+    - apt-get -qq install -y git-lfs
+
+    # For internal git dependencies
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jatic.net".insteadof "ssh://git@gitlab.jatic.net"
+    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.jatic.net/".insteadOf "git@gitlab.jatic.net:"
+
+    # Setup poetry
+    - export PATH=${HOME}/.local/bin:${PATH}
+    - pip install --root-user-action=ignore --upgrade pip -q
+    - pip install --root-user-action=ignore --user -U "poetry>=2.2" tox -q
+
+    # Show version details for debugging
+    - python --version
+    - pip --version
+    - poetry --version
+    - tox --version
+
+  script:
+    - git clone https://robot:${GITLAB_KITWARE_GROUP_TOKEN}@gitlab.jatic.net/jatic/kitware/metarepo.git
+    - cd metarepo/XAITK/.vcrm
+    - sed -i "s|^xaitk *=.*|xaitk = ${CI_PROJECT_DIR}|" tox.dev.ini
+    - tox -c tox.dev.ini
+
+  after_script:
+    - REPORTS=(${CI_PROJECT_DIR}/metarepo/XAITK/.vcrm/reports/*.dev.md*)
+    - apt-get -y install pandoc
+    - pandoc "${REPORTS[0]}" -o "${CI_PROJECT_DIR}/vcrm-report.html"
+    # Copy the dev report so it can be exposed as an artifact
+    - cp "${REPORTS[0]}" vcrm-report.md
+
+  artifacts:
+    when: always
+    name: 'VCRM Report'
+    paths:
+      - vcrm-report.html
+      - vcrm-report.md

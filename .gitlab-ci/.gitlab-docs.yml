@@ -1,13 +1,118 @@
 ###############################################################################
 # Stage -- Documentation
 ###############################################################################
-#
-# Overrides:
-#
-# 1) Installed "tools" and "example_deps" extras
-#
-###############################################################################
+
 .docs-setup:
+  extends: .shared-setup
+  stage: docs
   before_script:
     - !reference [.shared-setup, before_script]
-    - poetry sync --only main,docs,tests --extras "tools example_deps"
+    - poetry sync --only main,docs,tests,linting
+
+# Job to check the release notes folder
+release-notes:
+  extends: .docs-setup
+  needs: [] # Don't wait for previous stages/jobs
+  allow_failure: true
+  before_script: [] # We don't need poetry, git, or git-lfs
+  script:
+    - git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --depth 1
+    - scripts/check_for_release_notes.sh origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "release"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - !reference [.shared-setup, rules] # Don't overwrite normal rules
+
+pages-branch:
+  extends: .docs-setup
+  artifacts:
+      expose_as: 'Documentation Build'
+      paths:
+        - docs/_build/html/
+  environment:
+      name: docs-preview/$CI_MERGE_REQUEST_IID
+      url: "https://jatic.pages.jatic.net/-/kitware/$CI_PROJECT_NAME/-/jobs/$CI_JOB_ID/artifacts/docs/_build/html/index.html"
+      auto_stop_in: 1 week
+  script:
+    - cd docs
+    - poetry run make html
+  variables:
+      PUBLIC_URL: "/-/kitware/$CI_PROJECT_NAME/-/jobs/$CI_JOB_ID/artifacts/docs/_build/html/"
+  rules:
+    # Don't run this rule if on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: never
+    - !reference [.docs-setup, rules]
+
+pages: # this must be named "pages" to get GitLab to run "pages:deploy"
+  extends: .docs-setup
+  script:
+    - cd docs
+    - poetry run make html
+    - mv _build/html/ ../public/
+  artifacts:
+    paths:
+    - public
+  rules:
+    # Only run this rule if on main branch
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+pdf-build:
+  extends: .docs-setup
+  artifacts:
+      expose_as: 'Documentation PDF'
+      paths:
+        - docs/_pdf
+  allow_failure: true
+  before_script:
+    - !reference [.docs-setup, before_script]
+    - apt-get install latexmk texlive texlive-latex-extra texlive-luatex fonts-freefont-ttf -y
+  script:
+    - cd docs
+    - poetry run python -m sphinx -T -b latex -d _build/doctrees -D language=en . ./_pdf
+    - cd _pdf
+    - latexmk -r latexmkrc -pdflua -f -dvi- -ps- -interaction=nonstopmode
+
+markdown-link-check:
+  extends: .docs-setup
+  needs: []
+  before_script: []  # skip poetry sync — this image has no apt/python
+  image:
+    name: ghcr.io/tcort/markdown-link-check:stable
+    entrypoint: ['/bin/sh', '-c']
+  script:
+    - markdown-link-check *.md
+    - find docs -name '*.md' -print0 | xargs -0 -n1 markdown-link-check
+  # Allow failures in link checking to avoid blocking merges due to transient issues
+  # and anti-scraping measures on some sites. Warnings should be reviewed and addressed.
+  allow_failure: true
+
+markdownlint:
+  extends: .docs-setup
+  needs: []
+  before_script: []  # skip poetry sync — this image has no apt/python
+  image:
+    name: davidanson/markdownlint-cli2
+    entrypoint: ['']
+  script: |
+    markdownlint-cli2 README.md || FAIL=1
+    markdownlint-cli2 CONTRIBUTING.md || FAIL=1
+    markdownlint-cli2 ROADMAP.md || FAIL=1
+    markdownlint-cli2 'docs/**/*.md' || FAIL=1
+    exit $FAIL
+
+check-links:
+  extends: .docs-setup
+  script:
+    - apt-get update && apt-get install -y npm
+    - npm install -g broken-link-checker-local
+    - cd docs
+    - poetry run make html
+    - cd _build/html
+    - blcl -ro --exclude "http://localhost:5500/" .
+  allow_failure: true  # temporary while we get everything cloned downstream
+  timeout: 10 minutes
+  rules:
+    - !reference [.docs-setup, rules]

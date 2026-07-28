@@ -28,7 +28,9 @@ class KWCocoUtils:
 
     def parse_coco_dset(
         self,
-        dets_dset: "kwcoco.CocoDataset",
+        # kwcoco's __init__.py uses lazy import loading, so pyright
+        # infers `kwcoco.CocoDataset` as `ModuleType | Any` instead of a class.
+        dets_dset: "kwcoco.CocoDataset",  # pyright: ignore[reportGeneralTypeIssues]
     ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
         """
         Generate reference image, bounding box, and class score matrices, for
