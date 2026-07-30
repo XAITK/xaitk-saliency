@@ -60,7 +60,7 @@ class MAITEDetector(DetectImageObjects):
         self,
         img_iter: Iterable[np.ndarray],
     ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
-        all_out = list()
+        all_out = []
 
         def _to_channels_first(img: np.ndarray) -> np.ndarray:
             """Convert an image from channels-last format (H, W, C) to channels-first format (C, H, W).
@@ -94,7 +94,7 @@ class MAITEDetector(DetectImageObjects):
                     - An `AxisAlignedBoundingBox`.
                     - A dictionary of class label-to-confidence mappings.
             """
-            dets_dict: dict[AxisAlignedBoundingBox, dict[Hashable, float]] = dict()
+            dets_dict: dict[AxisAlignedBoundingBox, dict[Hashable, float]] = {}
             for box, label, prob in zip(bboxes, labels, probs, strict=False):
                 if probs.ndim > 1:  # Scores per classes
                     dets_dict[box] = dict(zip(self._ids, prob, strict=False))
@@ -136,13 +136,13 @@ class MAITEDetector(DetectImageObjects):
                 all_out.append(_xform_dets(bboxes=boxes, labels=labels, probs=scores))
 
         # Batch model passes
-        batch = list()
+        batch = []
         for img in img_iter:
             batch.append(_to_channels_first(img))
 
             if len(batch) == self._img_batch_size:
                 _generate_outputs(batch)
-                batch = list()
+                batch = []
 
         # Leftover batch
         if len(batch) > 0:

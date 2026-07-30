@@ -99,8 +99,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
         self._kwcoco_dataset = kwcoco_dataset
 
-        self._image_ids = list()
-        self._annotations = dict()
+        self._image_ids = []
+        self._annotations = {}
 
         for _, img_id in enumerate(kwcoco_dataset.imgs.keys()):
             bboxes = np.empty((0, 4))
@@ -165,8 +165,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
         image_md: COCOMetadata = {
             "id": image_id,
-            "ann_ids": (list(gid_to_aids[image_id]) if image_id in gid_to_aids else list()),
-            "image_info": dict(width=width, height=height, file_name=img_file_path),
+            "ann_ids": (list(gid_to_aids[image_id]) if image_id in gid_to_aids else []),
+            "image_info": {"width": width, "height": height, "file_name": img_file_path},
         }
 
         # Forward input metadata, checking for clobbering

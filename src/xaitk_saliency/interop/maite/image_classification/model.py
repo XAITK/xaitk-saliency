@@ -63,8 +63,8 @@ class MAITEImageClassifier(ClassifyImage):
 
     @override
     def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:  # noqa: C901
-        all_out = list()
-        batch = list()
+        all_out = []
+        batch = []
 
         # Convert from channels last to channels first
         # Channels first is specified in protocols v0.5.0
@@ -86,7 +86,7 @@ class MAITEImageClassifier(ClassifyImage):
 
             if len(batch) == self._img_batch_size:
                 all_out.extend(_generate_outputs(batch))
-                batch = list()
+                batch = []
 
         # Leftover batch
         if len(batch) > 0:

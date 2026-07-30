@@ -57,7 +57,7 @@ def compute_sal_maps(
     :param blackbox_detector: ``DetectImageObjects`` detector
     :param num_classes: Number of classes potentially predicted by the detector.
     """
-    img_sal_maps = list()
+    img_sal_maps = []
     for dset_idx in range(len(dataset)):
         ref_img, dets, _ = dataset[dset_idx]
 

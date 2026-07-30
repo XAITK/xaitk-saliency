@@ -80,7 +80,7 @@ class TestComputeSalMaps:
 
 
 class TestSalOnDets:
-    @mock.patch("xaitk_saliency.interop.maite.utils.sal_on_dets.compute_sal_maps", return_value=(list(), dict()))
+    @mock.patch("xaitk_saliency.interop.maite.utils.sal_on_dets.compute_sal_maps", return_value=([], {}))
     def test_sal_on_dets(self, patch: MagicMock) -> None:
         """Test workflow with MAITE detector."""
         dataset = MagicMock(spec=Dataset)

@@ -93,7 +93,7 @@ def sal_on_coco_dets(  # noqa: C901
     :param verbose: Display progress messages. Default is false.
     """
     if generate_config_file:
-        config: dict[str, Any] = dict()
+        config: dict[str, Any] = {}
 
         config["DetectImageObjects"] = make_default_config(DetectImageObjects.get_impls())
         config["GenerateObjectDetectorBlackboxSaliency"] = make_default_config(
