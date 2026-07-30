@@ -16,9 +16,7 @@ class TestSquaredDifferenceScoring:
         assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
-        """Test that passing a different number of reference confidences and
-        perturbed confidences raises the expected exception.
-        """
+        """Test that passing a mismatched number of reference and perturbed confidences raises expected exception."""
         test_ref = np.ones(4)
         test_pert = np.ones((4, 3))
         test_masks = np.ones((4, 3, 3))
@@ -32,9 +30,7 @@ class TestSquaredDifferenceScoring:
             impl.generate(test_ref, test_pert, test_masks)
 
     def test_bad_alignment_masks(self) -> None:
-        """Test that passing a different number of perturbed confidences and masks
-        raises the expected exception.
-        """
+        """Test that passing a mismatched number of perturbed confidences and masks raises the expected exception."""
         test_ref = np.ones(4)
         test_pert = np.ones((4, 4))
         test_masks = np.ones((5, 3, 3))
@@ -48,7 +44,7 @@ class TestSquaredDifferenceScoring:
             impl.generate(test_ref, test_pert, test_masks)
 
     def test_scores(self) -> None:
-        """Test for expected output with known input using one class"""
+        """Test for expected output with known input using one class."""
         test_ref = np.array([0.9, 0.1])
         test_pert = np.array(
             [

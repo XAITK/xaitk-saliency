@@ -20,15 +20,14 @@ config_file = os.path.join(DATA_DIR, "config.json")
 
 @pytest.mark.core
 class TestSalOnCocoDetsNotUsable:
-    """These tests make use of the `tmpdir` fixture from `pytest`. Find more
-    information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
+    """These tests make use of the `tmpdir` fixture from `pytest`.
+
+    Find more information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
     """
 
     @mock.patch("xaitk_saliency.utils.bin.sal_on_coco_dets.is_usable", False)
     def test_warning(self, tmpdir: py.path.local) -> None:
-        """Test that proper warning is displayed when required dependencies are
-        not installed.
-        """
+        """Test that proper warning is displayed when required dependencies are not installed."""
         output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()
@@ -42,14 +41,13 @@ class TestSalOnCocoDetsNotUsable:
 @pytest.mark.tools
 @pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestSalOnCocoDets:
-    """These tests make use of the `tmpdir` fixture from `pytest`. Find more
-    information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
+    """These tests make use of the `tmpdir` fixture from `pytest`.
+
+    Find more information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
     """
 
     def test_coco_sal_gen(self, tmpdir: py.path.local) -> None:
-        """Test saliency map generation with RandomDetector, RISEGrid, and
-        DRISEScoring.
-        """
+        """Test saliency map generation with RandomDetector, RISEGrid, and DRISEScoring."""
         output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()
@@ -67,9 +65,7 @@ class TestSalOnCocoDets:
             assert sorted(img_dir.listdir()) == sorted(map_files)
 
     def test_coco_sal_gen_img_overlay(self, tmpdir: py.path.local) -> None:
-        """Test saliency map generation with RandomDetector, RISEGrid, and
-        DRISEScoring with the overlay image option.
-        """
+        """Test saliency map generation with RandomDetector, RISEGrid, and DRISEScoring with overlay image option."""
         output_dir = tmpdir.join(Path("out"))
 
         runner = CliRunner()

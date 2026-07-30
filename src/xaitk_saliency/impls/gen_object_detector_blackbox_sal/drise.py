@@ -1,6 +1,7 @@
-"""This module defines `_BaseDRISE`, `DRISEStack`, and `RandomGridStack`. `_BaseDRISE` is the abstract class for
-implementations that use the `DRISEScoring` algorithm. `DRISEStack` and `RandomGridStack` are implementations
-of `_BaseDRISE`.
+"""This module defines `_BaseDRISE`, `DRISEStack`, and `RandomGridStack`.
+
+`_BaseDRISE` is the abstract class for implementations that use the `DRISEScoring` algorithm. `DRISEStack` and
+`RandomGridStack` are implementations of `_BaseDRISE`.
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
     """Abstract class for implementations that use the `DRISEScoring` algorithm.
+
     Implementations of this class should define the image perturbation method
     and call this constructor.
     """
@@ -44,9 +46,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
 
     @abc.abstractmethod
     def _get_perturber(self) -> PerturbImage:
-        """Abstract method to retrieve the `PerturbImage` implementation to use in
-        conjunction with `DRISEScoring`.
-        """
+        """Abstract method to retrieve the `PerturbImage` implementation to use in conjunction with `DRISEScoring`."""
 
     @property
     def fill(self) -> int | Sequence[int] | np.ndarray | None:
@@ -79,9 +79,9 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
 
 
 class DRISEStack(_BaseDRISE):
-    """Encapsulation of the perturbation-occlusion method using the RISE image
-    perturbation and DRISE scoring algorithms to generate visual saliency maps
-    for object detections.
+    """Encapsulation of the perturbation-occlusion method using RISE image perturbation and DRISE scoring algorithms.
+
+    This generates visual saliency maps for object detections.
     See references in the :class:`RISEGrid` and :class:`DRISEScoring`
     documentation.
     """
@@ -95,9 +95,9 @@ class DRISEStack(_BaseDRISE):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = 0,
     ) -> None:
-        """Encapsulation of the perturbation-occlusion method using the RISE image
-        perturbation and DRISE scoring algorithms to generate visual saliency maps
-        for object detections.
+        """Encapsulation of the perturbation-occlusion method using RISE image perturbation and DRISE algorithms.
+
+        This generates visual saliency maps for object detections.
 
         :param n: Number of random masks used in the algorithm.
         :param s: Spatial resolution of the small masking grid.
@@ -122,9 +122,9 @@ class DRISEStack(_BaseDRISE):
 
 
 class RandomGridStack(_BaseDRISE):
-    """Encapsulation of the perturbation-occlusion method using the RandomGrid
-    image perturbation and DRISE scoring algorithms to generate visual saliency
-    maps for object detection.
+    """Encapsulation of the perturbation-occlusion method using RandomGrid perturbation and DRISE scoring algorithms.
+
+    This generates visual saliency maps for object detection.
     See references in the :class:`RandomGrid` and :class:`DRISEScoring`
     documentation.
     """
@@ -138,9 +138,9 @@ class RandomGridStack(_BaseDRISE):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int = 0,
     ) -> None:
-        """Encapsulation of the perturbation-occlusion method using the RandomGrid
-        image perturbation and DRISE scoring algorithms to generate visual saliency
-        maps for object detection.
+        """Encapsulation of the perturbation-occlusion method using RandomGrid perturbation and DRISE algorithms.
+
+        This generates visual saliency maps for object detection.
 
         :param n: Number of random masks.
         :param s: Dimensions of each grid cell in pixels. E.g. (3, 4) would use a

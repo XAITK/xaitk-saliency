@@ -1,5 +1,6 @@
-"""This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations
@@ -19,8 +20,7 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
-    """Image similarity saliency generator composed of modular perturbation and
-    occlusion-based algorithms.
+    """Image similarity saliency generator composed of modular perturbation and occlusion-based algorithms.
 
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
@@ -34,8 +34,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = None,
     ) -> None:
-        """Image similarity saliency generator composed of modular perturbation and
-        occlusion-based algorithms.
+        """Image similarity saliency generator composed of modular perturbation and occlusion-based algorithms.
 
         :param perturber: `PerturbImage` implementation instance for generating
             occlusion masks.

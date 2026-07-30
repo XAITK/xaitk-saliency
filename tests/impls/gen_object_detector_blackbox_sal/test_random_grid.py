@@ -68,8 +68,9 @@ class TestBlackBoxRandomGrid:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
-        """Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = RandomGridStack(3, (4, 5), 0.6, seed=7)
         assert inst._po.fill is None

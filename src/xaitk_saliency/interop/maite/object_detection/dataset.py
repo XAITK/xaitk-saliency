@@ -1,4 +1,5 @@
 """This module provides dataset classes for working with object detection data in the MAITE framework.
+
 It includes adapters for COCO-format datasets and general datasets for varying-sized images.
 
 Classes:
@@ -55,7 +56,7 @@ class MAITEDetectionTarget:
 
 
 class COCOMetadata(DatumMetadata):
-    """TypedDict for COCO-detection datum-level metdata"""
+    """TypedDict for COCO-detection datum-level metdata."""
 
     ann_ids: ReadOnly[Sequence[int]]
     image_info: ReadOnly[dict[str, Any]]
@@ -210,7 +211,7 @@ class MAITEObjectDetectionDataset(Dataset):
         dataset_id: str,
         index2label: dict[int, str] | None = None,
     ) -> None:
-        """Initialize MAITE-compliant dataset
+        """Initialize MAITE-compliant dataset.
 
         Args:
             imgs (Sequence[np.ndarray]): Sequence of images in the dataset.

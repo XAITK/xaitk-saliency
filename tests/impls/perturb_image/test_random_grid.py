@@ -74,9 +74,7 @@ class TestRandomGrid:
         assert np.array_equal(masks1, masks2)
 
     def test_call_idempotency(self) -> None:
-        """Test that perturbation generation is idempotent, at least when seeded
-        and single-threaded.
-        """
+        """Test that perturbation generation is idempotent, at least when seeded and single-threaded."""
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
 
@@ -88,8 +86,9 @@ class TestRandomGrid:
         assert np.array_equal(masks1, masks2)
 
     def test_perturb_1_channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """Test mask generation on a one-channel image of a known size. Number
-        of channels should not affect output masks.
+        """Test mask generation on a one-channel image of a known size.
+
+        Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
@@ -100,8 +99,9 @@ class TestRandomGrid:
         snapshot_custom.assert_match(actual_masks)
 
     def test_perturb_3_channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """Test mask generation on a three-channel image of a known size. Number
-        of channels should not affect output masks.
+        """Test mask generation on a three-channel image of a known size.
+
+        Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6, 3), dtype=np.uint8)
@@ -112,9 +112,7 @@ class TestRandomGrid:
         snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_size(self) -> None:
-        """Test that a single implementation can be used for images of varying
-        sizes.
-        """
+        """Test that a single implementation can be used for images of varying sizes."""
         impl = RandomGrid(n=5, s=(3, 4), p1=0.2, seed=42, threads=0)
 
         rng = np.random.default_rng(seed=0)

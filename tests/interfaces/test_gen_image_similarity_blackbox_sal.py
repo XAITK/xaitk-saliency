@@ -51,9 +51,7 @@ def test_generate_checks_image_shape() -> None:
 
 @pytest.mark.core
 def test_generate_checks_output_shape() -> None:
-    """Test that the `_generate` output shape is appropriately checked against that
-    of the reference image.
-    """
+    """Test that the `_generate` output shape is appropriately checked against that of the reference image."""
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
 
     test_ref_image = np.empty((256, 123))
@@ -77,9 +75,7 @@ def test_generate_checks_output_shape() -> None:
 
 @pytest.mark.core
 def test_generate_checkout_num_saliency_maps() -> None:
-    """Test that the number of output heatmaps is checked against the number of
-    input query images.
-    """
+    """Test that the number of output heatmaps is checked against the number of input query images."""
     m_impl = mock.Mock(spec=GenerateImageSimilarityBlackboxSaliency)
 
     test_ref_image = np.empty((55, 44, 6))

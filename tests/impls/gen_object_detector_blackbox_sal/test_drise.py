@@ -36,7 +36,7 @@ class TestBlackBoxDRISE:
             assert inst_g.get_config() == {}
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy inputs"""
+        """Test basic generation functionality with dummy inputs."""
 
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
@@ -67,8 +67,9 @@ class TestBlackBoxDRISE:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
-        """Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = DRISEStack(5, 8, 0.5, seed=0)
         assert inst._po.fill is None

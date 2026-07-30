@@ -34,9 +34,7 @@ class TestSimilarityScoring:
         assert impl.proximity_metric == "hamming"
 
     def test_invalid_metric(self) -> None:
-        """Test that a ValueError is raised when an invalid cdist proximity_metric
-        is passed.
-        """
+        """Test that a ValueError is raised when an invalid cdist proximity_metric is passed."""
         with pytest.raises(
             ValueError,
             match=r"Chosen comparison metric not supported or may not be available in scipy",
@@ -44,9 +42,7 @@ class TestSimilarityScoring:
             SimilarityScoring("invalid metric")
 
     def test_generate_mismatch_ref_descriptors(self) -> None:
-        """Test that we appropriately error when the input reference descriptors
-        are not the same dimensionality.
-        """
+        """Test that we appropriately error when the input reference descriptors are not the same dimensionality."""
         rng = np.random.default_rng(seed=0)
         test_ref_descr = rng.standard_normal(16)
         test_query_descrs = rng.standard_normal((5, 15))  # Different than above
@@ -62,9 +58,7 @@ class TestSimilarityScoring:
             impl.generate(test_ref_descr, test_query_descrs, test_pert_descrs, test_masks)
 
     def test_generate_mismatched_perturbed(self) -> None:
-        """Test that we appropriately error when the input perturbation
-        descriptors and mask arrays are not equal in first-dimension length.
-        """
+        """Test that an error occurs when perturbation descriptors and mask arrays differ in first-dimension length."""
         rng = np.random.default_rng(seed=0)
         test_ref_descr = rng.standard_normal(16)
         test_query_descrs = rng.standard_normal((1, 16))

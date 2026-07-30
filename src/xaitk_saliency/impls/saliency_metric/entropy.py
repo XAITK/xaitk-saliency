@@ -1,5 +1,6 @@
-"""Provides an implementation of the `SaliencyMetric` interface for computing
-entropy over a saliency map using `scipy.stats.entropy`.
+"""Provides an implementation of the `SaliencyMetric` interface for computing entropy over a saliency map.
+
+Computation is done using `scipy.stats.entropy`.
 
 Classes:
     Entropy: Computes the entropy of a given saliency map.

@@ -1,4 +1,4 @@
-"""Implementation of SimilarityScoring scorer"""
+"""Implementation of SimilarityScoring scorer."""
 
 import numpy as np
 from typing_extensions import override
@@ -8,10 +8,10 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
-    """This saliency implementation transforms black-box confidence predictions
-    from a classification-style network into saliency heatmaps. This should
-    require a sequence of classification scores predicted on the reference
-    image, a number of classification scores predicted on perturbed images, as
+    """This saliency implementation transforms black-box confidence predictions from a classification-style network.
+
+    The result is expressed as saliency heatmaps. This should require a sequence of classification scores
+    predicted on the reference image, a number of classification scores predicted on perturbed images, as
     well as the masks of the reference image perturbations (as would be output
     from a `PerturbImage` implementation).
 
@@ -31,7 +31,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Generate saliency heatmaps from black-box confidence predictions
+        """Generate saliency heatmaps from black-box confidence predictions.
 
         :param reference: np.ndarray
             Reference predictions from the reference image

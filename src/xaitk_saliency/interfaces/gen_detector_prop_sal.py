@@ -7,8 +7,9 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateDetectorProposalSaliency(Plugfigurable):
-    """This interface proposes that implementations transform black-box image
-    object detection predictions into visual saliency heatmaps.
+    """This interface proposes that implementations transform black-box image object detection predictions.
+
+    These predictions are transformed into visual saliency heatmaps.
     This should require externally-generated object detection predictions over
     some image, along with predictions for perturbed images and the perturbation
     masks for those images as would be output from a
@@ -30,8 +31,9 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Generate visual saliency heatmap matrices for each reference
-        detection, describing what visual information contributed to the
+        """Generate visual saliency heatmap matrices for each reference detection.
+
+        These describe what visual information contributed to the
         associated reference detection.
 
         We expect input detections to come from a black-box source that outputs

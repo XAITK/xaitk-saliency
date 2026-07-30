@@ -1,5 +1,6 @@
-"""This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations

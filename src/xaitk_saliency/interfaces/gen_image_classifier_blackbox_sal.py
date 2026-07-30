@@ -20,9 +20,9 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
-    """This interface for algorithms takes a reference image and an image
-    classifier black-box algorithm, then generates a number of visual
-    saliency heatmap matrices, one for each class output by the classifier
+    """This interface for algorithms takes a reference image and an image classifier black-box algorithm.
+
+    It then generates a number of visual saliency heatmap matrices, one for each class output by the classifier
     black box.
 
     A classifier black box needs to be input, which requires some
@@ -36,8 +36,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
     """
 
     def generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """Generates per-class visual saliency heatmaps for some classifier
-        black box over some image of interest.
+        """Generates per-class visual saliency heatmaps for some classifier black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
         either a `H x W` or `H x W x C` shape format.
@@ -83,14 +82,13 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
         return output
 
     def __call__(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """Alias to the :meth:`generate` method.
-        See :meth:`generate` for more details.
-        """
+        """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
         return self.generate(ref_image, blackbox)
 
     @abc.abstractmethod
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         """Internal method for implementing the generation logic.
+
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for the `generate` method also applies here aside from

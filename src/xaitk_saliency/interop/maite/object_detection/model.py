@@ -1,4 +1,5 @@
 """This module provides the `MAITEDetector` class, an adapter for the MAITE object detection protocol.
+
 It converts MAITE model outputs into the SMQTK `DetectImageObjects` interface format, making
 it compatible with downstream detection pipelines.
 
@@ -22,8 +23,9 @@ from typing_extensions import override
 
 
 class MAITEDetector(DetectImageObjects):
-    """Adapter for MAITE object detection protocol that transforms its outputs into
-    the SMQTK `DetectImageObjects` interface format.
+    """Adapter for MAITE object detection protocol.
+
+    It transforms its outputs into the SMQTK `DetectImageObjects` interface format.
 
     Attributes:
         _detector (od.Model): The MAITE protocol-based detector instance.

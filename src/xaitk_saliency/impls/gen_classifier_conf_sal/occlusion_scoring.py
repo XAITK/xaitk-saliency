@@ -1,4 +1,4 @@
-"""Implementation of OcclusionScoring scorer"""
+"""Implementation of OcclusionScoring scorer."""
 
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
@@ -8,9 +8,9 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class OcclusionScoring(GenerateClassifierConfidenceSaliency):
-    """This saliency implementation transforms black-box
-    image classification scores into saliency heatmaps. This should
-    require a sequence of per-class confidences predicted on the
+    """This saliency implementation transforms black-box image classification scores into saliency heatmaps.
+
+    This should require a sequence of per-class confidences predicted on the
     reference image, a number of per-class confidences as predicted
     on perturbed images, as well as the masks of the reference image
     perturbations (as would be output from a `PerturbImage` implementation).
@@ -28,7 +28,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Generate saliency maps
+        """Generate saliency maps.
 
         :param reference: np.ndarray
             Reference confidence lengths from the reference image

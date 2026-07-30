@@ -1,4 +1,4 @@
-"""Implementation of RISEScoring scorer"""
+"""Implementation of RISEScoring scorer."""
 
 from typing import Any
 
@@ -12,6 +12,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 class RISEScoring(GenerateClassifierConfidenceSaliency):
     """Saliency map generation based on the original RISE implementation.
+
     This version utilizes only the input perturbed image confidence predictions
     and does not utilize reference image confidences.
     This implementation also takes influence from debiased RISE and may take an
@@ -46,7 +47,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Generate saliency maps
+        """Generate saliency maps.
 
         :param reference: np.ndarray
             Reference confidence lengths from the reference image

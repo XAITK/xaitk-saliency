@@ -1,4 +1,4 @@
-"""Implementation of DRISE scorer"""
+"""Implementation of DRISE scorer."""
 
 import numpy as np
 from scipy.spatial.distance import cdist
@@ -10,8 +10,9 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class DRISEScoring(GenerateDetectorProposalSaliency):
-    """This D-RISE implementation transforms black-box object detector predictions
-    into visual saliency heatmaps. Specifically, we make use of perturbed
+    """This D-RISE implementation transforms black-box object detector predictions into visual saliency heatmaps.
+
+    Specifically, we make use of perturbed
     detections generated using the `RISEGrid` image perturbation class and
     a similarity metric that captures both the localization and categorization
     aspects of object detection.
@@ -78,7 +79,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Generate visual saliency heatmaps from black-box object detector predictions
+        """Generate visual saliency heatmaps from black-box object detector predictions.
 
         :param ref_dets: np.ndarray
             Reference detections from the reference image

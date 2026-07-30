@@ -1,6 +1,4 @@
-"""Encapsulation of the perturbation-occlusion method using specifically
-sliding windows and the occlusion-scoring method.
-"""
+"""Encapsulation of the perturbation-occlusion method using sliding windows and the occlusion-scoring method."""
 
 from __future__ import annotations
 
@@ -17,8 +15,8 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
-    """Encapsulation of the perturbation-occlusion method using specifically
-    sliding windows and the occlusion-scoring method.
+    """Encapsulation of the perturbation-occlusion method using sliding windows and the occlusion-scoring method.
+
     See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
     for more details.
     """
@@ -29,8 +27,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         stride: tuple[int, int] = (20, 20),
         threads: int = 0,
     ) -> None:
-        """Initialization of the perturbation-occlusion method using specifically
-        sliding windows and the occlusion-scoring method.
+        """Initialize the perturbation-occlusion method using sliding windows and the occlusion-scoring method.
 
         :param window_size: The block window size as a tuple with format
             `(height, width)`.
@@ -52,7 +49,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     @property
     def fill(self) -> int | Sequence[int] | None:
-        """Gets the fill value"""
+        """Gets the fill value."""
         return self._po.fill
 
     @fill.setter

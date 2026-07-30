@@ -1,6 +1,7 @@
-"""This module provides the `MAITEImageClassifier` class, an adapter for integrating MAITE-based
-image classifiers with the SMQTK `ClassifyImage` interface. It enables the use of MAITE
-protocol-based classifiers in pipelines that require the SMQTK interface.
+"""This module provides the `MAITEImageClassifier` class.
+
+It is an adapter for integrating MAITE-based image classifiers with the SMQTK `ClassifyImage` interface. It enables
+the use of MAITE protocol-based classifiers in pipelines that require the SMQTK interface.
 
 Classes:
     MAITEImageClassifier: Adapts a MAITE image classification model for compatibility with

@@ -18,11 +18,11 @@ class StubImpl(GenerateDescriptorSimilaritySaliency):
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Stub impl"""
+        """Stub impl."""
         return np.zeros((1, 1))
 
     def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
-        """Stub impl"""
+        """Stub impl."""
 
 
 def teardown_module() -> None:
@@ -35,9 +35,7 @@ def teardown_module() -> None:
 
 @pytest.mark.core
 def test_call_alias() -> None:
-    """Test that the __call__ instance method is an alias to invoke the generate
-    instance method.
-    """
+    """Test that the __call__ instance method is an alias to invoke the generate instance method."""
     stub = StubImpl()
     stub.generate = mock.Mock()  # type: ignore
     m_ref_descr_1 = mock.Mock(spec=np.ndarray)

@@ -33,9 +33,7 @@ class TestRadialOcclusionBasedPerturb:
         assert impl.sigma == ex_sig
 
     def test_plugin_find(self) -> None:
-        """This implementation has no optional plugins so it should be found and
-        exposed by the super-type's impl getter.
-        """
+        """This implementation has no optional plugins and should be found by the super-type's impl getter."""
         assert SlidingRadial in PerturbImage.get_impls()
 
     def test_standard_config(self) -> None:
@@ -50,6 +48,7 @@ class TestRadialOcclusionBasedPerturb:
 
     def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test basic perturbation on a known 1-channel image.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.
@@ -63,6 +62,7 @@ class TestRadialOcclusionBasedPerturb:
 
     def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test basic perturbation on a known 3-channel image.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.
@@ -76,6 +76,7 @@ class TestRadialOcclusionBasedPerturb:
 
     def test_perturb_3channel_with_blurring(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test basic perturbation on a known 3-channel image with blurring.
+
         Input image mode should not impact the masks output.
         """
         # Square image for uneven masking 6-ways.
@@ -89,6 +90,7 @@ class TestRadialOcclusionBasedPerturb:
 
     def test_perturb_4channel(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test basic perturbation on a known 4-channel image.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide, should be occluded 6-ways.

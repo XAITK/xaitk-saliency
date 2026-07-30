@@ -56,9 +56,7 @@ def test_generate_checks_image_shape() -> None:
 
 @pytest.mark.core
 def test_generate_checks_output_mismatch() -> None:
-    """Test that the `_generate` output shape appropriately checks against the
-    input image shape and errors when not matching.
-    """
+    """Test that `_generate`'s output shape is checked against the input image shape, erroring on mismatch."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
     m_clfier = mock.Mock(spec=ClassifyImage)
 

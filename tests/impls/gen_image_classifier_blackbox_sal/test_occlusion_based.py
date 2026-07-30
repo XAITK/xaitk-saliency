@@ -66,7 +66,7 @@ class TestPerturbationOcclusion:
             assert inst_i._generator.p == test_sgn_p
 
     def test_generate_success(self) -> None:
-        """Test successfully invoking _generate"""
+        """Test successfully invoking _generate."""
 
         # Stub classifier blackbox that returns two class predictions.
         class StubClassifier(ClassifyImage):

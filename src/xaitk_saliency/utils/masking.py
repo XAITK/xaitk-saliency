@@ -19,8 +19,9 @@ def occlude_image_batch(  # noqa: C901
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> np.ndarray:
-    """Apply a number of input occlusion masks to the given reference image,
-    producing a list of images equivalent in length, and parallel in order, to
+    """Apply a number of input occlusion masks to the given reference image.
+
+    This produces a list of images equivalent in length, and parallel in order, to
     the input masks.
     This batch version will compute all occluded images and returns them all in
     one large matrix.
@@ -128,8 +129,9 @@ def occlude_image_streaming(  # noqa: C901
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> Generator[np.ndarray, None, None]:
-    """Apply a number of input occlusion masks to the given reference image,
-    producing a list of images equivalent in length, and parallel in order, to
+    """Apply a number of input occlusion masks to the given reference image.
+
+    This produces a list of images equivalent in length, and parallel in order, to
     the input masks.
     This streaming version will return an iterator that yields occluded image
     matrices.
@@ -217,9 +219,9 @@ def benchmark_occlude_image(
     num_masks: int = 1000,
     threading_tests: Sequence[int] = (0, 1, 2),
 ) -> None:
-    """Simple benchmark for the two above `occlude_image_*` functions above w.r.t.
-    the given reference image matrix, which should be of the shape
-    `[H x W [x C]]`.
+    """Simple benchmark for the two above `occlude_image_*` functions above w.r.t. the given reference image matrix.
+
+    This should be of the shape `[H x W [x C]]`.
     """
     img_mat = np.ones((*img_shape, img_channels), dtype=np.uint8)
     rng = np.random.default_rng(seed=0)

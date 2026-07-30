@@ -1,1 +1,1 @@
-"""MAITE compliant dataset and model objects for using XAITK for object detection"""
+"""MAITE compliant dataset and model objects for using XAITK for object detection."""

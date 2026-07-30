@@ -7,9 +7,7 @@ from xaitk_saliency.utils.detection import format_detection
 @pytest.mark.core
 class TestFormatDetection:
     def test_default_objectness_fill(self) -> None:
-        """Test that when objectness scores are not provided the expected default
-        is filled into the appropriate column.
-        """
+        """Test that when objectness scores are not provided the default is filled into the appropriate column."""
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
@@ -29,9 +27,7 @@ class TestFormatDetection:
         assert np.allclose(combined_mat[:, 4], test_obj_v)
 
     def test_explicit_objectness_2d(self) -> None:
-        """Test that an input objectness vector that is of shape `[nDets x 1]` is
-        treated fine.
-        """
+        """Test that an input objectness vector that is of shape `[nDets x 1]` is treated fine."""
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
@@ -66,9 +62,7 @@ class TestFormatDetection:
         assert np.allclose(test_obj_v, gen_fresh_objness())
 
     def test_bbox_class_shape_mismatch(self) -> None:
-        """Test that an error is raised when there is a `nDets` dimension shape
-        mismatch in input bbox and classification matrices.
-        """
+        """Test that an error is raised on `nDets` shape mismatch between input bbox and classification matrices."""
         # 16 boxes, 14 classifications.
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
@@ -80,9 +74,7 @@ class TestFormatDetection:
             format_detection(test_bbox_mat, test_class_mat)
 
     def test_objectness_shape_mismatch(self) -> None:
-        """Test that an error is raised when the explicitly input objectness array
-        is not a matching size.
-        """
+        """Test that an error is raised when the explicitly input objectness array is not a matching size."""
         rng = np.random.default_rng(seed=0)
         test_bbox_mat = rng.integers(0, 255, (16, 4))
         test_class_mat = rng.standard_normal((16, 8))
@@ -104,6 +96,7 @@ class TestFormatDetection:
     )
     def test_against_type_upcasting(self, bbox_type: np.dtype, clf_type: np.dtype, expected_type: np.dtype) -> None:
         """Test that the output is not of a type that is larger than is input.
+
         E.g. when input is float32, output is *not* float64, but still float32.
         """
         rng = np.random.default_rng(seed=0)
@@ -129,9 +122,7 @@ class TestFormatDetection:
         obj_type: np.dtype,
         expected_type: np.dtype,
     ) -> None:
-        """Same as ``test_against_type_upcasting`` but including the objectness
-        input vector instead of it being ``None``.
-        """
+        """Same as ``test_against_type_upcasting`` but with an explicit objectness input vector instead of ``None``."""
         rng = np.random.default_rng(seed=0)
         bbox_mat = rng.standard_normal((100, 4)).astype(bbox_type)
         classification_mat = rng.standard_normal((100, 10)).astype(clf_type)

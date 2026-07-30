@@ -50,7 +50,7 @@ class TestMCRise:
             assert inst_i._fill_colors == fill_colors
 
     def test_generation_rgb(self, snapshot_custom: SnapshotAssertion) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""

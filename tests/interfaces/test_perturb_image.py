@@ -26,9 +26,7 @@ def teardown_module() -> None:
 
 @pytest.mark.core
 def test_call_alias() -> None:
-    """Test that the __call__ instance method is an alias to invoke the perturb
-    instance method.
-    """
+    """Test that the __call__ instance method is an alias to invoke the perturb instance method."""
     stub = StubImpl()
     stub.perturb = mock.Mock()  # type: ignore
     m_img = mock.Mock(spec=np.ndarray)

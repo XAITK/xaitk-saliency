@@ -1,1 +1,1 @@
-"""Utils for generating saliency on detection datasets"""
+"""Utils for generating saliency on detection datasets."""

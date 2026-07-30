@@ -30,7 +30,7 @@ class TestSpecializationSlidingWindow:
             assert inst_i._po._threads == 99
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -57,7 +57,7 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_generation_gray(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -84,8 +84,9 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
-        """Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
         assert inst.fill is None

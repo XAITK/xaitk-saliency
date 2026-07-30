@@ -1,5 +1,6 @@
-"""This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations
@@ -140,9 +141,9 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 def _dets_to_formatted_mat(
     dets: Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]],
 ) -> np.ndarray:
-    """Converts detections, as returned by an implementation of
-    ``DetectImageObjects``, into a detection matrix formatted for use with
-    an implementation of ``GenerateDetectorProposalSaliency``.
+    """Converts detections, as returned by an implementation of ``DetectImageObjects``, into a detection matrix.
+
+    The matrix is formatted for use with an implementation of ``GenerateDetectorProposalSaliency``.
     The order of the class scores in the resulting matrix follows the order of
     labels present in the first non-empty detection in the input set.
 

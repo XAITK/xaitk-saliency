@@ -1,5 +1,6 @@
-"""This module provides the `sal_on_coco_dets` CLI script to generate saliency maps
-for detections in a COCO dataset for `xaitk-saliency`.
+"""This module provides the `sal_on_coco_dets` CLI script.
+
+It generates saliency maps for detections in a COCO dataset for `xaitk-saliency`.
 """
 
 import json
@@ -74,8 +75,9 @@ def sal_on_coco_dets(
     generate_config_file: TextIO,
     verbose: bool,
 ) -> None:
-    """Generate saliency maps for detections in a COCO format file and write them
-    to disk. Maps for each detection are written out in subdirectories named
+    r"""Generate saliency maps for detections in a COCO format file and write them to disk.
+
+    Maps for each detection are written out in subdirectories named
     after their corresponding image file.
 
     \b

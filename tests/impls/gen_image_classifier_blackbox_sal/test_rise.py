@@ -58,7 +58,7 @@ class TestSpecializationRise:
             assert inst_i.get_config()["debiased"] is False
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -89,8 +89,9 @@ class TestSpecializationRise:
         assert np.allclose(exp_res, res, atol=2e-7)
 
     def test_fill_prop(self) -> None:
-        """Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = RISEStack(5, 8, 0.5, seed=0)
         assert inst.fill is None
