@@ -1,5 +1,4 @@
-"""
-This module provides dataset classes for working with object detection data in the MAITE framework.
+"""This module provides dataset classes for working with object detection data in the MAITE framework.
 It includes adapters for COCO-format datasets and general datasets for varying-sized images.
 
 Classes:
@@ -78,14 +77,14 @@ class COCOMAITEObjectDetectionDataset(Dataset):
         skip_no_anns: bool = False,
         dataset_id: str | None = None,
     ) -> None:
-        """
-        Initialize MAITE-compliant dataset from a COCO dataset.
+        """Initialize MAITE-compliant dataset from a COCO dataset.
 
         Args:
             kwcoco_dataset (kwcoco.CocoDataset): The COCO dataset object.
             image_metadata (Sequence[DatumMetadataType]): Metadata for each image.
             skip_no_anns (bool): Whether to skip images without annotations. Defaults to False.
             dataset_id (str): Dataset ID, defaults to filepath.
+
         Raises:
             ImportError: If required dependencies are not installed.
             ValueError: If metadata is missing for any image in the dataset.
@@ -211,8 +210,7 @@ class MAITEObjectDetectionDataset(Dataset):
         dataset_id: str,
         index2label: dict[int, str] | None = None,
     ) -> None:
-        """
-        Initialize MAITE-compliant dataset
+        """Initialize MAITE-compliant dataset
 
         Args:
             imgs (Sequence[np.ndarray]): Sequence of images in the dataset.

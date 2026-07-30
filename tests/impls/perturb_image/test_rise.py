@@ -55,8 +55,7 @@ class TestRISEPerturbation:
         assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -70,8 +69,7 @@ class TestRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_call_idempotency(self) -> None:
-        """
-        Test that, at least when seeded and single-threaded, perturbation
+        """Test that, at least when seeded and single-threaded, perturbation
         generation is idempotent.
         """
         # Image is slightly wide
@@ -91,8 +89,7 @@ class TestRISEPerturbation:
         )
 
     def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -106,8 +103,7 @@ class TestRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_sizes(self) -> None:
-        """
-        Test that once we initialize a RISEPerturbation we can call it on
+        """Test that once we initialize a RISEPerturbation we can call it on
         images of varying sizes
         """
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42)

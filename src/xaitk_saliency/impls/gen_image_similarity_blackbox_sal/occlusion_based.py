@@ -1,5 +1,4 @@
-"""
-This module defines the `PerturbationOcclusion` class, which implements a generator composed of
+"""This module defines the `PerturbationOcclusion` class, which implements a generator composed of
 modular perturbation and occlusion-based algorithms
 """
 
@@ -20,8 +19,7 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
-    """
-    Image similarity saliency generator composed of modular perturbation and
+    """Image similarity saliency generator composed of modular perturbation and
     occlusion-based algorithms.
 
     This implementation exposes its `fill` attribute as public.
@@ -36,8 +34,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = None,
     ) -> None:
-        """
-        Image similarity saliency generator composed of modular perturbation and
+        """Image similarity saliency generator composed of modular perturbation and
         occlusion-based algorithms.
 
         :param perturber: `PerturbImage` implementation instance for generating
@@ -77,8 +74,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the PerturbationOcclusion.
+        """Returns the default configuration for the PerturbationOcclusion.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -94,8 +90,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     @classmethod
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
-        """
-        Create a PerturbationOcclusion instance from a configuration dictionary.
+        """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:
             config_dict (dict): Configuration dictionary with perturber details.
@@ -113,8 +108,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the PerturbationOcclusion instance.
+        """Get the configuration dictionary of the PerturbationOcclusion instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

@@ -1,5 +1,4 @@
-"""
-Module for generating visual saliency heatmaps from image classifiers.
+"""Module for generating visual saliency heatmaps from image classifiers.
 
 This module provides the `GenerateImageClassifierBlackboxSaliency` class, which is used to generate per-class visual
 saliency heatmaps for an image classifier black-box. The saliency maps indicate which regions of the image are most
@@ -21,8 +20,7 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
-    """
-    This interface for algorithms takes a reference image and an image
+    """This interface for algorithms takes a reference image and an image
     classifier black-box algorithm, then generates a number of visual
     saliency heatmap matrices, one for each class output by the classifier
     black box.
@@ -38,8 +36,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
     """
 
     def generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Generates per-class visual saliency heatmaps for some classifier
+        """Generates per-class visual saliency heatmaps for some classifier
         black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
@@ -86,16 +83,14 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
         return output
 
     def __call__(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Alias to the :meth:`generate` method.
+        """Alias to the :meth:`generate` method.
         See :meth:`generate` for more details.
         """
         return self.generate(ref_image, blackbox)
 
     @abc.abstractmethod
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Internal method for implementing the generation logic.
+        """Internal method for implementing the generation logic.
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for the `generate` method also applies here aside from

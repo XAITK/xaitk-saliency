@@ -7,8 +7,7 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateClassifierConfidenceSaliency(Plugfigurable):
-    """
-    Visual saliency map generation interface whose implementations transform
+    """Visual saliency map generation interface whose implementations transform
     black-box image classification scores into saliency heatmaps.
 
     This should require a sequence of per-class confidences predicted on the
@@ -35,8 +34,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate a visual saliency heatmap matrix given the black-box
+        """Generate a visual saliency heatmap matrix given the black-box
         classifier output on a reference image, the same classifier output on
         perturbed images and the masks of the visual perturbations.
 

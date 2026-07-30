@@ -8,8 +8,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
-    """
-    This saliency implementation transforms black-box confidence predictions
+    """This saliency implementation transforms black-box confidence predictions
     from a classification-style network into saliency heatmaps. This should
     require a sequence of classification scores predicted on the reference
     image, a number of classification scores predicted on perturbed images, as
@@ -32,8 +31,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate saliency heatmaps from black-box confidence predictions
+        """Generate saliency heatmaps from black-box confidence predictions
 
         :param reference: np.ndarray
             Reference predictions from the reference image
@@ -60,8 +58,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         return sal / sal.max()
 
     def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the SquaredDifferenceScoring instance.
+        """Get the configuration dictionary of the SquaredDifferenceScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

@@ -89,8 +89,7 @@ class TestSpecializationRise:
         assert np.allclose(exp_res, res, atol=2e-7)
 
     def test_fill_prop(self) -> None:
-        """
-        Test that the `fill` property appropriately gets and sets the
+        """Test that the `fill` property appropriately gets and sets the
         underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = RISEStack(5, 8, 0.5, seed=0)

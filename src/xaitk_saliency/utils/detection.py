@@ -10,8 +10,7 @@ def format_detection(
     classification_mat: np.ndarray,
     objectness: np.ndarray | None = None,
 ) -> np.ndarray:
-    """
-    Combine detection and classification output, with optional objectness
+    """Combine detection and classification output, with optional objectness
     output, into the combined format required for
     :py:meth:`.GenerateDetectorProposalSaliency.generate` ``*_dets`` input
     parameters.

@@ -7,8 +7,7 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class PerturbImage(Plugfigurable):
-    """
-    Interface abstracting the behavior of taking a reference image and
+    """Interface abstracting the behavior of taking a reference image and
     generating some number perturbations in the form of mask matrices
     indicating where perturbations should occur and to what amount.
 
@@ -17,8 +16,7 @@ class PerturbImage(Plugfigurable):
 
     @abc.abstractmethod
     def perturb(self, ref_image: np.ndarray) -> np.ndarray:
-        """
-        Transform an input reference image into a number of mask matrices
+        """Transform an input reference image into a number of mask matrices
         indicating the perturbed regions.
 
         Output mask matrix should be three-dimensional with the format

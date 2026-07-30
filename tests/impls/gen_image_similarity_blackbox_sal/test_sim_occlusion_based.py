@@ -45,7 +45,6 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using stub implementations."""
-
         inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == 27

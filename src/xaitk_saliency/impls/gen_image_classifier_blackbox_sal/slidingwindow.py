@@ -1,5 +1,6 @@
 """Encapsulation of the perturbation-occlusion method using specifically
-sliding windows and the occlusion-scoring method."""
+sliding windows and the occlusion-scoring method.
+"""
 
 from __future__ import annotations
 
@@ -16,8 +17,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically
+    """Encapsulation of the perturbation-occlusion method using specifically
     sliding windows and the occlusion-scoring method.
     See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
     for more details.
@@ -29,8 +29,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         stride: tuple[int, int] = (20, 20),
         threads: int = 0,
     ) -> None:
-        """
-        Initialization of the perturbation-occlusion method using specifically
+        """Initialization of the perturbation-occlusion method using specifically
         sliding windows and the occlusion-scoring method.
 
         :param window_size: The block window size as a tuple with format
@@ -65,8 +64,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the SlidingWindowStack.
+        """Returns the default configuration for the SlidingWindowStack.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -84,8 +82,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the SlidingWindowStack instance.
+        """Get the configuration dictionary of the SlidingWindowStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

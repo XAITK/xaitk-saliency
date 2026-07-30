@@ -62,8 +62,7 @@ class TestBlackBoxSBSM:
         assert np.allclose(exp_res, sal_maps)
 
     def test_fill_prop(self) -> None:
-        """
-        Test that the `fill` property appropriately gets and sets the
+        """Test that the `fill` property appropriately gets and sets the
         underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = SBSMStack((2, 2), (1, 1))

@@ -134,7 +134,6 @@ class TestSalOnCocoDets:
     @mock.patch("pathlib.Path.is_file", return_value=False)
     def test_missing_annotations(self, tmpdir: py.path.local) -> None:
         """Check that an exception is appropriately raised if the annotations file is missing."""
-
         with pytest.raises(ValueError, match=r"Could not identify annotations file."):
             CliRunner().invoke(
                 sal_on_coco_dets,
@@ -158,7 +157,6 @@ class TestSalOnCocoDets:
 
         This will only run as as long as it's not required by the perturber.
         """
-
         with caplog.at_level(logging.INFO):
             runner = CliRunner()
             result = runner.invoke(

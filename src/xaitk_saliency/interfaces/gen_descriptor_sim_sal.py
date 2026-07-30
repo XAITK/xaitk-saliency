@@ -7,8 +7,7 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateDescriptorSimilaritySaliency(Plugfigurable):
-    """
-    Visual saliency map generation interface whose implementations transform
+    """Visual saliency map generation interface whose implementations transform
     black-box feature vectors from multiple references and perturbations into
     saliency heatmaps.
 
@@ -31,8 +30,7 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate a matrix of visual saliency heatmaps given the black-box
+        """Generate a matrix of visual saliency heatmaps given the black-box
         descriptor generation output on a reference image, several query images,
         perturbed versions of the reference image and the masks of the visual
         perturbations.

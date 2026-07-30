@@ -47,7 +47,6 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using known simple implementations."""
-
         test_threads = 87
         test_spi_p = 0
         test_sgn_p = 1

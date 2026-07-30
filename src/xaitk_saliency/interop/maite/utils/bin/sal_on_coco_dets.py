@@ -1,5 +1,4 @@
-"""
-This module provides a CLI tool for generating saliency maps for object detection
+"""This module provides a CLI tool for generating saliency maps for object detection
 models applied to datasets in COCO format. It leverages saliency generation methods
 and blackbox object detection models to create visual explanations for predictions.
 

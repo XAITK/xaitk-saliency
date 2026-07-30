@@ -17,8 +17,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
+    """Encapsulation of the perturbation-occlusion method using specifically the
     MC-RISE implementations of the component algorithms.
 
     This more specifically encapsulates the MC-RISE method as presented
@@ -39,8 +38,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         seed: int | None,
         threads: int = 0,
     ) -> None:
-        """
-        :param n: int
+        """:param n: int
             Number of random masks used in the algorithm. E.g. 1000.
         :param s: int
             Spatial resolution of the small masking grid. E.g. 8.
@@ -123,8 +121,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
 
     @override
     def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Warning: this implementation returns a different shape than is typically expected by this interface.
+        """Warning: this implementation returns a different shape than is typically expected by this interface.
         Instead of returning `[nClasses x H x W]`, `[kColors x nClasses x H x W] saliency maps will be returned.
 
         :param ref_image: np.ndarray

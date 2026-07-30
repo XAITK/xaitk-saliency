@@ -1,5 +1,4 @@
-"""
-This module provides the `sal_on_coco_dets` CLI script to generate saliency maps
+"""This module provides the `sal_on_coco_dets` CLI script to generate saliency maps
 for detections in a COCO dataset for `xaitk-saliency`.
 """
 
@@ -32,8 +31,7 @@ except ImportError:
 
 
 def _generate_config_file(generate_config_file: TextIO) -> None:
-    """
-    Generates a default configuration file and writes it to the specified output stream.
+    """Generates a default configuration file and writes it to the specified output stream.
 
     This function is intended for internal use only. When provided with a file-like object,
     it creates a default configuration by aggregating settings from various components
@@ -76,8 +74,7 @@ def sal_on_coco_dets(
     generate_config_file: TextIO,
     verbose: bool,
 ) -> None:
-    """
-    Generate saliency maps for detections in a COCO format file and write them
+    """Generate saliency maps for detections in a COCO format file and write them
     to disk. Maps for each detection are written out in subdirectories named
     after their corresponding image file.
 
@@ -102,7 +99,6 @@ def sal_on_coco_dets(
         This skips the normal operation of this tool and only outputs the file.
     :param verbose: Display progress messages. Default is false.
     """
-
     _generate_config_file(generate_config_file)
 
     if not is_usable:

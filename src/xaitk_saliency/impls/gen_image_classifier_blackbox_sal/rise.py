@@ -1,5 +1,6 @@
 """Encapsulation of the perturbation-occlusion method using specifically the
-RISE implementations of the component algorithms."""
+RISE implementations of the component algorithms.
+"""
 
 from __future__ import annotations
 
@@ -16,8 +17,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class RISEStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
+    """Encapsulation of the perturbation-occlusion method using specifically the
     RISE implementations of the component algorithms.
 
     This more specifically encapsulates the original RISE method as presented
@@ -38,8 +38,7 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         threads: int = 0,
         debiased: bool = True,
     ) -> None:
-        """
-        Initialization of the perturbation-occlusion method using specifically the
+        """Initialization of the perturbation-occlusion method using specifically the
         RISE implementations of the component algorithms.
 
         :param n:
@@ -80,8 +79,7 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         return self._po.generate(ref_image, blackbox)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the RISEStack instance.
+        """Get the configuration dictionary of the RISEStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

@@ -1,5 +1,4 @@
-"""
-This module provides the `MAITEDetector` class, an adapter for the MAITE object detection protocol.
+"""This module provides the `MAITEDetector` class, an adapter for the MAITE object detection protocol.
 It converts MAITE model outputs into the SMQTK `DetectImageObjects` interface format, making
 it compatible with downstream detection pipelines.
 
@@ -23,8 +22,7 @@ from typing_extensions import override
 
 
 class MAITEDetector(DetectImageObjects):
-    """
-    Adapter for MAITE object detection protocol that transforms its outputs into
+    """Adapter for MAITE object detection protocol that transforms its outputs into
     the SMQTK `DetectImageObjects` interface format.
 
     Attributes:
@@ -43,8 +41,7 @@ class MAITEDetector(DetectImageObjects):
         ids: Sequence[int],
         img_batch_size: int = 1,
     ) -> None:
-        """
-        Initialize the MAITEDetector with a MAITE protocol-based object detector.
+        """Initialize the MAITEDetector with a MAITE protocol-based object detector.
 
         Args:
             detector (od.Model): The MAITE object detection model.
@@ -63,8 +60,7 @@ class MAITEDetector(DetectImageObjects):
         all_out = list()
 
         def _to_channels_first(img: np.ndarray) -> np.ndarray:
-            """
-            Convert an image from channels-last format (H, W, C) to channels-first format (C, H, W).
+            """Convert an image from channels-last format (H, W, C) to channels-first format (C, H, W).
 
             Args:
                 img (np.ndarray): Input image.
@@ -81,8 +77,7 @@ class MAITEDetector(DetectImageObjects):
             labels: np.ndarray,
             probs: np.ndarray,
         ) -> Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]:
-            """
-            Transform detection outputs into the SMQTK detection format.
+            """Transform detection outputs into the SMQTK detection format.
 
             Args:
                 bboxes (Iterable[AxisAlignedBoundingBox]): Detected bounding boxes.
@@ -108,8 +103,7 @@ class MAITEDetector(DetectImageObjects):
             return list(dets_dict.items())
 
         def _xform_bbox(box: np.ndarray) -> AxisAlignedBoundingBox:
-            """
-            Convert a bounding box array into an `AxisAlignedBoundingBox` instance.
+            """Convert a bounding box array into an `AxisAlignedBoundingBox` instance.
 
             Args:
                 box (np.ndarray): A bounding box in `[x_min, y_min, x_max, y_max]` format.
@@ -120,8 +114,7 @@ class MAITEDetector(DetectImageObjects):
             return AxisAlignedBoundingBox(box[0:2], box[2:4])
 
         def _generate_outputs(batch: Sequence[np.ndarray]) -> None:
-            """
-            Generate detection outputs for a batch of images.
+            """Generate detection outputs for a batch of images.
 
             Args:
                 batch (Sequence[np.ndarray]): A batch of images in channels-first format.

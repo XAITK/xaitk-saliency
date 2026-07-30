@@ -24,8 +24,7 @@ from xaitk_saliency.utils.masking import (
     ],
 )
 def occ_func(request: pytest.FixtureRequest) -> Callable:
-    """
-    Module-local fixture for parameterizing tests across occlusion
+    """Module-local fixture for parameterizing tests across occlusion
     function variants.
     """
     # param is "optional" in FixtureRequest, so it's not resolving as a "valid"
@@ -35,8 +34,7 @@ def occ_func(request: pytest.FixtureRequest) -> Callable:
 
 
 def as_uint8(v: npt.ArrayLike) -> np.ndarray:
-    """
-    Convert input value to np.uint8 type. This only exists to make
+    """Convert input value to np.uint8 type. This only exists to make
     type-checking happy by using `np.asarray(..., dtype=np.uint8)` instead
     of `np.uint8(v)`, in a wrapped func to reduce typing.
     """
@@ -45,8 +43,7 @@ def as_uint8(v: npt.ArrayLike) -> np.ndarray:
 
 @pytest.mark.core
 class TestOccludeImageCommon:
-    """
-    Common tests for both batch and streaming occlusion methods since each
+    """Common tests for both batch and streaming occlusion methods since each
     should output the same results for these.
     """
 
@@ -171,8 +168,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_gray_bool_fill_list_error(self, occ_func: Callable) -> None:
-        """
-        Test using a custom fill color for masked regions as a 3-channel list.
+        """Test using a custom fill color for masked regions as a 3-channel list.
         For single-channel input this is an error.
         """
         with pytest.raises(ValueError, match=r"operands could not be broadcast together"):
@@ -181,8 +177,7 @@ class TestOccludeImageCommon:
             list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, [255, 0, 255]))
 
     def test_gray_float_fill_list_error(self, occ_func: Callable) -> None:
-        """
-        Test using a custom fill color for masked regions as a 3-channel list.
+        """Test using a custom fill color for masked regions as a 3-channel list.
         For single-channel input this is an error.
         """
         with pytest.raises(ValueError, match=r"operands could not be broadcast together"):
@@ -264,8 +259,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_gray_bool_fill_img_rgb_error(self, occ_func: Callable) -> None:
-        """
-        Filling with a multi-channel image when the ref-image is single-channel
+        """Filling with a multi-channel image when the ref-image is single-channel
         should be an error.
         """
         with pytest.raises(
@@ -275,8 +269,7 @@ class TestOccludeImageCommon:
             list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, fill=TEST_FILL_IMG_RGB))
 
     def test_rgb_bool_fill_img_gray_error(self, occ_func: Callable) -> None:
-        """
-        Filling with a single-channel image when the ref-image is multi-channel
+        """Filling with a single-channel image when the ref-image is multi-channel
         should be an error.
         """
         with pytest.raises(
@@ -359,8 +352,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_fill_img_bad_height_width(self, occ_func: Callable) -> None:
-        """
-        Test that inputting a fill image with inconsistent height, width or
+        """Test that inputting a fill image with inconsistent height, width or
         both with respect to the ref image is a ValueError.
         """
         fill_img = np.full((3, 4), 255, dtype=np.uint8)
@@ -387,8 +379,7 @@ class TestOccludeImageCommon:
 @pytest.mark.core
 class TestOccludeImageBatch:
     def test_catch_bad_masks_dim(self) -> None:
-        """
-        Test the expectation that input mask matrices need to be 3 dimensional
+        """Test the expectation that input mask matrices need to be 3 dimensional
         for the [N x H x W] shape.
         """
         with pytest.raises(ValueError, match="Expected a 3-dimension mask input"):
@@ -396,8 +387,7 @@ class TestOccludeImageBatch:
             occlude_image_batch(TEST_IMAGE_GRAY, np.ones((5, 5)))
 
     def test_catch_bad_mask_shape(self) -> None:
-        """
-        Test catching input masks that do not have the same shape as the input
+        """Test catching input masks that do not have the same shape as the input
         ref image.
         """
         with pytest.raises(ValueError, match="Input image shape and mask image shape did not match"):
@@ -407,8 +397,7 @@ class TestOccludeImageBatch:
 @pytest.mark.core
 class TestOccludeImageStreaming:
     def test_catch_bad_mask_shape(self) -> None:
-        """
-        Test catching input masks that do not have the same shape as the input
+        """Test catching input masks that do not have the same shape as the input
         ref image.
         """
         with pytest.raises(ValueError, match=r"Input mask \(position 0\) did not the shape of the input image"):
@@ -465,8 +454,7 @@ class TestWeightRegionsByScalar:
         inv_masks: bool,
         normalize: bool,
     ) -> None:
-        """
-        Test that the output is not of a type that is larger than is input.
+        """Test that the output is not of a type that is larger than is input.
         In other words, the output should follow numpy's type promotion rules
         based on the input data types.
         E.g. when input is float32, output is *not* float64, but still float32.

@@ -8,8 +8,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class OcclusionScoring(GenerateClassifierConfidenceSaliency):
-    """
-    This saliency implementation transforms black-box
+    """This saliency implementation transforms black-box
     image classification scores into saliency heatmaps. This should
     require a sequence of per-class confidences predicted on the
     reference image, a number of per-class confidences as predicted
@@ -29,8 +28,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate saliency maps
+        """Generate saliency maps
 
         :param reference: np.ndarray
             Reference confidence lengths from the reference image
@@ -62,8 +60,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the OcclusionScoring instance.
+        """Get the configuration dictionary of the OcclusionScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

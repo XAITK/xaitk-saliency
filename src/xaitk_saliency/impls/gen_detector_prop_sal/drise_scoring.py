@@ -10,8 +10,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class DRISEScoring(GenerateDetectorProposalSaliency):
-    """
-    This D-RISE implementation transforms black-box object detector predictions
+    """This D-RISE implementation transforms black-box object detector predictions
     into visual saliency heatmaps. Specifically, we make use of perturbed
     detections generated using the `RISEGrid` image perturbation class and
     a similarity metric that captures both the localization and categorization
@@ -34,8 +33,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     """
 
     def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
-        """
-        Compute the intersection over union (IoU) of two sets of boxes.
+        """Compute the intersection over union (IoU) of two sets of boxes.
 
         | E.g.:
         |    A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
@@ -80,8 +78,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate visual saliency heatmaps from black-box object detector predictions
+        """Generate visual saliency heatmaps from black-box object detector predictions
 
         :param ref_dets: np.ndarray
             Reference detections from the reference image
@@ -138,8 +135,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the DRISEScoring instance.
+        """Get the configuration dictionary of the DRISEScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

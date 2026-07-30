@@ -11,8 +11,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class MCRISEScoring(GenerateClassifierConfidenceSaliency):
-    """
-    Saliency map generation based on the MC-RISE implementation.
+    """Saliency map generation based on the MC-RISE implementation.
     This version utilizes only the input perturbed image confidence predictions
     and does not utilize reference image confidences.
     This implementation also takes influence from debiased RISE and may take an
@@ -30,8 +29,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         k: int,
         p1: float = 0.0,
     ) -> None:
-        """
-        :param k: int
+        """:param k: int
             Number of colors to used during perturbation.
         :param p1: float
             Debias probability, typically paired with the same probability used in mask generation.
@@ -56,8 +54,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Warning: this implementation returns a different shape than typically expected by
+        """Warning: this implementation returns a different shape than typically expected by
         this interface. Instead of `[nClasses x H x W]`, saliency maps of shape
         `[kColors x nClasses x H x W]` are generated, one per color per class.
 

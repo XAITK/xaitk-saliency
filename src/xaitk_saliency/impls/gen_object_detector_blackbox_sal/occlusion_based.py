@@ -1,5 +1,4 @@
-"""
-This module defines the `PerturbationOcclusion` class, which implements a generator composed of
+"""This module defines the `PerturbationOcclusion` class, which implements a generator composed of
 modular perturbation and occlusion-based algorithms
 """
 
@@ -28,8 +27,7 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
-    """
-    Generator composed of modular perturbation and occlusion-based algorithms.
+    """Generator composed of modular perturbation and occlusion-based algorithms.
 
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
@@ -43,8 +41,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = 0,
     ) -> None:
-        """
-        Generator composed of modular perturbation and occlusion-based algorithms.
+        """Generator composed of modular perturbation and occlusion-based algorithms.
 
         :param perturber: `PerturbImage` implementation instance for generating
             occlusion masks.
@@ -93,8 +90,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the PerturbationOcclusion.
+        """Returns the default configuration for the PerturbationOcclusion.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -110,8 +106,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     @classmethod
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
-        """
-        Create a PerturbationOcclusion instance from a configuration dictionary.
+        """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:
             config_dict (dict): Configuration dictionary with perturber details.
@@ -129,8 +124,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the PerturbationOcclusion instance.
+        """Get the configuration dictionary of the PerturbationOcclusion instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.
@@ -146,8 +140,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 def _dets_to_formatted_mat(
     dets: Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]],
 ) -> np.ndarray:
-    """
-    Converts detections, as returned by an implementation of
+    """Converts detections, as returned by an implementation of
     ``DetectImageObjects``, into a detection matrix formatted for use with
     an implementation of ``GenerateDetectorProposalSaliency``.
     The order of the class scores in the resulting matrix follows the order of

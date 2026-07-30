@@ -10,8 +10,7 @@ from skimage.transform import resize
 
 
 def compute_ssd(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
-    """
-    Computes the Sum of Squared Differences (SSD) between two saliency maps.
+    """Computes the Sum of Squared Differences (SSD) between two saliency maps.
 
     Args:
         sal_map (np.ndarray): Predicted saliency map of shape (height, width).
@@ -28,8 +27,7 @@ def compute_ssd(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]
 
 
 def compute_xcorr(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
-    """
-    Computes the Normalized Cross-Correlation (NCC) between two saliency maps.
+    """Computes the Normalized Cross-Correlation (NCC) between two saliency maps.
 
     Args:
         sal_map (np.ndarray): Predicted saliency map of shape (height, width).
@@ -77,7 +75,6 @@ def compute_iou_coverage(
     Returns:
         float: The computed IoU coverage metric.
     """
-
     # Determine the target dimensions (smallest among the two)
     target_h = min(ground_truth_features.shape[0], saliency_features.shape[0])
     target_w = min(ground_truth_features.shape[1], saliency_features.shape[1])

@@ -84,8 +84,7 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
-        """
-        Test that the `fill` property appropriately gets and sets the
+        """Test that the `fill` property appropriately gets and sets the
         underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = SlidingWindowStack((8, 8), (4, 4), threads=0)

@@ -1,5 +1,4 @@
-"""
-This module defines `SBSMStack`, which implements the perturbation-occlusion method using specifically the
+"""This module defines `SBSMStack`, which implements the perturbation-occlusion method using specifically the
 sliding window image perturbation and similarity scoring algorithms to generate similarity-based visual
 saliency maps
 """
@@ -19,8 +18,7 @@ from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
 class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
+    """Encapsulation of the perturbation-occlusion method using specifically the
     sliding window image perturbation and similarity scoring algorithms to
     generate similarity-based visual saliency maps.
     See the documentation of :class:`SlidingWindow` and
@@ -35,8 +33,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = None,
     ) -> None:
-        """
-        Encapsulation of the perturbation-occlusion method using specifically the
+        """Encapsulation of the perturbation-occlusion method using specifically the
         sliding window image perturbation
 
         :param window_size: The block window size as a tuple with format
@@ -84,8 +81,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the SBSMStack.
+        """Returns the default configuration for the SBSMStack.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -103,8 +99,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the SBSMStack instance.
+        """Get the configuration dictionary of the SBSMStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

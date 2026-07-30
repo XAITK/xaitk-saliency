@@ -17,8 +17,7 @@ class TestOcclusionScoring:
         assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
-        """
-        Test that a mismatch of input ref-image and perturbed-image confidence
+        """Test that a mismatch of input ref-image and perturbed-image confidence
         classes causes the expected exception.
         """
         test_ref_confs = np.ones([3])  # ONE MORE than pert conf mat.
@@ -33,11 +32,9 @@ class TestOcclusionScoring:
             impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
 
     def test_bad_alignment_masks(self) -> None:
-        """
-        Test that the number of input perturbed image confidences and masks
+        """Test that the number of input perturbed image confidences and masks
         match.
         """
-
         test_ref_confs = np.ones([2])
         test_pert_confs = np.ones((4, 2))
         # Different number of masks from confs

@@ -9,8 +9,7 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
-    """
-    This saliency implementation transforms proximity in feature space into
+    """This saliency implementation transforms proximity in feature space into
     saliency heatmaps.
     This should require feature vectors for the reference image, for each query
     image, and for perturbed versions of the reference image, as well as the
@@ -23,8 +22,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
     """
 
     def __init__(self, proximity_metric: str = "euclidean") -> None:
-        """
-        Initialization for SimilarityScoring
+        """Initialization for SimilarityScoring
 
         :param proximity_metric: The type of comparison metric used
             to determine proximity in feature space. The type of comparison
@@ -56,8 +54,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate visual saliency heatmaps for similarity from vectors
+        """Generate visual saliency heatmaps for similarity from vectors
 
         :param ref_descr: np.ndarray
             Feature vectors from the reference image
@@ -101,8 +98,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the SimilarityScoring instance.
+        """Get the configuration dictionary of the SimilarityScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

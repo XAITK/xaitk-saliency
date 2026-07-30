@@ -14,7 +14,6 @@ from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISESco
 class TestBlackBoxDRISE:
     def test_configuration(self) -> None:
         """Test configuration suite."""
-
         inst = DRISEStack(
             n=123,
             s=8,
@@ -68,8 +67,7 @@ class TestBlackBoxDRISE:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
-        """
-        Test that the `fill` property appropriately gets and sets the
+        """Test that the `fill` property appropriately gets and sets the
         underlying `PerturbationOcclusion` instance fill instance attribute.
         """
         inst = DRISEStack(5, 8, 0.5, seed=0)

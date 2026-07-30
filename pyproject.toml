@@ -148,39 +148,50 @@ markers = [
 # Exclude content as appropriate.
 extend-exclude = [
     "__pycache__",
-    "demos",
     "scripts",
     "docs/_build",
     "docs/_implementations",
+    ".tox",
 ]
+
 line-length = 120
 indent-width = 4
+
 # Assume Python 3.10
 target-version = "py310"
+
 extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = [
-    "F", "E", "W", "C90", "I", "N", "D1", "D200", "D201", "D211", "D403", "D419", "UP",
-    "YTT", "ANN", "S",  "BLE", "B", "A", "COM", "C4", "T10", "ISC", "ICN", "PYI", "PT", "Q",
+    "F", "E", "W", "C90", "I", "N", "D", "UP",
+    "YTT", "ANN", "S",  "BLE", "B", "A", "COM", "C4", "T10", "ISC", "ICN", "PLR0917", "PYI", "PT", "Q",
     "RSE", "RET", "SLF", "SIM", "TID252", "ARG", "FIX", "PD", "FLY", "NPY", "RUF027",
     "RUF100", "PERF", "UP045", "RUF013"
 ]
 preview = true  # needed for RUF027
 explicit-preview-rules = true
+
 # From program suggested config
-ignore = ["ANN101","ANN102","C408","C416"]
+ignore = ["C416"]
+external = ["FKA100"]
+
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
+
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*.py" = [
+"**/*tests/*.py" = [
   "S101",  # Allow asserts in tests
   "SLF001",  # Allow private member access for introspection in tests
-  "D100", "D101", "D102", "D103", "D104", "D105", "D107"  # Allow missing docstring in test dir
+  "D100", "D101", "D102", "D103", "D104", "D105", "D107",  # Allow missing docstring in test dir
+  "PLR0917"  # Allow more than one positional arg in tests
+]
+"docs/**/*.ipynb" = [
+   "PLR0917"  # Allow more than one positional arg in notebooks
 ]
 
 [tool.ruff.lint.flake8-annotations]
@@ -198,6 +209,9 @@ convention = "google"
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 120
+
+[tool.ruff.lint.pylint]
+max-positional-args = 1
 
 [tool.ruff.format]
 quote-style = "double"

@@ -11,8 +11,7 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
-    """
-    This interface describes the generation of visual saliency heatmaps based on
+    """This interface describes the generation of visual saliency heatmaps based on
     the similarity of a reference image to a number of query images.
     Similarity is deduced from the output of a black-box image feature vector
     generator that transforms each image to an embedding space.
@@ -31,8 +30,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Generates visual saliency maps based on the similarity of the reference
+        """Generates visual saliency maps based on the similarity of the reference
         image to each query image determined by the output of the blackbox
         feature vector generator.
 
@@ -96,8 +94,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Alias to :meth:`generate` method.
+        """Alias to :meth:`generate` method.
         See :meth:`generate` for details.
         """
         return self.generate(ref_image, query_images, blackbox)
@@ -109,8 +106,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Internal method for implementing the generation logic.
+        """Internal method for implementing the generation logic.
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for `generate` also applies here aside from the

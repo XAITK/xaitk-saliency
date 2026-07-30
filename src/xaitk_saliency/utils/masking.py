@@ -19,8 +19,7 @@ def occlude_image_batch(  # noqa: C901
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> np.ndarray:
-    """
-    Apply a number of input occlusion masks to the given reference image,
+    """Apply a number of input occlusion masks to the given reference image,
     producing a list of images equivalent in length, and parallel in order, to
     the input masks.
     This batch version will compute all occluded images and returns them all in
@@ -129,8 +128,7 @@ def occlude_image_streaming(  # noqa: C901
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> Generator[np.ndarray, None, None]:
-    """
-    Apply a number of input occlusion masks to the given reference image,
+    """Apply a number of input occlusion masks to the given reference image,
     producing a list of images equivalent in length, and parallel in order, to
     the input masks.
     This streaming version will return an iterator that yields occluded image
@@ -219,8 +217,7 @@ def benchmark_occlude_image(
     num_masks: int = 1000,
     threading_tests: Sequence[int] = (0, 1, 2),
 ) -> None:
-    """
-    Simple benchmark for the two above `occlude_image_*` functions above w.r.t.
+    """Simple benchmark for the two above `occlude_image_*` functions above w.r.t.
     the given reference image matrix, which should be of the shape
     `[H x W [x C]]`.
     """
@@ -301,8 +298,7 @@ def weight_regions_by_scalar(
     inv_masks: bool = True,
     normalize: bool = True,
 ) -> np.ndarray:
-    """
-    Weight some binary masks region with its respective vector in scalar_vec.
+    """Weight some binary masks region with its respective vector in scalar_vec.
 
     We expect the "masks" matrices and the image to be the same height and
     width, and be valued in the [0, 1] floating-point range. The length

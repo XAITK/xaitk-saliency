@@ -32,8 +32,7 @@ class KWCocoUtils:
         # infers `kwcoco.CocoDataset` as `ModuleType | Any` instead of a class.
         dets_dset: "kwcoco.CocoDataset",  # pyright: ignore[reportGeneralTypeIssues]
     ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
-        """
-        Generate reference image, bounding box, and class score matrices, for
+        """Generate reference image, bounding box, and class score matrices, for
         use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
         from a `kwcoco.CocoDataset` object.
         Matrices are generated for each image in the dataset that has
@@ -87,8 +86,7 @@ class KWCocoUtils:
 
     @classmethod
     def is_usable(cls) -> bool:
-        """
-        Checks if the necessary dependencies (KWCoco) are available.
+        """Checks if the necessary dependencies (KWCoco) are available.
 
         Returns:
             bool: True if KWCoco is available; False otherwise.

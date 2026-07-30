@@ -1,5 +1,4 @@
-"""
-This module provides the `MAITEImageClassifier` class, an adapter for integrating MAITE-based
+"""This module provides the `MAITEImageClassifier` class, an adapter for integrating MAITE-based
 image classifiers with the SMQTK `ClassifyImage` interface. It enables the use of MAITE
 protocol-based classifiers in pipelines that require the SMQTK interface.
 
@@ -23,8 +22,7 @@ from typing_extensions import override
 
 
 class MAITEImageClassifier(ClassifyImage):
-    """
-    Adapter for the MAITE image classification protocol, implementing the SMQTK `ClassifyImage` interface.
+    """Adapter for the MAITE image classification protocol, implementing the SMQTK `ClassifyImage` interface.
 
     This adapter allows a MAITE protocol-based classifier to be used in SMQTK pipelines by transforming
     classification outputs into the expected format.
@@ -46,8 +44,7 @@ class MAITEImageClassifier(ClassifyImage):
         ids: Sequence[int],
         img_batch_size: int = 1,
     ) -> None:
-        """
-        Initialize the MAITEImageClassifier with a MAITE protocol-based classifier.
+        """Initialize the MAITEImageClassifier with a MAITE protocol-based classifier.
 
         Args:
             classifier (ic.Model): The MAITE protocol-based image classification model.

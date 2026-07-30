@@ -1,5 +1,4 @@
-"""
-This module provides functionality for generating saliency maps for object detection models
+"""This module provides functionality for generating saliency maps for object detection models
 using blackbox saliency generation techniques. It integrates with the MAITE dataset and
 object detection protocols to produce visual explanations for model predictions.
 

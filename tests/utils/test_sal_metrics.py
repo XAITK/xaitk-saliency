@@ -80,7 +80,6 @@ class TestComputeSSD:
         ref_sal_map: np.ndarray,
     ) -> None:
         """Test SSD metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
             computation=compute_ssd,
             sal_map=sal_map,
@@ -118,7 +117,6 @@ class TestComputeXCorr:
         ref_sal_map: np.ndarray,
     ) -> None:
         """Test XCorr metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
             computation=compute_xcorr,
             sal_map=sal_map,
@@ -164,7 +162,6 @@ class TestComputeGroundTruthCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test Ground Truth Coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
             computation=compute_ground_truth_coverage,
             sal_map=saliency_features,
@@ -227,7 +224,6 @@ class TestComputeSaliencyCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test Saliency coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
             computation=compute_saliency_coverage,
             sal_map=saliency_features,
@@ -290,7 +286,6 @@ class TestComputeIoUCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test IoU coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
             computation=compute_iou_coverage,
             sal_map=saliency_features,

@@ -161,8 +161,7 @@ def test_generate_checks_bboxes_width() -> None:
 
 @pytest.mark.core
 def test_generate_checks_output_shape_mismatch() -> None:
-    """
-    Test that the appropriate error is raised when the output of `_generate`
+    """Test that the appropriate error is raised when the output of `_generate`
     has a different shape than the reference image.
     """
     m_impl = mock.Mock(spec=GenerateObjectDetectorBlackboxSaliency)
@@ -193,8 +192,7 @@ def test_generate_checks_output_shape_mismatch() -> None:
 
 @pytest.mark.core
 def test_generate_checks_output_quantity_mismatch() -> None:
-    """
-    Test that the appropriate error is raised when the quantity of heatmaps
+    """Test that the appropriate error is raised when the quantity of heatmaps
     output from `_generate` does not match the quantity of input reference
     detections.
     """
