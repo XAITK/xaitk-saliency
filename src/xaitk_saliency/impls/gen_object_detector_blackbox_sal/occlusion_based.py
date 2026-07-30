@@ -16,7 +16,7 @@ from smqtk_core.configuration import (
 )
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
@@ -37,6 +37,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateDetectorProposalSaliency,
         fill: int | Sequence[int] | np.ndarray | None = None,
@@ -64,18 +65,19 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
         objectness: np.ndarray | None = None,
     ) -> np.ndarray:
-        ref_dets_mat = format_detection(bboxes, scores, objectness)
+        ref_dets_mat = format_detection(bbox_mat=bboxes, classification_mat=scores, objectness=objectness)
 
         pert_masks = self._perturber(ref_image)
 
         pert_dets = blackbox.detect_objects(
-            occlude_image_batch(ref_image, pert_masks, fill=self.fill, threads=self._threads),
+            occlude_image_batch(ref_image=ref_image, masks=pert_masks, fill=self.fill, threads=self._threads),
         )
 
         pert_dets_mat = _dets_to_formatted_mat(pert_dets)
@@ -84,9 +86,9 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
             return np.array([])
 
         return self._generator(
-            ref_dets_mat,
-            pert_dets_mat,
-            pert_masks,
+            ref_dets=ref_dets_mat,
+            perturbed_dets=pert_dets_mat,
+            perturb_masks=pert_masks,
         )
 
     @classmethod
@@ -106,6 +108,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         return cfg
 
     @classmethod
+    @override
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 
@@ -193,12 +196,18 @@ def _dets_to_formatted_mat(
             img_scores = np.vstack((img_scores, scores))
             img_objectness = np.hstack((img_objectness, obj))
 
-        dets_mat_list.append(format_detection(img_bboxes, img_scores, img_objectness))
+        dets_mat_list.append(
+            format_detection(
+                bbox_mat=img_bboxes,
+                classification_mat=img_scores,
+                objectness=img_objectness,
+            ),
+        )
 
     return np.asarray(_format_output(dets_mat_list=dets_mat_list, num_classes=num_classes))
 
 
-def _format_output(dets_mat_list: list[np.ndarray], num_classes: int) -> Sequence[np.ndarray]:
+def _format_output(*, dets_mat_list: list[np.ndarray], num_classes: int) -> Sequence[np.ndarray]:
     # pad matrices
     num_dets = [dets_mat.shape[0] for dets_mat in dets_mat_list]
     max_dets = max(num_dets)

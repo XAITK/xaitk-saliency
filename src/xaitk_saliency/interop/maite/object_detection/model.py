@@ -39,6 +39,7 @@ class MAITEDetector(DetectImageObjects):
 
     def __init__(
         self,
+        *,
         detector: od.Model,
         ids: Sequence[int],
         img_batch_size: int = 1,
@@ -75,6 +76,7 @@ class MAITEDetector(DetectImageObjects):
             return np.moveaxis(img, -1, 0)
 
         def _xform_dets(
+            *,
             bboxes: Iterable[AxisAlignedBoundingBox],
             labels: np.ndarray,
             probs: np.ndarray,

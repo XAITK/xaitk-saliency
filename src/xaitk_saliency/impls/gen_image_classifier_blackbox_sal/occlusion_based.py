@@ -15,7 +15,7 @@ from smqtk_core.configuration import (
     make_default_config,
     to_config_dict,
 )
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import GenerateImageClassifierBlackboxSaliency
@@ -38,6 +38,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateClassifierConfidenceSaliency,
         threads: int = 0,
@@ -60,6 +61,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         blackbox: ClassifyImage,
     ) -> np.ndarray:
@@ -70,7 +72,12 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         ref_conf_vec = np.asarray([ref_conf_dict[la] for la in class_list])
         pert_conf_mat = np.empty((perturbation_masks.shape[0], ref_conf_vec.shape[0]), dtype=ref_conf_vec.dtype)
         pert_conf_it = blackbox.classify_images(
-            occlude_image_streaming(ref_image, perturbation_masks, fill=self.fill, threads=self._threads),
+            occlude_image_streaming(
+                ref_image=ref_image,
+                masks=perturbation_masks,
+                fill=self.fill,
+                threads=self._threads,
+            ),
         )
         for i, pc in enumerate(pert_conf_it):
             pert_conf_mat[i] = [pc[la] for la in class_list]
@@ -78,9 +85,9 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         # Compose classification results into a matrix for the generator
         # algorithm.
         return self._generator(
-            ref_conf_vec,
-            pert_conf_mat,
-            perturbation_masks,
+            reference=ref_conf_vec,
+            perturbed=pert_conf_mat,
+            perturbed_masks=perturbation_masks,
         )
 
     @classmethod
@@ -100,6 +107,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         return cfg
 
     @classmethod
+    @override
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 

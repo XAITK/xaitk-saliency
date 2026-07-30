@@ -27,6 +27,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
 
     def __init__(
         self,
+        *,
         k: int,
         p1: float = 0.0,
     ) -> None:
@@ -52,6 +53,7 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,

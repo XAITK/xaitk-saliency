@@ -54,7 +54,7 @@ class TestBlackBoxSBSM:
 
         inst = SBSMStack(window_size=(4, 5), stride=(2, 3), proximity_metric="euclidean")
 
-        sal_maps = inst.generate(test_ref_img, test_query_imgs, test_desc_gen)
+        sal_maps = inst.generate(ref_image=test_ref_img, query_images=test_query_imgs, blackbox=test_desc_gen)
 
         assert sal_maps.shape == (2, 25, 32)
 
@@ -66,7 +66,7 @@ class TestBlackBoxSBSM:
 
         Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        inst = SBSMStack((2, 2), (1, 1))
+        inst = SBSMStack(window_size=(2, 2), stride=(1, 1))
         assert inst._po.fill is None
         assert inst.fill is None
         inst.fill = 26

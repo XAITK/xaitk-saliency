@@ -55,7 +55,12 @@ class TestSimilarityScoring:
             ValueError,
             match=r"Size of feature vectors between reference and query images do not match.",
         ):
-            impl.generate(test_ref_descr, test_query_descrs, test_pert_descrs, test_masks)
+            impl.generate(
+                ref_descr=test_ref_descr,
+                query_descrs=test_query_descrs,
+                perturbed_descrs=test_pert_descrs,
+                perturbed_masks=test_masks,
+            )
 
     def test_generate_mismatched_perturbed(self) -> None:
         """Test that an error occurs when perturbation descriptors and mask arrays differ in first-dimension length."""
@@ -71,7 +76,12 @@ class TestSimilarityScoring:
             ValueError,
             match=r"Number of perturbation masks and respective feature vector do not match.",
         ):
-            impl.generate(test_ref_descr, test_query_descrs, test_pert_descrs, test_masks)
+            impl.generate(
+                ref_descr=test_ref_descr,
+                query_descrs=test_query_descrs,
+                perturbed_descrs=test_pert_descrs,
+                perturbed_masks=test_masks,
+            )
 
     def test_1_featurevec(self) -> None:
         """Test basic scoring with a single feature for broadcasting sanity check."""
@@ -81,7 +91,12 @@ class TestSimilarityScoring:
         query_feats = rng.standard_normal((2, 2048))
         pertb_feats = rng.standard_normal((3, 2048))
         pertb_mask = rng.integers(low=0, high=2, size=(3, 10, 10), dtype="int")
-        sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
+        sal = impl.generate(
+            ref_descr=ref_feat,
+            query_descrs=query_feats,
+            perturbed_descrs=pertb_feats,
+            perturbed_masks=pertb_mask,
+        )
         assert sal.shape == (2, 10, 10)
 
     def test_standard_featurevec(self) -> None:
@@ -90,7 +105,12 @@ class TestSimilarityScoring:
         ref_feat = np.array([0.6, 0.7])
         query_feats = np.array([[0.3, 0.5], [0.1, 0.6], [0.4, 0.4]])
         pertb_feats = np.array([[0.25, 0.9], [0.3, 0.45], [0.8, 0.95], [0.55, 0.2], [0.1, 0.75], [0.35, 0.65]])
-        sal = impl.generate(ref_feat, query_feats, pertb_feats, EXPECTED_MASKS_4x6)
+        sal = impl.generate(
+            ref_descr=ref_feat,
+            query_descrs=query_feats,
+            perturbed_descrs=pertb_feats,
+            perturbed_masks=EXPECTED_MASKS_4x6,
+        )
         standard_sal = np.load(os.path.join(DATA_DIR, "SimilaritySal.npy"))
         assert sal.shape == (3, 4, 6)
         assert np.allclose(standard_sal, sal)
@@ -103,5 +123,10 @@ class TestSimilarityScoring:
         query_feats = rng.standard_normal((1, 512))
         pertb_feats = rng.standard_normal((15, 512))
         pertb_mask = rng.integers(low=0, high=2, size=(15, 10, 10), dtype="int")
-        sal = impl.generate(ref_feat, query_feats, pertb_feats, pertb_mask)
+        sal = impl.generate(
+            ref_descr=ref_feat,
+            query_descrs=query_feats,
+            perturbed_descrs=pertb_feats,
+            perturbed_masks=pertb_mask,
+        )
         assert sal.shape == (1, 10, 10)

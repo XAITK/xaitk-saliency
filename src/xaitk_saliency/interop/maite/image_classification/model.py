@@ -41,6 +41,7 @@ class MAITEImageClassifier(ClassifyImage):
 
     def __init__(
         self,
+        *,
         classifier: ic.Model,
         ids: Sequence[int],
         img_batch_size: int = 1,

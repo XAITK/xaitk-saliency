@@ -13,6 +13,7 @@ class StubImpl(GenerateDetectorProposalSaliency):
     @override
     def generate(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -40,5 +41,9 @@ def test_call_alias() -> None:
     m_ref_dets = mock.Mock(spec=np.ndarray)
     m_perturbed_dets = mock.Mock(spec=np.ndarray)
     m_perturb_masks = mock.Mock(spec=np.ndarray)
-    stub(m_ref_dets, m_perturbed_dets, m_perturb_masks)
-    stub.generate.assert_called_once_with(m_ref_dets, m_perturbed_dets, m_perturb_masks)
+    stub(ref_dets=m_ref_dets, perturbed_dets=m_perturbed_dets, perturb_masks=m_perturb_masks)
+    stub.generate.assert_called_once_with(
+        ref_dets=m_ref_dets,
+        perturbed_dets=m_perturbed_dets,
+        perturbed_masks=m_perturb_masks,
+    )

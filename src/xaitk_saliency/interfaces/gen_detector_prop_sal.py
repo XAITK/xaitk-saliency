@@ -27,6 +27,7 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -99,9 +100,10 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturb_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateDetectorProposalSaliency.generate`."""
-        return self.generate(ref_dets, perturbed_dets, perturb_masks)
+        return self.generate(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturb_masks)

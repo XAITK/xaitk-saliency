@@ -27,6 +27,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
 
     def generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
@@ -71,7 +72,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
         if ref_image.ndim not in (2, 3):
             raise ValueError(f"Input reference image matrix has an unexpected number of dimensions: {ref_image.ndim}")
 
-        output = self._generate(ref_image, query_images, blackbox)
+        output = self._generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
         if output.shape[1:] != ref_image.shape[:2]:
             raise ShapeMismatchError(
@@ -91,16 +92,18 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
         """Alias to :meth:`generate` method. See :meth:`generate` for details."""
-        return self.generate(ref_image, query_images, blackbox)
+        return self.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @abc.abstractmethod
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,

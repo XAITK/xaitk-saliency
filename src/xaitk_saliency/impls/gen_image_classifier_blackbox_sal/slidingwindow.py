@@ -23,6 +23,7 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         threads: int = 0,
@@ -56,8 +57,8 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
     def fill(self, v: int | Sequence[int] | None) -> None:
         self._po.fill = v
 
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        return self._po.generate(ref_image, blackbox)
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+        return self._po.generate(ref_image=ref_image, blackbox=blackbox)
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:

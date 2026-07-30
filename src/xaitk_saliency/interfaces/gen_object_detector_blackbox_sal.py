@@ -31,6 +31,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
@@ -118,18 +119,18 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
             image.
         """
         self._verify_generate_inputs(
-            ref_image,
-            bboxes,
-            scores,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            objectness=objectness,
         )
 
         output = self._generate(
-            ref_image,
-            bboxes,
-            scores,
-            blackbox,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            blackbox=blackbox,
+            objectness=objectness,
         )
 
         if len(output) == 0:
@@ -156,6 +157,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def _verify_generate_inputs(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
@@ -183,6 +185,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
@@ -191,16 +194,17 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
     ) -> np.ndarray:
         """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
         return self.generate(
-            ref_image,
-            bboxes,
-            scores,
-            blackbox,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            blackbox=blackbox,
+            objectness=objectness,
         )
 
     @abc.abstractmethod
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,

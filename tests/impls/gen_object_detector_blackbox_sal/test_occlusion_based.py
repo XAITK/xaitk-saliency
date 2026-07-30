@@ -50,7 +50,7 @@ class TestPerturbationOcclusion:
         test_threads = 87
         test_spi_p = 0
         test_sgn_p = 1
-        inst = PerturbationOcclusion(StubPI(test_spi_p), StubGen(test_sgn_p), threads=87)
+        inst = PerturbationOcclusion(perturber=StubPI(test_spi_p), generator=StubGen(test_sgn_p), threads=87)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == test_threads
             assert isinstance(inst_i._perturber, StubPI)
@@ -92,12 +92,12 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(m_perturb, m_gen)
+            inst = PerturbationOcclusion(perturber=m_perturb, generator=m_gen)
             test_result = inst._generate(
-                test_image,
-                test_bboxes,
-                test_scores,
-                m_detector,
+                ref_image=test_image,
+                bboxes=test_bboxes,
+                scores=test_scores,
+                blackbox=m_detector,
             )
 
             assert test_result.shape == (3, 64, 64)
@@ -115,13 +115,13 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(m_perturb, m_gen)
+            inst = PerturbationOcclusion(perturber=m_perturb, generator=m_gen)
             inst.fill = test_fill
             test_result = inst._generate(
-                test_image,
-                test_bboxes,
-                test_scores,
-                m_detector,
+                ref_image=test_image,
+                bboxes=test_bboxes,
+                scores=test_scores,
+                blackbox=m_detector,
             )
 
             assert test_result.shape == (3, 64, 64)
@@ -158,12 +158,12 @@ class TestPerturbationOcclusion:
         m_detector = mock.Mock(spec=DetectImageObjects)
         m_detector.detect_objects = detect_objects
 
-        inst = PerturbationOcclusion(m_perturb, m_gen)
+        inst = PerturbationOcclusion(perturber=m_perturb, generator=m_gen)
         test_result = inst._generate(
-            test_image,
-            test_bboxes,
-            test_scores,
-            m_detector,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+            blackbox=m_detector,
         )
 
         assert len(test_result) == 0

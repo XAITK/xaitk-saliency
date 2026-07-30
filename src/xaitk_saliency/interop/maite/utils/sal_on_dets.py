@@ -44,6 +44,7 @@ from xaitk_saliency.interop.maite.object_detection.model import MAITEDetector
 
 
 def compute_sal_maps(
+    *,
     dataset: Dataset,
     sal_generator: GenerateObjectDetectorBlackboxSaliency,
     blackbox_detector: DetectImageObjects,
@@ -67,10 +68,10 @@ def compute_sal_maps(
 
         img_sal_maps.append(
             sal_generator(
-                np.asarray(np.transpose(ref_img, axes=(1, 2, 0))),
-                np.asarray(dets.boxes),
-                score_matrix,
-                blackbox_detector,
+                ref_image=np.asarray(np.transpose(ref_img, axes=(1, 2, 0))),
+                bboxes=np.asarray(dets.boxes),
+                scores=score_matrix,
+                blackbox=blackbox_detector,
             ),
         )
 
@@ -78,6 +79,7 @@ def compute_sal_maps(
 
 
 def sal_on_dets(
+    *,
     dataset: Dataset,
     sal_generator: GenerateObjectDetectorBlackboxSaliency,
     detector: Model,

@@ -49,6 +49,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
 
     def generate(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
@@ -89,7 +90,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         diff = np.transpose(np.clip(diff, 0, None))
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar(diff, perturbed_masks)
+        sal = weight_regions_by_scalar(scalar_vec=diff, masks=perturbed_masks)
 
         # Normalize final saliency maps
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)

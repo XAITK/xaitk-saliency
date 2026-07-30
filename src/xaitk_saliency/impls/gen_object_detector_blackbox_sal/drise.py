@@ -30,6 +30,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = 0,
     ) -> None:
@@ -42,7 +43,12 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
             If this is <=0 or None, no threading is used and processing
             is performed in-line serially.
         """
-        self._po = PerturbationOcclusion(self._get_perturber(), DRISEScoring(), fill=fill, threads=threads)
+        self._po = PerturbationOcclusion(
+            perturber=self._get_perturber(),
+            generator=DRISEScoring(),
+            fill=fill,
+            threads=threads,
+        )
 
     @abc.abstractmethod
     def _get_perturber(self) -> PerturbImage:
@@ -58,6 +64,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
@@ -65,11 +72,11 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
         objectness: np.ndarray | None = None,
     ) -> np.ndarray:
         return self._po.generate(
-            ref_image,
-            bboxes,
-            scores,
-            blackbox,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            blackbox=blackbox,
+            objectness=objectness,
         )
 
     def get_config(self) -> dict[str, Any]:
@@ -88,6 +95,7 @@ class DRISEStack(_BaseDRISE):
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
@@ -115,7 +123,7 @@ class DRISEStack(_BaseDRISE):
         """
         self._perturber = RISEGrid(n=n, s=s, p1=p1, seed=seed, threads=threads)
 
-        super().__init__(fill, threads)
+        super().__init__(fill=fill, threads=threads)
 
     def _get_perturber(self) -> PerturbImage:
         return self._perturber
@@ -131,6 +139,7 @@ class RandomGridStack(_BaseDRISE):
 
     def __init__(
         self,
+        *,
         n: int,
         s: tuple[int, int],
         p1: float,
@@ -158,7 +167,7 @@ class RandomGridStack(_BaseDRISE):
         """
         self._perturber = RandomGrid(n=n, s=s, p1=p1, seed=seed, threads=threads)
 
-        super().__init__(fill, threads)
+        super().__init__(fill=fill, threads=threads)
 
     def _get_perturber(self) -> PerturbImage:
         return self._perturber

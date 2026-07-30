@@ -61,7 +61,7 @@ class TestBlackBoxDRISE:
         test_scores = np.array([[0.1, 0.9], [0.5, 0.5]])
 
         inst = DRISEStack(n=5, s=8, p1=0.5, seed=0)
-        res = inst.generate(test_image, test_bboxes, test_scores, test_det)
+        res = inst.generate(ref_image=test_image, bboxes=test_bboxes, scores=test_scores, blackbox=test_det)
 
         exp_res = np.load(DATA_DIR / "exp_drise_stack_res.npy")
         assert np.allclose(exp_res, res)
@@ -71,7 +71,7 @@ class TestBlackBoxDRISE:
 
         Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        inst = DRISEStack(5, 8, 0.5, seed=0)
+        inst = DRISEStack(n=5, s=8, p1=0.5, seed=0)
         assert inst._po.fill is None
         assert inst.fill is None
         inst.fill = 42

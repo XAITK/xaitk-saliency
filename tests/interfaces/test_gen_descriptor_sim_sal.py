@@ -13,6 +13,7 @@ class StubImpl(GenerateDescriptorSimilaritySaliency):
     @override
     def generate(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
@@ -42,5 +43,15 @@ def test_call_alias() -> None:
     m_query_descrs = mock.Mock(spec=np.ndarray)
     m_perturbed_conf = mock.Mock(spec=np.ndarray)
     m_perturbed_masks = mock.Mock(spec=np.ndarray)
-    stub(m_ref_descr_1, m_query_descrs, m_perturbed_conf, m_perturbed_masks)
-    stub.generate.assert_called_once_with(m_ref_descr_1, m_query_descrs, m_perturbed_conf, m_perturbed_masks)
+    stub(
+        ref_descr=m_ref_descr_1,
+        query_descrs=m_query_descrs,
+        perturbed_descrs=m_perturbed_conf,
+        perturbed_masks=m_perturbed_masks,
+    )
+    stub.generate.assert_called_once_with(
+        ref_descr=m_ref_descr_1,
+        query_descrs=m_query_descrs,
+        perturbed_descrs=m_perturbed_conf,
+        perturbed_masks=m_perturbed_masks,
+    )

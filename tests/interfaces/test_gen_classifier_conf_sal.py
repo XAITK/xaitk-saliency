@@ -13,6 +13,7 @@ class StubImpl(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -40,5 +41,9 @@ def test_call_alias() -> None:
     m_image_conf = mock.Mock(spec=np.ndarray)
     m_perturbed_conf = mock.Mock(spec=np.ndarray)
     m_perturbed_masks = mock.Mock(spec=np.ndarray)
-    stub(m_image_conf, m_perturbed_conf, m_perturbed_masks)
-    stub.generate.assert_called_once_with(m_image_conf, m_perturbed_conf, m_perturbed_masks)
+    stub(reference=m_image_conf, perturbed=m_perturbed_conf, perturbed_masks=m_perturbed_masks)
+    stub.generate.assert_called_once_with(
+        reference=m_image_conf,
+        perturbed=m_perturbed_conf,
+        perturbed_masks=m_perturbed_masks,
+    )

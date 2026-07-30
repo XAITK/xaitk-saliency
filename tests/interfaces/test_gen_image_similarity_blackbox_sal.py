@@ -24,9 +24,18 @@ def test_generate_checks_success() -> None:
     # mock image descriptor generator
     m_desc_generator = mock.Mock(spec=ImageDescriptorGenerator)
 
-    res = GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
+    res = GenerateImageSimilarityBlackboxSaliency.generate(
+        m_impl,
+        ref_image=test_ref_image,
+        query_images=test_query_images,
+        blackbox=m_desc_generator,
+    )
 
-    m_impl._generate.assert_called_once_with(test_ref_image, test_query_images, m_desc_generator)
+    m_impl._generate.assert_called_once_with(
+        ref_image=test_ref_image,
+        query_images=test_query_images,
+        blackbox=m_desc_generator,
+    )
 
     assert np.array_equal(res, exp_res)
 
@@ -41,12 +50,22 @@ def test_generate_checks_image_shape() -> None:
     test_ref_image = np.empty((256,))
     test_query_images = [np.empty((256, 400, 3))] * 2
     with pytest.raises(ValueError, match=r"^Input reference image matrix has an unexpected number of dimensions: 1$"):
-        GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
+        GenerateImageSimilarityBlackboxSaliency.generate(
+            m_impl,
+            ref_image=test_ref_image,
+            query_images=test_query_images,
+            blackbox=m_desc_generator,
+        )
 
     # too many dimensions
     test_ref_image = np.empty((256, 256, 1, 1))
     with pytest.raises(ValueError, match=r"^Input reference image matrix has an unexpected number of dimensions: 4$"):
-        GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
+        GenerateImageSimilarityBlackboxSaliency.generate(
+            m_impl,
+            ref_image=test_ref_image,
+            query_images=test_query_images,
+            blackbox=m_desc_generator,
+        )
 
 
 @pytest.mark.core
@@ -70,7 +89,12 @@ def test_generate_checks_output_shape() -> None:
         r"width shape components: \(reference\) \(256, 123\) != \(214, 179\) "
         r"\(output\)$",
     ):
-        GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
+        GenerateImageSimilarityBlackboxSaliency.generate(
+            m_impl,
+            ref_image=test_ref_image,
+            query_images=test_query_images,
+            blackbox=m_desc_generator,
+        )
 
 
 @pytest.mark.core
@@ -92,7 +116,12 @@ def test_generate_checkout_num_saliency_maps() -> None:
         match=r"^Number of output saliency heatmaps did not match number of "
         r"input query images: \(heatmaps\) 3 != 7 \(query images\)$",
     ):
-        GenerateImageSimilarityBlackboxSaliency.generate(m_impl, test_ref_image, test_query_images, m_desc_generator)
+        GenerateImageSimilarityBlackboxSaliency.generate(
+            m_impl,
+            ref_image=test_ref_image,
+            query_images=test_query_images,
+            blackbox=m_desc_generator,
+        )
 
 
 @pytest.mark.core
@@ -106,6 +135,11 @@ def test_call_alias() -> None:
     expected_return = "expected return"
     m_impl.generate.return_value = expected_return
 
-    test_ret = GenerateImageSimilarityBlackboxSaliency.__call__(m_impl, m_ref_img, m_query_img, m_bbox)
-    m_impl.generate.assert_called_once_with(m_ref_img, m_query_img, m_bbox)
+    test_ret = GenerateImageSimilarityBlackboxSaliency.__call__(
+        m_impl,
+        ref_image=m_ref_img,
+        query_images=m_query_img,
+        blackbox=m_bbox,
+    )
+    m_impl.generate.assert_called_once_with(ref_image=m_ref_img, query_images=m_query_img, blackbox=m_bbox)
     assert test_ret == expected_return

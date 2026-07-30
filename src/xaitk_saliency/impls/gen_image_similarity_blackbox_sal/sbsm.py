@@ -28,6 +28,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
@@ -73,11 +74,12 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        return self._po.generate(ref_image, query_images, blackbox)
+        return self._po.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:

@@ -45,7 +45,7 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using stub implementations."""
-        inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)
+        inst = PerturbationOcclusion(perturber=StubPI(4), generator=StubGen(8), threads=27)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == 27
             assert isinstance(inst_i._perturber, StubPI)
@@ -70,6 +70,7 @@ class TestPerturbationOcclusion:
             @override
             def generate(
                 self,
+                *,
                 ref_descr: np.ndarray,
                 query_descrs: np.ndarray,
                 perturbed_descrs: np.ndarray,
@@ -100,8 +101,8 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
-            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
+            test_result = inst._generate(ref_image=test_ref_img, query_images=test_query_imgs, blackbox=test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
@@ -118,9 +119,9 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
             inst.fill = test_fill
-            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
+            test_result = inst._generate(ref_image=test_ref_img, query_images=test_query_imgs, blackbox=test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match

@@ -34,6 +34,7 @@ class SlidingRadial(PerturbImage):
 
     def __init__(
         self,
+        *,
         radius: tuple[float, float] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         sigma: tuple[float, float] | None = None,

@@ -25,6 +25,7 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
@@ -74,10 +75,16 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateDescriptorSimilaritySaliency.generate`."""
-        return self.generate(ref_descr, query_descrs, perturbed_descrs, perturbed_masks)
+        return self.generate(
+            ref_descr=ref_descr,
+            query_descrs=query_descrs,
+            perturbed_descrs=perturbed_descrs,
+            perturbed_masks=perturbed_masks,
+        )

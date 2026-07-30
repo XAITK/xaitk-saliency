@@ -62,6 +62,7 @@ except ImportError:
 )
 @click.option("--verbose", "-v", count=True, help="print progress messages")
 def sal_on_coco_dets(  # noqa: C901
+    *,
     dataset_dir: str,
     output_dir: str,
     config_file: TextIO,

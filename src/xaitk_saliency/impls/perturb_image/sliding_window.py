@@ -23,6 +23,7 @@ class SlidingWindow(PerturbImage):
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
     ) -> None:

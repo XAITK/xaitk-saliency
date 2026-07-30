@@ -73,6 +73,7 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
     def __init__(  # noqa: C901
         self,
+        *,
         kwcoco_dataset: kwcoco.CocoDataset,  # pyright: ignore
         image_metadata: Sequence[DatumMetadataType],
         skip_no_anns: bool = False,
@@ -205,6 +206,7 @@ class MAITEObjectDetectionDataset(Dataset):
 
     def __init__(
         self,
+        *,
         imgs: Sequence[np.ndarray],
         dets: Sequence[TargetType],
         datum_metadata: Sequence[DatumMetadataType],

@@ -48,8 +48,8 @@ class TestSpecializationSlidingWindow:
         test_image = np.full([32, 32, 3], fill_value=255, dtype=np.uint8)
         test_bb = TestBlackBox()
 
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
-        res = inst.generate(test_image, test_bb)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
         # We expect this result to be composed of zeros because there is no
         # difference in classification performance across all sliding window
         # perturbations due to the fix return nature of the above stub class.
@@ -75,8 +75,8 @@ class TestSpecializationSlidingWindow:
         test_image = np.full([32, 32], fill_value=255, dtype=np.uint8)
         test_bb = TestBlackBox()
 
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
-        res = inst.generate(test_image, test_bb)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
         # We expect this result to be composed of zeros because there is no
         # difference in classification performance across all sliding window
         # perturbations due to the fix return nature of the above stub class.
@@ -88,7 +88,7 @@ class TestSpecializationSlidingWindow:
 
         Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
         assert inst.fill is None
         inst.fill = 42
         assert inst._po.fill == 42

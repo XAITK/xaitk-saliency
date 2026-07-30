@@ -35,7 +35,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
     float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
     """
 
-    def generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         """Generates per-class visual saliency heatmaps for some classifier black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
@@ -71,7 +71,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
         # checks.
         if ref_image.ndim not in (2, 3):
             raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
-        output = self._generate(ref_image, blackbox)
+        output = self._generate(ref_image=ref_image, blackbox=blackbox)
         # Check that the saliency heatmaps' shape matches the reference image.
         if output.shape[-2:] != ref_image.shape[:2]:
             raise ShapeMismatchError(
@@ -81,12 +81,12 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
             )
         return output
 
-    def __call__(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def __call__(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
-        return self.generate(ref_image, blackbox)
+        return self.generate(ref_image=ref_image, blackbox=blackbox)
 
     @abc.abstractmethod
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         """Internal method for implementing the generation logic.
 
         This is invoked by the above `generate` method as a template method.

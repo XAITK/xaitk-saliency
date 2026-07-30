@@ -48,33 +48,33 @@ class TestOccludeImageCommon:
         """Exercise the combo of gray image and boolean masks."""
         # Simple mult against bool masks is expect image in our white input case.
         expected_images = TEST_MASKS_BOOL * as_uint8(255)
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL))
         assert np.allclose(res_images, expected_images)
 
     def test_rgb_bool_no_fill(self, occ_func: Callable) -> None:
         """Exercise the combo of RGB image and boolean masks."""
         # Simple mult against bool masks is expect image in our white input case.
         expected_images = TEST_MASKS_BOOL[..., None] * as_uint8([255, 255, 255])
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_BOOL))
         assert np.allclose(res_images, expected_images)
 
     def test_gray_float_no_fill(self, occ_func: Callable) -> None:
         """Exercise the combo of gray image and float masks."""
         # Simple mult against bool masks is expect image in our white input case.
         expected_images = as_uint8(TEST_MASKS_FLOAT * 255)
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_FLOAT))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_FLOAT))
         assert np.allclose(res_images, expected_images)
 
     def test_rgb_float_no_fill(self, occ_func: Callable) -> None:
         """Exercise the combo of RGB image and float masks."""
         # Simple mult against bool masks is expect image in our white input case.
         expected_images = as_uint8(TEST_MASKS_FLOAT[..., None] * [255, 255, 255])
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_FLOAT))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_FLOAT))
         assert np.allclose(res_images, expected_images)
 
     def test_gray_bool_fill_scalar(self, occ_func: Callable) -> None:
         """Test using a custom fill color for the masked regions."""
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, 44))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL, fill=44))
         # Known alpha blending
         expected_images = as_uint8(
             [
@@ -97,7 +97,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_rgb_bool_fill_scalar(self, occ_func: Callable) -> None:
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL, 44))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_BOOL, fill=44))
         expected_images = as_uint8(
             [
                 [
@@ -120,7 +120,7 @@ class TestOccludeImageCommon:
 
     def test_gray_float_fill_scalar(self, occ_func: Callable) -> None:
         # Using 5 because it exposes a detail about float-level accumulation.
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_FLOAT, 5))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_FLOAT, fill=5))
         expected_images = as_uint8(
             [
                 [
@@ -143,7 +143,7 @@ class TestOccludeImageCommon:
 
     def test_rgb_float_fill_scalar(self, occ_func: Callable) -> None:
         # Using 5 because it exposes a detail about float-level accumulation.
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_FLOAT, 5))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_FLOAT, fill=5))
         expected_images = as_uint8(
             [
                 [
@@ -172,7 +172,7 @@ class TestOccludeImageCommon:
         with pytest.raises(ValueError, match=r"operands could not be broadcast together"):
             # This should error because the input is single channel while the
             # fill value is 3-channel
-            list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, [255, 0, 255]))
+            list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL, fill=[255, 0, 255]))
 
     def test_gray_float_fill_list_error(self, occ_func: Callable) -> None:
         """Test using a custom fill color for masked regions as a 3-channel list.
@@ -182,11 +182,11 @@ class TestOccludeImageCommon:
         with pytest.raises(ValueError, match=r"operands could not be broadcast together"):
             # This should error because the input is single channel while the
             # fill value is 3-channel
-            list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_FLOAT, [1, 2, 3]))
+            list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_FLOAT, fill=[1, 2, 3]))
 
     def test_rgb_bool_fill_list(self, occ_func: Callable) -> None:
         # Let's use half-magenta because why not
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL, [128, 0, 128]))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_BOOL, fill=[128, 0, 128]))
         expected_images = as_uint8(
             [
                 [
@@ -210,7 +210,7 @@ class TestOccludeImageCommon:
     def test_rgb_float_fill_list(self, occ_func: Callable) -> None:
         # Using [5,7,9] here because it exposes a detail about float-level
         # accumulation.
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_FLOAT, [5, 7, 9]))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_FLOAT, fill=[5, 7, 9]))
         expected_images = as_uint8(
             [
                 [
@@ -254,7 +254,7 @@ class TestOccludeImageCommon:
                 ],
             ],
         )
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, fill=TEST_FILL_IMG_GRAY))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL, fill=TEST_FILL_IMG_GRAY))
         assert np.allclose(res_images, expected_images)
 
     def test_gray_bool_fill_img_rgb_error(self, occ_func: Callable) -> None:
@@ -263,7 +263,7 @@ class TestOccludeImageCommon:
             ValueError,
             match=r"operands could not be broadcast together with shapes \((2,)?5,5\) \(5,5,3\)",
         ):
-            list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, fill=TEST_FILL_IMG_RGB))
+            list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL, fill=TEST_FILL_IMG_RGB))
 
     def test_rgb_bool_fill_img_gray_error(self, occ_func: Callable) -> None:
         """Filling with a single-channel image when the ref-image is multi-channel should be an error."""
@@ -272,13 +272,13 @@ class TestOccludeImageCommon:
             match=r"operands could not be broadcast together with shapes "
             r"\((2,)?5,5,3\) \((2,)?5,5,5\) \((2,)?5,5,3\)",
         ):
-            list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL, fill=TEST_FILL_IMG_GRAY))
+            list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_BOOL, fill=TEST_FILL_IMG_GRAY))
 
     def test_rgb_bool_fill_img_rgb(self, occ_func: Callable) -> None:
         res_images = list(
             occ_func(
-                TEST_IMAGE_RGB,
-                TEST_MASKS_BOOL,
+                ref_image=TEST_IMAGE_RGB,
+                masks=TEST_MASKS_BOOL,
                 fill=TEST_FILL_IMG_RGB,
             ),
         )
@@ -303,7 +303,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_gray_float_fill_img(self, occ_func: Callable) -> None:
-        res_images = list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_FLOAT, fill=TEST_FILL_IMG_GRAY))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_FLOAT, fill=TEST_FILL_IMG_GRAY))
         expected_images = as_uint8(
             [
                 [
@@ -325,7 +325,7 @@ class TestOccludeImageCommon:
         assert np.allclose(res_images, expected_images)
 
     def test_rgb_float_fill_img(self, occ_func: Callable) -> None:
-        res_images = list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_FLOAT, fill=TEST_FILL_IMG_RGB))
+        res_images = list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_FLOAT, fill=TEST_FILL_IMG_RGB))
         expected_images = as_uint8(
             [
                 [
@@ -355,7 +355,7 @@ class TestOccludeImageCommon:
             # broadcast.
             match=r"operands could not be broadcast together with shapes \((2,)?5,5\) \(3,4\)",
         ):
-            list(occ_func(TEST_IMAGE_GRAY, TEST_MASKS_BOOL, fill=fill_img))
+            list(occ_func(ref_image=TEST_IMAGE_GRAY, masks=TEST_MASKS_BOOL, fill=fill_img))
 
     def test_fill_img_bad_channels(self, occ_func: Callable) -> None:
         fill_img = np.full((5, 5, 4), 255, dtype=np.uint8)
@@ -366,7 +366,7 @@ class TestOccludeImageCommon:
             match=r"operands could not be broadcast together with shapes "
             r"\((2,)?5,5,3\) \((2,)?5,5,4\) \((2,)?5,5,3\)",
         ):
-            list(occ_func(TEST_IMAGE_RGB, TEST_MASKS_BOOL, fill=fill_img))
+            list(occ_func(ref_image=TEST_IMAGE_RGB, masks=TEST_MASKS_BOOL, fill=fill_img))
 
 
 @pytest.mark.core
@@ -375,12 +375,12 @@ class TestOccludeImageBatch:
         """Test the expectation that input mask matrices need to be 3 dimensional for the [N x H x W] shape."""
         with pytest.raises(ValueError, match="Expected a 3-dimension mask input"):
             # WHAT IF WE PUT IN ONE MASK GUYS!
-            occlude_image_batch(TEST_IMAGE_GRAY, np.ones((5, 5)))
+            occlude_image_batch(ref_image=TEST_IMAGE_GRAY, masks=np.ones((5, 5)))
 
     def test_catch_bad_mask_shape(self) -> None:
         """Test catching input masks that do not have the same shape as the input ref image."""
         with pytest.raises(ValueError, match="Input image shape and mask image shape did not match"):
-            occlude_image_batch(TEST_IMAGE_GRAY, np.ones((3, 4, 2)))
+            occlude_image_batch(ref_image=TEST_IMAGE_GRAY, masks=np.ones((3, 4, 2)))
 
 
 @pytest.mark.core
@@ -391,17 +391,17 @@ class TestOccludeImageStreaming:
             # Giving just make will cause the first dim to seem to be the
             # iteration axis, so 1D vectors will be input as "masks"
             # incorrectly.
-            list(occlude_image_streaming(TEST_IMAGE_GRAY, np.ones((5, 5))))
+            list(occlude_image_streaming(ref_image=TEST_IMAGE_GRAY, masks=np.ones((5, 5))))
 
         with pytest.raises(ValueError, match=r"Input mask \(position 0\) did not the shape of the input image"):
-            list(occlude_image_streaming(TEST_IMAGE_GRAY, np.ones((3, 4, 2))))
+            list(occlude_image_streaming(ref_image=TEST_IMAGE_GRAY, masks=np.ones((3, 4, 2))))
 
         # List with non-zero position?
         with pytest.raises(ValueError, match=r"Input mask \(position 2\) did not the shape of the input image"):
             list(
                 occlude_image_streaming(
-                    TEST_IMAGE_GRAY,
-                    [
+                    ref_image=TEST_IMAGE_GRAY,
+                    masks=[
                         np.ones((5, 5)),
                         np.ones((5, 5)),
                         np.ones((2, 8)),
@@ -449,7 +449,7 @@ class TestWeightRegionsByScalar:
         rng = np.random.default_rng(seed=0)
         scalar_vec = rng.standard_normal((100, 10)).astype(scalar_type)
         masks = np.ones((100, 224, 224)).astype(mask_type)
-        output = weight_regions_by_scalar(scalar_vec, masks, inv_masks, normalize)
+        output = weight_regions_by_scalar(scalar_vec=scalar_vec, masks=masks, inv_masks=inv_masks, normalize=normalize)
         assert output.dtype == expected_output_type
 
 

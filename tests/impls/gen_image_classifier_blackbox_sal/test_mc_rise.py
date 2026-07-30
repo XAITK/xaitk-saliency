@@ -75,6 +75,6 @@ class TestMCRise:
         # Results may be sensitive to changes in scikit-image. Version 0.19
         # introduces some changes to the resize function. Difference is
         # expected to only be marginal.
-        res = inst.generate(test_image, test_bb)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
 
         snapshot_custom.assert_match(res)

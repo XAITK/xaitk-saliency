@@ -11,7 +11,7 @@ from typing import Any, TypeVar
 import numpy as np
 from smqtk_core.configuration import from_config_dict, make_default_config, to_config_dict
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency, GenerateImageSimilarityBlackboxSaliency, PerturbImage
 from xaitk_saliency.utils.masking import occlude_image_batch
@@ -29,6 +29,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateDescriptorSimilaritySaliency,
         fill: int | Sequence[int] | np.ndarray | None = None,
@@ -56,6 +57,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
@@ -65,11 +67,16 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
         pert_masks = self._perturber(ref_image)
 
-        pert_imgs = occlude_image_batch(ref_image, pert_masks, fill=self.fill, threads=self._threads)
+        pert_imgs = occlude_image_batch(ref_image=ref_image, masks=pert_masks, fill=self.fill, threads=self._threads)
 
         pert_feats = np.array(list(blackbox.generate_arrays_from_images(pert_imgs)))
 
-        return self._generator(ref_feat, query_feats, pert_feats, pert_masks)
+        return self._generator(
+            ref_descr=ref_feat,
+            query_descrs=query_feats,
+            perturbed_descrs=pert_feats,
+            perturbed_masks=pert_masks,
+        )
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
@@ -88,6 +95,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     @classmethod
+    @override
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 

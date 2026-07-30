@@ -27,7 +27,7 @@ class TestSquaredDifferenceScoring:
             ValueError,
             match=r"Number of classes in original image and perturbed image do not match",
         ):
-            impl.generate(test_ref, test_pert, test_masks)
+            impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=test_masks)
 
     def test_bad_alignment_masks(self) -> None:
         """Test that passing a mismatched number of perturbed confidences and masks raises the expected exception."""
@@ -41,7 +41,7 @@ class TestSquaredDifferenceScoring:
             ValueError,
             match=r"Number of perturbation masks and respective confidence lengths do not match.",
         ):
-            impl.generate(test_ref, test_pert, test_masks)
+            impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=test_masks)
 
     def test_scores(self) -> None:
         """Test for expected output with known input using one class."""
@@ -58,7 +58,7 @@ class TestSquaredDifferenceScoring:
         )
 
         impl = SquaredDifferenceScoring()
-        sal = impl.generate(test_ref, test_pert, EXPECTED_MASKS_4x6)
+        sal = impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=EXPECTED_MASKS_4x6)
 
         assert np.allclose(sal, EXPECTED_SAL)
 

@@ -43,6 +43,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -67,7 +68,12 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         # used here.
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar(perturbed, perturbed_masks - self.p1, inv_masks=False, normalize=False)
+        sal = weight_regions_by_scalar(
+            scalar_vec=perturbed,
+            masks=perturbed_masks - self.p1,
+            inv_masks=False,
+            normalize=False,
+        )
 
         # Normalize final saliency map
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)

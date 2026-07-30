@@ -30,6 +30,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
@@ -74,8 +75,9 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         self._threads = threads
         self._fill_colors = fill_colors
 
+    # `parallel_map` below invokes this positionally, so it can't be made keyword-only.
     @staticmethod
-    def _work_func(ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:
+    def _work_func(ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:  # noqa: PLR0917
         s: tuple = (...,)
         if ref_image.ndim > 2:
             s = (..., None)  # add channel axis for multiplication
@@ -120,7 +122,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
             )
 
     @override
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         """Warning: this implementation returns a different shape than is typically expected by this interface.
 
         Instead of returning `[nClasses x H x W]`, `[kColors x nClasses x H x W] saliency maps will be returned.

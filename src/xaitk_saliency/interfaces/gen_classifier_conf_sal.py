@@ -30,6 +30,7 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -82,9 +83,10 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateClassifierConfidenceSaliency.generate`."""
-        return self.generate(reference, perturbed, perturbed_masks)
+        return self.generate(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)

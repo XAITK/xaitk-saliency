@@ -33,7 +33,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     https://arxiv.org/abs/2006.03204
     """
 
-    def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
+    def iou(self, *, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
         """Compute the intersection over union (IoU) of two sets of boxes.
 
         | E.g.:
@@ -75,6 +75,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     @override
     def generate(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -106,7 +107,11 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         n_dets = len(ref_dets)
 
         # Compute IoU of bounding boxes
-        s1 = self.iou(perturbed_dets[:, :, :4].reshape(-1, 4), ref_dets[:, :4]).reshape(n_masks, n_props, n_dets)
+        s1 = self.iou(box_a=perturbed_dets[:, :, :4].reshape(-1, 4), box_b=ref_dets[:, :4]).reshape(
+            n_masks,
+            n_props,
+            n_dets,
+        )
 
         # Compute similarity of class probabilities
         s2 = 1 - cdist(
@@ -127,7 +132,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         s = s.max(axis=1)
 
         # Weighting perturbed regions by similarity
-        sal = weight_regions_by_scalar(s, perturbed_masks, inv_masks=False)
+        sal = weight_regions_by_scalar(scalar_vec=s, masks=perturbed_masks, inv_masks=False)
 
         # Normalize final saliency map
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)

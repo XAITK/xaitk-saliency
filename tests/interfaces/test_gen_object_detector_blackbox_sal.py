@@ -26,37 +26,57 @@ def test_generate_checks_success() -> None:
     test_image = np.ones((256, 256), dtype=np.uint8)
     GenerateObjectDetectorBlackboxSaliency.generate(
         m_impl,
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
     )
 
-    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, None)  # no objectness passed
+    # no objectness passed
+    m_impl._generate.assert_called_with(
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=None,
+    )
 
     # multi-channel image shoudl work with whatever channel dim size
     test_image = np.ones((256, 256, 7), dtype=np.uint8)
     GenerateObjectDetectorBlackboxSaliency.generate(
         m_impl,
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
     )
 
-    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, None)  # no objectness passed
+    # no objectness passed
+    m_impl._generate.assert_called_with(
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=None,
+    )
 
     # With objectness
     GenerateObjectDetectorBlackboxSaliency.generate(
         m_impl,
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        test_objectness,
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=test_objectness,
     )
 
-    m_impl._generate.assert_called_with(test_image, test_bboxes, test_scores, m_detector, test_objectness)
+    m_impl._generate.assert_called_with(
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=test_objectness,
+    )
 
 
 @pytest.mark.core
@@ -72,9 +92,9 @@ def test_generate_checks_image_shape() -> None:
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 1$"):
         GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
-            test_image,
-            m_bboxes,
-            m_scores,
+            ref_image=test_image,
+            bboxes=m_bboxes,
+            scores=m_scores,
         )
 
     # image with more than 3 dimenstions
@@ -82,9 +102,9 @@ def test_generate_checks_image_shape() -> None:
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 4$"):
         GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
-            test_image,
-            m_bboxes,
-            m_scores,
+            ref_image=test_image,
+            bboxes=m_bboxes,
+            scores=m_scores,
         )
 
 
@@ -102,7 +122,12 @@ def test_generate_checks_detection_inputs_length() -> None:
         ValueError,
         match=r"^Number of input bounding boxes and scores do not match: \(bboxes\) 4 != 5 \(scores\)$",
     ):
-        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(m_impl, test_image, test_bboxes, test_scores)
+        GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
+            m_impl,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+        )
 
     # Mismatched number of bboxes and scores, with objectness
     test_bboxes = np.ones((5, 4), dtype=float)
@@ -116,10 +141,10 @@ def test_generate_checks_detection_inputs_length() -> None:
     ):
         GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
-            test_objectness,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+            objectness=test_objectness,
         )
 
     # Different number of objectness scores
@@ -134,10 +159,10 @@ def test_generate_checks_detection_inputs_length() -> None:
     ):
         GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
-            test_objectness,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+            objectness=test_objectness,
         )
 
 
@@ -153,9 +178,9 @@ def test_generate_checks_bboxes_width() -> None:
     with pytest.raises(ValueError, match=r"^Input bounding boxes matrix has width of 3, should have width of 4$"):
         GenerateObjectDetectorBlackboxSaliency._verify_generate_inputs(
             m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
         )
 
 
@@ -181,10 +206,10 @@ def test_generate_checks_output_shape_mismatch() -> None:
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
-            m_detector,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+            blackbox=m_detector,
         )
 
 
@@ -215,10 +240,10 @@ def test_generate_checks_output_quantity_mismatch() -> None:
     ):
         GenerateObjectDetectorBlackboxSaliency.generate(
             m_impl,
-            test_image,
-            test_bboxes,
-            test_scores,
-            m_detector,
+            ref_image=test_image,
+            bboxes=test_bboxes,
+            scores=test_scores,
+            blackbox=m_detector,
         )
 
 
@@ -237,13 +262,20 @@ def test_call_alias() -> None:
 
     test_ret = GenerateObjectDetectorBlackboxSaliency.__call__(
         m_impl,
-        m_img,
-        test_bboxes,
-        test_scores,
-        m_detector,
+        ref_image=m_img,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
     )
 
-    m_impl.generate.assert_called_once_with(m_img, test_bboxes, test_scores, m_detector, None)  # no objectness passed
+    # no objectness passed
+    m_impl.generate.assert_called_once_with(
+        ref_image=m_img,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=None,
+    )
     assert test_ret == expected_return
 
 
@@ -265,17 +297,17 @@ def test_return_empty_map() -> None:
 
     test_ret = GenerateObjectDetectorBlackboxSaliency.generate(
         m_impl,
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
     )
 
     m_impl._generate.assert_called_with(
-        test_image,
-        test_bboxes,
-        test_scores,
-        m_detector,
-        None,  # no objectness passed
+        ref_image=test_image,
+        bboxes=test_bboxes,
+        scores=test_scores,
+        blackbox=m_detector,
+        objectness=None,  # no objectness passed
     )
     assert len(test_ret) == 0

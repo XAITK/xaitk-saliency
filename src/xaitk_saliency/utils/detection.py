@@ -6,6 +6,7 @@ import numpy as np
 
 
 def format_detection(
+    *,
     bbox_mat: np.ndarray,
     classification_mat: np.ndarray,
     objectness: np.ndarray | None = None,

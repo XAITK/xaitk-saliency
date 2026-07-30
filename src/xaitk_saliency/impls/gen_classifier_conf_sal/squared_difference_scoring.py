@@ -27,6 +27,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
@@ -51,7 +52,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
 
         # Based on equations 2 and 4 from Greydanus et al., '18
         diff = 0.5 * ((reference - perturbed) ** 2).sum(axis=1, keepdims=True)
-        sal = weight_regions_by_scalar(diff, perturbed_masks)[0]
+        sal = weight_regions_by_scalar(scalar_vec=diff, masks=perturbed_masks)[0]
 
         # Normalize saliency map to [0,1]
         sal -= sal.min()
