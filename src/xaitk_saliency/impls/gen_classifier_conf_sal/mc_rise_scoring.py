@@ -31,8 +31,9 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
         k: int,
         p1: float = 0.0,
     ) -> None:
-        """:param k: int
+        """Initialize an MC-RISE-based saliency map generator with optional p1 de-biasing.
 
+        :param k: int
             Number of colors to used during perturbation.
         :param p1: float
             Debias probability, typically paired with the same probability used in mask generation.

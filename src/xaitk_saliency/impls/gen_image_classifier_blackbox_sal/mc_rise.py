@@ -38,8 +38,9 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         seed: int | None,
         threads: int = 0,
     ) -> None:
-        """:param n: int
+        """Initialize the perturbation-occlusion method using the MC-RISE implementations of the component algorithms.
 
+        :param n: int
             Number of random masks used in the algorithm. E.g. 1000.
         :param s: int
             Spatial resolution of the small masking grid. E.g. 8.
