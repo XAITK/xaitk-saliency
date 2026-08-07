@@ -88,7 +88,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         return self._generator(
             ref_dets=ref_dets_mat,
             perturbed_dets=pert_dets_mat,
-            perturb_masks=pert_masks,
+            perturbed_masks=pert_masks,
         )
 
     @classmethod

@@ -40,10 +40,10 @@ def test_call_alias() -> None:
     stub.generate = mock.Mock()  # type: ignore
     m_ref_dets = mock.Mock(spec=np.ndarray)
     m_perturbed_dets = mock.Mock(spec=np.ndarray)
-    m_perturb_masks = mock.Mock(spec=np.ndarray)
-    stub(ref_dets=m_ref_dets, perturbed_dets=m_perturbed_dets, perturb_masks=m_perturb_masks)
+    m_perturbed_masks = mock.Mock(spec=np.ndarray)
+    stub(ref_dets=m_ref_dets, perturbed_dets=m_perturbed_dets, perturbed_masks=m_perturbed_masks)
     stub.generate.assert_called_once_with(
         ref_dets=m_ref_dets,
         perturbed_dets=m_perturbed_dets,
-        perturbed_masks=m_perturb_masks,
+        perturbed_masks=m_perturbed_masks,
     )

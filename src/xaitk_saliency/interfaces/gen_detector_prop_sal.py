@@ -85,7 +85,7 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
             variations of the reference image.
             We expect this to be a float-types array with shape
             `[nMasks x nProps x (4+1+nClasses)]`.
-        :param perturb_masks:
+        :param perturbed_masks:
             Perturbation masks `numpy.ndarray` over the reference image.
             This should be parallel in association to the detection
             propositions input into the `perturbed_dets` parameter.
@@ -103,7 +103,7 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
         *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateDetectorProposalSaliency.generate`."""
-        return self.generate(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturb_masks)
+        return self.generate(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturbed_masks)
