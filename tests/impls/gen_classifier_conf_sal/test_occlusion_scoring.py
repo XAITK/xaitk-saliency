@@ -8,6 +8,7 @@ from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 
 
+@pytest.mark.core
 class TestOcclusionScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""

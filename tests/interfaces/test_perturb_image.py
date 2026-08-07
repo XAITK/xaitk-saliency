@@ -3,6 +3,7 @@ import unittest.mock as mock
 from typing import Any
 
 import numpy as np
+import pytest
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
@@ -23,6 +24,7 @@ def teardown_module() -> None:
     gc.collect()
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """
     Test that the __call__ instance method is an alias to invoke the perturb

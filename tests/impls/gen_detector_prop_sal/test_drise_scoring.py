@@ -9,6 +9,7 @@ from xaitk_saliency import GenerateDetectorProposalSaliency
 from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 
 
+@pytest.mark.core
 class TestDRISEScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""

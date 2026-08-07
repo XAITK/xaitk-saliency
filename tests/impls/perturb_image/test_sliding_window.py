@@ -13,6 +13,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestOcclusionBasedPerturb:
     def test_init_default(self) -> None:
         """Test empty construction since we provide defaults."""

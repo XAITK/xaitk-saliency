@@ -9,6 +9,7 @@ from xaitk_saliency import GenerateDescriptorSimilaritySaliency
 from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
 
 
+@pytest.mark.core
 class TestSimilarityScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""

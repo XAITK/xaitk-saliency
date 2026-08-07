@@ -6,6 +6,7 @@ from tests import DATA_DIR, EXPECTED_MASKS_4x6
 from xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring import RISEScoring
 
 
+@pytest.mark.core
 class TestRiseScoring:
     def test_init_outofrange_p1(self) -> None:
         """Test catching an out of range p1 value."""

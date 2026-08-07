@@ -1,6 +1,7 @@
 from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
+import pytest
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
@@ -13,6 +14,7 @@ from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise import (
 )
 
 
+@pytest.mark.core
 class TestSpecializationRise:
     def test_configuration(self) -> None:
         """Test standard config things."""

@@ -65,6 +65,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestComputeSSD:
     """This class contains the unit tests for the functionality of the SSD metric util function."""
 
@@ -102,6 +103,7 @@ class TestComputeSSD:
         snapshot_custom.assert_match(ssd_metric_value)
 
 
+@pytest.mark.core
 class TestComputeXCorr:
     """This class contains the unit tests for the functionality of the XCorr metric util function."""
 
@@ -139,6 +141,7 @@ class TestComputeXCorr:
         snapshot_custom.assert_match(xcorr_metric_value)
 
 
+@pytest.mark.core
 class TestComputeGroundTruthCoverage:
     """This class contains the unit tests for the functionality of the Ground Truth coverage metric util function."""
 
@@ -195,6 +198,7 @@ class TestComputeGroundTruthCoverage:
         snapshot_custom.assert_match(gt_coverage_metric_value)
 
 
+@pytest.mark.core
 class TestComputeSaliencyCoverage:
     """This class contains the unit tests for the functionality of the Saliency coverage metric util function."""
 
@@ -263,6 +267,7 @@ class TestComputeSaliencyCoverage:
         snapshot_custom.assert_match(saliency_coverage_metric_value)
 
 
+@pytest.mark.core
 class TestComputeIoUCoverage:
     """This class contains the unit tests for the functionality of the IoU coverage metric util function."""
 

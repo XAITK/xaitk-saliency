@@ -18,6 +18,7 @@ dets_file = os.path.join(DATA_DIR, "test_dets.json")
 config_file = os.path.join(DATA_DIR, "config.json")
 
 
+@pytest.mark.core
 class TestSalOnCocoDetsNotUsable:
     """
     These tests make use of the `tmpdir` fixture from `pytest`. Find more
@@ -40,6 +41,7 @@ class TestSalOnCocoDetsNotUsable:
         assert not output_dir.check(dir=1)
 
 
+@pytest.mark.tools
 @pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestSalOnCocoDets:
     """

@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from typing import Any
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 from typing_extensions import override
@@ -35,6 +36,7 @@ class StubGen(GenerateDescriptorSimilaritySaliency):
         return {"stub_param": self.p}
 
 
+@pytest.mark.core
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
