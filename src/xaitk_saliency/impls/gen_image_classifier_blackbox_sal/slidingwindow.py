@@ -19,6 +19,15 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
     for more details.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> n_classes, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = SlidingWindowStack(window_size=(8, 8), stride=(8, 8))
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 1.0}))
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(

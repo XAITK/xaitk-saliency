@@ -23,6 +23,16 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
 
     Based on Hatakeyama et. al:
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf
+
+    Example:
+        >>> n_colors, n_classes, n_masks, height, width = 2, 3, 4, 5, 6
+        >>> reference = np.array([0.5, 0.3, 0.2])
+        >>> perturbed = np.array([[0.2, 0.3, 0.5], [0.4, 0.4, 0.2], [0.6, 0.1, 0.3], [0.3, 0.3, 0.4]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_colors, n_masks, height, width))
+        >>> scorer = MCRISEScoring(k=n_colors, p1=0.5)
+        >>> sal = scorer(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_colors, n_classes, height, width)
+        True
     """
 
     def __init__(

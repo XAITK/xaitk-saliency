@@ -33,6 +33,21 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
 
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
+
+    Example:
+        >>> from xaitk_saliency.utils.detection import format_detection
+        >>> n_ref_dets, n_masks, height, width = 1, 3, 4, 5
+        >>> ref_dets = format_detection(bbox_mat=np.array([[0, 0, 10, 10]]), classification_mat=np.array([[0.6, 0.4]]))
+        >>> bbox_mat = np.array([[0, 0, 10, 10], [1, 1, 9, 9], [2, 2, 8, 8]])
+        >>> classification_mat = np.array([[0.5, 0.5], [0.3, 0.7], [0.4, 0.6]])
+        >>> perturbed_dets = format_detection(bbox_mat=bbox_mat, classification_mat=classification_mat).reshape(
+        ...     n_masks, 1, 7
+        ... )
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = DRISEScoring()
+        >>> sal = scorer(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_ref_dets, height, width)
+        True
     """
 
     def iou(self, *, box_a: np.ndarray[Any, Any], box_b: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:

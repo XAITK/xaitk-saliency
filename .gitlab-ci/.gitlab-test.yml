@@ -101,7 +101,6 @@ tox:docs:
         TOX_ENV: ["doctests"]
   script:
     - tox -e "py${PYTHON_VERSION//./}-${TOX_ENV}"
-  allow_failure: true # currently no doctests
 
 .tox:coverage:version:
   extends: .test-setup

@@ -4,10 +4,6 @@ Computation is done using `scipy.stats.entropy`.
 
 Classes:
     Entropy: Computes the entropy of a given saliency map.
-
-Example:
-    >> entropy_saliency_metric = Entropy(clip_range=(0, 1))
-    >> result = entropy_saliency_metric(sal_map)  # entropy_saliency_metric.compute(sal_map)
 """
 
 from __future__ import annotations
@@ -31,6 +27,12 @@ class Entropy(SaliencyMetric):
     Attributes:
         clip_range (tuple[float, float] | None): Optional (min, max) range to clip
             saliency values before computing entropy.
+
+    Example:
+        >>> sal_map = np.array([[0.1, 0.9, 0.3], [0.4, 0.6, 0.2]])
+        >>> entropy_saliency_metric = Entropy(clip_range=(0, 1))
+        >>> round(entropy_saliency_metric(sal_map), 4)
+        2.2921
     """
 
     def __init__(self, clip_range: tuple[float, float] | None = None) -> None:

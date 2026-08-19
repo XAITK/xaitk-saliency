@@ -34,6 +34,20 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
     `PerturbImage` implementation.
     This is a parameter to be set during runtime as this is most often driven
     by the black-box algorithm used, if at all.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
+        >>> from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+        >>> n_classes, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = PerturbationOcclusion(
+        ...     perturber=SlidingWindow(window_size=(8, 8), stride=(8, 8)),
+        ...     generator=OcclusionScoring(),
+        ... )
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 1.0}))
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(

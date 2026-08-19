@@ -22,6 +22,16 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
     float are rounded to the nearest value and binarized
     with value 1 replacing values greater than or equal to half of
     the maximum value in mask after rounding while 0 replaces the rest.
+
+    Example:
+        >>> n_classes, n_masks, height, width = 2, 3, 4, 5
+        >>> reference = np.array([0.6, 0.4])
+        >>> perturbed = np.array([[0.2, 0.8], [0.9, 0.1], [0.5, 0.5]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = OcclusionScoring()
+        >>> sal = scorer(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def generate(

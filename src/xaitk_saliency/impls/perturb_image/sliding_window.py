@@ -19,6 +19,14 @@ class SlidingWindow(PerturbImage):
     Related, if the stride is set to be larger than the window size, the
     resulting plane of summed values will also not be even, as there be
     increasingly long valleys of unperturbed space between masked regions.
+
+    Example:
+        >>> n_masks, height, width = 12, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = SlidingWindow(window_size=(10, 12), stride=(8, 10))
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_masks, height, width)
+        True
     """
 
     def __init__(
