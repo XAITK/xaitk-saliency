@@ -13,15 +13,16 @@ class StubImpl(GenerateDetectorProposalSaliency):
     @override
     def generate(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """Stub impl"""
+        """Stub impl."""
         return np.zeros((1, 1))
 
     def get_config(self) -> dict[str, Any]:  # type: ignore[empty-body]
-        """Stub impl"""
+        """Stub impl."""
 
 
 def teardown_module() -> None:
@@ -34,14 +35,15 @@ def teardown_module() -> None:
 
 @pytest.mark.core
 def test_call_alias() -> None:
-    """
-    Test that the __call__ instance method is an alias to invoke the generate
-    instance method.
-    """
+    """Test that the __call__ instance method is an alias to invoke the generate instance method."""
     stub = StubImpl()
     stub.generate = mock.Mock()  # type: ignore
     m_ref_dets = mock.Mock(spec=np.ndarray)
     m_perturbed_dets = mock.Mock(spec=np.ndarray)
-    m_perturb_masks = mock.Mock(spec=np.ndarray)
-    stub(m_ref_dets, m_perturbed_dets, m_perturb_masks)
-    stub.generate.assert_called_once_with(m_ref_dets, m_perturbed_dets, m_perturb_masks)
+    m_perturbed_masks = mock.Mock(spec=np.ndarray)
+    stub(ref_dets=m_ref_dets, perturbed_dets=m_perturbed_dets, perturbed_masks=m_perturbed_masks)
+    stub.generate.assert_called_once_with(
+        ref_dets=m_ref_dets,
+        perturbed_dets=m_perturbed_dets,
+        perturbed_masks=m_perturbed_masks,
+    )

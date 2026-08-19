@@ -43,20 +43,20 @@ class TestRISEPerturbation:
             assert np.allclose(inst.p1, ex_p1)
 
     def test_if_random(self) -> None:
-        """Test that the perturbations are randomized"""
+        """Test that the perturbations are randomized."""
         impl1 = RISEGrid(n=1000, s=8, p1=0.5)
         impl2 = RISEGrid(n=1000, s=8, p1=0.5)
         assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
-        """Test that passing a seed generates equivalent masks"""
+        """Test that passing a seed generates equivalent masks."""
         impl1 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         impl2 = RISEGrid(n=1000, s=8, p1=0.5, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -70,10 +70,7 @@ class TestRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_call_idempotency(self) -> None:
-        """
-        Test that, at least when seeded and single-threaded, perturbation
-        generation is idempotent.
-        """
+        """Test that, at least when seeded and single-threaded, perturbation generation is idempotent."""
         # Image is slightly wide
         white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
         # Setting threads=0 for serialized processing for deterministic
@@ -91,8 +88,8 @@ class TestRISEPerturbation:
         )
 
     def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -106,10 +103,7 @@ class TestRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_sizes(self) -> None:
-        """
-        Test that once we initialize a RISEPerturbation we can call it on
-        images of varying sizes
-        """
+        """Test that once we initialize a RISEPerturbation we can call it on images of varying sizes."""
         impl = RISEGrid(n=2, s=2, p1=0.5, seed=42)
         white_image_small = np.full((4, 6), fill_value=255, dtype=np.uint8)
         white_image_large = np.full((41, 26), fill_value=255, dtype=np.uint8)

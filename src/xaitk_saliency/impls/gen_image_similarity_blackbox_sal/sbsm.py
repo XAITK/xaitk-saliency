@@ -1,7 +1,7 @@
-"""
-This module defines `SBSMStack`, which implements the perturbation-occlusion method using specifically the
-sliding window image perturbation and similarity scoring algorithms to generate similarity-based visual
-saliency maps
+"""This module defines `SBSMStack`.
+
+It implements the perturbation-occlusion method using the sliding window image perturbation and similarity
+scoring algorithms to generate similarity-based visual saliency maps.
 """
 
 from __future__ import annotations
@@ -19,25 +19,23 @@ from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
 class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
-    sliding window image perturbation and similarity scoring algorithms to
-    generate similarity-based visual saliency maps.
+    """Encapsulation of the perturbation-occlusion method using sliding window and similarity scoring algorithms.
+
+    This generates similarity-based visual saliency maps.
     See the documentation of :class:`SlidingWindow` and
     :class:`SimilarityScoring` for details.
     """
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = None,
     ) -> None:
-        """
-        Encapsulation of the perturbation-occlusion method using specifically the
-        sliding window image perturbation
+        """Encapsulation of the perturbation-occlusion method using the sliding window image perturbation algorithm.
 
         :param window_size: The block window size as a tuple with format
             `(height, width)`.
@@ -67,7 +65,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     @property
     def fill(self) -> int | Sequence[int] | np.ndarray | None:
-        """Gets the fill value"""
+        """Gets the fill value."""
         return self._po.fill
 
     @fill.setter
@@ -76,16 +74,16 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        return self._po.generate(ref_image, query_images, blackbox)
+        return self._po.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the SBSMStack.
+        """Returns the default configuration for the SBSMStack.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -103,8 +101,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the SBSMStack instance.
+        """Get the configuration dictionary of the SBSMStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

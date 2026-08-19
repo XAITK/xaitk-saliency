@@ -1,7 +1,7 @@
-"""
-This module provides the `MAITEImageClassifier` class, an adapter for integrating MAITE-based
-image classifiers with the SMQTK `ClassifyImage` interface. It enables the use of MAITE
-protocol-based classifiers in pipelines that require the SMQTK interface.
+"""This module provides the `MAITEImageClassifier` class.
+
+It is an adapter for integrating MAITE-based image classifiers with the SMQTK `ClassifyImage` interface. It enables
+the use of MAITE protocol-based classifiers in pipelines that require the SMQTK interface.
 
 Classes:
     MAITEImageClassifier: Adapts a MAITE image classification model for compatibility with
@@ -23,8 +23,7 @@ from typing_extensions import override
 
 
 class MAITEImageClassifier(ClassifyImage):
-    """
-    Adapter for the MAITE image classification protocol, implementing the SMQTK `ClassifyImage` interface.
+    """Adapter for the MAITE image classification protocol, implementing the SMQTK `ClassifyImage` interface.
 
     This adapter allows a MAITE protocol-based classifier to be used in SMQTK pipelines by transforming
     classification outputs into the expected format.
@@ -42,12 +41,12 @@ class MAITEImageClassifier(ClassifyImage):
 
     def __init__(
         self,
+        *,
         classifier: ic.Model,
         ids: Sequence[int],
         img_batch_size: int = 1,
     ) -> None:
-        """
-        Initialize the MAITEImageClassifier with a MAITE protocol-based classifier.
+        """Initialize the MAITEImageClassifier with a MAITE protocol-based classifier.
 
         Args:
             classifier (ic.Model): The MAITE protocol-based image classification model.
@@ -64,8 +63,8 @@ class MAITEImageClassifier(ClassifyImage):
 
     @override
     def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:  # noqa: C901
-        all_out = list()
-        batch = list()
+        all_out = []
+        batch = []
 
         # Convert from channels last to channels first
         # Channels first is specified in protocols v0.5.0
@@ -87,7 +86,7 @@ class MAITEImageClassifier(ClassifyImage):
 
             if len(batch) == self._img_batch_size:
                 all_out.extend(_generate_outputs(batch))
-                batch = list()
+                batch = []
 
         # Leftover batch
         if len(batch) > 0:

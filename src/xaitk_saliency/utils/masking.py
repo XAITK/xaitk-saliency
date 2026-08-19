@@ -14,14 +14,15 @@ UINT8_ONE = np.uint8(1)
 
 
 def occlude_image_batch(  # noqa: C901
+    *,
     ref_image: np.ndarray,
     masks: np.ndarray,
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> np.ndarray:
-    """
-    Apply a number of input occlusion masks to the given reference image,
-    producing a list of images equivalent in length, and parallel in order, to
+    """Apply a number of input occlusion masks to the given reference image.
+
+    This produces a list of images equivalent in length, and parallel in order, to
     the input masks.
     This batch version will compute all occluded images and returns them all in
     one large matrix.
@@ -124,14 +125,15 @@ def occlude_image_batch(  # noqa: C901
 
 
 def occlude_image_streaming(  # noqa: C901
+    *,
     ref_image: np.ndarray,
     masks: Iterable[np.ndarray],
     fill: int | Sequence[int] | np.ndarray | None = None,
     threads: int | None = None,
 ) -> Generator[np.ndarray, None, None]:
-    """
-    Apply a number of input occlusion masks to the given reference image,
-    producing a list of images equivalent in length, and parallel in order, to
+    """Apply a number of input occlusion masks to the given reference image.
+
+    This produces a list of images equivalent in length, and parallel in order, to
     the input masks.
     This streaming version will return an iterator that yields occluded image
     matrices.
@@ -187,7 +189,8 @@ def occlude_image_streaming(  # noqa: C901
     if ref_image.ndim > 2:
         s = (..., None)  # add channel axis for multiplication
 
-    def work_func(i_: int, m: np.ndarray) -> np.ndarray:
+    # `parallel_map` below invokes this positionally, so it can't be made keyword-only.
+    def work_func(i_: int, m: np.ndarray) -> np.ndarray:  # noqa: PLR0917
         m_shape = m.shape
         if m_shape != img_shape:
             raise ValueError(
@@ -214,15 +217,15 @@ def occlude_image_streaming(  # noqa: C901
 
 
 def benchmark_occlude_image(
+    *,
     img_shape: tuple[int, int] = (224, 224),
     img_channels: int = 3,
     num_masks: int = 1000,
     threading_tests: Sequence[int] = (0, 1, 2),
 ) -> None:
-    """
-    Simple benchmark for the two above `occlude_image_*` functions above w.r.t.
-    the given reference image matrix, which should be of the shape
-    `[H x W [x C]]`.
+    """Simple benchmark for the two above `occlude_image_*` functions above w.r.t. the given reference image matrix.
+
+    This should be of the shape `[H x W [x C]]`.
     """
     img_mat = np.ones((*img_shape, img_channels), dtype=np.uint8)
     rng = np.random.default_rng(seed=0)
@@ -233,9 +236,9 @@ def benchmark_occlude_image(
     print(f"Image shape={img_mat.shape}, masks={masks.shape}, fill_1c={fill_1c}, fill_{img_channels}c={fill_mc}")
 
     s = perf_counter()
-    occlude_image_batch(img_mat, masks)
+    occlude_image_batch(ref_image=img_mat, masks=masks)
     e = perf_counter()
-    _log_line("Batch", "main", 0, "no-fill", e - s)
+    _log_line(op="Batch", mode="main", cores=0, fill="no-fill", seconds=e - s)
     _benchmark_threads_helper(
         img_mat=img_mat,
         masks=masks,
@@ -245,9 +248,9 @@ def benchmark_occlude_image(
     )
 
     s = perf_counter()
-    occlude_image_batch(img_mat, masks, fill=fill_1c)
+    occlude_image_batch(ref_image=img_mat, masks=masks, fill=fill_1c)
     e = perf_counter()
-    _log_line("Batch", "main", 0, "fill-1c", e - s)
+    _log_line(op="Batch", mode="main", cores=0, fill="fill-1c", seconds=e - s)
     _benchmark_threads_helper(
         img_mat=img_mat,
         masks=masks,
@@ -258,9 +261,9 @@ def benchmark_occlude_image(
     )
 
     s = perf_counter()
-    occlude_image_batch(img_mat, masks, fill=fill_mc)
+    occlude_image_batch(ref_image=img_mat, masks=masks, fill=fill_mc)
     e = perf_counter()
-    _log_line("Batch", "main", 0, f"fill-{img_channels}c", e - s)
+    _log_line(op="Batch", mode="main", cores=0, fill=f"fill-{img_channels}c", seconds=e - s)
     _benchmark_threads_helper(
         img_mat=img_mat,
         masks=masks,
@@ -271,11 +274,12 @@ def benchmark_occlude_image(
     )
 
 
-def _log_line(op: str, mode: str, cores: int, fill: str, seconds: float) -> None:
+def _log_line(*, op: str, mode: str, cores: int, fill: str, seconds: float) -> None:
     print(f"{op:12s}{mode:16s}{cores:2d}  {fill:9s}{seconds} s")
 
 
 def _benchmark_threads_helper(
+    *,
     img_mat: np.ndarray,
     masks: np.ndarray,
     img_channels: int,
@@ -285,24 +289,24 @@ def _benchmark_threads_helper(
 ) -> None:
     for threads in threading_tests:
         s = perf_counter()
-        occlude_image_batch(img_mat, masks, fill=fill, threads=threads)
+        occlude_image_batch(ref_image=img_mat, masks=masks, fill=fill, threads=threads)
         e = perf_counter()
-        _log_line("Batch", "threads", threads, f"fill-{img_channels}c", e - s)
+        _log_line(op="Batch", mode="threads", cores=threads, fill=f"fill-{img_channels}c", seconds=e - s)
     for threads in threading_tests:
         s = perf_counter()
-        np.asarray(list(occlude_image_streaming(img_mat, masks, fill=fill, threads=threads)))
+        np.asarray(list(occlude_image_streaming(ref_image=img_mat, masks=masks, fill=fill, threads=threads)))
         e = perf_counter()
-        _log_line("Streaming", "threads", threads, f"fill-{img_channels}c", e - s)
+        _log_line(op="Streaming", mode="threads", cores=threads, fill=f"fill-{img_channels}c", seconds=e - s)
 
 
 def weight_regions_by_scalar(
+    *,
     scalar_vec: np.ndarray,
     masks: np.ndarray,
     inv_masks: bool = True,
     normalize: bool = True,
 ) -> np.ndarray:
-    """
-    Weight some binary masks region with its respective vector in scalar_vec.
+    """Weight some binary masks region with its respective vector in scalar_vec.
 
     We expect the "masks" matrices and the image to be the same height and
     width, and be valued in the [0, 1] floating-point range. The length
@@ -357,6 +361,7 @@ def weight_regions_by_scalar(
 
 
 def _upcast_to_common_type(
+    *,
     scalar_vec: np.ndarray,
     masks: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray]:

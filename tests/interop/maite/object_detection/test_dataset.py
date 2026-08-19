@@ -104,7 +104,7 @@ class TestCOCOMAITEObjectDetectionDataset:
         with pytest.raises(ValueError, match=r"Image metadata length mismatch"):
             _ = COCOMAITEObjectDetectionDataset(
                 kwcoco_dataset=TestCOCOMAITEObjectDetectionDataset.kwcoco_dataset,
-                image_metadata=list(),
+                image_metadata=[],
             )
 
 

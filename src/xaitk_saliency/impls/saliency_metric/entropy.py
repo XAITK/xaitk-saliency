@@ -1,6 +1,6 @@
-"""
-Provides an implementation of the `SaliencyMetric` interface for computing
-entropy over a saliency map using `scipy.stats.entropy`.
+"""Provides an implementation of the `SaliencyMetric` interface for computing entropy over a saliency map.
+
+Computation is done using `scipy.stats.entropy`.
 
 Classes:
     Entropy: Computes the entropy of a given saliency map.
@@ -22,8 +22,7 @@ from xaitk_saliency.interfaces.saliency_metric import SaliencyMetric
 
 
 class Entropy(SaliencyMetric):
-    """
-    Implementation of the `SaliencyMetric` interface to calculate entropy.
+    """Implementation of the `SaliencyMetric` interface to calculate entropy.
 
     Entropy is a statistical measure of randomness that quantifies the amount of
     information in a saliency map. High entropy indicates complex, detailed information,
@@ -35,8 +34,7 @@ class Entropy(SaliencyMetric):
     """
 
     def __init__(self, clip_range: tuple[float, float] | None = None) -> None:
-        """
-        Initialize the Entropy metric.
+        """Initialize the Entropy metric.
 
         Args:
             clip_range (tuple[float, float] | None): Optional (min, max) value range to
@@ -57,8 +55,7 @@ class Entropy(SaliencyMetric):
         self,
         sal_map: np.ndarray,
     ) -> float:
-        """
-        Compute the entropy of a saliency map.
+        """Compute the entropy of a saliency map.
 
         Entropy is computed using `scipy.stats.entropy` on the clipped/normalized saliency map.
         If `clip_range` is provided, the metric computation only performs range clipping and does
@@ -84,8 +81,7 @@ class Entropy(SaliencyMetric):
 
     @override
     def get_config(self) -> dict[str, Any]:
-        """
-        Generates a configuration dictionary for the Entropy metric instance.
+        """Generates a configuration dictionary for the Entropy metric instance.
 
         Returns:
             dict[str, Any]: Configuration data representing the sensor and scenario.

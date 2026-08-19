@@ -7,11 +7,10 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateDescriptorSimilaritySaliency(Plugfigurable):
-    """
-    Visual saliency map generation interface whose implementations transform
-    black-box feature vectors from multiple references and perturbations into
-    saliency heatmaps.
+    """Visual saliency map generation interface.
 
+    Implementations transform black-box feature vectors from multiple references and perturbations into
+    saliency heatmaps.
     This transformation requires a reference image, and a number of query images
     all translated into feature vectors via some black-box means.
     We are trying to discern the feature-space saliency between the reference
@@ -26,15 +25,15 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate a matrix of visual saliency heatmaps given the black-box
-        descriptor generation output on a reference image, several query images,
-        perturbed versions of the reference image and the masks of the visual
+        """Generate a matrix of visual saliency heatmaps from black-box descriptor output on a reference image.
+
+        This also uses several query images, perturbed versions of the reference image and the masks of the visual
         perturbations.
 
         Perturbation mask input into the `perturbed_masks` parameter here is
@@ -76,10 +75,16 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_descr: np.ndarray,
         query_descrs: np.ndarray,
         perturbed_descrs: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateDescriptorSimilaritySaliency.generate`."""
-        return self.generate(ref_descr, query_descrs, perturbed_descrs, perturbed_masks)
+        return self.generate(
+            ref_descr=ref_descr,
+            query_descrs=query_descrs,
+            perturbed_descrs=perturbed_descrs,
+            perturbed_masks=perturbed_masks,
+        )

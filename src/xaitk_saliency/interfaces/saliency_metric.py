@@ -1,7 +1,7 @@
-"""
-This module defines the `SaliencyMetric` abstract base class, an interface for computing
-metrics for a single saliency map input. Implementations of `SaliencyMetric` should
-define the specific metric computation in the `compute` method, which can be called directly or
+"""This module defines the `SaliencyMetric` abstract base class.
+
+It is an interface for computing metrics for a single saliency map input. Implementations of `SaliencyMetric`
+should define the specific metric computation in the `compute` method, which can be called directly or
 via the `__call__` method.
 
 Classes:
@@ -31,19 +31,14 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class SaliencyMetric(Plugfigurable):
-    """
-    This interface outlines the computation of a given metric when provided with
-    a single input saliency map.
-    """
+    """This interface outlines the computation of a given metric when provided with a single input saliency map."""
 
     @abc.abstractmethod
     def compute(
         self,
         sal_map: np.ndarray,
     ) -> float:
-        """
-        Given up to two saliency maps, and additional parameters, return some given metric about
-        the saliency map(s).
+        """Given up to two saliency maps, and additional parameters, return some given metric about the saliency map(s).
 
         :param sal_map: An input saliency map.
 
@@ -66,8 +61,7 @@ class SaliencyMetric(Plugfigurable):
 
     @property
     def name(self) -> str:
-        """
-        Returns the name of the SaliencyMetric instance.
+        """Returns the name of the SaliencyMetric instance.
 
         This property provides a convenient way to retrieve the name of the
         class instance, which can be useful for logging, debugging, or display purposes.

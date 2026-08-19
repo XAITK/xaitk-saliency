@@ -7,9 +7,9 @@ from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateDetectorProposalSaliency(Plugfigurable):
-    """
-    This interface proposes that implementations transform black-box image
-    object detection predictions into visual saliency heatmaps.
+    """This interface proposes that implementations transform black-box image object detection predictions.
+
+    These predictions are transformed into visual saliency heatmaps.
     This should require externally-generated object detection predictions over
     some image, along with predictions for perturbed images and the perturbation
     masks for those images as would be output from a
@@ -27,13 +27,14 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
-        """
-        Generate visual saliency heatmap matrices for each reference
-        detection, describing what visual information contributed to the
+        """Generate visual saliency heatmap matrices for each reference detection.
+
+        These describe what visual information contributed to the
         associated reference detection.
 
         We expect input detections to come from a black-box source that outputs
@@ -84,7 +85,7 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
             variations of the reference image.
             We expect this to be a float-types array with shape
             `[nMasks x nProps x (4+1+nClasses)]`.
-        :param perturb_masks:
+        :param perturbed_masks:
             Perturbation masks `numpy.ndarray` over the reference image.
             This should be parallel in association to the detection
             propositions input into the `perturbed_dets` parameter.
@@ -99,9 +100,10 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_dets: np.ndarray,
         perturbed_dets: np.ndarray,
-        perturb_masks: np.ndarray,
+        perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         """Alias for :meth:`.GenerateDetectorProposalSaliency.generate`."""
-        return self.generate(ref_dets, perturbed_dets, perturb_masks)
+        return self.generate(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturbed_masks)

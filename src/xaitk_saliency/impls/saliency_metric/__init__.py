@@ -1,1 +1,1 @@
-"""Module for all implementations of the SaliencyMetric interface"""
+"""Module for all implementations of the SaliencyMetric interface."""

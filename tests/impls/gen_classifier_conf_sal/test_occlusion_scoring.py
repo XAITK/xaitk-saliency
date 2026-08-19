@@ -17,10 +17,7 @@ class TestOcclusionScoring:
         assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
-        """
-        Test that a mismatch of input ref-image and perturbed-image confidence
-        classes causes the expected exception.
-        """
+        """Test that a mismatch of ref-image and perturbed-image confidence classes causes the expected exception."""
         test_ref_confs = np.ones([3])  # ONE MORE than pert conf mat.
         test_pert_confs = np.ones((4, 2))
         test_pert_masks = np.ones((4, 3, 3))
@@ -30,14 +27,10 @@ class TestOcclusionScoring:
             ValueError,
             match=r"Number of classes in original image and perturbed image do not match",
         ):
-            impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
+            impl.generate(reference=test_ref_confs, perturbed=test_pert_confs, perturbed_masks=test_pert_masks)
 
     def test_bad_alignment_masks(self) -> None:
-        """
-        Test that the number of input perturbed image confidences and masks
-        match.
-        """
-
+        """Test that the number of input perturbed image confidences and masks match."""
         test_ref_confs = np.ones([2])
         test_pert_confs = np.ones((4, 2))
         # Different number of masks from confs
@@ -48,7 +41,7 @@ class TestOcclusionScoring:
             ValueError,
             match=r"Number of perturbation masks and respective confidence lengths do not match",
         ):
-            impl.generate(test_ref_confs, test_pert_confs, test_pert_masks)
+            impl.generate(reference=test_ref_confs, perturbed=test_pert_confs, perturbed_masks=test_pert_masks)
 
     def test_1class_scores(self) -> None:
         """Test basic scoring with a single class for broadcasting sanity check."""
@@ -59,7 +52,11 @@ class TestOcclusionScoring:
         pertb_confs_1_class_ = rng.standard_normal((3, 1))
         mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype="int")
 
-        sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
+        sal = impl.generate(
+            reference=image_confs_1_class_,
+            perturbed=pertb_confs_1_class_,
+            perturbed_masks=mask_confs_1_class_,
+        )
         assert sal.shape == (1, 10, 10)
 
     def test_standard_1class_scores(self) -> None:
@@ -68,7 +65,11 @@ class TestOcclusionScoring:
         # Three Perturbation masks of size 4 x 6 for 1 class
         image_confs_1_class_ = np.array([0.6])
         pertb_confs_1_class_ = np.array([[0.3], [0.65], [0.12], [0.18], [0.36], [0.42]])
-        sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, EXPECTED_MASKS_4x6)
+        sal = impl.generate(
+            reference=image_confs_1_class_,
+            perturbed=pertb_confs_1_class_,
+            perturbed_masks=EXPECTED_MASKS_4x6,
+        )
         standard_sal = np.load(os.path.join(DATA_DIR, "OccScorSal.npy"))
         assert sal.shape == (1, 4, 6)
         assert np.allclose(standard_sal, sal)
@@ -81,5 +82,9 @@ class TestOcclusionScoring:
         image_confs_1_class_ = rng.standard_normal(20)
         pertb_confs_1_class_ = rng.standard_normal((3, 20))
         mask_confs_1_class_ = rng.integers(low=0, high=2, size=(3, 10, 10), dtype="int")
-        sal = impl.generate(image_confs_1_class_, pertb_confs_1_class_, mask_confs_1_class_)
+        sal = impl.generate(
+            reference=image_confs_1_class_,
+            perturbed=pertb_confs_1_class_,
+            perturbed_masks=mask_confs_1_class_,
+        )
         assert sal.shape == (20, 10, 10)

@@ -44,7 +44,7 @@ class TestMCRiseScoring:
             ValueError,
             match=r"Number of perturbation masks and respective confidence lengths do not match",
         ):
-            inst.generate(test_confs[0], test_confs, test_masks)
+            inst.generate(reference=test_confs[0], perturbed=test_confs, perturbed_masks=test_masks)
 
     def test_2class_scoring(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test for expected output when given known input data."""
@@ -53,6 +53,10 @@ class TestMCRiseScoring:
         test_pert_confs = np.array([[0.00, 0.33, 0.66, 0.33, 0.66, 1.00], [1.00, 0.66, 0.33, 0.66, 0.33, 0.00]]).T
 
         inst = MCRISEScoring(k=1)
-        sal = inst.generate(test_ref_confs, test_pert_confs, np.asarray([EXPECTED_MASKS_4x6]))
+        sal = inst.generate(
+            reference=test_ref_confs,
+            perturbed=test_pert_confs,
+            perturbed_masks=np.asarray([EXPECTED_MASKS_4x6]),
+        )
 
         snapshot_custom.assert_match(sal)

@@ -1,1 +1,1 @@
-"""Utils for generating saliency on coco datasets"""
+"""Utils for generating saliency on coco datasets."""

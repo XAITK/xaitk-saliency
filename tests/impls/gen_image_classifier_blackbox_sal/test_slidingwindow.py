@@ -30,7 +30,7 @@ class TestSpecializationSlidingWindow:
             assert inst_i._po._threads == 99
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -48,8 +48,8 @@ class TestSpecializationSlidingWindow:
         test_image = np.full([32, 32, 3], fill_value=255, dtype=np.uint8)
         test_bb = TestBlackBox()
 
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
-        res = inst.generate(test_image, test_bb)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
         # We expect this result to be composed of zeros because there is no
         # difference in classification performance across all sliding window
         # perturbations due to the fix return nature of the above stub class.
@@ -57,7 +57,7 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_generation_gray(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -75,8 +75,8 @@ class TestSpecializationSlidingWindow:
         test_image = np.full([32, 32], fill_value=255, dtype=np.uint8)
         test_bb = TestBlackBox()
 
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
-        res = inst.generate(test_image, test_bb)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
         # We expect this result to be composed of zeros because there is no
         # difference in classification performance across all sliding window
         # perturbations due to the fix return nature of the above stub class.
@@ -84,11 +84,11 @@ class TestSpecializationSlidingWindow:
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
-        """
-        inst = SlidingWindowStack((8, 8), (4, 4), threads=0)
+        inst = SlidingWindowStack(window_size=(8, 8), stride=(4, 4), threads=0)
         assert inst.fill is None
         inst.fill = 42
         assert inst._po.fill == 42

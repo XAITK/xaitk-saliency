@@ -1,4 +1,4 @@
-"""Define the xaitk-saliency package"""
+"""Define the xaitk-saliency package."""
 
 from importlib import metadata
 

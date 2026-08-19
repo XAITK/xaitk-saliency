@@ -1,6 +1,6 @@
-"""
-This module provides functionality for generating saliency maps for object detection models
-using blackbox saliency generation techniques. It integrates with the MAITE dataset and
+"""This module provides functionality for generating saliency maps for object detection models.
+
+It uses blackbox saliency generation techniques and integrates with the MAITE dataset and
 object detection protocols to produce visual explanations for model predictions.
 
 Functions:
@@ -44,6 +44,7 @@ from xaitk_saliency.interop.maite.object_detection.model import MAITEDetector
 
 
 def compute_sal_maps(
+    *,
     dataset: Dataset,
     sal_generator: GenerateObjectDetectorBlackboxSaliency,
     blackbox_detector: DetectImageObjects,
@@ -56,7 +57,7 @@ def compute_sal_maps(
     :param blackbox_detector: ``DetectImageObjects`` detector
     :param num_classes: Number of classes potentially predicted by the detector.
     """
-    img_sal_maps = list()
+    img_sal_maps = []
     for dset_idx in range(len(dataset)):
         ref_img, dets, _ = dataset[dset_idx]
 
@@ -67,10 +68,10 @@ def compute_sal_maps(
 
         img_sal_maps.append(
             sal_generator(
-                np.asarray(np.transpose(ref_img, axes=(1, 2, 0))),
-                np.asarray(dets.boxes),
-                score_matrix,
-                blackbox_detector,
+                ref_image=np.asarray(np.transpose(ref_img, axes=(1, 2, 0))),
+                bboxes=np.asarray(dets.boxes),
+                scores=score_matrix,
+                blackbox=blackbox_detector,
             ),
         )
 
@@ -78,6 +79,7 @@ def compute_sal_maps(
 
 
 def sal_on_dets(
+    *,
     dataset: Dataset,
     sal_generator: GenerateObjectDetectorBlackboxSaliency,
     detector: Model,

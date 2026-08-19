@@ -1,5 +1,4 @@
-"""Encapsulation of the perturbation-occlusion method using specifically the
-RISE implementations of the component algorithms."""
+"""Encapsulation of the perturbation-occlusion method using the RISE implementations of the component algorithms."""
 
 from __future__ import annotations
 
@@ -16,9 +15,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class RISEStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
-    RISE implementations of the component algorithms.
+    """Encapsulation of the perturbation-occlusion method using the RISE implementations of the component algorithms.
 
     This more specifically encapsulates the original RISE method as presented
     in their paper and code. See references in the :class:`RISEGrid`
@@ -31,6 +28,7 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
@@ -38,9 +36,7 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         threads: int = 0,
         debiased: bool = True,
     ) -> None:
-        """
-        Initialization of the perturbation-occlusion method using specifically the
-        RISE implementations of the component algorithms.
+        """Initialize the perturbation-occlusion method using the RISE implementations of the component algorithms.
 
         :param n:
             Number of random masks used in the algorithm. E.g. 1000.
@@ -62,26 +58,25 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
         """
         self._debiased = debiased  # retain for config output
         self._po = PerturbationOcclusion(
-            RISEGrid(n=n, s=s, p1=p1, seed=seed, threads=threads),
-            RISEScoring(p1=p1 if debiased else 0.0),
+            perturber=RISEGrid(n=n, s=s, p1=p1, seed=seed, threads=threads),
+            generator=RISEScoring(p1=p1 if debiased else 0.0),
             threads=threads,
         )
 
     @property
     def fill(self) -> int | Sequence[int] | None:
-        """Gets the fill value"""
+        """Gets the fill value."""
         return self._po.fill
 
     @fill.setter
     def fill(self, v: int | Sequence[int] | None) -> None:
         self._po.fill = v
 
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        return self._po.generate(ref_image, blackbox)
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+        return self._po.generate(ref_image=ref_image, blackbox=blackbox)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the RISEStack instance.
+        """Get the configuration dictionary of the RISEStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

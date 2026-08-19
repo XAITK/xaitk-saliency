@@ -1,6 +1,6 @@
-"""
-This module provides a CLI tool for generating saliency maps for object detection
-models applied to datasets in COCO format. It leverages saliency generation methods
+"""This module provides a CLI tool for generating saliency maps for object detection models.
+
+It applies to datasets in COCO format. It leverages saliency generation methods
 and blackbox object detection models to create visual explanations for predictions.
 
 Functions:
@@ -62,6 +62,7 @@ except ImportError:
 )
 @click.option("--verbose", "-v", count=True, help="print progress messages")
 def sal_on_coco_dets(  # noqa: C901
+    *,
     dataset_dir: str,
     output_dir: str,
     config_file: TextIO,
@@ -92,7 +93,7 @@ def sal_on_coco_dets(  # noqa: C901
     :param verbose: Display progress messages. Default is false.
     """
     if generate_config_file:
-        config: dict[str, Any] = dict()
+        config: dict[str, Any] = {}
 
         config["DetectImageObjects"] = make_default_config(DetectImageObjects.get_impls())
         config["GenerateObjectDetectorBlackboxSaliency"] = make_default_config(

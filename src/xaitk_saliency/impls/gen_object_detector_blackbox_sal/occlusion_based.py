@@ -1,6 +1,6 @@
-"""
-This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from smqtk_core.configuration import (
 )
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency.interfaces.gen_detector_prop_sal import GenerateDetectorProposalSaliency
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
@@ -28,8 +28,7 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
-    """
-    Generator composed of modular perturbation and occlusion-based algorithms.
+    """Generator composed of modular perturbation and occlusion-based algorithms.
 
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
@@ -38,13 +37,13 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateDetectorProposalSaliency,
         fill: int | Sequence[int] | np.ndarray | None = None,
         threads: int | None = 0,
     ) -> None:
-        """
-        Generator composed of modular perturbation and occlusion-based algorithms.
+        """Generator composed of modular perturbation and occlusion-based algorithms.
 
         :param perturber: `PerturbImage` implementation instance for generating
             occlusion masks.
@@ -66,18 +65,19 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
         objectness: np.ndarray | None = None,
     ) -> np.ndarray:
-        ref_dets_mat = format_detection(bboxes, scores, objectness)
+        ref_dets_mat = format_detection(bbox_mat=bboxes, classification_mat=scores, objectness=objectness)
 
         pert_masks = self._perturber(ref_image)
 
         pert_dets = blackbox.detect_objects(
-            occlude_image_batch(ref_image, pert_masks, fill=self.fill, threads=self._threads),
+            occlude_image_batch(ref_image=ref_image, masks=pert_masks, fill=self.fill, threads=self._threads),
         )
 
         pert_dets_mat = _dets_to_formatted_mat(pert_dets)
@@ -86,15 +86,14 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
             return np.array([])
 
         return self._generator(
-            ref_dets_mat,
-            pert_dets_mat,
-            pert_masks,
+            ref_dets=ref_dets_mat,
+            perturbed_dets=pert_dets_mat,
+            perturbed_masks=pert_masks,
         )
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the PerturbationOcclusion.
+        """Returns the default configuration for the PerturbationOcclusion.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -109,9 +108,9 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         return cfg
 
     @classmethod
+    @override
     def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
-        """
-        Create a PerturbationOcclusion instance from a configuration dictionary.
+        """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:
             config_dict (dict): Configuration dictionary with perturber details.
@@ -129,8 +128,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the PerturbationOcclusion instance.
+        """Get the configuration dictionary of the PerturbationOcclusion instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.
@@ -146,10 +144,9 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 def _dets_to_formatted_mat(
     dets: Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]],
 ) -> np.ndarray:
-    """
-    Converts detections, as returned by an implementation of
-    ``DetectImageObjects``, into a detection matrix formatted for use with
-    an implementation of ``GenerateDetectorProposalSaliency``.
+    """Converts detections, as returned by an implementation of ``DetectImageObjects``, into a detection matrix.
+
+    The matrix is formatted for use with an implementation of ``GenerateDetectorProposalSaliency``.
     The order of the class scores in the resulting matrix follows the order of
     labels present in the first non-empty detection in the input set.
 
@@ -199,12 +196,18 @@ def _dets_to_formatted_mat(
             img_scores = np.vstack((img_scores, scores))
             img_objectness = np.hstack((img_objectness, obj))
 
-        dets_mat_list.append(format_detection(img_bboxes, img_scores, img_objectness))
+        dets_mat_list.append(
+            format_detection(
+                bbox_mat=img_bboxes,
+                classification_mat=img_scores,
+                objectness=img_objectness,
+            ),
+        )
 
     return np.asarray(_format_output(dets_mat_list=dets_mat_list, num_classes=num_classes))
 
 
-def _format_output(dets_mat_list: list[np.ndarray], num_classes: int) -> Sequence[np.ndarray]:
+def _format_output(*, dets_mat_list: list[np.ndarray], num_classes: int) -> Sequence[np.ndarray]:
     # pad matrices
     num_dets = [dets_mat.shape[0] for dets_mat in dets_mat_list]
     max_dets = max(num_dets)

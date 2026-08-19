@@ -14,7 +14,6 @@ from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISESco
 class TestBlackBoxRandomGrid:
     def test_configuration(self) -> None:
         """Test configuration suite."""
-
         inst = RandomGridStack(
             n=55,
             s=(15, 8),
@@ -63,17 +62,17 @@ class TestBlackBoxRandomGrid:
         test_scores = np.array([[0.9, 0.1], [0.4, 0.6]])
 
         inst = RandomGridStack(n=5, s=(2, 8), p1=0.6, seed=42)
-        res = inst.generate(test_image, test_bboxes, test_scores, test_det)
+        res = inst.generate(ref_image=test_image, bboxes=test_bboxes, scores=test_scores, blackbox=test_det)
 
         exp_res = np.load(DATA_DIR / "exp_random_grid_stack_res.npy")
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
-        """
-        inst = RandomGridStack(3, (4, 5), 0.6, seed=7)
+        inst = RandomGridStack(n=3, s=(4, 5), p1=0.6, seed=7)
         assert inst._po.fill is None
         assert inst.fill is None
         inst.fill = 24

@@ -1,5 +1,5 @@
-"""
-This module provides dataset classes for working with object detection data in the MAITE framework.
+"""This module provides dataset classes for working with object detection data in the MAITE framework.
+
 It includes adapters for COCO-format datasets and general datasets for varying-sized images.
 
 Classes:
@@ -56,7 +56,7 @@ class MAITEDetectionTarget:
 
 
 class COCOMetadata(DatumMetadata):
-    """TypedDict for COCO-detection datum-level metdata"""
+    """TypedDict for COCO-detection datum-level metdata."""
 
     ann_ids: ReadOnly[Sequence[int]]
     image_info: ReadOnly[dict[str, Any]]
@@ -73,19 +73,20 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
     def __init__(  # noqa: C901
         self,
+        *,
         kwcoco_dataset: kwcoco.CocoDataset,  # pyright: ignore
         image_metadata: Sequence[DatumMetadataType],
         skip_no_anns: bool = False,
         dataset_id: str | None = None,
     ) -> None:
-        """
-        Initialize MAITE-compliant dataset from a COCO dataset.
+        """Initialize MAITE-compliant dataset from a COCO dataset.
 
         Args:
             kwcoco_dataset (kwcoco.CocoDataset): The COCO dataset object.
             image_metadata (Sequence[DatumMetadataType]): Metadata for each image.
             skip_no_anns (bool): Whether to skip images without annotations. Defaults to False.
             dataset_id (str): Dataset ID, defaults to filepath.
+
         Raises:
             ImportError: If required dependencies are not installed.
             ValueError: If metadata is missing for any image in the dataset.
@@ -98,8 +99,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
         self._kwcoco_dataset = kwcoco_dataset
 
-        self._image_ids = list()
-        self._annotations = dict()
+        self._image_ids = []
+        self._annotations = {}
 
         for _, img_id in enumerate(kwcoco_dataset.imgs.keys()):
             bboxes = np.empty((0, 4))
@@ -164,8 +165,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
 
         image_md: COCOMetadata = {
             "id": image_id,
-            "ann_ids": (list(gid_to_aids[image_id]) if image_id in gid_to_aids else list()),
-            "image_info": dict(width=width, height=height, file_name=img_file_path),
+            "ann_ids": (list(gid_to_aids[image_id]) if image_id in gid_to_aids else []),
+            "image_info": {"width": width, "height": height, "file_name": img_file_path},
         }
 
         # Forward input metadata, checking for clobbering
@@ -205,14 +206,14 @@ class MAITEObjectDetectionDataset(Dataset):
 
     def __init__(
         self,
+        *,
         imgs: Sequence[np.ndarray],
         dets: Sequence[TargetType],
         datum_metadata: Sequence[DatumMetadataType],
         dataset_id: str,
         index2label: dict[int, str] | None = None,
     ) -> None:
-        """
-        Initialize MAITE-compliant dataset
+        """Initialize MAITE-compliant dataset.
 
         Args:
             imgs (Sequence[np.ndarray]): Sequence of images in the dataset.

@@ -11,9 +11,9 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
-    """
-    This interface describes the generation of visual saliency heatmaps based on
-    the similarity of a reference image to a number of query images.
+    """This interface describes the generation of visual saliency heatmaps.
+
+    These are based on the similarity of a reference image to a number of query images.
     Similarity is deduced from the output of a black-box image feature vector
     generator that transforms each image to an embedding space.
 
@@ -27,14 +27,14 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
 
     def generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Generates visual saliency maps based on the similarity of the reference
-        image to each query image determined by the output of the blackbox
-        feature vector generator.
+        """Generates visual saliency maps based on the similarity of the reference image to each query image.
+
+        This is determined by the output of the blackbox feature vector generator.
 
         The input reference image is expected to be a matrix in
         either a `H x W` or `H x W x C` shape format.
@@ -72,7 +72,7 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
         if ref_image.ndim not in (2, 3):
             raise ValueError(f"Input reference image matrix has an unexpected number of dimensions: {ref_image.ndim}")
 
-        output = self._generate(ref_image, query_images, blackbox)
+        output = self._generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
         if output.shape[1:] != ref_image.shape[:2]:
             raise ShapeMismatchError(
@@ -92,25 +92,24 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
 
     def __call__(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Alias to :meth:`generate` method.
-        See :meth:`generate` for details.
-        """
-        return self.generate(ref_image, query_images, blackbox)
+        """Alias to :meth:`generate` method. See :meth:`generate` for details."""
+        return self.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @abc.abstractmethod
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        """
-        Internal method for implementing the generation logic.
+        """Internal method for implementing the generation logic.
+
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for `generate` also applies here aside from the

@@ -19,10 +19,10 @@ LOG = logging.getLogger(__name__)
 
 
 class KWCocoUtils:
-    """Class for KWCoco Utility functions"""
+    """Class for KWCoco Utility functions."""
 
     def __init__(self) -> None:
-        """Initialize KWCocoUtils"""
+        """Initialize KWCocoUtils."""
         if not self.is_usable():
             raise KWCocoImportError
 
@@ -32,9 +32,9 @@ class KWCocoUtils:
         # infers `kwcoco.CocoDataset` as `ModuleType | Any` instead of a class.
         dets_dset: "kwcoco.CocoDataset",  # pyright: ignore[reportGeneralTypeIssues]
     ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
-        """
-        Generate reference image, bounding box, and class score matrices, for
-        use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
+        """Generate reference image, bounding box, and class score matrices.
+
+        This is for use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
         from a `kwcoco.CocoDataset` object.
         Matrices are generated for each image in the dataset that has
         annotations associated with it.
@@ -87,8 +87,7 @@ class KWCocoUtils:
 
     @classmethod
     def is_usable(cls) -> bool:
-        """
-        Checks if the necessary dependencies (KWCoco) are available.
+        """Checks if the necessary dependencies (KWCoco) are available.
 
         Returns:
             bool: True if KWCoco is available; False otherwise.
