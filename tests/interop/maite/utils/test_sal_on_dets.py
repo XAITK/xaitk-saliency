@@ -4,6 +4,7 @@ from typing import TypedDict
 from unittest.mock import MagicMock
 
 import numpy as np
+import pytest
 from maite.protocols.object_detection import Dataset, Model
 from smqtk_core.configuration import to_config_dict
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
@@ -11,12 +12,12 @@ from smqtk_image_io.bbox import AxisAlignedBoundingBox
 from typing_extensions import ReadOnly, Required
 
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEStack
-from xaitk_saliency.interop.maite.object_detection.dataset import (
+from xaitk_saliency.interop.maite.object_detection import (
     MAITEDetectionTarget,
+    MAITEDetector,
     MAITEObjectDetectionDataset,
 )
-from xaitk_saliency.interop.maite.object_detection.model import MAITEDetector
-from xaitk_saliency.interop.maite.utils.sal_on_dets import compute_sal_maps, sal_on_dets
+from xaitk_saliency.interop.maite.utils import compute_sal_maps, sal_on_dets
 
 rng = np.random.default_rng()
 
@@ -25,6 +26,7 @@ class _DummyDatumMetadata(TypedDict):
     id: Required[ReadOnly[int]]
 
 
+@pytest.mark.maite
 class TestComputeSalMaps:
     def test_compute_sal_maps(self) -> None:
         """Test saliency map generation with dummy detector, RISEGrid, and DRISEScoring."""
@@ -79,8 +81,9 @@ class TestComputeSalMaps:
         assert sal_md == to_config_dict(sal_generator)
 
 
+@pytest.mark.maite
 class TestSalOnDets:
-    @mock.patch("xaitk_saliency.interop.maite.utils.sal_on_dets.compute_sal_maps", return_value=([], {}))
+    @mock.patch("xaitk_saliency.interop.maite.utils._sal_on_dets.compute_sal_maps", return_value=([], {}))
     def test_sal_on_dets(self, patch: MagicMock) -> None:
         """Test workflow with MAITE detector."""
         dataset = MagicMock(spec=Dataset)

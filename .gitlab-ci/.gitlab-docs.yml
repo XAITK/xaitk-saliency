@@ -7,7 +7,7 @@
   stage: docs
   before_script:
     - !reference [.shared-setup, before_script]
-    - poetry sync --only main,docs,tests,linting
+    - poetry sync --only main,docs,tests,linting --extras "maite tools"
 
 # Job to check the release notes folder
 release-notes:

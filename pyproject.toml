@@ -36,8 +36,6 @@ dependencies = [
     "smqtk-core>=0.20.0",
     "smqtk-descriptors>=0.20.0",
     "smqtk-detection>=0.23.0",
-    "click>=8.0.3",
-    "maite>=0.9.2",
     "typing-extensions>=4.5.0",
 ]
 
@@ -55,13 +53,17 @@ example_deps = [
     "torchvision>=0.25.0; python_version >= '3.14'",  # py3.14 floor (paired with torch>=2.10.0); forces resolver past releases lacking cp314 wheels
     "tqdm>=4.66.3",  # CVE-2024-34062
 ]
+maite = [
+    "maite>=0.9.2",
+]
 tools = [
+    "click>=8.0.3",
     "kwcoco>=0.2.18",
     "matplotlib>=3.7.1",
 ]
 
 [project.scripts]
-sal-on-coco-dets= "xaitk_saliency.utils.bin.sal_on_coco_dets:sal_on_coco_dets"
+sal-on-coco-dets= "xaitk_saliency.utils.bin:sal_on_coco_dets"
 
 [project.entry-points."smqtk_plugins"]
 "impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"
@@ -120,7 +122,6 @@ tests = [
 [tool.pytest.ini_options]
 addopts = [
     "-lv",                              # Show local in trace-backs.
-    "--doctest-modules",                # Increased verbosity.
     "--tb=long",                        # Trace-back print mode.
     "--cov=./src/xaitk_saliency",          # Cover our package specifically
     "--cov=./tests",                    # Also cover our tests for dead spots
@@ -128,9 +129,11 @@ addopts = [
     "--cov-report=xml:coverage.xml",    # for external tool reporting
     "--snapshot-warn-unused",           # Prevent test failure when skipping tests
 ]
+# NOTE: --doctest-modules removed from addopts. To run doctests, use:
+#   pytest --doctest-modules src/xaitk_saliency
+# Doctests require optional dependencies to be installed.
 testpaths = [
     "tests",
-    "src/xaitk_saliency",
 ]
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
@@ -140,6 +143,7 @@ markers = [
     "core: Run tests that only require core functionality",
     "required: Alias for core to satisfy a JATIC requirement",
     "tools: Run tests that require the tools extra",
+    "maite: Run tests that require the maite extra",
     "notebooks: Run notebook-related tests (pyright checks)",
     "optional: Run all tests except notebooks",
 ]

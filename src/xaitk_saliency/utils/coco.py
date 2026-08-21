@@ -6,7 +6,7 @@ from collections.abc import Generator
 import numpy as np
 from PIL import Image  # type: ignore
 
-from xaitk_saliency.exceptions import KWCocoImportError
+from xaitk_saliency.exceptions import ToolsImportError
 
 try:
     import kwcoco  # type: ignore
@@ -24,7 +24,7 @@ class KWCocoUtils:
     def __init__(self) -> None:
         """Initialize KWCocoUtils."""
         if not self.is_usable():
-            raise KWCocoImportError
+            raise ToolsImportError
 
     def parse_coco_dset(
         self,

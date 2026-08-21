@@ -13,7 +13,7 @@ from smqtk_detection.impls.detect_image_objects.random_detector import RandomDet
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEStack
-from xaitk_saliency.interop.maite.utils.bin.sal_on_coco_dets import sal_on_coco_dets
+from xaitk_saliency.interop.maite.utils.bin import sal_on_coco_dets
 
 rng = np.random.default_rng()
 
@@ -25,27 +25,8 @@ dataset_dir_path = DATA_DIR
 config_file = os.path.join(DATA_DIR, "config.json")
 
 
-class TestSalOnCocoDetsNotUsable:
-    """These tests make use of the `tmpdir` fixture from `pytest`.
-
-    Find more information here: https://docs.pytest.org/en/6.2.x/tmpdir.html
-    """
-
-    @mock.patch("xaitk_saliency.interop.maite.utils.bin.sal_on_coco_dets.is_usable", False)
-    def test_warning(self, tmpdir: py.path.local) -> None:
-        """Test that proper warning is displayed when required dependencies are not installed."""
-        output_dir_path = tmpdir.join(Path("out"))
-
-        runner = CliRunner()
-
-        result = runner.invoke(sal_on_coco_dets, [str(dataset_dir_path), str(output_dir_path), str(config_file)])
-
-        assert result.output.startswith(
-            "This tool requires additional dependencies, please install 'xaitk-saliency[tools]'.",
-        )
-        assert not output_dir_path.check(dir=1)
-
-
+@pytest.mark.maite
+@pytest.mark.tools
 @pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestSalOnCocoDets:
     """These tests make use of the `tmpdir` fixture from `pytest`.
@@ -95,7 +76,7 @@ class TestSalOnCocoDets:
 
     @pytest.mark.parametrize("overlay_image", [False, True])
     @mock.patch(
-        "xaitk_saliency.interop.maite.utils.bin.sal_on_coco_dets.compute_sal_maps",
+        "xaitk_saliency.interop.maite.utils.bin._sal_on_coco_dets.compute_sal_maps",
         return_value=mock_return_value,
     )
     def test_compute_sal_maps(
@@ -143,7 +124,7 @@ class TestSalOnCocoDets:
 
     @mock.patch("pathlib.Path.is_file", side_effect=[True, False, False])
     @mock.patch(
-        "xaitk_saliency.interop.maite.utils.bin.sal_on_coco_dets.compute_sal_maps",
+        "xaitk_saliency.interop.maite.utils.bin._sal_on_coco_dets.compute_sal_maps",
         return_value=mock_return_value,
     )
     def test_missing_metadata(

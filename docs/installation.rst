@@ -121,13 +121,17 @@ additional dependencies such as :program:`TeX` or :program:`LaTeX`).
 Extras
 ------
 
-XAITK Saliency has two optional extras to expand functionality. The list below contains the extra name and a brief
-description of the extra.
+XAITK Saliency has several optional extras to expand functionality. The list below contains the extra name and a
+brief description of the extra.
 
     **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
 
-    **tools**: installs `KWCOCO <https://github.com/Kitware/kwcoco>`_ and
-    `matplotlib <https://matplotlib.org/>`_. Required for ``sal_on_coco_dets.py``.
+    **tools**: installs `click <https://click.palletsprojects.com/>`_,
+    `KWCOCO <https://github.com/Kitware/kwcoco>`_, and `matplotlib <https://matplotlib.org/>`_. Required for the
+    ``sal_on_coco_dets`` CLI.
+
+    **maite**: installs `MAITE <https://mit-ll-ai-technology.github.io/maite/>`_. Required for
+    ``xaitk_saliency.interop.maite``.
 
 .. :auto live-preview:
 

@@ -20,6 +20,7 @@ access may be restricted—**xaitk-saliency prioritizes black-box saliency techn
   `Modular AI Trustworthy Engineering (MAITE) <https://mit-ll-ai-technology.github.io/maite/>`_ users may enable
   XAITK-Saliency operations on MAITE models and datasets using
   `MAITE interoperability <https://github.com/Kitware/xaitk-saliency/src/xaitk_saliency/interop/maite>`_.
+  This requires the optional ``maite`` extra: ``pip install xaitk-saliency[maite]``.
   For example usage, view the notebooks for
   `object detection  <maite_detection_>`_ and `image classification <maite_classification_>`_ after getting
   familiarized with core XAITK-Saliency concepts.

@@ -99,7 +99,7 @@ include:
       python_image: harbor.jatic.net:443/platform-team/base-images/python-base-image
       python_versions: ["3.10", "3.11"]
       package_name: xaitk-saliency
-      poetry_install_options: --only main,tests --extras "tools"
+      poetry_install_options: --only main,tests --extras "tools maite"
       dependency: optional  # Only used for job name
       marker: optional
       posargs: ""

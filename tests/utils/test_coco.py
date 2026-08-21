@@ -7,7 +7,7 @@ import pytest
 from PIL import Image  # type: ignore
 
 from tests import DATA_DIR
-from xaitk_saliency.exceptions import KWCocoImportError
+from xaitk_saliency.exceptions import ToolsImportError
 from xaitk_saliency.utils.coco import KWCocoUtils
 
 if KWCocoUtils.is_usable():
@@ -22,12 +22,12 @@ class TestParseCocoDsetNotUsable:
         """Test that an exception is raised when required dependencies are not installed."""
         mock_is_usable.return_value = False
         assert not KWCocoUtils.is_usable()
-        with pytest.raises(KWCocoImportError):
+        with pytest.raises(ToolsImportError):
             KWCocoUtils()
 
 
 @pytest.mark.tools
-@pytest.mark.skipif(not KWCocoUtils.is_usable(), reason=str(KWCocoImportError()))
+@pytest.mark.skipif(not KWCocoUtils.is_usable(), reason=str(ToolsImportError()))
 class TestParseCocoDset:
     def test_dset_parse(self) -> None:
         """Test that a dummy detection file is parsed correctly."""
