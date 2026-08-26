@@ -10,11 +10,12 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from syrupy.assertion import SnapshotAssertion
 
-from xaitk_saliency.interop.maite.image_classification.model import MAITEImageClassifier
+from xaitk_saliency.interop.maite.image_classification import MAITEImageClassifier
 
 rng = np.random.default_rng()
 
 
+@pytest.mark.maite
 class TestMAITEImageClassifier:
     dummy_id_to_name_1 = {0: "A", 1: "B", 2: "C"}
     expected_labels = [0, 1, 2]

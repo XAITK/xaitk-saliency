@@ -10,11 +10,12 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from syrupy.assertion import SnapshotAssertion
 
-from xaitk_saliency.interop.maite.object_detection.model import MAITEDetector
+from xaitk_saliency.interop.maite.object_detection import MAITEDetector
 
 rng = np.random.default_rng()
 
 
+@pytest.mark.maite
 class TestMAITEObjectDetector:
     dummy_id_to_name = {0: "A", 1: "B", 2: "C"}
     dummy_boxes = np.asarray([[1, 2, 3, 4], [1, 2, 3, 4], [5, 6, 7, 8]])

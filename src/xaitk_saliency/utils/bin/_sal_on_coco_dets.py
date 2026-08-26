@@ -10,25 +10,21 @@ from collections.abc import Iterable, Sequence
 from typing import TextIO
 
 import click  # type: ignore
+import kwcoco  # type: ignore
 import numpy as np
 from PIL import Image  # type: ignore
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency import GenerateObjectDetectorBlackboxSaliency
+from xaitk_saliency.utils.coco import KWCocoUtils
 
 plt = None
-ptches = None
 try:
-    import kwcoco as kwcoco  # type: ignore
     import matplotlib.pyplot as plt  # type: ignore
     from matplotlib.patches import Rectangle  # type: ignore
-
-    from xaitk_saliency.utils.coco import KWCocoUtils
-
-    is_usable = True
 except ImportError:
-    is_usable = False
+    pass
 
 
 def _generate_config_file(generate_config_file: TextIO) -> None:
@@ -104,13 +100,10 @@ def sal_on_coco_dets(
     """
     _generate_config_file(generate_config_file)
 
-    if not is_usable:
-        print("This tool requires additional dependencies, please install 'xaitk-saliency[tools]'")
-        exit(-1)
-
     # load dets
-    # NOTE: Suppressing type hinting for unbound function call due to guarded import
-    dets_dset = kwcoco.CocoDataset(coco_file)  # type: ignore
+    # kwcoco's __init__.py uses lazy import loading, so pyright
+    # infers `kwcoco.CocoDataset` as `ModuleType` instead of a class.
+    dets_dset = kwcoco.CocoDataset(coco_file)  # pyright: ignore[reportCallIssue]
 
     # load config
     config = json.load(config_file)
@@ -127,8 +120,7 @@ def sal_on_coco_dets(
 
     img_sal_maps = [
         sal_generator(ref_image=ref_img, bboxes=bboxes, scores=scores, blackbox=blackbox_detector)
-        # NOTE: Suppressing type hinting for unbound function call due to guarded import
-        for ref_img, bboxes, scores in KWCocoUtils().parse_coco_dset(dets_dset)  # type: ignore
+        for ref_img, bboxes, scores in KWCocoUtils().parse_coco_dset(dets_dset)
     ]
 
     # The outputs of pase_coco_dset() are constructed using gid_to_aids, so we
@@ -194,9 +186,8 @@ def _save_sal_maps(
 
                 bbox = dets_dset.anns[det_id]["bbox"]
                 plt.gca().add_patch(
-                    # NOTE: Suppressing type hinting for unbound function call
-                    # due to guarded import
-                    Rectangle(  # type: ignore
+                    # Non-None plt confirms Rectangle will be non-None.
+                    Rectangle(  # pyright: ignore[reportPossiblyUnboundVariable]
                         (bbox[0], bbox[1]),
                         bbox[2],
                         bbox[3],

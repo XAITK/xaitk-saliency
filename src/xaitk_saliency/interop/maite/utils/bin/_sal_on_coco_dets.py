@@ -23,26 +23,22 @@ from pathlib import Path
 from typing import Any, TextIO
 
 import click  # type: ignore
+import kwcoco  # type: ignore
 import numpy as np
 from PIL import Image  # type: ignore
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
-from xaitk_saliency.interop.maite.utils.sal_on_dets import compute_sal_maps
+from xaitk_saliency.interop.maite.object_detection._dataset import COCOMAITEObjectDetectionDataset
+from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps
 
+plt = None
 try:
-    import kwcoco  # type: ignore
     import matplotlib.pyplot as plt  # type: ignore
     from matplotlib.patches import Rectangle  # type: ignore
-
-    from xaitk_saliency.interop.maite.object_detection.dataset import (
-        COCOMAITEObjectDetectionDataset,
-    )
-
-    is_usable = True
 except ImportError:
-    is_usable = False
+    pass
 
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
@@ -107,16 +103,14 @@ def sal_on_coco_dets(  # noqa: C901
     if verbose:
         logging.basicConfig(level=logging.INFO)
 
-    if not is_usable:
-        print("This tool requires additional dependencies, please install 'xaitk-saliency[tools]'.")
-        exit(-1)
-
     # Load COCO dataset
     coco_file = Path(dataset_dir) / "annotations.json"
     if not coco_file.is_file():
         raise ValueError("Could not identify annotations file. Expected at '[dataset_dir]/annotations.json'.")
     logging.info(f"Loading kwcoco annotations from {coco_file}.")
-    kwcoco_dataset = kwcoco.CocoDataset(coco_file)
+    # kwcoco's __init__.py uses lazy import loading, so pyright
+    # infers `kwcoco.CocoDataset` as `ModuleType` instead of a class.
+    kwcoco_dataset = kwcoco.CocoDataset(coco_file)  # pyright: ignore[reportCallIssue]
 
     # Load metadata, if it exists
     metadata_file = Path(dataset_dir) / "image_metadata.json"
@@ -183,26 +177,28 @@ def sal_on_coco_dets(  # noqa: C901
             sal_map = img_sal_maps[dset_idx][sal_idx]
             det_id = ann_ids[sal_idx]
 
-            fig = plt.figure()
-            plt.axis("off")
-            if overlay_image:
-                gray_img = np.asarray(Image.fromarray(np.asarray(ref_img)).convert("L"))
-                plt.imshow(gray_img, alpha=0.7, cmap="gray")
+            if plt is not None:
+                fig = plt.figure()
+                plt.axis("off")
+                if overlay_image:
+                    gray_img = np.asarray(Image.fromarray(np.asarray(ref_img)).convert("L"))
+                    plt.imshow(gray_img, alpha=0.7, cmap="gray")
 
-                plt.gca().add_patch(
-                    Rectangle(
-                        (bbox[0], bbox[1]),
-                        bbox[2] - bbox[0],
-                        bbox[3] - bbox[1],
-                        linewidth=1,
-                        edgecolor="r",
-                        facecolor="none",
-                    ),
-                )
-                plt.imshow(sal_map, cmap="jet", alpha=0.3)
-                plt.colorbar()
-            else:
-                plt.imshow(sal_map, cmap="jet")
-                plt.colorbar()
-            plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
-            plt.close(fig)
+                    plt.gca().add_patch(
+                        # Non-None plt confirms Rectangle will be non-None.
+                        Rectangle(  # pyright: ignore[reportPossiblyUnboundVariable]
+                            (bbox[0], bbox[1]),
+                            bbox[2] - bbox[0],
+                            bbox[3] - bbox[1],
+                            linewidth=1,
+                            edgecolor="r",
+                            facecolor="none",
+                        ),
+                    )
+                    plt.imshow(sal_map, cmap="jet", alpha=0.3)
+                    plt.colorbar()
+                else:
+                    plt.imshow(sal_map, cmap="jet")
+                    plt.colorbar()
+                plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
+                plt.close(fig)

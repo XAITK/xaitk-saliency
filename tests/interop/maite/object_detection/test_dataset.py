@@ -8,7 +8,7 @@ from PIL import Image  # type: ignore
 from typing_extensions import ReadOnly
 
 from tests import DATA_DIR
-from xaitk_saliency.interop.maite.object_detection.dataset import (
+from xaitk_saliency.interop.maite.object_detection import (
     MAITEDetectionTarget,
     MAITEObjectDetectionDataset,
 )
@@ -18,7 +18,7 @@ COCOMAITEObjectDetectionDataset = None
 try:
     import kwcoco  # type: ignore
 
-    from xaitk_saliency.interop.maite.object_detection.dataset import (
+    from xaitk_saliency.interop.maite.object_detection import (
         COCOMAITEObjectDetectionDataset,
     )
 
@@ -34,6 +34,8 @@ class _DummyDatumMetadata(DatumMetadata):
     foo: ReadOnly[str]
 
 
+@pytest.mark.maite
+@pytest.mark.tools
 @pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestCOCOMAITEObjectDetectionDataset:
     if is_usable and kwcoco is not None:
@@ -108,6 +110,7 @@ class TestCOCOMAITEObjectDetectionDataset:
             )
 
 
+@pytest.mark.maite
 class TestMAITEObjectDetectionDataset:
     imgs = [rng.integers(0, 255, (256, 256, 3), dtype=np.uint8) for _ in range(2)]
     dets = [
