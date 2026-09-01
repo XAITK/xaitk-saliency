@@ -113,7 +113,7 @@ docs = [
 
 tests = [
     # pytest unittesting
-    "pytest>=7.2.0",
+    "pytest>=7.3.1",
     "pytest-cov>=4.0.0", # reports code coverage
     "pytest-xdist>=3.8.0", # allows -n auto|# to be used to run pytests in parallel
     "syrupy>=5.0.0", # required for snapshot/regression testing
