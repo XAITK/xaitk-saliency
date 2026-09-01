@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import numpy as np
-import py  # type: ignore
+import py
 import pytest
 from click.testing import CliRunner
 from smqtk_detection.impls.detect_image_objects.random_detector import RandomDetector

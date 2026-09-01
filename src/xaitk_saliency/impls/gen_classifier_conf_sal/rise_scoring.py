@@ -44,10 +44,10 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
     def generate(
         self,
         *,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate saliency maps.
 
         :param reference: np.ndarray

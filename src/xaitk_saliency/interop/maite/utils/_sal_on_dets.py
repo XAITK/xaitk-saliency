@@ -33,6 +33,7 @@ Example:
 """
 
 from collections.abc import Sequence
+from typing import Any
 
 import numpy as np
 from maite.protocols.object_detection import Dataset, Model
@@ -49,7 +50,7 @@ def compute_sal_maps(
     sal_generator: GenerateObjectDetectorBlackboxSaliency,
     blackbox_detector: DetectImageObjects,
     num_classes: int,
-) -> tuple[list[np.ndarray], dict]:
+) -> tuple[list[np.ndarray[Any, Any]], dict[str, Any]]:
     """Generate saliency maps for the provided dataset.
 
     :param dataset: MAITE dataset
@@ -85,7 +86,7 @@ def sal_on_dets(
     detector: Model,
     ids: Sequence[int],
     img_batch_size: int = 1,
-) -> tuple[list[np.ndarray], dict]:
+) -> tuple[list[np.ndarray[Any, Any]], dict[str, Any]]:
     """Generate saliency maps for provided dataset.
 
     :param dataset: MAITE dataset

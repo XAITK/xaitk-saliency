@@ -1,5 +1,7 @@
 """Implementation of DRISE scorer."""
 
+from typing import Any
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
@@ -33,7 +35,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     https://arxiv.org/abs/2006.03204
     """
 
-    def iou(self, *, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
+    def iou(self, *, box_a: np.ndarray[Any, Any], box_b: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """Compute the intersection over union (IoU) of two sets of boxes.
 
         | E.g.:
@@ -76,10 +78,10 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     def generate(
         self,
         *,
-        ref_dets: np.ndarray,
-        perturbed_dets: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_dets: np.ndarray[Any, Any],
+        perturbed_dets: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate visual saliency heatmaps from black-box object detector predictions.
 
         :param ref_dets: np.ndarray
@@ -140,7 +142,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-    def get_config(self) -> dict:
+    def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the DRISEScoring instance.
 
         Returns:

@@ -4,14 +4,14 @@ from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
-from PIL import Image  # type: ignore
+from PIL import Image
 
 from tests import DATA_DIR
 from xaitk_saliency.exceptions import ToolsImportError
 from xaitk_saliency.utils.coco import KWCocoUtils
 
 if KWCocoUtils.is_usable():
-    import kwcoco  # type: ignore
+    import kwcoco
 
 
 @pytest.mark.core

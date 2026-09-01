@@ -1,5 +1,7 @@
 """Implementation of OcclusionScoring scorer."""
 
+from typing import Any
+
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 
@@ -25,10 +27,10 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
     def generate(
         self,
         *,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate saliency maps.
 
         :param reference: np.ndarray
@@ -60,7 +62,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-    def get_config(self) -> dict:
+    def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the OcclusionScoring instance.
 
         Returns:

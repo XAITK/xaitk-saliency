@@ -11,6 +11,7 @@ confidence in each class.
 """
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
@@ -35,7 +36,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
     float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
     """
 
-    def generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def generate(self, *, ref_image: np.ndarray[Any, Any], blackbox: ClassifyImage) -> np.ndarray[Any, Any]:
         """Generates per-class visual saliency heatmaps for some classifier black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
@@ -81,7 +82,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
             )
         return output
 
-    def __call__(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+    def __call__(self, *, ref_image: np.ndarray[Any, Any], blackbox: ClassifyImage) -> np.ndarray[Any, Any]:
         """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
         return self.generate(ref_image=ref_image, blackbox=blackbox)
 

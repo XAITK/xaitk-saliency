@@ -14,6 +14,7 @@ Dependencies:
 """
 
 from collections.abc import Hashable, Iterable, Sequence
+from typing import Any
 
 import maite.protocols.object_detection as od
 import numpy as np
@@ -58,7 +59,7 @@ class MAITEDetector(DetectImageObjects):
     @override
     def detect_objects(  # noqa: C901
         self,
-        img_iter: Iterable[np.ndarray],
+        img_iter: Iterable[np.ndarray[Any, Any]],
     ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
         all_out = []
 
@@ -151,7 +152,7 @@ class MAITEDetector(DetectImageObjects):
         return all_out
 
     @override
-    def get_config(self) -> dict:
+    def get_config(self) -> dict[str, Any]:
         raise NotImplementedError(
             "Constructor arguments are not serializable as is and require further implementation to do so.",
         )

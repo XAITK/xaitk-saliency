@@ -1,6 +1,7 @@
 """This module provides the `GenerateDescriptorSimilaritySaliency` interface for `xaitk-saliency`."""
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -26,11 +27,11 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
     def generate(
         self,
         *,
-        ref_descr: np.ndarray,
-        query_descrs: np.ndarray,
-        perturbed_descrs: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_descr: np.ndarray[Any, Any],
+        query_descrs: np.ndarray[Any, Any],
+        perturbed_descrs: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate a matrix of visual saliency heatmaps from black-box descriptor output on a reference image.
 
         This also uses several query images, perturbed versions of the reference image and the masks of the visual
@@ -76,11 +77,11 @@ class GenerateDescriptorSimilaritySaliency(Plugfigurable):
     def __call__(
         self,
         *,
-        ref_descr: np.ndarray,
-        query_descrs: np.ndarray,
-        perturbed_descrs: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_descr: np.ndarray[Any, Any],
+        query_descrs: np.ndarray[Any, Any],
+        perturbed_descrs: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Alias for :meth:`.GenerateDescriptorSimilaritySaliency.generate`."""
         return self.generate(
             ref_descr=ref_descr,

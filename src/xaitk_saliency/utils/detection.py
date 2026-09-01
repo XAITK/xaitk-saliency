@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 
 
 def format_detection(
     *,
-    bbox_mat: np.ndarray,
-    classification_mat: np.ndarray,
-    objectness: np.ndarray | None = None,
-) -> np.ndarray:
+    bbox_mat: np.ndarray[Any, Any],
+    classification_mat: np.ndarray[Any, Any],
+    objectness: np.ndarray[Any, Any] | None = None,
+) -> np.ndarray[Any, Any]:
     """Combine detection and classification output, with optional objectness output, into a combined format.
 
     This is required for :py:meth:`.GenerateDetectorProposalSaliency.generate` ``*_dets`` input

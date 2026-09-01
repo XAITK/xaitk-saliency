@@ -3,16 +3,18 @@
 It generates saliency maps for detections in a COCO dataset for `xaitk-saliency`.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import os
 from collections.abc import Iterable, Sequence
-from typing import TextIO
+from typing import TYPE_CHECKING, TextIO
 
-import click  # type: ignore
-import kwcoco  # type: ignore
+import click
+import kwcoco
 import numpy as np
-from PIL import Image  # type: ignore
+from PIL import Image
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
@@ -21,10 +23,13 @@ from xaitk_saliency.utils.coco import KWCocoUtils
 
 plt = None
 try:
-    import matplotlib.pyplot as plt  # type: ignore
-    from matplotlib.patches import Rectangle  # type: ignore
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
 except ImportError:
     pass
+
+if TYPE_CHECKING:
+    from kwcoco.coco_dataset import CocoDataset
 
 
 def _generate_config_file(generate_config_file: TextIO) -> None:
@@ -159,9 +164,7 @@ def sal_on_coco_dets(
 
 def _save_sal_maps(
     *,
-    # kwcoco's __init__.py uses lazy import loading, so pyright
-    # infers `kwcoco.CocoDataset` as `ModuleType | Any` instead of a class.
-    dets_dset: "kwcoco.CocoDataset",  # pyright: ignore[reportGeneralTypeIssues]
+    dets_dset: CocoDataset,
     det_ids: Iterable[int],
     img_sal_maps: Sequence[np.ndarray],
     img_idx: int,

@@ -55,10 +55,10 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
     def generate(
         self,
         *,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Warning: this implementation returns a different shape than typically expected by this interface.
 
         Instead of `[nClasses x H x W]`, saliency maps of shape
