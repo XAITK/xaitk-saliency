@@ -21,7 +21,7 @@ import logging
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from maite.protocols import DatasetMetadata, DatumMetadata
@@ -31,15 +31,18 @@ from maite.protocols.object_detection import (
     InputType,
     TargetType,
 )
-from PIL import Image  # type: ignore
+from PIL import Image
 from typing_extensions import ReadOnly
 
 try:
-    import kwcoco  # type: ignore
+    import kwcoco  # noqa: F401
 
-    is_usable = True
+    is_usable: bool = True
 except ImportError:
     is_usable = False
+
+if TYPE_CHECKING:
+    from kwcoco.coco_dataset import CocoDataset
 
 OBJ_DETECTION_DATUM_T = tuple[InputType, TargetType, DatumMetadataType]
 
@@ -50,9 +53,9 @@ LOG = logging.getLogger(__name__)
 class MAITEDetectionTarget:
     """Dataclass for the datum-level MAITE output detection format."""
 
-    boxes: np.ndarray
-    labels: np.ndarray
-    scores: np.ndarray
+    boxes: np.ndarray[Any, Any]
+    labels: np.ndarray[Any, Any]
+    scores: np.ndarray[Any, Any]
 
 
 class COCOMetadata(DatumMetadata):
@@ -74,7 +77,7 @@ class COCOMAITEObjectDetectionDataset(Dataset):
     def __init__(  # noqa: C901
         self,
         *,
-        kwcoco_dataset: kwcoco.CocoDataset,  # pyright: ignore
+        kwcoco_dataset: CocoDataset,
         image_metadata: Sequence[DatumMetadataType],
         skip_no_anns: bool = False,
         dataset_id: str | None = None,
@@ -145,8 +148,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
         if len(self._image_metadata) != len(self._image_ids):
             raise ValueError("Image metadata length mismatch, metadata needed for every image.")
 
-        self.metadata = DatasetMetadata(
-            id=dataset_id if dataset_id else kwcoco_dataset.fpath,
+        self.metadata: DatasetMetadata = DatasetMetadata(
+            id=dataset_id if dataset_id else str(kwcoco_dataset.fpath),
             index2label={c["id"]: c["name"] for c in kwcoco_dataset.cats.values()},
         )
 
@@ -207,7 +210,7 @@ class MAITEObjectDetectionDataset(Dataset):
     def __init__(
         self,
         *,
-        imgs: Sequence[np.ndarray],
+        imgs: Sequence[np.ndarray[Any, Any]],
         dets: Sequence[TargetType],
         datum_metadata: Sequence[DatumMetadataType],
         dataset_id: str,

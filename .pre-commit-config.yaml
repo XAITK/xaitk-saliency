@@ -58,6 +58,5 @@ repos:
       name: pyright-external
       require_serial: true
       language: system
-      # nrtk uses --verifytypes xaitk_saliency --ignoreexternal
-      entry: poetry run pyright src/xaitk_saliency
+      entry: poetry run pyright --verifytypes xaitk_saliency --ignoreexternal src/xaitk_saliency
       types: [file, python]

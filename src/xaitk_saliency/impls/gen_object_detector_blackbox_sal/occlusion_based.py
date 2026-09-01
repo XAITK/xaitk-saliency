@@ -40,7 +40,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         *,
         perturber: PerturbImage,
         generator: GenerateDetectorProposalSaliency,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = 0,
     ) -> None:
         """Generator composed of modular perturbation and occlusion-based algorithms.
@@ -109,7 +109,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
 
     @classmethod
     @override
-    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
+    def from_config(cls, config_dict: dict[str, Any], merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:

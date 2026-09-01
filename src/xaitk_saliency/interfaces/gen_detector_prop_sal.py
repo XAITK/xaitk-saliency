@@ -1,6 +1,7 @@
 """This module provides the `GenerateDetectorProposalSaliency` interface for `xaitk-saliency`."""
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -28,10 +29,10 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
     def generate(
         self,
         *,
-        ref_dets: np.ndarray,
-        perturbed_dets: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_dets: np.ndarray[Any, Any],
+        perturbed_dets: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate visual saliency heatmap matrices for each reference detection.
 
         These describe what visual information contributed to the
@@ -101,9 +102,9 @@ class GenerateDetectorProposalSaliency(Plugfigurable):
     def __call__(
         self,
         *,
-        ref_dets: np.ndarray,
-        perturbed_dets: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_dets: np.ndarray[Any, Any],
+        perturbed_dets: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Alias for :meth:`.GenerateDetectorProposalSaliency.generate`."""
         return self.generate(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturbed_masks)

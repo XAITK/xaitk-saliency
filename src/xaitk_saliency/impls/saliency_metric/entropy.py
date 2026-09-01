@@ -53,7 +53,7 @@ class Entropy(SaliencyMetric):
     @override
     def compute(
         self,
-        sal_map: np.ndarray,
+        sal_map: np.ndarray[Any, Any],
     ) -> float:
         """Compute the entropy of a saliency map.
 

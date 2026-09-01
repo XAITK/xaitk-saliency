@@ -13,12 +13,13 @@ Dependencies:
     - smqtk_classifier: For SMQTK classifier interfaces and classification utilities.
 """
 
-from collections.abc import Hashable, Iterator, Sequence
+from collections.abc import Hashable, Iterable, Iterator, Sequence
+from typing import Any
 
 import maite.protocols.image_classification as ic
 import numpy as np
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
-from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
+from smqtk_classifier.interfaces.classify_image import ClassifyImage
 from typing_extensions import override
 
 
@@ -62,7 +63,10 @@ class MAITEImageClassifier(ClassifyImage):
         return self._ids
 
     @override
-    def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:  # noqa: C901
+    def classify_images(  # noqa: C901
+        self,
+        img_iter: np.ndarray[Any, Any] | Iterable[np.ndarray[Any, Any]],
+    ) -> Iterator[CLASSIFICATION_DICT_T]:
         all_out = []
         batch = []
 
@@ -95,7 +99,7 @@ class MAITEImageClassifier(ClassifyImage):
         return iter(all_out)
 
     @override
-    def get_config(self) -> dict:
+    def get_config(self) -> dict[str, Any]:
         raise NotImplementedError(
             "Constructor arguments are not serializable as is and require further implementation to do so.",
         )

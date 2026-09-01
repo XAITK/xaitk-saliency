@@ -51,8 +51,8 @@ class RandomGrid(PerturbImage):
     @override
     def perturb(
         self,
-        ref_image: np.ndarray,
-    ) -> np.ndarray:
+        ref_image: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         num_masks = self.n
         s = np.array(self.s)
         p1 = self.p1

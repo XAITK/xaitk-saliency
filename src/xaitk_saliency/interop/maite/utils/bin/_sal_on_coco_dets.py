@@ -22,10 +22,10 @@ import os
 from pathlib import Path
 from typing import Any, TextIO
 
-import click  # type: ignore
-import kwcoco  # type: ignore
+import click
+import kwcoco
 import numpy as np
-from PIL import Image  # type: ignore
+from PIL import Image
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
@@ -35,8 +35,8 @@ from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps
 
 plt = None
 try:
-    import matplotlib.pyplot as plt  # type: ignore
-    from matplotlib.patches import Rectangle  # type: ignore
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
 except ImportError:
     pass
 

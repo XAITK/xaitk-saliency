@@ -1,6 +1,7 @@
 """This module provides the `GenerateClassifierConfidenceSaliency` interface for `xaitk-saliency`."""
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -31,10 +32,10 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     def generate(
         self,
         *,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate a visual saliency heatmap matrix given the black-box classifier output on a reference image.
 
         This also uses the same classifier output on perturbed images and the masks of the visual perturbations.
@@ -84,9 +85,9 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     def __call__(
         self,
         *,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Alias for :meth:`.GenerateClassifierConfidenceSaliency.generate`."""
         return self.generate(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)

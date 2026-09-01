@@ -32,7 +32,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = None,
     ) -> None:
         """Encapsulation of the perturbation-occlusion method using the sliding window image perturbation algorithm.
@@ -64,12 +64,12 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         )
 
     @property
-    def fill(self) -> int | Sequence[int] | np.ndarray | None:
+    def fill(self) -> int | Sequence[int] | np.ndarray[Any, Any] | None:
         """Gets the fill value."""
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: int | Sequence[int] | np.ndarray | None) -> None:
+    def fill(self, v: int | Sequence[int] | np.ndarray[Any, Any] | None) -> None:
         self._po.fill = v
 
     def _generate(

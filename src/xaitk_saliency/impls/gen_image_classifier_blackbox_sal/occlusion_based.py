@@ -108,7 +108,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     @classmethod
     @override
-    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
+    def from_config(cls, config_dict: dict[str, Any], merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:

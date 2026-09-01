@@ -25,6 +25,7 @@ Example usage:
 from __future__ import annotations
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -36,7 +37,7 @@ class SaliencyMetric(Plugfigurable):
     @abc.abstractmethod
     def compute(
         self,
-        sal_map: np.ndarray,
+        sal_map: np.ndarray[Any, Any],
     ) -> float:
         """Given up to two saliency maps, and additional parameters, return some given metric about the saliency map(s).
 
@@ -48,7 +49,7 @@ class SaliencyMetric(Plugfigurable):
 
     def __call__(
         self,
-        sal_map: np.ndarray,
+        sal_map: np.ndarray[Any, Any],
     ) -> float:
         """Calls compute() with the given input saliency map(s) and additional parameters.
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import itertools
 import time
 from collections.abc import Callable, Generator, Iterable, Sequence
+from typing import Any
 
 import numpy as np
 from smqtk_descriptors.utils.parallel import parallel_map
@@ -15,11 +16,11 @@ UINT8_ONE = np.uint8(1)
 
 def occlude_image_batch(  # noqa: C901
     *,
-    ref_image: np.ndarray,
-    masks: np.ndarray,
-    fill: int | Sequence[int] | np.ndarray | None = None,
+    ref_image: np.ndarray[Any, Any],
+    masks: np.ndarray[Any, Any],
+    fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
     threads: int | None = None,
-) -> np.ndarray:
+) -> np.ndarray[Any, Any]:
     """Apply a number of input occlusion masks to the given reference image.
 
     This produces a list of images equivalent in length, and parallel in order, to
@@ -126,11 +127,11 @@ def occlude_image_batch(  # noqa: C901
 
 def occlude_image_streaming(  # noqa: C901
     *,
-    ref_image: np.ndarray,
-    masks: Iterable[np.ndarray],
-    fill: int | Sequence[int] | np.ndarray | None = None,
+    ref_image: np.ndarray[Any, Any],
+    masks: Iterable[np.ndarray[Any, Any]],
+    fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
     threads: int | None = None,
-) -> Generator[np.ndarray, None, None]:
+) -> Generator[np.ndarray[Any, Any], None, None]:
     """Apply a number of input occlusion masks to the given reference image.
 
     This produces a list of images equivalent in length, and parallel in order, to
@@ -301,11 +302,11 @@ def _benchmark_threads_helper(
 
 def weight_regions_by_scalar(
     *,
-    scalar_vec: np.ndarray,
-    masks: np.ndarray,
+    scalar_vec: np.ndarray[Any, Any],
+    masks: np.ndarray[Any, Any],
     inv_masks: bool = True,
     normalize: bool = True,
-) -> np.ndarray:
+) -> np.ndarray[Any, Any]:
     """Weight some binary masks region with its respective vector in scalar_vec.
 
     We expect the "masks" matrices and the image to be the same height and

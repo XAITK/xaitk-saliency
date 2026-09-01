@@ -32,7 +32,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         *,
         perturber: PerturbImage,
         generator: GenerateDescriptorSimilaritySaliency,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = None,
     ) -> None:
         """Image similarity saliency generator composed of modular perturbation and occlusion-based algorithms.
@@ -96,7 +96,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     @classmethod
     @override
-    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
+    def from_config(cls, config_dict: dict[str, Any], merge_default: bool = True) -> Self:
         """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:

@@ -1,19 +1,25 @@
 """This module provides the `parse_coco_dset` function to load a COCO dataset for `xaitk-saliency`."""
 
+from __future__ import annotations
+
 import logging
 from collections.abc import Generator
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from PIL import Image  # type: ignore
+from PIL import Image
 
 from xaitk_saliency.exceptions import ToolsImportError
 
 try:
-    import kwcoco  # type: ignore
+    import kwcoco  # noqa: F401
 
-    kwcoco_available = True
+    kwcoco_available: bool = True
 except ImportError:
     kwcoco_available = False
+
+if TYPE_CHECKING:
+    from kwcoco.coco_dataset import CocoDataset
 
 LOG = logging.getLogger(__name__)
 
@@ -28,10 +34,8 @@ class KWCocoUtils:
 
     def parse_coco_dset(
         self,
-        # kwcoco's __init__.py uses lazy import loading, so pyright
-        # infers `kwcoco.CocoDataset` as `ModuleType | Any` instead of a class.
-        dets_dset: "kwcoco.CocoDataset",  # pyright: ignore[reportGeneralTypeIssues]
-    ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
+        dets_dset: CocoDataset,
+    ) -> Generator[tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]], None, None]:
         """Generate reference image, bounding box, and class score matrices.
 
         This is for use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,

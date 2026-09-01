@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import abc
 import logging
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -11,7 +12,7 @@ from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.exceptions import ShapeMismatchError
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
@@ -32,12 +33,12 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
     def generate(
         self,
         *,
-        ref_image: np.ndarray,
-        bboxes: np.ndarray,
-        scores: np.ndarray,
+        ref_image: np.ndarray[Any, Any],
+        bboxes: np.ndarray[Any, Any],
+        scores: np.ndarray[Any, Any],
         blackbox: DetectImageObjects,
-        objectness: np.ndarray | None = None,
-    ) -> np.ndarray:
+        objectness: np.ndarray[Any, Any] | None = None,
+    ) -> np.ndarray[Any, Any]:
         """Generate per-detection visual saliency heatmaps for some object detector black-box.
 
         This is over some input reference detections from some input reference image.
@@ -186,12 +187,12 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
     def __call__(
         self,
         *,
-        ref_image: np.ndarray,
-        bboxes: np.ndarray,
-        scores: np.ndarray,
+        ref_image: np.ndarray[Any, Any],
+        bboxes: np.ndarray[Any, Any],
+        scores: np.ndarray[Any, Any],
         blackbox: DetectImageObjects,
-        objectness: np.ndarray | None = None,
-    ) -> np.ndarray:
+        objectness: np.ndarray[Any, Any] | None = None,
+    ) -> np.ndarray[Any, Any]:
         """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
         return self.generate(
             ref_image=ref_image,

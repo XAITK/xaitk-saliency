@@ -2,6 +2,7 @@
 
 import abc
 from collections.abc import Sequence
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -28,10 +29,10 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
     def generate(
         self,
         *,
-        ref_image: np.ndarray,
-        query_images: Sequence[np.ndarray],
+        ref_image: np.ndarray[Any, Any],
+        query_images: Sequence[np.ndarray[Any, Any]],
         blackbox: ImageDescriptorGenerator,
-    ) -> np.ndarray:
+    ) -> np.ndarray[Any, Any]:
         """Generates visual saliency maps based on the similarity of the reference image to each query image.
 
         This is determined by the output of the blackbox feature vector generator.
@@ -93,10 +94,10 @@ class GenerateImageSimilarityBlackboxSaliency(Plugfigurable):
     def __call__(
         self,
         *,
-        ref_image: np.ndarray,
-        query_images: Sequence[np.ndarray],
+        ref_image: np.ndarray[Any, Any],
+        query_images: Sequence[np.ndarray[Any, Any]],
         blackbox: ImageDescriptorGenerator,
-    ) -> np.ndarray:
+    ) -> np.ndarray[Any, Any]:
         """Alias to :meth:`generate` method. See :meth:`generate` for details."""
         return self.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 

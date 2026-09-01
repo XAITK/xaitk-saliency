@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pytest
 from maite.protocols import DatumMetadata
-from PIL import Image  # type: ignore
+from PIL import Image
 from typing_extensions import ReadOnly
 
 from tests import DATA_DIR
@@ -16,7 +16,7 @@ from xaitk_saliency.interop.maite.object_detection import (
 kwcoco = None
 COCOMAITEObjectDetectionDataset = None
 try:
-    import kwcoco  # type: ignore
+    import kwcoco
 
     from xaitk_saliency.interop.maite.object_detection import (
         COCOMAITEObjectDetectionDataset,

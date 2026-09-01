@@ -31,7 +31,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
     def __init__(
         self,
         *,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = 0,
     ) -> None:
         """Abstract class for implementations that use the `DRISEScoring` algorithm.
@@ -55,11 +55,11 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
         """Abstract method to retrieve the `PerturbImage` implementation to use in conjunction with `DRISEScoring`."""
 
     @property
-    def fill(self) -> int | Sequence[int] | np.ndarray | None:
+    def fill(self) -> int | Sequence[int] | np.ndarray[Any, Any] | None:
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: int | Sequence[int] | np.ndarray | None) -> None:
+    def fill(self, v: int | Sequence[int] | np.ndarray[Any, Any] | None) -> None:
         self._po.fill = v
 
     def _generate(
@@ -100,7 +100,7 @@ class DRISEStack(_BaseDRISE):
         s: int,
         p1: float,
         seed: int | None = None,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = 0,
     ) -> None:
         """Encapsulation of the perturbation-occlusion method using RISE image perturbation and DRISE algorithms.
@@ -144,7 +144,7 @@ class RandomGridStack(_BaseDRISE):
         s: tuple[int, int],
         p1: float,
         seed: int | None = None,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int = 0,
     ) -> None:
         """Encapsulation of the perturbation-occlusion method using RandomGrid perturbation and DRISE algorithms.

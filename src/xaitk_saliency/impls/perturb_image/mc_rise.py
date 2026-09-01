@@ -84,7 +84,7 @@ class MCRISEGrid(PerturbImage):
         self.grid.astype("float32")
 
     @override
-    def perturb(self, ref_image: np.ndarray) -> np.ndarray:
+    def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """
         Warning: this implementation returns a different shape than typically expected by this interface.
         Instead of `[nMasks x Height x Width]`, masks of shape `[kColors x nMasks x Height x Width]`

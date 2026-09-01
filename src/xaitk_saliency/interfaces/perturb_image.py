@@ -1,6 +1,7 @@
 """This module provides the `PerturbImage` interface for `xaitk-saliency`."""
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -16,7 +17,7 @@ class PerturbImage(Plugfigurable):
     """
 
     @abc.abstractmethod
-    def perturb(self, ref_image: np.ndarray) -> np.ndarray:
+    def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """Transform an input reference image into a number of mask matrices indicating the perturbed regions.
 
         Output mask matrix should be three-dimensional with the format
@@ -36,6 +37,6 @@ class PerturbImage(Plugfigurable):
         :return: Mask matrix with shape [nMasks x Height x Width].
         """
 
-    def __call__(self, ref_image: np.ndarray) -> np.ndarray:
+    def __call__(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """Alias for :meth:`.PerturbImage.perturb`."""
         return self.perturb(ref_image)

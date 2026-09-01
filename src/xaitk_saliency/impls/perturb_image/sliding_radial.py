@@ -48,11 +48,11 @@ class SlidingRadial(PerturbImage):
         :param sigma: The sigma values for the Gaussian filter applied to masks in
             pixels as a tuple with format `(sigma_y, sigma_x)`.
         """
-        self.radius = (radius[0], radius[1])
-        self.stride = (int(stride[0]), int(stride[1]))
-        self.sigma = (sigma[0], sigma[1]) if sigma else None
+        self.radius: tuple[float, float] = (radius[0], radius[1])
+        self.stride: tuple[int, int] = (int(stride[0]), int(stride[1]))
+        self.sigma: tuple[float, float] | None = (sigma[0], sigma[1]) if sigma else None
 
-    def perturb(self, ref_image: np.ndarray) -> np.ndarray:
+    def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """Produce a mask based on a radial occlusion area with configured radius over the area of an image.
 
         :param ref_image:

@@ -1,5 +1,7 @@
 """Implementation of SimilarityScoring scorer."""
 
+from typing import Any
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
@@ -50,11 +52,11 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
     def generate(
         self,
         *,
-        ref_descr: np.ndarray,
-        query_descrs: np.ndarray,
-        perturbed_descrs: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        ref_descr: np.ndarray[Any, Any],
+        query_descrs: np.ndarray[Any, Any],
+        perturbed_descrs: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Generate visual saliency heatmaps for similarity from vectors.
 
         :param ref_descr: np.ndarray
@@ -98,7 +100,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-    def get_config(self) -> dict:
+    def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the SimilarityScoring instance.
 
         Returns:
