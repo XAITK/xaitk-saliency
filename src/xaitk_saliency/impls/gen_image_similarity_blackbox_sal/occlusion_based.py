@@ -25,6 +25,24 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
     black-box algorithm used, if at all.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeImageDescriptorGenerator
+        >>> from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
+        >>> from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+        >>> n_query, height, width = 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> query_images = [
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ... ]
+        >>> gen = PerturbationOcclusion(
+        ...     perturber=SlidingWindow(window_size=(8, 8), stride=(8, 8)),
+        ...     generator=SimilarityScoring(),
+        ... )
+        >>> sal = gen.generate(ref_image=ref_image, query_images=query_images, blackbox=FakeImageDescriptorGenerator())
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(

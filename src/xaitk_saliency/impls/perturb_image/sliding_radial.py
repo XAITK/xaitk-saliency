@@ -30,6 +30,14 @@ class SlidingRadial(PerturbImage):
 
     The generated masks are boolean if no blurring is used, otherwise the masks
     will be of floating-point type in the [0, 1] range.
+
+    Example:
+        >>> n_masks, height, width = 12, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = SlidingRadial(radius=(6, 8), stride=(8, 10))
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_masks, height, width)
+        True
     """
 
     def __init__(

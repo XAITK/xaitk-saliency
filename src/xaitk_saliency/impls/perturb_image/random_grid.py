@@ -32,6 +32,14 @@ class RandomGrid(PerturbImage):
     :param threads: Number of threads to use when generating masks. If this
         is <=0 or None, no threading is used and processing is performed
         in-line serially.
+
+    Example:
+        >>> n_masks, height, width = 3, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = RandomGrid(n=n_masks, s=(4, 6), p1=0.5, seed=0)
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_masks, height, width)
+        True
     """
 
     def __init__(

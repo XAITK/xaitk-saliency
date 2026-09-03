@@ -21,6 +21,22 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
     The resulting saliency maps are relative to the reference image.
     As such, each map denotes regions in the reference image that make it more
     or less similar to the corresponding query image.
+
+    Example:
+        >>> n_query, n_masks, height, width = 2, 3, 4, 5
+        >>> ref_descr = np.array([0.0, 1.0])
+        >>> query_descrs = np.array([[0.0, 1.0], [1.0, 0.0]])
+        >>> perturbed_descrs = np.array([[0.0, 0.5], [0.5, 0.0], [0.2, 0.8]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = SimilarityScoring(proximity_metric="euclidean")
+        >>> sal = scorer(
+        ...     ref_descr=ref_descr,
+        ...     query_descrs=query_descrs,
+        ...     perturbed_descrs=perturbed_descrs,
+        ...     perturbed_masks=perturbed_masks,
+        ... )
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(self, proximity_metric: str = "euclidean") -> None:

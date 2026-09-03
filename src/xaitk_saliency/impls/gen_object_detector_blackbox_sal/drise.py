@@ -91,6 +91,17 @@ class DRISEStack(_BaseDRISE):
     This generates visual saliency maps for object detections.
     See references in the :class:`RISEGrid` and :class:`DRISEScoring`
     documentation.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeDetectImageObjects
+        >>> n_dets, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> bboxes = np.array([[0, 0, 8, 8]])
+        >>> scores = np.array([[0.4, 0.6]])
+        >>> gen = DRISEStack(n=3, s=4, p1=0.5, seed=0)
+        >>> sal = gen.generate(ref_image=ref_image, bboxes=bboxes, scores=scores, blackbox=FakeDetectImageObjects())
+        >>> sal.shape == (n_dets, height, width)
+        True
     """
 
     def __init__(
@@ -135,6 +146,17 @@ class RandomGridStack(_BaseDRISE):
     This generates visual saliency maps for object detection.
     See references in the :class:`RandomGrid` and :class:`DRISEScoring`
     documentation.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeDetectImageObjects
+        >>> n_dets, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> bboxes = np.array([[0, 0, 8, 8]])
+        >>> scores = np.array([[0.4, 0.6]])
+        >>> gen = RandomGridStack(n=3, s=(4, 4), p1=0.5, seed=0)
+        >>> sal = gen.generate(ref_image=ref_image, bboxes=bboxes, scores=scores, blackbox=FakeDetectImageObjects())
+        >>> sal.shape == (n_dets, height, width)
+        True
     """
 
     def __init__(

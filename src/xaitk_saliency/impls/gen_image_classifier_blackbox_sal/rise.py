@@ -24,6 +24,15 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
     This implementation shares the `p1` probability with the internal
     `RISEScoring` instance use, effectively causing this implementation to
     utilize debiased RISE.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> n_classes, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = RISEStack(n=3, s=4, p1=0.5, seed=0)
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 1.0}))
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(

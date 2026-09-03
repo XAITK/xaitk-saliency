@@ -39,6 +39,14 @@ class RISEGrid(PerturbImage):
 
     Implementation is borrowed from the original authors:
     https://github.com/eclique/RISE/blob/master/explanations.py
+
+    Example:
+        >>> n_masks, height, width = 3, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = RISEGrid(n=n_masks, s=8, p1=0.5, seed=0)
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_masks, height, width)
+        True
     """
 
     def __init__(

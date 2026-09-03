@@ -33,6 +33,22 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
     black-box algorithm used, if at all.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeDetectImageObjects
+        >>> from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
+        >>> from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+        >>> n_dets, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> bboxes = np.array([[0, 0, 8, 8]])
+        >>> scores = np.array([[0.4, 0.6]])
+        >>> gen = PerturbationOcclusion(
+        ...     perturber=SlidingWindow(window_size=(8, 8), stride=(8, 8)),
+        ...     generator=DRISEScoring(),
+        ... )
+        >>> sal = gen.generate(ref_image=ref_image, bboxes=bboxes, scores=scores, blackbox=FakeDetectImageObjects())
+        >>> sal.shape == (n_dets, height, width)
+        True
     """
 
     def __init__(

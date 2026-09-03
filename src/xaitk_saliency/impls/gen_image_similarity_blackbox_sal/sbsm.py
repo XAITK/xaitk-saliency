@@ -24,6 +24,19 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
     This generates similarity-based visual saliency maps.
     See the documentation of :class:`SlidingWindow` and
     :class:`SimilarityScoring` for details.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeImageDescriptorGenerator
+        >>> n_query, height, width = 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> query_images = [
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ... ]
+        >>> gen = SBSMStack(window_size=(8, 8), stride=(8, 8))
+        >>> sal = gen.generate(ref_image=ref_image, query_images=query_images, blackbox=FakeImageDescriptorGenerator())
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(
@@ -113,5 +126,5 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         }
         c["fill"] = po_config["fill"]
         c["threads"] = po_config["threads"]
-        print(c)
+
         return c

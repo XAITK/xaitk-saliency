@@ -26,6 +26,15 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
     This implementation shares the `p1` probability and 'k' number colors
     with the internal `MCRISEScoring` instance use, to make use of the
     debiasing described in the MC-RISE paper. Debiasing is always on.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> n_colors, n_classes, height, width = 1, 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = MCRISEStack(n=3, s=4, p1=0.5, fill_colors=[[0, 0, 0]], seed=0)
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 0.6, 1: 0.4}))
+        >>> sal.shape == (n_colors, n_classes, height, width)
+        True
     """
 
     def __init__(

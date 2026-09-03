@@ -16,6 +16,14 @@ class MCRISEGrid(PerturbImage):
     """
     Based on Hatakeyama et. al:
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf
+
+    Example:
+        >>> n_colors, n_masks, height, width = 2, 3, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = MCRISEGrid(n=n_masks, s=8, p1=0.5, k=n_colors, seed=0)
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_colors, n_masks, height, width)
+        True
     """
 
     def __init__(
