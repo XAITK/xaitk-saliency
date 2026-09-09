@@ -60,10 +60,11 @@ tools = [
     "click>=8.0.3",
     "kwcoco>=0.2.18",
     "matplotlib>=3.7.1",
+    "datamaite[od]>=0.5.0",
 ]
 
 [project.scripts]
-sal-on-coco-dets= "xaitk_saliency.utils.bin:sal_on_coco_dets"
+sal-on-od-dets= "xaitk_saliency.utils.bin:sal_on_od_dets"
 
 [project.entry-points."smqtk_plugins"]
 "impls.perturb_image.sliding_window" = "xaitk_saliency.impls.perturb_image.sliding_window"

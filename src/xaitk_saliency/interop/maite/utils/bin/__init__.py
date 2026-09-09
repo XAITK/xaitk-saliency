@@ -1,4 +1,4 @@
-"""Utils for generating saliency on coco datasets."""
+"""Utils for generating saliency on object detection datasets loaded via ``datamaite``."""
 
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 from xaitk_saliency._guard import Group, guard
 
 if TYPE_CHECKING:
-    from xaitk_saliency.interop.maite.utils.bin._sal_on_coco_dets import sal_on_coco_dets as sal_on_coco_dets
+    from xaitk_saliency.interop.maite.utils.bin._sal_on_od_dets import sal_on_od_dets as sal_on_od_dets
 
 __getattr__: Callable[[str], Any]
 __dir__: Callable[[], list[str]]
@@ -17,7 +17,7 @@ __getattr__, __dir__, __all__ = guard(
     groups=[
         Group(
             symbols={
-                "sal_on_coco_dets": "xaitk_saliency.interop.maite.utils.bin._sal_on_coco_dets",
+                "sal_on_od_dets": "xaitk_saliency.interop.maite.utils.bin._sal_on_od_dets",
             },
             extras=["maite", "tools"],
         ),

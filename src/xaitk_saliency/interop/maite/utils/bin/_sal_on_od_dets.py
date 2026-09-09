@@ -1,14 +1,15 @@
 """This module provides a CLI tool for generating saliency maps for object detection models.
 
-It applies to datasets in COCO format. It leverages saliency generation methods
-and blackbox object detection models to create visual explanations for predictions.
+It uses ``datamaite`` to load the input dataset, so any object detection dataset format
+``datamaite`` supports (COCO, YOLO, ...) can be used as input. It leverages saliency
+generation methods and blackbox object detection models to create visual explanations for predictions.
 
 Functions:
-    sal_on_coco_dets: CLI command to generate saliency maps and optionally overlay them
+    sal_on_od_dets: CLI command to generate saliency maps and optionally overlay them
                       on input images with bounding boxes.
 
 Dependencies:
-    - kwcoco: For working with COCO-format datasets.
+    - datamaite: For loading object detection datasets.
     - matplotlib: For visualizing and saving saliency maps.
     - xaitk_saliency: For generating saliency maps.
     - smqtk_detection: For object detection interfaces.
@@ -19,34 +20,52 @@ Dependencies:
 import json
 import logging
 import os
-from pathlib import Path
-from typing import Any, TextIO
+from dataclasses import replace
+from typing import TextIO
 
 import click
-import kwcoco
+import datamaite
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
 from PIL import Image
-from smqtk_core.configuration import from_config_dict, make_default_config
+from smqtk_core.configuration import from_config_dict
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
-from xaitk_saliency.interop.maite.object_detection._coco_maite_object_detection_dataset import (
-    COCOMAITEObjectDetectionDataset,
-)
 from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps
+
+_OD_FORMATS = tuple(key.format for key in datamaite.available_loader_keys() if key.task == datamaite.Task.OD)
+
+
+def _detection_score(det: datamaite.ObjectDetectionAnnotation) -> float:
+    if det.score is not None:
+        return det.score
+    if "score" in det.attributes:
+        return det.attributes["score"]
+    if "prob" in det.attributes:
+        return max(det.attributes["prob"])
+    return 1.0
 
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.argument("dataset_dir", type=click.Path(exists=True))
+@click.argument("dataset_dir", type=click.Path(exists=True, file_okay=False, dir_okay=True))
 @click.argument("output_dir", type=click.Path(exists=False))
 @click.argument("config_file", type=click.File(mode="r"))
 @click.option(
-    "-g",
-    "--generate-config-file",
-    help="write default config to specified file",
-    type=click.File(mode="w"),
+    "-i",
+    "--dataset-format",
+    default="coco",
+    show_default=True,
+    type=click.Choice(_OD_FORMATS, case_sensitive=False),
+    help="format of the input dataset",
+)
+@click.option(
+    "-o",
+    "--loader-option",
+    multiple=True,
+    metavar="KEY=VALUE",
+    help="extra key=value option forwarded to the datamaite loader, dataset format-specific.",
 )
 @click.option(
     "--overlay-image",
@@ -54,16 +73,17 @@ from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps
     help="overlay saliency map on images with bounding boxes, RGB images are converted to grayscale",
 )
 @click.option("--verbose", "-v", count=True, help="print progress messages")
-def sal_on_coco_dets(  # noqa: C901
+def sal_on_od_dets(  # noqa: C901
     *,
     dataset_dir: str,
     output_dir: str,
     config_file: TextIO,
+    dataset_format: datamaite.DatasetFormat,
+    loader_option: tuple[str, ...],
     overlay_image: bool,
-    generate_config_file: TextIO,
     verbose: bool,
 ) -> None:
-    """Generate saliency maps for detections in a COCO format file and write them to disk.
+    """Generate saliency maps for detections in an object detection dataset and write them to disk.
 
     Maps for each detection are written out in subdirectories named after their corresponding image file.
 
@@ -76,61 +96,58 @@ def sal_on_coco_dets(  # noqa: C901
     :param output_dir: Directory to write the saliency maps to.
     :param config_file: Config file specifying the object detector and
         ``GenerateObjectDetectorBlackboxSaliency`` implementations to use.
+    :param dataset_format: Format of the input ``datamaite`` dataset.
+    :param loader_option: Extra ``key=value`` options forwarded to the ``datamaite``
+        loader for ``dataset_format``.
     :param overlay_image: Overlay saliency maps on images with bounding boxes.
         RGB images are converted to grayscale. Default is to write out saliency
         maps by themselves.
-    :param generate_config_file: File to write default config file, only written
-        if specified. Only one of "DetectImageObjects" and "ObjectDetector" should
-        be kept.
-        This skips the normal operation of this tool and only outputs the file.
     :param verbose: Display progress messages. Default is false.
     """
-    if generate_config_file:
-        config: dict[str, Any] = {}
-
-        config["DetectImageObjects"] = make_default_config(DetectImageObjects.get_impls())
-        config["GenerateObjectDetectorBlackboxSaliency"] = make_default_config(
-            GenerateObjectDetectorBlackboxSaliency.get_impls(),
-        )
-
-        json.dump(config, generate_config_file, indent=4)
-
-        exit()
-
     if verbose:
         logging.basicConfig(level=logging.INFO)
 
-    # Load COCO dataset
-    coco_file = Path(dataset_dir) / "annotations.json"
-    if not coco_file.is_file():
-        raise ValueError("Could not identify annotations file. Expected at '[dataset_dir]/annotations.json'.")
-    logging.info(f"Loading kwcoco annotations from {coco_file}.")
-    # kwcoco's __init__.py uses lazy import loading, so pyright
-    # infers `kwcoco.CocoDataset` as `ModuleType` instead of a class.
-    kwcoco_dataset = kwcoco.CocoDataset(coco_file)  # pyright: ignore[reportCallIssue]
+    extra_loader_options: dict[str, str] = {}
+    for opt in loader_option:
+        key, sep, value = opt.partition("=")
+        if not sep:
+            raise click.BadParameter(f"expected KEY=VALUE, got {opt}", param_hint="'-o' / '--loader-option'")
+        extra_loader_options[key] = value
 
-    # Load metadata, if it exists
-    metadata_file = Path(dataset_dir) / "image_metadata.json"
-    if not metadata_file.is_file():
-        logging.info(
-            "Could not identify metadata file, assuming no metadata. Expected at '[dataset_dir]/image_metadata.json'",
+    logging.info(f"Loading {dataset_format.value} dataset from {dataset_dir}")
+    input_dataset = datamaite.load_od(dataset_dir, dataset_format=dataset_format, **extra_loader_options)
+
+    taxonomy = input_dataset.dataset_metadata.taxonomy
+    if taxonomy is None or not taxonomy.entries:
+        raise ValueError(
+            f"No categories declared in {dataset_dir}",
         )
-        metadata = [{"id": img_id} for img_id in kwcoco_dataset.imgs]
-    else:
-        logging.info(f"Loading metadata from {metadata_file}")
-        with open(metadata_file) as f:
-            metadata = json.load(f)
 
-    # Initialize dataset object
-    input_dataset = COCOMAITEObjectDetectionDataset(
-        kwcoco_dataset=kwcoco_dataset,
-        image_metadata=metadata,
-        skip_no_anns=True,
-    )
+    num_classes = len(taxonomy.entries)
 
-    cids = [cat["id"] for cat in kwcoco_dataset.cats.values()]
-    min_cid = min(cids)
-    num_classes = max(cids) - min_cid + 1
+    # Category ids are not guaranteed to be contiguous or 0-based. Remap each detection's
+    # category id to its dense version.
+    source_to_dense_id = taxonomy.dense_ids()
+
+    def _dense_remap(sample: datamaite.ImageObjectDetectionSample) -> datamaite.ImageObjectDetectionSample:
+        keep = []
+        for det in sample.detections:
+            dense_id = source_to_dense_id.get(det.category_id)
+            if dense_id is None:
+                continue
+            keep.append(replace(det, category_id=dense_id, score=_detection_score(det)))
+        return replace(sample, detections=tuple(keep))
+
+    remapped_samples = []
+    num_dropped = 0
+    for sample in input_dataset.samples:
+        dense_sample = _dense_remap(sample)
+        num_dropped += len(sample.detections) - len(dense_sample.detections)
+        if dense_sample.detections:
+            remapped_samples.append(dense_sample)
+    input_dataset = replace(input_dataset, samples=tuple(remapped_samples))
+    if num_dropped:
+        logging.warning(f"Dropped {num_dropped} detections with an undeclared category id.")
 
     # Load config
     config = json.load(config_file)
@@ -143,7 +160,9 @@ def sal_on_coco_dets(  # noqa: C901
     blackbox_detector = from_config_dict(config=config["DetectImageObjects"], type_iter=DetectImageObjects.get_impls())
 
     img_sal_maps, _ = compute_sal_maps(
-        dataset=input_dataset,
+        # datamaite.ObjectDetectionDataset does not satisfy the MAITE Dataset protocol
+        # Current issue: https://gitlab.jatic.net/jatic/orchestration-interoperability/datamaite/-/work_items/124
+        dataset=input_dataset,  # pyright: ignore[reportArgumentType]
         sal_generator=sal_generator,
         blackbox_detector=blackbox_detector,
         num_classes=num_classes,
@@ -152,7 +171,8 @@ def sal_on_coco_dets(  # noqa: C901
     # Save saliency maps
     for dset_idx in range(len(input_dataset)):
         ref_img, dets, md = input_dataset[dset_idx]
-        img_file = md["image_info"]["file_name"]
+        sample = input_dataset.samples[dset_idx]
+        img_file = md.get("file_name", str(sample.image_id))
 
         if overlay_image:
             # Convert to channel last
@@ -168,11 +188,12 @@ def sal_on_coco_dets(  # noqa: C901
 
         os.makedirs(sub_dir, exist_ok=True)
 
-        ann_ids = md["ann_ids"]
         bboxes = np.asarray(dets.boxes)
         for sal_idx, bbox in enumerate(bboxes):
             sal_map = img_sal_maps[dset_idx][sal_idx]
-            det_id = ann_ids[sal_idx]
+            # ObjectDetectionAnnotation.source_annotation_id is not guaranteed to exist,
+            # instead use the saliency map's index
+            det_id = sal_idx
 
             fig = plt.figure()
             plt.axis("off")
