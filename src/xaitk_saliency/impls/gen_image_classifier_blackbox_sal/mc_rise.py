@@ -44,7 +44,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         s: int,
         p1: float,
         fill_colors: Sequence[Sequence[int]],
-        seed: int | None,
+        seed: int | None = None,
         threads: int = 0,
     ) -> None:
         """Initialize the perturbation-occlusion method using the MC-RISE implementations of the component algorithms.
@@ -77,10 +77,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         for fill_color in fill_colors:
             if len(fill_color) != len(fill_colors[0]):
                 raise ValueError("All fill colors must have the same number of channels")
-        if seed is not None:
-            self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), seed=seed, threads=threads)
-        else:
-            self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), threads=threads)
+        self._perturber = MCRISEGrid(n=n, s=s, p1=p1, k=len(fill_colors), seed=seed, threads=threads)
         self._generator = MCRISEScoring(k=len(fill_colors), p1=p1)
         self._threads = threads
         self._fill_colors = fill_colors
