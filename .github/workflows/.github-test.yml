@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Unit Testing
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches:
       - master
@@ -14,7 +10,6 @@ on:
       - master
       - release
       - update-to-v*
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -22,53 +17,89 @@ defaults:
   run:
     shell: bash
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-# NOTE: Github actions does not support anchors apparently. Forgive duplication of job
-#       steps.
 jobs:
   pytest:
+    name: pytest (py${{ matrix.python-version }}, ${{ matrix.tox-env }})
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        python-version: ["3.10","3.11","3.12", "3.13", "3.14"]
-        # Extras for included, optional plugin support (space-separated lists)
-        opt-extra: [
-            "",  # no extras
-            "maite tools example_deps",
-        ]
-      # We want all python versions tested even if one of them happens to fail
       fail-fast: false
-
-    container: python:${{ matrix.python-version }}
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        tox-env: ["core", "tools", "maite", "maite-tools", "notebooks"]
+    # notebooks jobs are allowed to fail for now
     steps:
-      - name: Install Git LFS
-        run: |
-          apt-get -qq update
-          apt-get -qq install -y git-lfs
-        shell: bash
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
-      # Cache local python environment artifacts for the current python version
-      # and poetry lockfile hash.
-      - uses: actions/cache@v4
-        id: env-cache
+      - uses: ./.github/actions/setup-tox
         with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run tox
+        continue-on-error: ${{ matrix.tox-env == 'notebooks' }}
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          TOX_ENV: ${{ matrix.tox-env }}
+        # Convert PYTHON_VERSION (3.10) to tox factor (py310) and run specific env
+        run: tox -e "py${PYTHON_VERSION//./}-${TOX_ENV}"
+      - name: Upload coverage and junit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-py${{ matrix.python-version }}-${{ matrix.tox-env }}
           path: |
-            ~/.cache
-          key: python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-${{ matrix.opt-extra }}
-          restore-keys: |
-            python-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Setup Environment
-        uses: ./.github/actions/test-stage
+            .coverage.*
+            .junit.*.xml
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 1
+
+  doctests:
+    name: doctests (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
         with:
-          extras: "${{ matrix.opt-extra }}"
-      - name: Unit Testing
-        run: poetry run pytest
+          lfs: true
+      - uses: ./.github/actions/setup-tox
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run tox
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: tox -e "py${PYTHON_VERSION//./}-doctests"
+
+  coverage:
+    needs: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: ./.github/actions/setup-tox
+        with:
+          python-version: "3.10"
+      - name: Download coverage data from pytest jobs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          merge-multiple: true
+      - name: Combine coverage and enforce threshold
+        run: tox -e coverage
+      - name: Upload combined coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            .coverage
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 1
       - name: CodeCov report submission
         uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00  # v5.5.0
         with:
@@ -77,9 +108,14 @@ jobs:
           files: coverage.xml
           flags: unittests
           skip_validation: true
+
   notebooks:
+    name: notebook (${{ matrix.notebook-file }})
+    if: github.event_name == 'workflow_dispatch' && inputs.run_notebooks
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         notebook-file: [
             "atari_deepRL_saliency.ipynb",
@@ -91,61 +127,20 @@ jobs:
             "SimilarityScoring.ipynb",
             "SuperPixelSaliency.ipynb",
             "SwappableImplementations.ipynb",
-            # Model comparison example is excluded due to computational complexity
-            # "VIAME_OcclusionSaliency.ipynb",
+            # VIAME notebook takes longer than 60 minutes to execute (timeout limit)
+            #"VIAME_OcclusionSaliency.ipynb",
             "SerializedDetectionSaliency.ipynb",
             # Model comparison example is excluded due to computational complexity
             #"ModelComparisonWithSaliency.ipynb",
         ]
-      # We want all python versions tested even if one of them happens to fail
-      fail-fast: false
-
-    # Just one python version, using our base supported version.
-    container:
-      image: python:3.10
-      options: "--shm-size 2GB"
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install Git LFS
-        run: |
-          apt-get -qq update
-          apt-get -qq install -y git-lfs
-        shell: bash
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
-      # Cache local python environment artifacts for the current python version
-      # and poetry lockfile hash.
-      - uses: actions/cache@v4
-        id: env-cache
+      - uses: ./.github/actions/setup-tox
         with:
-          path: |
-            ~/.cache
-          # Using a different key due to additional things the notebook
-          # examples ad-hoc install.
-          key: python-3.10-${{ hashFiles('poetry.lock') }}-Examples
-          restore-keys: |
-            python-3.10-${{ hashFiles('poetry.lock') }}
-      - name: Setup Environment
-        uses: ./.github/actions/test-stage
-        with:
-          extras: "tools example_deps"
-      - uses: actions/cache@v4
-        id: notebook-data-cache
-        with:
-          path: |
-            ~/.cache/
-            docs/examples/data/
-          key: python-3.10-${{ hashFiles('poetry.lock') }}-ExampleData-${{ matrix.notebook-file }}
-          # pretty unique, no restore-keys.
-      - name: Run Notebook
-        run: |
-          cd docs/examples
-          poetry run papermill \
-            --progress-bar \
-            -k python3 \
-            --stdout-file - --stderr-file - \
-            "${{ matrix.notebook-file }}" /dev/null
+          python-version: "3.13"
+      - name: Run notebook
+        env:
+          NOTEBOOK_FILE: ${{ matrix.notebook-file }}
+        run: tox -r -e papermill -- "docs/examples/${NOTEBOOK_FILE}" /dev/null
