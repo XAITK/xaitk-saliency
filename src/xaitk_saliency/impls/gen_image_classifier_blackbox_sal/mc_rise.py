@@ -1,4 +1,4 @@
-"""Implementation of MC-RISE saliency stack"""
+"""Implementation of MC-RISE saliency stack."""
 
 from __future__ import annotations
 
@@ -17,9 +17,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
-    MC-RISE implementations of the component algorithms.
+    """Encapsulation of the perturbation-occlusion method using the MC-RISE implementations of the component algorithms.
 
     This more specifically encapsulates the MC-RISE method as presented
     in their paper and code. See references in the :class:`MCRISEGrid`
@@ -28,10 +26,20 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
     This implementation shares the `p1` probability and 'k' number colors
     with the internal `MCRISEScoring` instance use, to make use of the
     debiasing described in the MC-RISE paper. Debiasing is always on.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> n_colors, n_classes, height, width = 1, 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = MCRISEStack(n=3, s=4, p1=0.5, fill_colors=[[0, 0, 0]], seed=0)
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 0.6, 1: 0.4}))
+        >>> sal.shape == (n_colors, n_classes, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
@@ -39,7 +47,8 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         seed: int | None,
         threads: int = 0,
     ) -> None:
-        """
+        """Initialize the perturbation-occlusion method using the MC-RISE implementations of the component algorithms.
+
         :param n: int
             Number of random masks used in the algorithm. E.g. 1000.
         :param s: int
@@ -76,8 +85,9 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
         self._threads = threads
         self._fill_colors = fill_colors
 
+    # `parallel_map` below invokes this positionally, so it can't be made keyword-only.
     @staticmethod
-    def _work_func(ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:
+    def _work_func(ref_image: np.ndarray, i_: int, m: np.ndarray, f: np.ndarray) -> np.ndarray:  # noqa: PLR0917
         s: tuple = (...,)
         if ref_image.ndim > 2:
             s = (..., None)  # add channel axis for multiplication
@@ -122,9 +132,9 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
             )
 
     @override
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Warning: this implementation returns a different shape than is typically expected by this interface.
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+        """Warning: this implementation returns a different shape than is typically expected by this interface.
+
         Instead of returning `[nClasses x H x W]`, `[kColors x nClasses x H x W] saliency maps will be returned.
 
         :param ref_image: np.ndarray

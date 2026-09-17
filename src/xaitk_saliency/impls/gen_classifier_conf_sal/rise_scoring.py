@@ -1,4 +1,4 @@
-"""Implementation of RISEScoring scorer"""
+"""Implementation of RISEScoring scorer."""
 
 from typing import Any
 
@@ -11,8 +11,8 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class RISEScoring(GenerateClassifierConfidenceSaliency):
-    """
-    Saliency map generation based on the original RISE implementation.
+    """Saliency map generation based on the original RISE implementation.
+
     This version utilizes only the input perturbed image confidence predictions
     and does not utilize reference image confidences.
     This implementation also takes influence from debiased RISE and may take an
@@ -23,14 +23,23 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
 
     Based on Hatakeyama et. al:
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf
+
+    Example:
+        >>> n_classes, n_masks, height, width = 2, 3, 4, 5
+        >>> reference = np.array([0.6, 0.4])
+        >>> perturbed = np.array([[0.2, 0.8], [0.9, 0.1], [0.5, 0.5]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = RISEScoring(p1=0.5)
+        >>> sal = scorer(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(
         self,
         p1: float = 0.0,
     ) -> None:
-        """
-        Generate RISE-based saliency maps with optional p1 de-biasing.
+        """Generate RISE-based saliency maps with optional p1 de-biasing.
 
         :param p1: De-biasing parameter based on the masking probability.
             This should be a float value in the [0, 1] range.
@@ -44,12 +53,12 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Generate saliency maps
+        *,
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Generate saliency maps.
 
         :param reference: np.ndarray
             Reference confidence lengths from the reference image
@@ -69,7 +78,12 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         # used here.
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar(perturbed, perturbed_masks - self.p1, inv_masks=False, normalize=False)
+        sal = weight_regions_by_scalar(
+            scalar_vec=perturbed,
+            masks=perturbed_masks - self.p1,
+            inv_masks=False,
+            normalize=False,
+        )
 
         # Normalize final saliency map
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
@@ -78,8 +92,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         return np.clip(sal, -1, 1)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the RISEScoring instance.
+        """Get the configuration dictionary of the RISEScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

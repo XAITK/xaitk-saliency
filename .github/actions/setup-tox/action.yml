@@ -1,0 +1,17 @@
+name: "setup-tox"
+description: "Install Python and tox so a job can run environments from tox.ini."
+inputs:
+  python-version:
+    description: "Python version to install"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install tox
+      run: |
+        pip install --root-user-action=ignore --only-binary :all: --user -U "tox==4.61.4" -q
+        tox --version
+      shell: bash

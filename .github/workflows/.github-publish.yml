@@ -22,34 +22,20 @@ defaults:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    container: python:3.10
     # This should only be run for tags on the "official" repository org.
     if: github.repository_owner == 'XAITK'
     steps:
-      - name: Install Git LFS
-        run: |
-          apt-get -qq update
-          apt-get -qq install -y git-lfs
-        shell: bash
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
-      # Cache local python environment artifacts for the current python version
-      # and poetry lockfile hash.
-      - uses: actions/cache@v4
-        id: env-cache
+      - uses: actions/setup-python@v5
         with:
-          # Confirmed that the `.local` directory doesn't exist until the
-          # `pip install --user` is invoked below, so we can be confident that
-          # only our python stuff is being captured in this cache (intentional).
-          path: |
-            ~/.cache
-          key: python-3.10-${{ hashFiles('poetry.lock') }}
-
-      - name: Setup Environment
-        uses: ./.github/actions/build-stage
+          python-version: "3.10"
+      - name: Install poetry
+        run: |
+          pip install --root-user-action=ignore --only-binary :all: --user -U "poetry==2.4.3" -q
+          poetry --version
+          poetry check
 
       # Ensure there is alignment with the tag reference and the reported
       # version of the package

@@ -12,10 +12,10 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestRandomGrid:
     def test_init_valued(self) -> None:
         """Test that constructor values pass."""
-
         test_n = 837
         test_s = (34, 12)
         test_p1 = 0.82
@@ -32,7 +32,6 @@ class TestRandomGrid:
 
     def test_standard_config(self) -> None:
         """Test values in implementation config."""
-
         test_n = 123
         test_s = (55, 44)
         test_p1 = 0.2
@@ -50,7 +49,6 @@ class TestRandomGrid:
 
     def test_if_random(self) -> None:
         """Test that the perturbations are randomized."""
-
         impl1 = RandomGrid(n=3, s=(5, 4), p1=0.5)
         impl2 = RandomGrid(n=3, s=(5, 4), p1=0.5)
 
@@ -64,7 +62,6 @@ class TestRandomGrid:
 
     def test_seed(self) -> None:
         """Test that using a seed generates the same masks."""
-
         impl1 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
         impl2 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
 
@@ -77,10 +74,7 @@ class TestRandomGrid:
         assert np.array_equal(masks1, masks2)
 
     def test_call_idempotency(self) -> None:
-        """
-        Test that perturbation generation is idempotent, at least when seeded
-        and single-threaded.
-        """
+        """Test that perturbation generation is idempotent, at least when seeded and single-threaded."""
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
 
@@ -92,9 +86,9 @@ class TestRandomGrid:
         assert np.array_equal(masks1, masks2)
 
     def test_perturb_1_channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test mask generation on a one-channel image of a known size. Number
-        of channels should not affect output masks.
+        """Test mask generation on a one-channel image of a known size.
+
+        Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
@@ -105,9 +99,9 @@ class TestRandomGrid:
         snapshot_custom.assert_match(actual_masks)
 
     def test_perturb_3_channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test mask generation on a three-channel image of a known size. Number
-        of channels should not affect output masks.
+        """Test mask generation on a three-channel image of a known size.
+
+        Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
         img = rng.integers(0, 255, size=(4, 6, 3), dtype=np.uint8)
@@ -118,10 +112,7 @@ class TestRandomGrid:
         snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_size(self) -> None:
-        """
-        Test that a single implementation can be used for images of varying
-        sizes.
-        """
+        """Test that a single implementation can be used for images of varying sizes."""
         impl = RandomGrid(n=5, s=(3, 4), p1=0.2, seed=42, threads=0)
 
         rng = np.random.default_rng(seed=0)

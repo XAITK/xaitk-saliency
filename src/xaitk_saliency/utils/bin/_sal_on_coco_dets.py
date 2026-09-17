@@ -1,39 +1,39 @@
+"""This module provides the `sal_on_coco_dets` CLI script.
+
+It generates saliency maps for detections in a COCO dataset for `xaitk-saliency`.
 """
-This module provides the `sal_on_coco_dets` CLI script to generate saliency maps
-for detections in a COCO dataset for `xaitk-saliency`.
-"""
+
+from __future__ import annotations
 
 import json
 import logging
 import os
 from collections.abc import Iterable, Sequence
-from typing import TextIO
+from typing import TYPE_CHECKING, TextIO
 
-import click  # type: ignore
+import click
+import kwcoco
 import numpy as np
-from PIL import Image  # type: ignore
+from PIL import Image
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency import GenerateObjectDetectorBlackboxSaliency
+from xaitk_saliency.utils.coco import KWCocoUtils
 
 plt = None
-ptches = None
 try:
-    import kwcoco as kwcoco  # type: ignore
-    import matplotlib.pyplot as plt  # type: ignore
-    from matplotlib.patches import Rectangle  # type: ignore
-
-    from xaitk_saliency.utils.coco import KWCocoUtils
-
-    is_usable = True
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
 except ImportError:
-    is_usable = False
+    pass
+
+if TYPE_CHECKING:
+    from kwcoco.coco_dataset import CocoDataset
 
 
 def _generate_config_file(generate_config_file: TextIO) -> None:
-    """
-    Generates a default configuration file and writes it to the specified output stream.
+    """Generates a default configuration file and writes it to the specified output stream.
 
     This function is intended for internal use only. When provided with a file-like object,
     it creates a default configuration by aggregating settings from various components
@@ -69,6 +69,7 @@ def _generate_config_file(generate_config_file: TextIO) -> None:
 @click.option("-g", "--generate-config-file", help="write default config to specified file", type=click.File(mode="w"))
 @click.option("--verbose", "-v", count=True, help="print progress messages")
 def sal_on_coco_dets(
+    *,
     coco_file: str,
     output_dir: str,
     config_file: TextIO,
@@ -76,9 +77,9 @@ def sal_on_coco_dets(
     generate_config_file: TextIO,
     verbose: bool,
 ) -> None:
-    """
-    Generate saliency maps for detections in a COCO format file and write them
-    to disk. Maps for each detection are written out in subdirectories named
+    r"""Generate saliency maps for detections in a COCO format file and write them to disk.
+
+    Maps for each detection are written out in subdirectories named
     after their corresponding image file.
 
     \b
@@ -102,16 +103,12 @@ def sal_on_coco_dets(
         This skips the normal operation of this tool and only outputs the file.
     :param verbose: Display progress messages. Default is false.
     """
-
     _generate_config_file(generate_config_file)
 
-    if not is_usable:
-        print("This tool requires additional dependencies, please install 'xaitk-saliency[tools]'")
-        exit(-1)
-
     # load dets
-    # NOTE: Suppressing type hinting for unbound function call due to guarded import
-    dets_dset = kwcoco.CocoDataset(coco_file)  # type: ignore
+    # kwcoco's __init__.py uses lazy import loading, so pyright
+    # infers `kwcoco.CocoDataset` as `ModuleType` instead of a class.
+    dets_dset = kwcoco.CocoDataset(coco_file)  # pyright: ignore[reportCallIssue]
 
     # load config
     config = json.load(config_file)
@@ -127,9 +124,8 @@ def sal_on_coco_dets(
         logging.basicConfig(level=logging.INFO)
 
     img_sal_maps = [
-        sal_generator(ref_img, bboxes, scores, blackbox_detector)
-        # NOTE: Suppressing type hinting for unbound function call due to guarded import
-        for ref_img, bboxes, scores in KWCocoUtils().parse_coco_dset(dets_dset)  # type: ignore
+        sal_generator(ref_image=ref_img, bboxes=bboxes, scores=scores, blackbox=blackbox_detector)
+        for ref_img, bboxes, scores in KWCocoUtils().parse_coco_dset(dets_dset)
     ]
 
     # The outputs of pase_coco_dset() are constructed using gid_to_aids, so we
@@ -167,7 +163,8 @@ def sal_on_coco_dets(
 
 
 def _save_sal_maps(
-    dets_dset: "kwcoco.CocoDataset",
+    *,
+    dets_dset: CocoDataset,
     det_ids: Iterable[int],
     img_sal_maps: Sequence[np.ndarray],
     img_idx: int,
@@ -192,9 +189,8 @@ def _save_sal_maps(
 
                 bbox = dets_dset.anns[det_id]["bbox"]
                 plt.gca().add_patch(
-                    # NOTE: Suppressing type hinting for unbound function call
-                    # due to guarded import
-                    Rectangle(  # type: ignore
+                    # Non-None plt confirms Rectangle will be non-None.
+                    Rectangle(  # pyright: ignore[reportPossiblyUnboundVariable]
                         (bbox[0], bbox[1]),
                         bbox[2],
                         bbox[3],

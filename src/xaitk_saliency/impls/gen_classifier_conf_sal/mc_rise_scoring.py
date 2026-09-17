@@ -1,4 +1,4 @@
-"""Implementation of MC-RISE scorer"""
+"""Implementation of MC-RISE scorer."""
 
 from typing import Any
 
@@ -11,8 +11,8 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class MCRISEScoring(GenerateClassifierConfidenceSaliency):
-    """
-    Saliency map generation based on the MC-RISE implementation.
+    """Saliency map generation based on the MC-RISE implementation.
+
     This version utilizes only the input perturbed image confidence predictions
     and does not utilize reference image confidences.
     This implementation also takes influence from debiased RISE and may take an
@@ -23,14 +23,26 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
 
     Based on Hatakeyama et. al:
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf
+
+    Example:
+        >>> n_colors, n_classes, n_masks, height, width = 2, 3, 4, 5, 6
+        >>> reference = np.array([0.5, 0.3, 0.2])
+        >>> perturbed = np.array([[0.2, 0.3, 0.5], [0.4, 0.4, 0.2], [0.6, 0.1, 0.3], [0.3, 0.3, 0.4]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_colors, n_masks, height, width))
+        >>> scorer = MCRISEScoring(k=n_colors, p1=0.5)
+        >>> sal = scorer(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_colors, n_classes, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         k: int,
         p1: float = 0.0,
     ) -> None:
-        """
+        """Initialize an MC-RISE-based saliency map generator with optional p1 de-biasing.
+
         :param k: int
             Number of colors to used during perturbation.
         :param p1: float
@@ -52,13 +64,14 @@ class MCRISEScoring(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Warning: this implementation returns a different shape than typically expected by
-        this interface. Instead of `[nClasses x H x W]`, saliency maps of shape
+        *,
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Warning: this implementation returns a different shape than typically expected by this interface.
+
+        Instead of `[nClasses x H x W]`, saliency maps of shape
         `[kColors x nClasses x H x W]` are generated, one per color per class.
 
         :param reference: np.ndarray

@@ -1,0 +1,79 @@
+# serializer version: 1
+# name: TestMAITEImageClassifier.test_labels[id_to_name0]
+  list([
+    0,
+    1,
+    2,
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_labels[id_to_name1]
+  list([
+    0,
+    1,
+    2,
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_labels[id_to_name2]
+  list([
+    1,
+    2,
+    4,
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_labels[id_to_name3]
+  list([
+    1,
+    2,
+    4,
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_smoketest[multiple images]
+  list([
+    dict({
+      0: 0.0,
+      1: 0.15,
+      2: 0.8,
+    }),
+    dict({
+      0: 0.0,
+      1: 0.15,
+      2: 0.8,
+    }),
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_smoketest[non-consecutive labels]
+  list([
+    dict({
+      1: 0.0,
+      2: 0.15,
+      4: 0.8,
+    }),
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_smoketest[single 3 channel]
+  list([
+    dict({
+      0: 0.0,
+      1: 0.15,
+      2: 0.8,
+    }),
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_smoketest[single greyscale]
+  list([
+    dict({
+      0: 0.0,
+      1: 0.15,
+      2: 0.8,
+    }),
+  ])
+# ---
+# name: TestMAITEImageClassifier.test_smoketest[unsorted non-consecutive labels]
+  list([
+    dict({
+      1: 0.0,
+      2: 0.15,
+      4: 0.8,
+    }),
+  ])
+# ---

@@ -1,7 +1,7 @@
-"""
-This module defines `SBSMStack`, which implements the perturbation-occlusion method using specifically the
-sliding window image perturbation and similarity scoring algorithms to generate similarity-based visual
-saliency maps
+"""This module defines `SBSMStack`.
+
+It implements the perturbation-occlusion method using the sliding window image perturbation and similarity
+scoring algorithms to generate similarity-based visual saliency maps.
 """
 
 from __future__ import annotations
@@ -19,25 +19,36 @@ from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
 
 
 class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically the
-    sliding window image perturbation and similarity scoring algorithms to
-    generate similarity-based visual saliency maps.
+    """Encapsulation of the perturbation-occlusion method using sliding window and similarity scoring algorithms.
+
+    This generates similarity-based visual saliency maps.
     See the documentation of :class:`SlidingWindow` and
     :class:`SimilarityScoring` for details.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeImageDescriptorGenerator
+        >>> n_query, height, width = 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> query_images = [
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ... ]
+        >>> gen = SBSMStack(window_size=(8, 8), stride=(8, 8))
+        >>> sal = gen.generate(ref_image=ref_image, query_images=query_images, blackbox=FakeImageDescriptorGenerator())
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         proximity_metric: str = "euclidean",
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = None,
     ) -> None:
-        """
-        Encapsulation of the perturbation-occlusion method using specifically the
-        sliding window image perturbation
+        """Encapsulation of the perturbation-occlusion method using the sliding window image perturbation algorithm.
 
         :param window_size: The block window size as a tuple with format
             `(height, width)`.
@@ -66,26 +77,26 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         )
 
     @property
-    def fill(self) -> int | Sequence[int] | np.ndarray | None:
-        """Gets the fill value"""
+    def fill(self) -> int | Sequence[int] | np.ndarray[Any, Any] | None:
+        """Gets the fill value."""
         return self._po.fill
 
     @fill.setter
-    def fill(self, v: int | Sequence[int] | np.ndarray | None) -> None:
+    def fill(self, v: int | Sequence[int] | np.ndarray[Any, Any] | None) -> None:
         self._po.fill = v
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
     ) -> np.ndarray:
-        return self._po.generate(ref_image, query_images, blackbox)
+        return self._po.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the SBSMStack.
+        """Returns the default configuration for the SBSMStack.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -103,8 +114,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the SBSMStack instance.
+        """Get the configuration dictionary of the SBSMStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.
@@ -116,5 +126,5 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         }
         c["fill"] = po_config["fill"]
         c["threads"] = po_config["threads"]
-        print(c)
+
         return c

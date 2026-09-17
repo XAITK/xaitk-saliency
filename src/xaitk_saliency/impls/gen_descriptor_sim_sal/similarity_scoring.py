@@ -1,4 +1,6 @@
-"""Implementation of SimilarityScoring scorer"""
+"""Implementation of SimilarityScoring scorer."""
+
+from typing import Any
 
 import numpy as np
 from scipy.spatial.distance import cdist
@@ -9,9 +11,8 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
-    """
-    This saliency implementation transforms proximity in feature space into
-    saliency heatmaps.
+    """This saliency implementation transforms proximity in feature space into saliency heatmaps.
+
     This should require feature vectors for the reference image, for each query
     image, and for perturbed versions of the reference image, as well as the
     masks of the reference image perturbations (as would be output from a
@@ -20,11 +21,26 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
     The resulting saliency maps are relative to the reference image.
     As such, each map denotes regions in the reference image that make it more
     or less similar to the corresponding query image.
+
+    Example:
+        >>> n_query, n_masks, height, width = 2, 3, 4, 5
+        >>> ref_descr = np.array([0.0, 1.0])
+        >>> query_descrs = np.array([[0.0, 1.0], [1.0, 0.0]])
+        >>> perturbed_descrs = np.array([[0.0, 0.5], [0.5, 0.0], [0.2, 0.8]])
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = SimilarityScoring(proximity_metric="euclidean")
+        >>> sal = scorer(
+        ...     ref_descr=ref_descr,
+        ...     query_descrs=query_descrs,
+        ...     perturbed_descrs=perturbed_descrs,
+        ...     perturbed_masks=perturbed_masks,
+        ... )
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(self, proximity_metric: str = "euclidean") -> None:
-        """
-        Initialization for SimilarityScoring
+        """Initialization for SimilarityScoring.
 
         :param proximity_metric: The type of comparison metric used
             to determine proximity in feature space. The type of comparison
@@ -51,13 +67,13 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
 
     def generate(
         self,
-        ref_descr: np.ndarray,
-        query_descrs: np.ndarray,
-        perturbed_descrs: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Generate visual saliency heatmaps for similarity from vectors
+        *,
+        ref_descr: np.ndarray[Any, Any],
+        query_descrs: np.ndarray[Any, Any],
+        perturbed_descrs: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Generate visual saliency heatmaps for similarity from vectors.
 
         :param ref_descr: np.ndarray
             Feature vectors from the reference image
@@ -92,7 +108,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         diff = np.transpose(np.clip(diff, 0, None))
 
         # Weighting perturbed regions with respective difference in confidence
-        sal = weight_regions_by_scalar(diff, perturbed_masks)
+        sal = weight_regions_by_scalar(scalar_vec=diff, masks=perturbed_masks)
 
         # Normalize final saliency maps
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
@@ -100,9 +116,8 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-    def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the SimilarityScoring instance.
+    def get_config(self) -> dict[str, Any]:
+        """Get the configuration dictionary of the SimilarityScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

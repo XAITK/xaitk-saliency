@@ -1,16 +1,16 @@
 """This module provides the `GenerateClassifierConfidenceSaliency` interface for `xaitk-saliency`."""
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
 
 
 class GenerateClassifierConfidenceSaliency(Plugfigurable):
-    """
-    Visual saliency map generation interface whose implementations transform
-    black-box image classification scores into saliency heatmaps.
+    """Visual saliency map generation interface.
 
+    Implementations transform black-box image classification scores into saliency heatmaps.
     This should require a sequence of per-class confidences predicted on the
     reference image, a number of per-class confidences as predicted on
     perturbed images, as well as the masks of the reference image perturbations
@@ -31,14 +31,14 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
     @abc.abstractmethod
     def generate(
         self,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Generate a visual saliency heatmap matrix given the black-box
-        classifier output on a reference image, the same classifier output on
-        perturbed images and the masks of the visual perturbations.
+        *,
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Generate a visual saliency heatmap matrix given the black-box classifier output on a reference image.
+
+        This also uses the same classifier output on perturbed images and the masks of the visual perturbations.
 
         Perturbation mask input into the `perturbed_masks` parameter here is
         equivalent to the perturbation mask output from a
@@ -84,9 +84,10 @@ class GenerateClassifierConfidenceSaliency(Plugfigurable):
 
     def __call__(
         self,
-        reference: np.ndarray,
-        perturbed: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
+        *,
+        reference: np.ndarray[Any, Any],
+        perturbed: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
         """Alias for :meth:`.GenerateClassifierConfidenceSaliency.generate`."""
-        return self.generate(reference, perturbed, perturbed_masks)
+        return self.generate(reference=reference, perturbed=perturbed, perturbed_masks=perturbed_masks)
