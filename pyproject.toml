@@ -229,6 +229,7 @@ docstring-code-line-length = "dynamic"
 pythonVersion = "3.10"
 reportMissingImports = "warning"
 typeCheckingMode = "standard"
+reportImplicitOverride = "error"
 include = [
     "src/xaitk_saliency",
     "tests",

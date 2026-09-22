@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
+from typing_extensions import override
 
 from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -62,6 +63,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
     def fill(self, v: int | Sequence[int] | np.ndarray[Any, Any] | None) -> None:
         self._po.fill = v
 
+    @override
     def _generate(
         self,
         *,
@@ -79,6 +81,7 @@ class _BaseDRISE(GenerateObjectDetectorBlackboxSaliency):
             objectness=objectness,
         )
 
+    @override
     def get_config(self) -> dict[str, Any]:
         cfg = self._get_perturber().get_config()
         cfg["fill"] = self._po.fill
@@ -136,6 +139,7 @@ class DRISEStack(_BaseDRISE):
 
         super().__init__(fill=fill, threads=threads)
 
+    @override
     def _get_perturber(self) -> PerturbImage:
         return self._perturber
 
@@ -191,5 +195,6 @@ class RandomGridStack(_BaseDRISE):
 
         super().__init__(fill=fill, threads=threads)
 
+    @override
     def _get_perturber(self) -> PerturbImage:
         return self._perturber

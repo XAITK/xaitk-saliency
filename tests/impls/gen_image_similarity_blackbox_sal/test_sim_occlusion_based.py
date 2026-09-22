@@ -22,6 +22,7 @@ class StubPI(PerturbImage):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -32,6 +33,7 @@ class StubGen(GenerateDescriptorSimilaritySaliency):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -59,6 +61,7 @@ class TestPerturbationOcclusion:
         class StubPI(PerturbImage):
             """Stub perturber that returns masks of ones."""
 
+            @override
             def perturb(self, ref_image: np.ndarray) -> np.ndarray:
                 return np.ones((3, *ref_image.shape[:2]), dtype=bool)
 
@@ -83,6 +86,7 @@ class TestPerturbationOcclusion:
         class StubDescGen(ImageDescriptorGenerator):
             """Stub image descriptor generator that returns known feature vectors."""
 
+            @override
             def generate_arrays_from_images(self, img_mat_iter: Iterable[np.ndarray | None]) -> Iterable[np.ndarray]:
                 for _ in img_mat_iter:
                     yield np.ones(25)

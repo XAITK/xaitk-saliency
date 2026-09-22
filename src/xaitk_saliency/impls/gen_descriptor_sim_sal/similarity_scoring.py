@@ -5,6 +5,7 @@ from typing import Any
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
+from typing_extensions import override
 
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
@@ -65,6 +66,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         except ValueError as err:
             raise ValueError("Chosen comparison metric not supported or may not be available in scipy") from err
 
+    @override
     def generate(
         self,
         *,
@@ -116,6 +118,7 @@ class SimilarityScoring(GenerateDescriptorSimilaritySaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the SimilarityScoring instance.
 

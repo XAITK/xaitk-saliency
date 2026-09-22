@@ -79,6 +79,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         self.fill = fill
         self._threads = threads
 
+    @override
     def _generate(
         self,
         *,
@@ -108,6 +109,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         )
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the PerturbationOcclusion.
 
@@ -143,6 +145,7 @@ class PerturbationOcclusion(GenerateObjectDetectorBlackboxSaliency):
         )
         return super().from_config(config_dict, merge_default=merge_default)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the PerturbationOcclusion instance.
 

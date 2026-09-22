@@ -6,6 +6,7 @@ from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DI
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
 from syrupy.assertion import SnapshotAssertion
+from typing_extensions import override
 
 from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.mc_rise import (
@@ -55,9 +56,11 @@ class TestMCRise:
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
 
+            @override
             def get_labels(self) -> Sequence[Hashable]:
                 return [0]
 
+            @override
             def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:
                 for _ in img_iter:
                     yield {0: 1.0}

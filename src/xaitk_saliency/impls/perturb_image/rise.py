@@ -29,6 +29,7 @@ from typing import Any, Dict, Optional
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils.parallel import parallel_map
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
@@ -90,6 +91,7 @@ class RISEGrid(PerturbImage):
 
         self.grid: np.ndarray[Any, Any] = grid
 
+    @override
     def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         input_size = np.shape(ref_image)[:2]
         num_masks = self.n
@@ -140,6 +142,7 @@ class RISEGrid(PerturbImage):
 
         return masks
 
+    @override
     def get_config(self) -> Dict[str, Any]:
         return {
             "n": self.n,

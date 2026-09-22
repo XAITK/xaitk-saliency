@@ -7,6 +7,7 @@ from typing import Any
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
+from typing_extensions import override
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring import RISEScoring
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -81,9 +82,11 @@ class RISEStack(GenerateImageClassifierBlackboxSaliency):
     def fill(self, v: int | Sequence[int] | None) -> None:
         self._po.fill = v
 
+    @override
     def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
         return self._po.generate(ref_image=ref_image, blackbox=blackbox)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the RISEStack instance.
 
