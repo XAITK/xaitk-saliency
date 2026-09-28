@@ -120,7 +120,7 @@ class MCRISEStack(GenerateImageClassifierBlackboxSaliency):
             ref_image = np.stack([ref_image for _ in fill_values], axis=0)
             # NOTE: Never pass by keyword to avoid the iterables being wrongly
             # zipped and assigned to kwargs.
-            yield from parallel_map(
+            yield from parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                 MCRISEStack._work_func,
                 ref_image,
                 itertools.count(),

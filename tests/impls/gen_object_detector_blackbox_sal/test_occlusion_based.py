@@ -72,7 +72,7 @@ class TestPerturbationOcclusion:
                 # test padding functinality
                 yield [
                     (
-                        AxisAlignedBoundingBox((0, 0), (1, 1)),
+                        AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(1, 1)),
                         {"class0": 0.0, "class1": 0.9},
                     )
                     for _ in range(i)

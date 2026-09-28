@@ -29,13 +29,13 @@ class TestMCRISEPerturbation:
     def test_init_outofrange_p1(self) -> None:
         """Test catching an out of range p1 value."""
         with pytest.raises(ValueError, match=r"Input p1 value of -0\.3 is not within the expected \[0,1\] range\."):
-            MCRISEGrid(10, 8, p1=-0.3, k=1)
+            MCRISEGrid(n=10, s=8, p1=-0.3, k=1)
 
         with pytest.raises(ValueError, match=r"Input p1 value of 5 is not within the expected \[0,1\] range\."):
-            MCRISEGrid(10, 8, p1=5, k=1)
+            MCRISEGrid(n=10, s=8, p1=5, k=1)
 
         with pytest.raises(ValueError, match=r"Input k value of -1 is not within the expected >0 range\."):
-            MCRISEGrid(10, 8, p1=0.2, k=-1)
+            MCRISEGrid(n=10, s=8, p1=0.2, k=-1)
 
     def test_standard_config(self) -> None:
         ex_n = 1000

@@ -49,8 +49,14 @@ class TestBlackBoxDRISE:
             ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((0, 0), (10, 15)), {"class0": 0.3, "class1": 0.7}),
-                        (AxisAlignedBoundingBox((5, 5), (20, 25)), {"class0": 0.9, "class1": 0.1}),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(10, 15)),
+                            {"class0": 0.3, "class1": 0.7},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(5, 5), max_vertex=(20, 25)),
+                            {"class0": 0.9, "class1": 0.1},
+                        ),
                     ]
 
             get_config = None  # type: ignore

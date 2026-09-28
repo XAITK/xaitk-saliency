@@ -29,7 +29,7 @@ class TestEntropy:
         ("sal_map", "expectation"),
         [
             (
-                rng.integers(0, 255, (256, 256), dtype=np.uint8),
+                rng.integers(low=0, high=255, size=(256, 256), dtype=np.uint8),
                 does_not_raise(),
             ),
         ],

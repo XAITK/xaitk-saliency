@@ -42,11 +42,11 @@ class TestComputeSalMaps:
                 for _ in img_iter:
                     yield [
                         (
-                            AxisAlignedBoundingBox((0, 0), (10, 15)),
+                            AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(10, 15)),
                             {"c0": 0.1, "c1": 0.7, "c2": 0.2},
                         ),
                         (
-                            AxisAlignedBoundingBox((5, 5), (20, 25)),
+                            AxisAlignedBoundingBox(min_vertex=(5, 5), max_vertex=(20, 25)),
                             {"c0": 0.85, "c1": 0.1, "c2": 0.05},
                         ),
                     ]
@@ -56,7 +56,7 @@ class TestComputeSalMaps:
         sal_generator = DRISEStack(n=1, s=3, p1=0.5)
         detector = TestDetector()
         dataset = MAITEObjectDetectionDataset(
-            imgs=[rng.integers(0, 255, (256, 256, 3), dtype=np.uint8)] * 4,
+            imgs=[rng.integers(low=0, high=255, size=(256, 256, 3), dtype=np.uint8)] * 4,
             dets=[
                 MAITEDetectionTarget(
                     boxes=np.asarray([[1, 2, 3, 4], [5, 6, 7, 8]]),

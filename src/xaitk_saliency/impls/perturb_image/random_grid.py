@@ -95,15 +95,15 @@ class RandomGrid(PerturbImage):
         # Expand index for efficiency
         img_h, img_w = img_shape
 
-        # flake8: noqa
+        # ruff: noqa
         def work_func(_i: int) -> np.ndarray:
             if max_shift_x != 0:
-                shift_x = shift_rng.integers(-max_shift_x, max_shift_x)
+                shift_x = shift_rng.integers(low=-max_shift_x, high=max_shift_x)
             else:
                 shift_x = 0
 
             if max_shift_y != 0:
-                shift_y = shift_rng.integers(-max_shift_y, max_shift_y)
+                shift_y = shift_rng.integers(low=-max_shift_y, high=max_shift_y)
             else:
                 shift_y = 0
 
@@ -111,7 +111,7 @@ class RandomGrid(PerturbImage):
             offset_x = center_x + shift_x
             offset_y = center_y + shift_y
 
-            mask = resize(grid[_i], up_size, order=1)
+            mask = resize(image=grid[_i], output_shape=up_size, order=1)
             mask = mask[offset_y : offset_y + img_h, offset_x : offset_x + img_w]
 
             return mask
@@ -120,7 +120,7 @@ class RandomGrid(PerturbImage):
             for i in range(num_masks):
                 masks[i, ...] = work_func(i)
         else:
-            for i, m in enumerate(parallel_map(work_func, range(num_masks), cores=threads, use_multiprocessing=False)):
+            for i, m in enumerate(parallel_map(work_func, range(num_masks), cores=threads, use_multiprocessing=False)):  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                 masks[i, ...] = m
 
         return masks

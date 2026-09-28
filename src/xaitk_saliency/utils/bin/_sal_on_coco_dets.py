@@ -109,10 +109,10 @@ def sal_on_coco_dets(
     config = json.load(config_file)
 
     # instantiate objects from config
-    blackbox_detector = from_config_dict(config["DetectImageObjects"], DetectImageObjects.get_impls())
+    blackbox_detector = from_config_dict(config=config["DetectImageObjects"], type_iter=DetectImageObjects.get_impls())
     sal_generator = from_config_dict(
-        config["GenerateObjectDetectorBlackboxSaliency"],
-        GenerateObjectDetectorBlackboxSaliency.get_impls(),
+        config=config["GenerateObjectDetectorBlackboxSaliency"],
+        type_iter=GenerateObjectDetectorBlackboxSaliency.get_impls(),
     )
 
     if verbose:
@@ -184,9 +184,9 @@ def _save_sal_maps(
             bbox = dets_dset.anns[det_id]["bbox"]
             plt.gca().add_patch(
                 Rectangle(
-                    (bbox[0], bbox[1]),
-                    bbox[2],
-                    bbox[3],
+                    xy=(bbox[0], bbox[1]),
+                    width=bbox[2],
+                    height=bbox[3],
                     linewidth=1,
                     edgecolor="r",
                     facecolor="none",

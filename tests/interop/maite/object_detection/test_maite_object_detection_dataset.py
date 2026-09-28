@@ -17,7 +17,7 @@ class _DummyDatumMetadata(DatumMetadata):
 
 @pytest.mark.maite
 class TestMAITEObjectDetectionDataset:
-    imgs = [rng.integers(0, 255, (256, 256, 3), dtype=np.uint8) for _ in range(2)]
+    imgs = [rng.integers(low=0, high=255, size=(256, 256, 3), dtype=np.uint8) for _ in range(2)]
     dets = [
         MAITEDetectionTarget(
             boxes=np.asarray([[0.0, 0.0, 50.0, 50.0]]),

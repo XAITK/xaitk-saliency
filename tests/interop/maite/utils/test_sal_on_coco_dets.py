@@ -30,8 +30,8 @@ class TestSalOnCocoDets:
 
     mock_return_value = (
         [
-            rng.integers(0, 255, (3, 256, 256), dtype=np.uint8),
-            rng.integers(0, 255, (3, 256, 256), dtype=np.uint8),
+            rng.integers(low=0, high=255, size=(3, 256, 256), dtype=np.uint8),
+            rng.integers(low=0, high=255, size=(3, 256, 256), dtype=np.uint8),
         ],
         {
             "type": "xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise.DRISEStack",
@@ -111,8 +111,8 @@ class TestSalOnCocoDets:
         """Check that an exception is appropriately raised if the annotations file is missing."""
         with pytest.raises(ValueError, match=r"Could not identify annotations file."):
             CliRunner().invoke(
-                sal_on_coco_dets,
-                [str(dataset_dir_path), str(tmpdir), str(config_file), "-v"],
+                cli=sal_on_coco_dets,
+                args=[str(dataset_dir_path), str(tmpdir), str(config_file), "-v"],
                 catch_exceptions=False,
             )
 

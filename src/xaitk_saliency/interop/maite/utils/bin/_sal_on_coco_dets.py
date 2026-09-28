@@ -137,10 +137,10 @@ def sal_on_coco_dets(  # noqa: C901
 
     # Instantiate objects from config
     sal_generator = from_config_dict(
-        config["GenerateObjectDetectorBlackboxSaliency"],
-        GenerateObjectDetectorBlackboxSaliency.get_impls(),
+        config=config["GenerateObjectDetectorBlackboxSaliency"],
+        type_iter=GenerateObjectDetectorBlackboxSaliency.get_impls(),
     )
-    blackbox_detector = from_config_dict(config["DetectImageObjects"], DetectImageObjects.get_impls())
+    blackbox_detector = from_config_dict(config=config["DetectImageObjects"], type_iter=DetectImageObjects.get_impls())
 
     img_sal_maps, _ = compute_sal_maps(
         dataset=input_dataset,
@@ -182,9 +182,9 @@ def sal_on_coco_dets(  # noqa: C901
 
                 plt.gca().add_patch(
                     Rectangle(
-                        (bbox[0], bbox[1]),
-                        bbox[2] - bbox[0],
-                        bbox[3] - bbox[1],
+                        xy=(bbox[0], bbox[1]),
+                        width=bbox[2] - bbox[0],
+                        height=bbox[3] - bbox[1],
                         linewidth=1,
                         edgecolor="r",
                         facecolor="none",

@@ -83,7 +83,7 @@ class SlidingRadial(PerturbImage):
 
         for i, (center_x, center_y) in enumerate(zip(center_xs_m, center_ys_m, strict=False)):
             mask = masks[i]
-            coords = ellipse(center_y, center_x, *self.radius, shape=mask.shape)
+            coords = ellipse(r=center_y, c=center_x, r_radius=self.radius[0], c_radius=self.radius[1], shape=mask.shape)
             mask[coords] = 1
 
             if self.sigma:

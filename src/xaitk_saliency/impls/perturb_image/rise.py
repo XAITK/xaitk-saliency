@@ -112,14 +112,14 @@ class RISEGrid(PerturbImage):
         cell_h, cell_w = cell_size[:2]
         input_h, input_w = input_size[:2]
 
-        # flake8: noqa
+        # ruff: noqa
         def work_func(i_: int) -> np.ndarray:
             # Random shifts
-            y = shift_rng.integers(0, cell_h)
-            x = shift_rng.integers(0, cell_w)
+            y = shift_rng.integers(low=0, high=cell_h)
+            x = shift_rng.integers(low=0, high=cell_w)
             mask = resize(
-                grid[i_],
-                up_size,
+                image=grid[i_],
+                output_shape=up_size,
                 order=1,
                 mode="reflect",
                 anti_aliasing=False,
@@ -135,7 +135,7 @@ class RISEGrid(PerturbImage):
                 masks[i, ...] = work_func(i)
         else:
             for i, m in enumerate(
-                parallel_map(
+                parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                     work_func,
                     range(num_masks),
                     cores=threads,

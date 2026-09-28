@@ -116,7 +116,7 @@ class MAITEDetector(DetectImageObjects):
             Returns:
                 AxisAlignedBoundingBox: The corresponding `AxisAlignedBoundingBox` instance.
             """
-            return AxisAlignedBoundingBox(box[0:2], box[2:4])
+            return AxisAlignedBoundingBox(min_vertex=box[0:2], max_vertex=box[2:4])
 
         def _generate_outputs(batch: Sequence[np.ndarray]) -> None:
             """Generate detection outputs for a batch of images.

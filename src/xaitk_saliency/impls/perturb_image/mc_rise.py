@@ -84,7 +84,7 @@ class MCRISEGrid(PerturbImage):
         for g_idx, g in enumerate(grid):
             g_shape = g.shape
             # Randomly choose fill colors for each pixel
-            fill_mask = rng.integers(0, k, size=g_shape)
+            fill_mask = rng.integers(low=0, high=k, size=g_shape)
             for fill_idx in range(self.k):
                 # Keep the masked pixels where the current idx (color) was selected
                 indiv_color_mask = np.where(g == False, np.where(fill_mask == fill_idx, False, True), True)
@@ -122,16 +122,16 @@ class MCRISEGrid(PerturbImage):
         cell_h, cell_w = cell_size[:2]
         input_h, input_w = input_size[:2]
 
-        # flake8: noqa
+        # ruff: noqa
         def work_func(i_: int) -> np.ndarray:
             # Random shifts
-            y = shift_rng.integers(0, cell_h)
-            x = shift_rng.integers(0, cell_w)
+            y = shift_rng.integers(low=0, high=cell_h)
+            x = shift_rng.integers(low=0, high=cell_w)
             k_masks = np.empty((num_colors, input_h, input_w))
             for k_ in range(num_colors):
                 k_masks[k_] = resize(
-                    grid[k_, i_, ...],
-                    up_size,
+                    image=grid[k_, i_, ...],
+                    output_shape=up_size,
                     order=1,
                     mode="reflect",
                     anti_aliasing=False,
@@ -147,7 +147,7 @@ class MCRISEGrid(PerturbImage):
                 masks[:, i, ...] = work_func(i)
         else:
             for i, m in enumerate(
-                parallel_map(
+                parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                     work_func,
                     range(num_masks),
                     cores=threads,

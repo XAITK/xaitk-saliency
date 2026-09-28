@@ -36,16 +36,16 @@ watch_globs = ["*.rst", "*.ipynb"]
 watch_source_dir = Path("../src/xaitk_saliency")
 
 server = Server()
-server.watch("conf.py", rebuild_cmd)
+server.watch(filepath="conf.py", func=rebuild_cmd)
 # Cover above configured watch dirs and globs matrix.
 for d in watch_dirs:
     for g in watch_globs:
         glob_path = os.path.join(d.resolve(), "**", g)
         print(f"Watching files for glob: {glob_path}")
-        server.watch(glob_path, rebuild_cmd)
+        server.watch(filepath=glob_path, func=rebuild_cmd)
 # Watch source python files.
 pkg_src_glob = os.path.join(watch_source_dir.resolve(), "**", "*.py")
 print(f"Watching source package python files: {pkg_src_glob}")
-server.watch(pkg_src_glob, rebuild_cmd)
+server.watch(filepath=pkg_src_glob, func=rebuild_cmd)
 # Optionally change to host="0.0.0.0" to make available outside localhost.
 server.serve(root=rebuild_root)

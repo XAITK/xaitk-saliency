@@ -55,7 +55,7 @@ class FakeDetectImageObjects(DetectImageObjects):
         img_iter: Iterable[np.ndarray],
     ) -> Iterator[list[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
         for _ in img_iter:
-            yield [(AxisAlignedBoundingBox((0, 0), (8, 8)), {"class0": 0.3, "class1": 0.7})]
+            yield [(AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(8, 8)), {"class0": 0.3, "class1": 0.7})]
 
     @override
     def get_config(self) -> dict[str, Any]:
