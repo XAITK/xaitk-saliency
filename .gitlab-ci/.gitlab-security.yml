@@ -1,8 +1,25 @@
 ###############################################################################
 # Stage -- Security Scanning
 ###############################################################################
+include:
+- template: Jobs/SAST.latest.gitlab-ci.yml
+- template: Jobs/Dependency-Scanning.latest.gitlab-ci.yml
+- template: Jobs/Secret-Detection.latest.gitlab-ci.yml
+
+sast:
+  stage: security
+  dependencies: []
+  needs: []
 
 dependency_scanning:
+  stage: security
+  dependencies: []
+  needs: []
   before_script:
     - !reference [.shared-setup, before_script]
     - poetry sync --only main,linting,tests,docs
+
+secret_detection:
+  stage: security
+  dependencies: []
+  needs: []

@@ -1,5 +1,4 @@
-"""
-Module for generating visual saliency heatmaps from image classifiers.
+"""Module for generating visual saliency heatmaps from image classifiers.
 
 This module provides the `GenerateImageClassifierBlackboxSaliency` class, which is used to generate per-class visual
 saliency heatmaps for an image classifier black-box. The saliency maps indicate which regions of the image are most
@@ -12,6 +11,7 @@ confidence in each class.
 """
 
 import abc
+from typing import Any
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
@@ -21,10 +21,9 @@ from xaitk_saliency.exceptions import ShapeMismatchError
 
 
 class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
-    """
-    This interface for algorithms takes a reference image and an image
-    classifier black-box algorithm, then generates a number of visual
-    saliency heatmap matrices, one for each class output by the classifier
+    """This interface for algorithms takes a reference image and an image classifier black-box algorithm.
+
+    It then generates a number of visual saliency heatmap matrices, one for each class output by the classifier
     black box.
 
     A classifier black box needs to be input, which requires some
@@ -37,10 +36,8 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
     float-type `numpy.ndarray` of shape `[nClasses x H x W]`.
     """
 
-    def generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Generates per-class visual saliency heatmaps for some classifier
-        black box over some image of interest.
+    def generate(self, *, ref_image: np.ndarray[Any, Any], blackbox: ClassifyImage) -> np.ndarray[Any, Any]:
+        """Generates per-class visual saliency heatmaps for some classifier black box over some image of interest.
 
         The input reference image is expected to be in matrix form and be in
         either a `H x W` or `H x W x C` shape format.
@@ -75,7 +72,7 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
         # checks.
         if ref_image.ndim not in (2, 3):
             raise ValueError(f"Input image matrix has an unexpected number of dimensions: {ref_image.ndim}")
-        output = self._generate(ref_image, blackbox)
+        output = self._generate(ref_image=ref_image, blackbox=blackbox)
         # Check that the saliency heatmaps' shape matches the reference image.
         if output.shape[-2:] != ref_image.shape[:2]:
             raise ShapeMismatchError(
@@ -85,17 +82,14 @@ class GenerateImageClassifierBlackboxSaliency(Plugfigurable):
             )
         return output
 
-    def __call__(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Alias to the :meth:`generate` method.
-        See :meth:`generate` for more details.
-        """
-        return self.generate(ref_image, blackbox)
+    def __call__(self, *, ref_image: np.ndarray[Any, Any], blackbox: ClassifyImage) -> np.ndarray[Any, Any]:
+        """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
+        return self.generate(ref_image=ref_image, blackbox=blackbox)
 
     @abc.abstractmethod
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        """
-        Internal method for implementing the generation logic.
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+        """Internal method for implementing the generation logic.
+
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for the `generate` method also applies here aside from

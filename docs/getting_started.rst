@@ -19,14 +19,16 @@ access may be restricted—**xaitk-saliency prioritizes black-box saliency techn
 .. note::
   `Modular AI Trustworthy Engineering (MAITE) <https://mit-ll-ai-technology.github.io/maite/>`_ users may enable
   XAITK-Saliency operations on MAITE models and datasets using
-  `XAITK-JATIC <https://github.com/Kitware/xaitk-jatic>`_. For example usage, view the notebooks for
-  `object detection  <jatic_detection_>`_ and `image classification <jatic_classification_>`_ after getting
+  `MAITE interoperability <https://github.com/Kitware/xaitk-saliency/src/xaitk_saliency/interop/maite>`_.
+  This requires the optional ``maite`` extra: ``pip install xaitk-saliency[maite]``.
+  For example usage, view the notebooks for
+  `object detection  <maite_detection_>`_ and `image classification <maite_classification_>`_ after getting
   familiarized with core XAITK-Saliency concepts.
 
-.. _jatic_detection: https://github.com/Kitware/xaitk-jatic/blob/main/docs/examples/
-   jatic-object-detector-protocol.ipynb
-.. _jatic_classification: https://github.com/Kitware/xaitk-jatic/blob/main/docs/examples/
-   jatic-image-classifier-protocol.ipynb
+.. _maite_detection: https://github.com/Kitware/xaitk-saliency/docs/interoperability/maite/examples/
+   maite-object-detector-protocol.ipynb
+.. _maite_classification: https://github.com/Kitware/xaitk-saliency/docs/interoperability/maite/examples/
+   maite-image-classifier-protocol.ipynb
 
 Example: A First Look at xaitk-saliency
 ---------------------------------------

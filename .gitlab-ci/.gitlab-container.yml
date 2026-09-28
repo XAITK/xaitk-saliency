@@ -1,0 +1,423 @@
+###############################################################################
+# Stage -- Build, scan, sign, and publish container images to Harbor.
+#
+# Pipeline structure:
+#   .container-setup    -- shared variables, Harbor auth, and base config
+#   .build-setup        -- shared build/scan/sign/push logic (extends .container-setup)
+#   build-branch        -- MR builds: tagged with branch slug, manual trigger
+#   build-main          -- main/scheduled builds: tagged "main"
+#   build-release       -- release builds: installed from PyPI, tagged with semver
+#   verify              -- pulls image, verifies cosign signature, smoke-tests
+#   cleanup             -- nightly sweep of stale branch images from Harbor
+###############################################################################
+
+###############################################################################
+# Shared base config for all container jobs. Provides Harbor connection
+# variables, Docker login/logout, and common image path construction.
+###############################################################################
+.container-setup:
+    extends: .shared-setup
+    stage: container
+    variables:
+      CONTAINER_NAME: "xaitk-saliency"
+      DOCKERFILE_FILE: "Dockerfile"
+      HARBOR_URL: "harbor.jatic.net"
+      HARBOR_PORT: "443"
+      HARBOR_PROJECT: "kitware"
+      HARBOR_REPO: "$CI_PROJECT_NAME"
+    rules:
+      - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+        when: on_success
+      - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE_TARGET != "prod"
+        when: on_success
+      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+        when: on_success
+      - if: $CI_COMMIT_TAG =~ /^v\d+(\.\d+)*$/
+        when: on_success
+      - when: never
+    before_script:
+      - apk add --no-cache curl
+      - echo ${KITWARE_HARBOR_TOKEN} | docker login ${HARBOR_URL}:${HARBOR_PORT}/v2 --username 'robot$kitware+robot' --password-stdin || echo "Failed to login to Harbor..."
+      # IMAGE_BASE is the registry path without a tag, used by build jobs to
+      # construct IMAGE_PATH (IMAGE_BASE:tag) and CACHE_REF.
+      - IMAGE_BASE="${HARBOR_URL}:${HARBOR_PORT}/${HARBOR_PROJECT}/${HARBOR_REPO}/${CONTAINER_NAME}"
+      # ARTIFACT_API is the Harbor v2 REST endpoint for this repository's
+      # artifacts, used for old digest cleanup and the nightly cleanup job.
+      - ARTIFACT_API="https://${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${HARBOR_REPO}%252F${CONTAINER_NAME}/artifacts"
+    after_script:
+      - echo "Logging out from Harbor..."
+      - docker logout ${HARBOR_URL}:${HARBOR_PORT} || echo "Failed to logout from Harbor..."
+    allow_failure: true
+    tags:
+      - docker
+    image: docker:25.0.5-git
+
+###############################################################################
+# Shared build template. Handles the full build pipeline:
+#   1. Build image with Docker buildx (with registry cache)
+#   2. Generate SBOM with Syft (SPDX format)
+#   3. Scan SBOM with Trivy for HIGH/CRITICAL vulnerabilities
+#   4. Push image (and any extra tags) to Harbor
+#   5. Clean up previous digest's cosign artifacts if the tag was overwritten
+#   6. Sign image and attest SBOM with cosign
+#   7. Export IMAGE_PATH and IMAGE_DIGEST via dotenv for downstream jobs
+#
+# Concrete build jobs set IMAGE_TAG, CACHE_TAG, and optionally BUILD_TARGET,
+# BUILD_EXTRA_ARGS, EXTRA_TAGS, and PUSH_EXTRA_TAGS to customize behavior.
+###############################################################################
+.build-setup:
+  extends: .container-setup
+  before_script:
+    - !reference [.container-setup, before_script]
+    # Resolve image path and cache references from job-level variables
+    - |
+      IMAGE_PATH="${IMAGE_BASE}:${IMAGE_TAG}"
+      CACHE_REF="${IMAGE_BASE}:${CACHE_TAG:-${IMAGE_TAG}}"
+      CACHE_FALLBACK_REF="${IMAGE_BASE}:${CACHE_FALLBACK_TAG:-}"
+    - apk add --no-cache jq cosign
+    # Record the current digest for IMAGE_TAG before we push. If the push
+    # overwrites the tag with a new digest, we delete the old artifact's
+    # cosign signature (.sig) and SBOM attestation (.att) to avoid orphans.
+    - |
+      OLD_DIGEST=$(curl -s "${ARTIFACT_API}" | jq -r --arg TAG "${IMAGE_TAG}" \
+        '.[] | select(.tags[]?.name == $TAG) | .digest' 2>/dev/null || echo "")
+    # Install Syft (SBOM generation) and Trivy (vulnerability scanning)
+    - echo "Installing Syft..."
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - echo "Installing Trivy..."
+    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+    - curl -sSfL -o gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/gitlab.tpl
+  script:
+    # Build the image. Uses registry-based caching with a fallback cache ref
+    # (e.g. branch builds fall back to the "main" cache).
+    - |
+      echo "Building image ${IMAGE_PATH}"
+
+      docker buildx build --load \
+      --target ${BUILD_TARGET:-build-from-source} \
+      ${BUILD_EXTRA_ARGS:-} \
+      --tag="${IMAGE_PATH}" \
+      ${EXTRA_TAGS:-} \
+      --platform linux/amd64 \
+      --cache-from=type=registry,ref="${CACHE_REF}" \
+      ${CACHE_FALLBACK_REF:+--cache-from=type=registry,ref="${CACHE_FALLBACK_REF}"} \
+      -f "${DOCKERFILE_FILE}" \
+      .
+    # Generate SPDX SBOM from the built image
+    - echo "Generating SBOM with Syft..."
+    - syft "${IMAGE_PATH}" -o spdx-json=sbom.spdx.json
+    # Scan the SBOM for HIGH/CRITICAL vulnerabilities. Output is formatted
+    # as a GitLab container scanning report. DOCKER_AUTH_CONFIG is cleared
+    # to prevent Trivy from attempting to pull the image from a registry.
+    - echo "Scanning SBOM for vulnerabilities..."
+    - |
+      TRIVY_EXIT=0
+      DOCKER_AUTH_CONFIG= ./bin/trivy sbom sbom.spdx.json \
+      --ignorefile .trivyignore \
+      --ignore-unfixed \
+      --format template \
+      --template "@gitlab.tpl" \
+      -o gl-container-scanning-report.json \
+      --severity HIGH,CRITICAL,MEDIUM \
+      --exit-code 1 || TRIVY_EXIT=$?
+
+      if [ "$TRIVY_EXIT" -ne 0 ]; then
+        echo "Vulnerability scan failed with exit code $TRIVY_EXIT"
+        exit $TRIVY_EXIT
+      fi
+    # Push image to Harbor (primary tag + any extra tags for releases)
+    - echo "Pushing image to Harbor..."
+    - docker push "${IMAGE_PATH}"
+    - |
+      for TAG in ${PUSH_EXTRA_TAGS:-}; do
+        docker push "${IMAGE_BASE}:${TAG}"
+      done
+    - IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE_PATH")
+    - echo "Image digest ${IMAGE_DIGEST}"
+    # If the tag previously pointed to a different digest, delete the old
+    # artifact and its cosign signature/attestation to avoid orphaned
+    # artifacts accumulating in Harbor.
+    - |
+      if [ -n "$OLD_DIGEST" ] && [ "$OLD_DIGEST" != "null" ]; then
+        NEW_DIGEST_HASH=$(echo "$IMAGE_DIGEST" | sed 's/.*sha256://')
+        OLD_DIGEST_HASH=$(echo "$OLD_DIGEST" | sed 's/sha256://')
+        if [ "$OLD_DIGEST_HASH" != "$NEW_DIGEST_HASH" ]; then
+          echo "Cleaning up old artifact ${OLD_DIGEST} and cosign artifacts..."
+          for TARGET in "${OLD_DIGEST/:/%3A}" "sha256-${OLD_DIGEST_HASH}.sig" "sha256-${OLD_DIGEST_HASH}.att"; do
+            curl -s -X DELETE \
+              -u "robot\$kitware+robot:${KITWARE_HARBOR_TOKEN}" \
+              -H 'accept: application/json' \
+              "${ARTIFACT_API}/${TARGET}" || true
+          done
+        fi
+      fi
+    # Sign the image and attest the SBOM using cosign. The private key is
+    # stored base64-encoded in CI variable COSIGN_PRIVATE_KEY_B64.
+    - printf '%s' "$COSIGN_PRIVATE_KEY_B64" | base64 -d > cosign.key
+    - chmod 600 cosign.key
+    - cosign sign --key cosign.key --yes "$IMAGE_DIGEST"
+    - cosign attest --predicate sbom.spdx.json --key cosign.key --yes "$IMAGE_DIGEST"
+    # Export image path and digest for the verify job via dotenv artifact
+    - echo "IMAGE_PATH=${IMAGE_PATH}" > build.env
+    - echo "IMAGE_DIGEST=${IMAGE_DIGEST}" >> build.env
+  artifacts:
+    when: always
+    paths:
+      - gl-container-scanning-report.json
+    reports:
+      dotenv: build.env
+      container_scanning: gl-container-scanning-report.json
+
+###############################################################################
+# Build container from source for MR testing. Manually triggered in MR
+# pipelines. Tagged with the branch slug (e.g. "dev-706-trivy-errors") and
+# uses the "main" image as a cache fallback for faster builds.
+###############################################################################
+build-branch:
+  extends: .build-setup
+  variables:
+    IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
+    CACHE_TAG: "${CI_COMMIT_REF_SLUG}"
+    CACHE_FALLBACK_TAG: "main"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+    - when: never
+
+###############################################################################
+# Build container from source for main branch. Runs on pushes to main and
+# on scheduled pipelines (nightly) to pick up dependency updates.
+# Tagged as "main".
+###############################################################################
+build-main:
+  extends: .build-setup
+  variables:
+    IMAGE_TAG: "main"
+    CACHE_TAG: "main"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE_TARGET != "prod"
+      when: on_success
+    - when: never
+
+###############################################################################
+# Build release container from PyPI (not source). Triggered by semver tags
+# (e.g. v1.2.3). Installs xaitk-saliency from PyPI via the "build-from-pypi" Dockerfile
+# target. Produces multiple tags: exact version (1.2.3), minor (1.2),
+# major (1), and "latest". Caches from the "latest" image.
+#
+# Overrides before_script from .build-setup because it needs to derive
+# IMAGE_TAG, EXTRA_TAGS, and BUILD_EXTRA_ARGS from the git tag at runtime.
+#
+# OLD_DIGEST is intentionally left empty. Unlike branch/main builds where
+# the old artifact becomes untagged when the tag moves, release artifacts
+# retain their version tags (e.g. "1.1.0", "1.1") after "latest" and the
+# major tag move to the new release. Deleting the old digest would destroy
+# previous releases and their cosign signatures.
+###############################################################################
+build-release:
+  extends: .build-setup
+  variables:
+    BUILD_TARGET: "build-from-pypi"
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+(\.\d+)*$/
+      when: on_success
+    - when: never
+  before_script:
+    - !reference [.container-setup, before_script]
+    # Derive version components and tag scheme from the git tag
+    - |
+      XAITK_VERSION="${CI_COMMIT_TAG#v}"
+      MAJOR=$(echo "$XAITK_VERSION" | cut -d. -f1)
+      MINOR=$(echo "$XAITK_VERSION" | cut -d. -f2)
+
+      IMAGE_TAG="${XAITK_VERSION}"
+      IMAGE_PATH="${IMAGE_BASE}:${IMAGE_TAG}"
+      CACHE_REF="${IMAGE_BASE}:latest"
+
+      BUILD_EXTRA_ARGS="--build-arg XAITK_VERSION=${XAITK_VERSION}"
+      EXTRA_TAGS="--tag=${IMAGE_BASE}:${MAJOR}.${MINOR} --tag=${IMAGE_BASE}:${MAJOR} --tag=${IMAGE_BASE}:latest"
+      PUSH_EXTRA_TAGS="${MAJOR}.${MINOR} ${MAJOR} latest"
+    - apk add --no-cache jq cosign
+    # Skip OLD_DIGEST — previous release artifacts must be preserved
+    - OLD_DIGEST=""
+    - echo "Installing Syft..."
+    - curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    - echo "Installing Trivy..."
+    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+    - curl -sSfL -o gitlab.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/gitlab.tpl
+
+###############################################################################
+# Verify image signature and smoke test. Runs after any build job, pulling
+# the image from Harbor, verifying its cosign signature against the public
+# key (cosign.pub), and running the container to confirm it starts cleanly.
+# All build jobs are optional dependencies — only the one that ran in this
+# pipeline will pass IMAGE_PATH via its dotenv artifact.
+###############################################################################
+verify:
+  extends: .container-setup
+  dependencies:
+    - build-branch
+    - build-main
+    - build-release
+  needs:
+    - job: build-branch
+      optional: true
+    - job: build-main
+      optional: true
+    - job: build-release
+      optional: true
+  before_script:
+    - !reference [.container-setup, before_script]
+    - apk add --no-cache cosign
+  script:
+    # IMAGE_PATH is set via dotenv artifact from whichever build job ran.
+    # If no build job ran (e.g. none were triggered), skip gracefully.
+    - |
+      if [ -z "${IMAGE_PATH}" ]; then
+        echo "No build job produced an image. Skipping verification."
+        exit 0
+      fi
+    - echo "Pulling image from Harbor..."
+    - docker pull "${IMAGE_PATH}"
+    - cosign verify --key cosign.pub "${IMAGE_PATH}"
+    - docker run --rm "${IMAGE_PATH}"
+
+###############################################################################
+# Job -- Clean up stale branch images from Harbor
+###############################################################################
+cleanup:
+  extends: .container-setup
+  image: alpine:3.21
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE_TARGET != "prod"
+      when: on_success
+    - when: never
+  needs:
+    - job: build-main
+      optional: true
+  tags:
+    - autoscaler
+  before_script:
+    - apk add --no-cache curl jq
+    - ARTIFACT_API="https://${HARBOR_URL}/api/v2.0/projects/${HARBOR_PROJECT}/repositories/${HARBOR_REPO}%252F${CONTAINER_NAME}/artifacts"
+  after_script: []
+  script:
+    - |
+      # Sweep Harbor for stale branch images. Branch builds tag images with
+      # CI_COMMIT_REF_SLUG (e.g. "dev-706-trivy-errors"). Once a branch is
+      # deleted, these tags become stale. This job lists all active GitLab
+      # branches, converts their names to slugs, then compares against Harbor
+      # tags to find and remove stale ones.
+      #
+      # Tags are classified as either "protected" or "branch":
+      #   Protected: "main", "latest", and semver (e.g. "1.0.0", "1.0", "1")
+      #   Branch:    everything else — assumed to be a CI_COMMIT_REF_SLUG
+      #
+      # Cosign signature (.sig) and attestation (.att) artifacts are stored as
+      # separate artifacts in Harbor with tags like "sha256-<hash>.sig". These
+      # are skipped entirely — they are managed as part of their parent image's
+      # lifecycle and deleted alongside the parent when appropriate.
+      #
+      # A branch tag is "stale" if no active GitLab branch produces that slug.
+      #
+      # Artifacts are handled in three cases:
+      #   1. Untagged: orphaned artifacts left behind when a tag moved to a new
+      #      digest. Deleted along with their cosign signature and attestation.
+      #   2. Mixed tags (stale + protected/active): only the stale branch tags
+      #      are removed. The artifact and its cosign artifacts are preserved.
+      #   3. All tags stale: the entire artifact is deleted along with its
+      #      cosign signature and SBOM attestation.
+
+      # Fetch all active branch names from GitLab and convert to slugs
+      # (matching CI_COMMIT_REF_SLUG: lowercase, non-alphanumeric to hyphen,
+      # collapse runs, strip leading/trailing hyphens, truncate to 63 chars).
+      # Stored one-per-line for exact matching with grep -Fx.
+      BRANCH_SLUGS=$(
+        PAGE=1
+        while true; do
+          RESP=$(curl -s --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+            "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/repository/branches?per_page=100&page=${PAGE}")
+          COUNT=$(echo "$RESP" | jq 'length')
+          [ "$COUNT" -eq 0 ] && break
+          echo "$RESP" | jq -r '.[].name' | \
+            tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//' | cut -c1-63
+          PAGE=$((PAGE + 1))
+        done
+      )
+
+      echo "Active branch slugs:"
+      echo "$BRANCH_SLUGS"
+
+      # Fetch all artifacts from Harbor (including untagged orphans)
+      ARTIFACTS=$(curl -s "${ARTIFACT_API}?page_size=100")
+
+      # Classify each artifact's tags and clean up stale ones
+      echo "$ARTIFACTS" | jq -c '.[]' | while read -r ARTIFACT; do
+        DIGEST=$(echo "$ARTIFACT" | jq -r '.digest')
+        TAGS=$(echo "$ARTIFACT" | jq -r '[.tags[]?.name] | join(" ")')
+
+        # Skip cosign signature/attestation artifacts — these are managed
+        # as part of their parent image's lifecycle, not directly. They are
+        # deleted alongside their parent in the all-stale and untagged cases.
+        IS_COSIGN=false
+        for TAG in $TAGS; do
+          case "$TAG" in sha256-*.sig|sha256-*.att) IS_COSIGN=true ;; esac
+        done
+        [ "$IS_COSIGN" = true ] && continue
+
+        # Untagged artifacts are orphans left behind when a tag moved to a
+        # new digest (e.g. after a rebuild). Delete them and their cosign
+        # signature and SBOM attestation.
+        if [ -z "$TAGS" ]; then
+          echo "Deleting untagged orphan artifact ${DIGEST}..."
+          DIGEST_HASH=$(echo "$DIGEST" | sed 's/sha256://')
+          for TARGET in "${DIGEST/:/%3A}" "sha256-${DIGEST_HASH}.sig" "sha256-${DIGEST_HASH}.att"; do
+            curl -s -X DELETE \
+              -u "robot\$kitware+robot:${KITWARE_HARBOR_TOKEN}" \
+              -H 'accept: application/json' \
+              "${ARTIFACT_API}/${TARGET}" || true
+          done
+          continue
+        fi
+
+        # Sort tags into stale vs keep
+        STALE_TAGS=""
+        KEEP_TAGS=""
+        for TAG in $TAGS; do
+          IS_PROTECTED=false
+          case "$TAG" in main|latest) IS_PROTECTED=true ;; esac
+          echo "$TAG" | grep -qE '^v?[0-9]+(\.[0-9]+)*$' && IS_PROTECTED=true
+
+          if [ "$IS_PROTECTED" = true ] || echo "$BRANCH_SLUGS" | grep -qFx "$TAG"; then
+            KEEP_TAGS="${KEEP_TAGS} ${TAG}"
+          else
+            STALE_TAGS="${STALE_TAGS} ${TAG}"
+          fi
+        done
+
+        if [ -n "$STALE_TAGS" ] && [ -n "$KEEP_TAGS" ]; then
+          # Artifact is shared with protected/active tags — only untag the
+          # stale branch tags. The artifact, cosign signature, and SBOM
+          # attestation are preserved for the remaining tags.
+          for TAG in $STALE_TAGS; do
+            echo "Removing stale tag ${TAG} from shared artifact (kept tags:${KEEP_TAGS})..."
+            curl -s -X DELETE \
+              -u "robot\$kitware+robot:${KITWARE_HARBOR_TOKEN}" \
+              -H 'accept: application/json' \
+              "${ARTIFACT_API}/${DIGEST/:/%3A}/tags/${TAG}" || true
+          done
+        elif [ -n "$STALE_TAGS" ]; then
+          # All tags are stale — delete the artifact and its cosign signature
+          # (.sig) and SBOM attestation (.att)
+          echo "Deleting orphaned artifact (tags:${STALE_TAGS})..."
+          DIGEST_HASH=$(echo "$DIGEST" | sed 's/sha256://')
+          for TARGET in "${DIGEST/:/%3A}" "sha256-${DIGEST_HASH}.sig" "sha256-${DIGEST_HASH}.att"; do
+            curl -s -X DELETE \
+              -u "robot\$kitware+robot:${KITWARE_HARBOR_TOKEN}" \
+              -H 'accept: application/json' \
+              "${ARTIFACT_API}/${TARGET}" || true
+          done
+        fi
+      done

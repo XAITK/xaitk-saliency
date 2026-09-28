@@ -1,6 +1,7 @@
 from collections.abc import Hashable, Iterator, Sequence
 
 import numpy as np
+import pytest
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
@@ -13,6 +14,7 @@ from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.rise import (
 )
 
 
+@pytest.mark.core
 class TestSpecializationRise:
     def test_configuration(self) -> None:
         """Test standard config things."""
@@ -56,7 +58,7 @@ class TestSpecializationRise:
             assert inst_i.get_config()["debiased"] is False
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -77,21 +79,21 @@ class TestSpecializationRise:
         # The heatmap result of this is merely the sum of RISE mask generation
         # normalized in the [-1,1] range as the generation stage does nothing
         # given the constant blackbox response.
-        inst = RISEStack(5, 8, 0.5, seed=0)
+        inst = RISEStack(n=5, s=8, p1=0.5, seed=0)
         # Results may be sensitive to changes in scikit-image. Version 0.19
         # introduces some changes to the resize function. Difference is
         # expected to only be marginal (see tolerance to np.allclose below).
-        res = inst.generate(test_image, test_bb)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
 
         exp_res = np.load(DATA_DIR / "exp_rise_stack_res.npy")
         assert np.allclose(exp_res, res, atol=2e-7)
 
     def test_fill_prop(self) -> None:
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
-        """
-        inst = RISEStack(5, 8, 0.5, seed=0)
+        inst = RISEStack(n=5, s=8, p1=0.5, seed=0)
         assert inst.fill is None
         inst.fill = 42
         assert inst._po.fill == 42

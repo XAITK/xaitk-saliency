@@ -1,38 +1,44 @@
 """This module provides the `parse_coco_dset` function to load a COCO dataset for `xaitk-saliency`."""
 
+from __future__ import annotations
+
 import logging
 from collections.abc import Generator
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from PIL import Image  # type: ignore
+from PIL import Image
 
-from xaitk_saliency.exceptions import KWCocoImportError
+from xaitk_saliency.exceptions import ToolsImportError
 
 try:
-    import kwcoco  # type: ignore
+    import kwcoco  # noqa: F401
 
-    kwcoco_available = True
+    kwcoco_available: bool = True
 except ImportError:
     kwcoco_available = False
+
+if TYPE_CHECKING:
+    from kwcoco.coco_dataset import CocoDataset
 
 LOG = logging.getLogger(__name__)
 
 
 class KWCocoUtils:
-    """Class for KWCoco Utility functions"""
+    """Class for KWCoco Utility functions."""
 
     def __init__(self) -> None:
-        """Initialize KWCocoUtils"""
+        """Initialize KWCocoUtils."""
         if not self.is_usable():
-            raise KWCocoImportError
+            raise ToolsImportError
 
     def parse_coco_dset(
         self,
-        dets_dset: "kwcoco.CocoDataset",
-    ) -> Generator[tuple[np.ndarray, np.ndarray, np.ndarray], None, None]:
-        """
-        Generate reference image, bounding box, and class score matrices, for
-        use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
+        dets_dset: CocoDataset,
+    ) -> Generator[tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]], None, None]:
+        """Generate reference image, bounding box, and class score matrices.
+
+        This is for use with an implementation of `GenerateObjectDetectorBlackboxSaliency`,
         from a `kwcoco.CocoDataset` object.
         Matrices are generated for each image in the dataset that has
         annotations associated with it.
@@ -85,8 +91,7 @@ class KWCocoUtils:
 
     @classmethod
     def is_usable(cls) -> bool:
-        """
-        Checks if the necessary dependencies (KWCoco) are available.
+        """Checks if the necessary dependencies (KWCoco) are available.
 
         Returns:
             bool: True if KWCoco is available; False otherwise.

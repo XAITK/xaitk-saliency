@@ -6,6 +6,7 @@ from tests import DATA_DIR, EXPECTED_MASKS_4x6
 from xaitk_saliency.impls.gen_classifier_conf_sal.rise_scoring import RISEScoring
 
 
+@pytest.mark.core
 class TestRiseScoring:
     def test_init_outofrange_p1(self) -> None:
         """Test catching an out of range p1 value."""
@@ -32,7 +33,7 @@ class TestRiseScoring:
             ValueError,
             match=r"Number of perturbation masks and respective confidence lengths do not match",
         ):
-            inst.generate(test_confs[0], test_confs, test_masks)
+            inst.generate(reference=test_confs[0], perturbed=test_confs, perturbed_masks=test_masks)
 
     def test_1class_scoring(self) -> None:
         """Test for expected output when given known input data."""
@@ -41,7 +42,7 @@ class TestRiseScoring:
         test_pert_confs = np.array([[0.00, 0.33, 0.66, 0.33, 0.66, 1.00], [1.00, 0.66, 0.33, 0.66, 0.33, 0.00]]).T
 
         inst = RISEScoring()
-        sal = inst.generate(test_ref_confs, test_pert_confs, EXPECTED_MASKS_4x6)
+        sal = inst.generate(reference=test_ref_confs, perturbed=test_pert_confs, perturbed_masks=EXPECTED_MASKS_4x6)
 
         # This expected output also encodes an expected flip of the test-case
         # saliency map generations (np.flip) which follows the flip in the conf

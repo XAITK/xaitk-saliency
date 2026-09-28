@@ -20,6 +20,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())  # type: ignore
 
 
+@pytest.mark.core
 class TestMCRise:
     def test_configuration(self) -> None:
         """Test standard config things."""
@@ -49,7 +50,7 @@ class TestMCRise:
             assert inst_i._fill_colors == fill_colors
 
     def test_generation_rgb(self, snapshot_custom: SnapshotAssertion) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
@@ -74,6 +75,6 @@ class TestMCRise:
         # Results may be sensitive to changes in scikit-image. Version 0.19
         # introduces some changes to the resize function. Difference is
         # expected to only be marginal.
-        res = inst.generate(test_image, test_bb)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
 
         snapshot_custom.assert_match(res)

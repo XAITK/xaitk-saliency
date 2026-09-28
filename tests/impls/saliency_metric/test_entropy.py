@@ -21,6 +21,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestEntropy:
     """This class contains the unit tests for the functionality of the Entropy metric impl."""
 

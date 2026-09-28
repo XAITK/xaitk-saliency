@@ -1,4 +1,6 @@
-"""Implementation of DRISE scorer"""
+"""Implementation of DRISE scorer."""
+
+from typing import Any
 
 import numpy as np
 from scipy.spatial.distance import cdist
@@ -10,9 +12,9 @@ from xaitk_saliency.utils.masking import weight_regions_by_scalar
 
 
 class DRISEScoring(GenerateDetectorProposalSaliency):
-    """
-    This D-RISE implementation transforms black-box object detector predictions
-    into visual saliency heatmaps. Specifically, we make use of perturbed
+    """This D-RISE implementation transforms black-box object detector predictions into visual saliency heatmaps.
+
+    Specifically, we make use of perturbed
     detections generated using the `RISEGrid` image perturbation class and
     a similarity metric that captures both the localization and categorization
     aspects of object detection.
@@ -31,11 +33,25 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
 
     Based on Petsiuk et al:
     https://arxiv.org/abs/2006.03204
+
+    Example:
+        >>> from xaitk_saliency.utils.detection import format_detection
+        >>> n_ref_dets, n_masks, height, width = 1, 3, 4, 5
+        >>> ref_dets = format_detection(bbox_mat=np.array([[0, 0, 10, 10]]), classification_mat=np.array([[0.6, 0.4]]))
+        >>> bbox_mat = np.array([[0, 0, 10, 10], [1, 1, 9, 9], [2, 2, 8, 8]])
+        >>> classification_mat = np.array([[0.5, 0.5], [0.3, 0.7], [0.4, 0.6]])
+        >>> perturbed_dets = format_detection(bbox_mat=bbox_mat, classification_mat=classification_mat).reshape(
+        ...     n_masks, 1, 7
+        ... )
+        >>> perturbed_masks = np.broadcast_to(np.eye(height, width), (n_masks, height, width))
+        >>> scorer = DRISEScoring()
+        >>> sal = scorer(ref_dets=ref_dets, perturbed_dets=perturbed_dets, perturbed_masks=perturbed_masks)
+        >>> sal.shape == (n_ref_dets, height, width)
+        True
     """
 
-    def iou(self, box_a: np.ndarray, box_b: np.ndarray) -> np.ndarray:
-        """
-        Compute the intersection over union (IoU) of two sets of boxes.
+    def iou(self, *, box_a: np.ndarray[Any, Any], box_b: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+        """Compute the intersection over union (IoU) of two sets of boxes.
 
         | E.g.:
         |    A ∩ B / A ∪ B = A ∩ B / (area(A) + area(B) - A ∩ B)
@@ -76,12 +92,12 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
     @override
     def generate(
         self,
-        ref_dets: np.ndarray,
-        perturbed_dets: np.ndarray,
-        perturbed_masks: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Generate visual saliency heatmaps from black-box object detector predictions
+        *,
+        ref_dets: np.ndarray[Any, Any],
+        perturbed_dets: np.ndarray[Any, Any],
+        perturbed_masks: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Generate visual saliency heatmaps from black-box object detector predictions.
 
         :param ref_dets: np.ndarray
             Reference detections from the reference image
@@ -108,7 +124,11 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         n_dets = len(ref_dets)
 
         # Compute IoU of bounding boxes
-        s1 = self.iou(perturbed_dets[:, :, :4].reshape(-1, 4), ref_dets[:, :4]).reshape(n_masks, n_props, n_dets)
+        s1 = self.iou(box_a=perturbed_dets[:, :, :4].reshape(-1, 4), box_b=ref_dets[:, :4]).reshape(
+            n_masks,
+            n_props,
+            n_dets,
+        )
 
         # Compute similarity of class probabilities
         s2 = 1 - cdist(
@@ -129,7 +149,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         s = s.max(axis=1)
 
         # Weighting perturbed regions by similarity
-        sal = weight_regions_by_scalar(s, perturbed_masks, inv_masks=False)
+        sal = weight_regions_by_scalar(scalar_vec=s, masks=perturbed_masks, inv_masks=False)
 
         # Normalize final saliency map
         sal = maxabs_scale(sal.reshape(sal.shape[0], -1), axis=1).reshape(sal.shape)
@@ -137,9 +157,8 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
-    def get_config(self) -> dict:
-        """
-        Get the configuration dictionary of the DRISEScoring instance.
+    def get_config(self) -> dict[str, Any]:
+        """Get the configuration dictionary of the DRISEScoring instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

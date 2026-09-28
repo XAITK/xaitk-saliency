@@ -1,0 +1,89 @@
+###############################################################################
+# Production regression CI against a pinned 1.x release
+#
+# These jobs run ONLY in a scheduled pipeline whose `SCHEDULE_TARGET` variable
+# is set to "prod" (set this, plus the release tag in `XAITK_SALIENCY_RELEASE_REF`,
+# on the prod pipeline schedule). They check out the release ref given by the
+# `XAITK_SALIENCY_RELEASE_REF` CI/CD variable and run the CI *as it was defined at
+# that release* -- driven entirely by the tag's own `tox.ini` -- so that dependency
+# drift (newer transitive dependencies published after the release) is caught
+# against released code rather than the moving development branch.
+#
+# WHY tox.ini rather than the tag's .gitlab-*.yml: GitLab `include`/components
+# are resolved at pipeline-creation time and share the pipeline's global job
+# namespace, and the released CI jobs are gated to merge-request/default-branch
+# pipelines -- so the tag's GitLab CI cannot be re-run as-is from here. `tox` has
+# no such gating, so the tag's `tox.ini` is the one re-runnable, version-faithful
+# definition of "what this release tested". Reading `tox -l` from the checked-out
+# tag therefore decides exactly which environments run -- in both directions:
+# envs the release defined but dev later removed are still run, and envs dev
+# added that the release never had are not.
+###############################################################################
+
+.prod:checkout:
+  extends: .tox-setup
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE_TARGET == "prod"
+      when: on_success
+    - when: never  # explicit fail-exclude terminal condition.
+  variables:
+    # Shallow clone; before_script fetches only the one pinned release tag.
+    GIT_DEPTH: "1"
+    GIT_STRATEGY: clone
+  before_script:
+    # Standard CI setup first: installs git-lfs, git config, poetry and tox.
+    - !reference [.tox-setup, before_script]
+    - pip install --root-user-action=ignore --user -U "tox>=4.2" -q
+    # Check out the release ref. $XAITK_SALIENCY_RELEASE_REF comes from the prod
+    # schedule's CI/CD variables, and is available here and in script (GitLab
+    # runs before_script + script in one shell).
+    - |
+      test -n "$XAITK_SALIENCY_RELEASE_REF" || { echo "ERROR: XAITK_SALIENCY_RELEASE_REF is not set"; exit 1; }
+      git fetch --depth 1 origin "refs/tags/${XAITK_SALIENCY_RELEASE_REF}:refs/tags/${XAITK_SALIENCY_RELEASE_REF}"
+      echo "Running production CI against release ${XAITK_SALIENCY_RELEASE_REF}"
+      git checkout --force --detach "$XAITK_SALIENCY_RELEASE_REF"
+      git lfs pull || true
+      git --no-pager log -1 --oneline
+
+.prod:tox:pytest:
+  extends: .prod:checkout
+  stage: test
+  image: $PYTHON_IMAGE
+  tags:
+    - $RUNNER_TAG
+  # Pull the test matrix and run command from the dev .tox:pytest job so the
+  # prod regression run stays in lockstep with it. Use !reference (not extends)
+  # to take ONLY these keys -- we intentionally do not inherit its artifacts,
+  # rules, or before_script (prod has its own via .prod:checkout).
+  parallel: !reference [.tox:pytest, parallel]
+  script: !reference [.tox:pytest, script]
+
+prod:pytest:py3.10:
+  extends: .prod:tox:pytest
+  image: python:3.10
+  variables:
+    PYTHON_VERSION: "3.10"
+
+prod:pytest:py3.11:
+  extends: .prod:tox:pytest
+  image: python:3.11
+  variables:
+    PYTHON_VERSION: "3.11"
+
+prod:pytest:py3.12:
+  extends: .prod:tox:pytest
+  image: python:3.12
+  variables:
+    PYTHON_VERSION: "3.12"
+
+prod:pytest:py3.13:
+  extends: .prod:tox:pytest
+  image: python:3.13
+  variables:
+    PYTHON_VERSION: "3.13"
+
+prod:pytest:py3.14:
+  extends: .prod:tox:pytest
+  image: python:3.14
+  variables:
+    PYTHON_VERSION: "3.14"

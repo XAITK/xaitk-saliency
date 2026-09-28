@@ -1,1 +1,1 @@
-"""Module for all implementations of the PerturbImage interface"""
+"""Module for all implementations of the PerturbImage interface."""

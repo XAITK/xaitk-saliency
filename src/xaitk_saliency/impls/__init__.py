@@ -1,1 +1,1 @@
-"""Module for all implementations of xaitk-saliency interfaces"""
+"""Module for all implementations of xaitk-saliency interfaces."""

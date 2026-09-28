@@ -1,6 +1,6 @@
-"""
-This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from typing import Any, TypeVar
 import numpy as np
 from smqtk_core.configuration import from_config_dict, make_default_config, to_config_dict
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency import GenerateDescriptorSimilaritySaliency, GenerateImageSimilarityBlackboxSaliency, PerturbImage
 from xaitk_saliency.utils.masking import occlude_image_batch
@@ -20,25 +20,40 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
-    """
-    Image similarity saliency generator composed of modular perturbation and
-    occlusion-based algorithms.
+    """Image similarity saliency generator composed of modular perturbation and occlusion-based algorithms.
 
     This implementation exposes its `fill` attribute as public.
     This allows it to be set during runtime as this is most often driven by the
     black-box algorithm used, if at all.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeImageDescriptorGenerator
+        >>> from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
+        >>> from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+        >>> n_query, height, width = 2, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> query_images = [
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ...     np.zeros((height, width, 3), dtype=np.uint8),
+        ... ]
+        >>> gen = PerturbationOcclusion(
+        ...     perturber=SlidingWindow(window_size=(8, 8), stride=(8, 8)),
+        ...     generator=SimilarityScoring(),
+        ... )
+        >>> sal = gen.generate(ref_image=ref_image, query_images=query_images, blackbox=FakeImageDescriptorGenerator())
+        >>> sal.shape == (n_query, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateDescriptorSimilaritySaliency,
-        fill: int | Sequence[int] | np.ndarray | None = None,
+        fill: int | Sequence[int] | np.ndarray[Any, Any] | None = None,
         threads: int | None = None,
     ) -> None:
-        """
-        Image similarity saliency generator composed of modular perturbation and
-        occlusion-based algorithms.
+        """Image similarity saliency generator composed of modular perturbation and occlusion-based algorithms.
 
         :param perturber: `PerturbImage` implementation instance for generating
             occlusion masks.
@@ -60,6 +75,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         query_images: Sequence[np.ndarray],
         blackbox: ImageDescriptorGenerator,
@@ -69,16 +85,20 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
 
         pert_masks = self._perturber(ref_image)
 
-        pert_imgs = occlude_image_batch(ref_image, pert_masks, fill=self.fill, threads=self._threads)
+        pert_imgs = occlude_image_batch(ref_image=ref_image, masks=pert_masks, fill=self.fill, threads=self._threads)
 
         pert_feats = np.array(list(blackbox.generate_arrays_from_images(pert_imgs)))
 
-        return self._generator(ref_feat, query_feats, pert_feats, pert_masks)
+        return self._generator(
+            ref_descr=ref_feat,
+            query_descrs=query_feats,
+            perturbed_descrs=pert_feats,
+            perturbed_masks=pert_masks,
+        )
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the PerturbationOcclusion.
+        """Returns the default configuration for the PerturbationOcclusion.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -93,9 +113,9 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         return cfg
 
     @classmethod
-    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
-        """
-        Create a PerturbationOcclusion instance from a configuration dictionary.
+    @override
+    def from_config(cls, config_dict: dict[str, Any], merge_default: bool = True) -> Self:
+        """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:
             config_dict (dict): Configuration dictionary with perturber details.
@@ -113,8 +133,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the PerturbationOcclusion instance.
+        """Get the configuration dictionary of the PerturbationOcclusion instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

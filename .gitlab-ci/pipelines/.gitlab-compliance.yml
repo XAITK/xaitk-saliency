@@ -1,0 +1,116 @@
+###########################################################
+# Stage -- A child pipeline to run the DevSecOps components
+###########################################################
+stages:
+  # - pre-commit
+  - sr-compliance
+  - unit-test
+  - tr-compliance
+  - dsor-compliance
+  - ir-compliance
+  - advana-compliance
+  - validate
+  - summary
+
+include:
+  - component: gitlab.jatic.net/jatic/bah/components/sr-compliance@1.1.0
+    inputs:
+      stage: sr-compliance
+      package_name: xaitk-saliency
+      poetry_image: harbor.jatic.net:443/platform-team/base-images/python-base-image:3.11
+      conda_image: continuumio/miniconda3
+      tools_used: [pyproject, poetry, tox, ruff]
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/tr-compliance@1.1.0
+    inputs:
+      stage: tr-compliance
+      package_name: xaitk-saliency
+      python_image: harbor.jatic.net:443/platform-team/base-images/python-base-image
+      python_versions: ["3.10", "3.11"]
+      poetry_install_options: --with main --extras "tools"
+      toml: ./pyproject.toml
+      linter_type: ruff
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/dsor-compliance@1.1.0
+    inputs:
+      stage: dsor-compliance
+      sast_excluded_paths: tests, README.md
+      sast_search_max_depth: "2"
+      image: harbor.jatic.net:443/platform-team/base-images/python-base-image:3.11
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/advana-compliance@1.1.0
+    inputs:
+      stage: advana-compliance
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/validate-pipeline@1.1.0
+    inputs:
+      stage: validate
+      full_execution_on_commit: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/pipeline-report@1.1.0
+    inputs:
+      stage: summary
+      full_execution_on_commit: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/unit-test@1.1.0
+    inputs:
+      stage: unit-test
+      prep_job: prep-job
+      python_image: harbor.jatic.net:443/platform-team/base-images/python-base-image
+      python_versions: ["3.10", "3.11"]
+      package_name: xaitk-saliency
+      poetry_install_options: --only main,tests
+      dependency: required   # Only used for job name
+      marker: all
+      posargs: ""
+      tags: CPU
+      coverage_threshold: 90
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/unit-test@1.1.0
+    inputs:
+      stage: unit-test
+      prep_job: prep-job
+      python_image: harbor.jatic.net:443/platform-team/base-images/python-base-image
+      python_versions: ["3.10", "3.11"]
+      package_name: xaitk-saliency
+      poetry_install_options: --only main,tests
+      dependency: required   # Only used for job name
+      marker: optional
+      posargs: ""
+      tags: CPU
+      coverage_threshold: 90
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/unit-test@1.1.0
+    inputs:
+      stage: unit-test
+      prep_job: prep-job
+      python_image: harbor.jatic.net:443/platform-team/base-images/python-base-image
+      python_versions: ["3.10", "3.11"]
+      package_name: xaitk-saliency
+      poetry_install_options: --only main,tests --extras "tools maite"
+      dependency: optional  # Only used for job name
+      marker: optional
+      posargs: ""
+      tags: CPU
+      coverage_threshold: 90
+      full_execution_on_commit: true
+      allow_failure: true
+
+  - component: gitlab.jatic.net/jatic/devsecops/components/ir-compliance@1.1.0
+    inputs:
+      stage: ir-compliance
+      maite_interop_scope: provider
+      full_execution_on_commit: true
+      allow_failure: true

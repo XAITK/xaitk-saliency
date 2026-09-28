@@ -1,1 +1,1 @@
-"""Module for all implementations of the GenImageClassifierBlackboxSal interface"""
+"""Module for all implementations of the GenImageClassifierBlackboxSal interface."""

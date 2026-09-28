@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import abc
 import logging
+from typing import Any
 
 import numpy as np
 from smqtk_core.plugfigurable import Plugfigurable
@@ -11,14 +12,13 @@ from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.exceptions import ShapeMismatchError
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
-    """
-    This interface describes the generation of visual saliency heatmaps for
-    input object detections with respect to a given black box object detection
-    and classification model.
+    """This interface describes the generation of visual saliency heatmaps for input object detections.
+
+    This is with respect to a given black box object detection and classification model.
 
     This transformation requires reference detections to focus on explaining,
     and the image those detections were drawn from.
@@ -32,16 +32,16 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def generate(
         self,
-        ref_image: np.ndarray,
-        bboxes: np.ndarray,
-        scores: np.ndarray,
+        *,
+        ref_image: np.ndarray[Any, Any],
+        bboxes: np.ndarray[Any, Any],
+        scores: np.ndarray[Any, Any],
         blackbox: DetectImageObjects,
-        objectness: np.ndarray | None = None,
-    ) -> np.ndarray:
-        """
-        Generate per-detection visual saliency heatmaps for some object
-        detector black-box over some input reference detections from some input
-        reference image.
+        objectness: np.ndarray[Any, Any] | None = None,
+    ) -> np.ndarray[Any, Any]:
+        """Generate per-detection visual saliency heatmaps for some object detector black-box.
+
+        This is over some input reference detections from some input reference image.
 
         The input reference image is expected to be a matrix in either
         `[H x W]` or `[H x W x C]` shape format.
@@ -120,18 +120,18 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
             image.
         """
         self._verify_generate_inputs(
-            ref_image,
-            bboxes,
-            scores,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            objectness=objectness,
         )
 
         output = self._generate(
-            ref_image,
-            bboxes,
-            scores,
-            blackbox,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            blackbox=blackbox,
+            objectness=objectness,
         )
 
         if len(output) == 0:
@@ -158,6 +158,7 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def _verify_generate_inputs(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
@@ -185,35 +186,34 @@ class GenerateObjectDetectorBlackboxSaliency(Plugfigurable):
 
     def __call__(
         self,
-        ref_image: np.ndarray,
-        bboxes: np.ndarray,
-        scores: np.ndarray,
+        *,
+        ref_image: np.ndarray[Any, Any],
+        bboxes: np.ndarray[Any, Any],
+        scores: np.ndarray[Any, Any],
         blackbox: DetectImageObjects,
-        objectness: np.ndarray | None = None,
-    ) -> np.ndarray:
-        """
-        Alias to the :meth:`generate` method.
-        See :meth:`generate` for more details.
-        """
+        objectness: np.ndarray[Any, Any] | None = None,
+    ) -> np.ndarray[Any, Any]:
+        """Alias to the :meth:`generate` method. See :meth:`generate` for more details."""
         return self.generate(
-            ref_image,
-            bboxes,
-            scores,
-            blackbox,
-            objectness,
+            ref_image=ref_image,
+            bboxes=bboxes,
+            scores=scores,
+            blackbox=blackbox,
+            objectness=objectness,
         )
 
     @abc.abstractmethod
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         bboxes: np.ndarray,
         scores: np.ndarray,
         blackbox: DetectImageObjects,
         objectness: np.ndarray | None = None,
     ) -> np.ndarray:
-        """
-        Internal method for implementing the generation logic.
+        """Internal method for implementing the generation logic.
+
         This is invoked by the above `generate` method as a template method.
 
         The doc-string for the `generate` method also applies here aside from

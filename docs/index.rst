@@ -64,6 +64,12 @@ Documentation Contents:
 
 .. toctree::
    :maxdepth: 1
+   :caption: Interoperability
+
+   interoperability/maite/index
+
+.. toctree::
+   :maxdepth: 1
    :caption: Reference
 
    interfaces

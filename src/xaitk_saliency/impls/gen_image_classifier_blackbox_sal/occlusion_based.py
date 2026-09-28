@@ -1,6 +1,6 @@
-"""
-This module defines the `PerturbationOcclusion` class, which implements a generator composed of
-modular perturbation and occlusion-based algorithms
+"""This module defines the `PerturbationOcclusion` class.
+
+This class implements a generator composed of modular perturbation and occlusion-based algorithms.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from smqtk_core.configuration import (
     make_default_config,
     to_config_dict,
 )
-from typing_extensions import Self
+from typing_extensions import Self, override
 
 from xaitk_saliency.interfaces.gen_classifier_conf_sal import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import GenerateImageClassifierBlackboxSaliency
@@ -26,8 +26,7 @@ C = TypeVar("C", bound="PerturbationOcclusion")
 
 
 class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
-    """
-    Generator composed of modular perturbation and occlusion-based algorithms.
+    """Generator composed of modular perturbation and occlusion-based algorithms.
 
     This implementation exposes a public attribute `fill`.
     This may be set to a scalar or sequence value to indicate a color that
@@ -35,16 +34,30 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
     `PerturbImage` implementation.
     This is a parameter to be set during runtime as this is most often driven
     by the black-box algorithm used, if at all.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
+        >>> from xaitk_saliency.impls.perturb_image.sliding_window import SlidingWindow
+        >>> n_classes, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = PerturbationOcclusion(
+        ...     perturber=SlidingWindow(window_size=(8, 8), stride=(8, 8)),
+        ...     generator=OcclusionScoring(),
+        ... )
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 1.0}))
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         perturber: PerturbImage,
         generator: GenerateClassifierConfidenceSaliency,
         threads: int = 0,
     ) -> None:
-        """
-        Initialization of a generator for modular perturbation and occlusion-based algorithms.
+        """Initialization of a generator for modular perturbation and occlusion-based algorithms.
 
         :param perturber: PerturbImage implementation instance for generating
             masks that will dictate occlusion.
@@ -62,6 +75,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
 
     def _generate(
         self,
+        *,
         ref_image: np.ndarray,
         blackbox: ClassifyImage,
     ) -> np.ndarray:
@@ -72,7 +86,12 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         ref_conf_vec = np.asarray([ref_conf_dict[la] for la in class_list])
         pert_conf_mat = np.empty((perturbation_masks.shape[0], ref_conf_vec.shape[0]), dtype=ref_conf_vec.dtype)
         pert_conf_it = blackbox.classify_images(
-            occlude_image_streaming(ref_image, perturbation_masks, fill=self.fill, threads=self._threads),
+            occlude_image_streaming(
+                ref_image=ref_image,
+                masks=perturbation_masks,
+                fill=self.fill,
+                threads=self._threads,
+            ),
         )
         for i, pc in enumerate(pert_conf_it):
             pert_conf_mat[i] = [pc[la] for la in class_list]
@@ -80,15 +99,14 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         # Compose classification results into a matrix for the generator
         # algorithm.
         return self._generator(
-            ref_conf_vec,
-            pert_conf_mat,
-            perturbation_masks,
+            reference=ref_conf_vec,
+            perturbed=pert_conf_mat,
+            perturbed_masks=perturbation_masks,
         )
 
     @classmethod
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the PerturbationOcclusion.
+        """Returns the default configuration for the PerturbationOcclusion.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -103,9 +121,9 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         return cfg
 
     @classmethod
-    def from_config(cls, config_dict: dict, merge_default: bool = True) -> Self:
-        """
-        Create a PerturbationOcclusion instance from a configuration dictionary.
+    @override
+    def from_config(cls, config_dict: dict[str, Any], merge_default: bool = True) -> Self:
+        """Create a PerturbationOcclusion instance from a configuration dictionary.
 
         Args:
             config_dict (dict): Configuration dictionary with perturber details.
@@ -123,8 +141,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         return super().from_config(config_dict, merge_default=merge_default)
 
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the PerturbationOcclusion instance.
+        """Get the configuration dictionary of the PerturbationOcclusion instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.
