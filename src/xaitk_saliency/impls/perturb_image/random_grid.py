@@ -123,6 +123,7 @@ class RandomGrid(PerturbImage):
 
         return masks
 
+    @override
     def get_config(self) -> Dict[str, Any]:
         return {
             "n": self.n,

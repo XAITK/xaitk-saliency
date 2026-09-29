@@ -21,9 +21,11 @@ class StubPI(PerturbImage):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def perturb(self, ref_image: np.ndarray) -> np.ndarray:
         return np.ones((6, *ref_image.shape[:2]), dtype=bool)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -42,6 +44,7 @@ class StubGen(GenerateClassifierConfidenceSaliency):
     ) -> np.ndarray:
         return np.zeros((reference.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -73,9 +76,11 @@ class TestPerturbationOcclusion:
         class StubClassifier(ClassifyImage):
             """Stub that returns a constant classification result."""
 
+            @override
             def get_labels(self) -> Sequence[Hashable]:
                 return ["a", "b"]
 
+            @override
             def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:
                 for _ in img_iter:
                     yield {"a": 1.0, "b": 0.1}

@@ -5,6 +5,7 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, RandomGrid, RandomGridStack
@@ -41,6 +42,7 @@ class TestBlackBoxRandomGrid:
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],

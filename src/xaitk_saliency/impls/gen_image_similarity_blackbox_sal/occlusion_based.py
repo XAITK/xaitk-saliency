@@ -73,6 +73,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         self._threads = threads
         self.fill = fill
 
+    @override
     def _generate(
         self,
         *,
@@ -97,6 +98,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         )
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the PerturbationOcclusion.
 
@@ -132,6 +134,7 @@ class PerturbationOcclusion(GenerateImageSimilarityBlackboxSaliency):
         )
         return super().from_config(config_dict, merge_default=merge_default)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the PerturbationOcclusion instance.
 

@@ -73,6 +73,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         # Optional fill color
         self.fill: int | Sequence[int] | None = None
 
+    @override
     def _generate(
         self,
         *,
@@ -105,6 +106,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         )
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the PerturbationOcclusion.
 
@@ -140,6 +142,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         )
         return super().from_config(config_dict, merge_default=merge_default)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the PerturbationOcclusion instance.
 

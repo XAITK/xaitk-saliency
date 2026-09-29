@@ -32,7 +32,7 @@ from maite.protocols.object_detection import (
     TargetType,
 )
 from PIL import Image
-from typing_extensions import ReadOnly
+from typing_extensions import ReadOnly, override
 
 try:
     import kwcoco  # noqa: F401
@@ -153,10 +153,12 @@ class COCOMAITEObjectDetectionDataset(Dataset):
             index2label={c["id"]: c["name"] for c in kwcoco_dataset.cats.values()},
         )
 
+    @override
     def __len__(self) -> int:
         """Returns the number of images in the dataset."""
         return len(self._image_ids)
 
+    @override
     def __getitem__(self, index: int) -> tuple[InputType, TargetType, COCOMetadata]:
         """Returns the dataset object at the given index."""
         image_id = self._image_ids[index]
@@ -238,10 +240,12 @@ class MAITEObjectDetectionDataset(Dataset):
                 "id": dataset_id,
             }
 
+    @override
     def __len__(self) -> int:
         """Returns the number of images in the dataset."""
         return len(self.imgs)
 
+    @override
     def __getitem__(self, index: int) -> OBJ_DETECTION_DATUM_T:
         """Returns the dataset object at the given index."""
         return self.imgs[index], self.dets[index], self.datum_metadata[index]

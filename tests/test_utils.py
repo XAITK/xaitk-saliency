@@ -4,6 +4,7 @@ import re
 
 import numpy as np
 from syrupy.extensions.amber import AmberSnapshotExtension
+from typing_extensions import override
 
 
 class CustomFloatSnapshotExtension(AmberSnapshotExtension):
@@ -26,6 +27,7 @@ class CustomFloatSnapshotExtension(AmberSnapshotExtension):
             )  # Use `eval` only for literals, not the whole snapshot
         return tuple(arrays)
 
+    @override
     def matches(self, *, serialized_data: str, snapshot_data: str) -> bool:
         try:
             # Convert serialized and snapshot data to floats and compare within tolerance

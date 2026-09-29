@@ -9,7 +9,7 @@ from maite.protocols.object_detection import Dataset, Model
 from smqtk_core.configuration import to_config_dict
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
-from typing_extensions import ReadOnly, Required
+from typing_extensions import ReadOnly, Required, override
 
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEStack
 from xaitk_saliency.interop.maite.object_detection import (
@@ -34,6 +34,7 @@ class TestComputeSalMaps:
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],

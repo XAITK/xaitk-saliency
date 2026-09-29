@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_image_similarity_blackbox_sal.sbsm import SBSMStack, SimilarityScoring, SlidingWindow
@@ -40,6 +41,7 @@ class TestBlackBoxSBSM:
         class TestDescriptorGenerator(ImageDescriptorGenerator):
             """Dummy descriptor generator that returns known feature vectors."""
 
+            @override
             def generate_arrays_from_images(self, img_mat_iter: Iterable[np.ndarray | None]) -> Iterable[np.ndarray]:
                 # return repeatable random feature vectors
                 rng = np.random.default_rng(0)

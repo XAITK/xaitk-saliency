@@ -157,6 +157,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the DRISEScoring instance.
 

@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
@@ -60,6 +61,7 @@ class SlidingRadial(PerturbImage):
         self.stride: tuple[int, int] = (int(stride[0]), int(stride[1]))
         self.sigma: tuple[float, float] | None = (sigma[0], sigma[1]) if sigma else None
 
+    @override
     def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         """Produce a mask based on a radial occlusion area with configured radius over the area of an image.
 
@@ -91,6 +93,7 @@ class SlidingRadial(PerturbImage):
         return masks
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the SlidingRadial.
 
@@ -109,6 +112,7 @@ class SlidingRadial(PerturbImage):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the SlidingRadial instance.
 
