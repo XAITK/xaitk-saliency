@@ -22,6 +22,19 @@ def set_numpy_printoptions() -> None:
 
 @pytest.fixture
 def require_marker(pytestconfig: pytest.Config) -> None:
+    """Skip unless a specific ``-m`` marker expression was selected.
+
+    Two kinds of tests use it: the dependency canaries in
+    ``tests/test_guard_canaries.py``, which assert an env's build, and
+    ``tests/examples/test_notebooks.py``, which must only run under ``-m notebooks``.
+
+    The ``optional`` arm is load-bearing: the DSO compliance pipeline's
+    optional-tests-with-required-deps jobs select ``-m optional`` on a core-only
+    install, under the contract that optional-marked tests skip or pass without the
+    extras. Canaries running there would fail by design, so they must skip. The
+    all-extras environment's own build is exercised by the ``doctests`` envs
+    instead, which import every leaf module directly.
+    """
     markexpr = pytestconfig.getoption("-m")
     if not markexpr or markexpr == "optional":
         pytest.skip("Test requires marker specified")

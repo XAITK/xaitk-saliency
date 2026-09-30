@@ -1,5 +1,4 @@
 import os
-from importlib.util import find_spec
 from pathlib import Path
 
 import py
@@ -9,16 +8,11 @@ from click.testing import CliRunner
 from tests import DATA_DIR
 from xaitk_saliency.utils.bin import sal_on_coco_dets as sal_on_coco_dets_cmd
 
-deps = ["kwcoco"]
-specs = [find_spec(dep) for dep in deps]
-is_usable = all(spec is not None for spec in specs)
-
 dets_file = os.path.join(DATA_DIR, "test_dets.json")
 config_file = os.path.join(DATA_DIR, "config.json")
 
 
 @pytest.mark.tools
-@pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestSalOnCocoDets:
     """These tests make use of the `tmpdir` fixture from `pytest`.
 

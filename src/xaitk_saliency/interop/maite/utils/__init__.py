@@ -1,27 +1,27 @@
-"""Utils for generating saliency on detection datasets.
+"""Utils for generating saliency on detection datasets."""
 
-This module provides import guards for optional dependencies:
-- compute_sal_maps, sal_on_dets: require ``maite`` extra
-"""
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
-from xaitk_saliency.exceptions import MaiteImportError
+from xaitk_saliency._guard import Group, guard
 
-_MAITE_NAMES = ["compute_sal_maps", "sal_on_dets"]
-
-__all__: list[str] = []
-
-_import_error: ImportError | None = None
-
-try:
+if TYPE_CHECKING:
     from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps as compute_sal_maps
     from xaitk_saliency.interop.maite.utils._sal_on_dets import sal_on_dets as sal_on_dets
 
-    __all__ += _MAITE_NAMES  # pyright: ignore[reportUnsupportedDunderAll]
-except ImportError as _ex:
-    _import_error = _ex
+__getattr__: Callable[[str], Any]
+__dir__: Callable[[], list[str]]
+__all__: list[str]
 
-
-def __getattr__(name: str) -> None:
-    if name in _MAITE_NAMES:
-        raise MaiteImportError(name, import_error=_import_error)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+__getattr__, __dir__, __all__ = guard(
+    namespace=globals(),
+    groups=[
+        Group(
+            symbols={
+                "compute_sal_maps": "xaitk_saliency.interop.maite.utils._sal_on_dets",
+                "sal_on_dets": "xaitk_saliency.interop.maite.utils._sal_on_dets",
+            },
+            extras=["maite"],
+        ),
+    ],
+)

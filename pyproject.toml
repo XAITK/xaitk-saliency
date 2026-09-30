@@ -148,11 +148,20 @@ markers = [
     "optional: Run all tests except notebooks",
 ]
 
+[tool.coverage.run]
+omit = [
+    # Scripts run as subprocesses in a fresh interpreter, so the tracer never sees
+    # them; counting them reports permanent false "dead spots".
+    "tests/scripts/*",
+]
+
 [tool.ruff]
 # Exclude content as appropriate.
 extend-exclude = [
     "__pycache__",
-    "scripts",
+    # Anchored: a bare "scripts" would also swallow tests/scripts, which must stay
+    # linted -- the guard scripts are real .py files precisely so ruff checks them.
+    "./scripts",
     "docs/_build",
     "docs/_implementations",
     ".tox",

@@ -1,11 +1,8 @@
-"""This module provides dataset classes for working with object detection data in the MAITE framework.
-
-It includes adapters for COCO-format datasets and general datasets for varying-sized images.
+"""This module provides a dataset class for converting COCO-format data to the MAITE object detection protocol.
 
 Classes:
-    MAITEDetectionTarget: A dataclass for storing detection results, including bounding boxes, labels, and scores.
-    COCOMAITEObjectDetectionDataset: Converts a COCO dataset to be compatible with the MAITE object detection protocol.
-    MAITEObjectDetectionDataset: A generic wrapper for object detection datasets with varying-sized images.
+    COCOMAITEObjectDetectionDataset: Converts a COCO dataset to be compatible with the MAITE object detection
+        protocol.
 
 Dependencies:
     - kwcoco: For working with COCO-format datasets.
@@ -19,43 +16,22 @@ from __future__ import annotations
 import copy
 import logging
 from collections.abc import Sequence
-from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+import kwcoco  # noqa: F401
 import numpy as np
 from maite.protocols import DatasetMetadata, DatumMetadata
-from maite.protocols.object_detection import (
-    Dataset,
-    DatumMetadataType,
-    InputType,
-    TargetType,
-)
+from maite.protocols.object_detection import Dataset, DatumMetadataType, InputType, TargetType
 from PIL import Image
 from typing_extensions import ReadOnly, override
 
-try:
-    import kwcoco  # noqa: F401
-
-    is_usable: bool = True
-except ImportError:
-    is_usable = False
+from xaitk_saliency.interop.maite.object_detection._maite_object_detection_dataset import MAITEDetectionTarget
 
 if TYPE_CHECKING:
     from kwcoco.coco_dataset import CocoDataset
 
-OBJ_DETECTION_DATUM_T = tuple[InputType, TargetType, DatumMetadataType]
-
 LOG = logging.getLogger(__name__)
-
-
-@dataclass
-class MAITEDetectionTarget:
-    """Dataclass for the datum-level MAITE output detection format."""
-
-    boxes: np.ndarray[Any, Any]
-    labels: np.ndarray[Any, Any]
-    scores: np.ndarray[Any, Any]
 
 
 class COCOMetadata(DatumMetadata):
@@ -91,15 +67,8 @@ class COCOMAITEObjectDetectionDataset(Dataset):
             dataset_id (str): Dataset ID, defaults to filepath.
 
         Raises:
-            ImportError: If required dependencies are not installed.
             ValueError: If metadata is missing for any image in the dataset.
         """
-        if not is_usable:
-            raise ImportError(
-                "COCOMAITEObjectDetectionDataset requires additional dependencies, \
-                please install 'xaitk-saliency[tools]'",
-            )
-
         self._kwcoco_dataset = kwcoco_dataset
 
         self._image_ids = []
@@ -190,62 +159,3 @@ class COCOMAITEObjectDetectionDataset(Dataset):
             self._annotations[image_id],
             image_md,
         )
-
-
-class MAITEObjectDetectionDataset(Dataset):
-    """Implementation of the MAITE Object Detection dataset wrapper for dataset images of varying sizes.
-
-    Parameters
-    ----------
-    imgs : Sequence[np.ndarray]
-        Sequence of images.
-    dets : Sequence[ObjectDetectionTarget]
-        Sequence of detections for each image.
-    datum_metadata : Sequence[DatumMetadataType]
-        Sequence of metadata for each image.
-    dataset_id: str
-        Dataset ID.
-    index2label: dict[int, str] | None
-        Mapping from class index to label.
-    """
-
-    def __init__(
-        self,
-        *,
-        imgs: Sequence[np.ndarray[Any, Any]],
-        dets: Sequence[TargetType],
-        datum_metadata: Sequence[DatumMetadataType],
-        dataset_id: str,
-        index2label: dict[int, str] | None = None,
-    ) -> None:
-        """Initialize MAITE-compliant dataset.
-
-        Args:
-            imgs (Sequence[np.ndarray]): Sequence of images in the dataset.
-            dets (Sequence[TargetType]): Sequence of detection targets for the images.
-            datum_metadata (Sequence[DatumMetadataType]): Sequence of metadata dictionaries.
-            dataset_id (str): Dataset ID.
-            index2label (dict[int, str] | None): Mapping from class index to label.
-        """
-        self.imgs = imgs
-        self.dets = dets
-        self.datum_metadata = datum_metadata
-        if index2label is not None:
-            self.metadata: DatasetMetadata = {
-                "id": dataset_id,
-                "index2label": index2label,
-            }
-        else:
-            self.metadata = {
-                "id": dataset_id,
-            }
-
-    @override
-    def __len__(self) -> int:
-        """Returns the number of images in the dataset."""
-        return len(self.imgs)
-
-    @override
-    def __getitem__(self, index: int) -> OBJ_DETECTION_DATUM_T:
-        """Returns the dataset object at the given index."""
-        return self.imgs[index], self.dets[index], self.datum_metadata[index]
