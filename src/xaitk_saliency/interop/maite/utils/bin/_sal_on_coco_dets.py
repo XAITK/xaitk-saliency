@@ -24,21 +24,18 @@ from typing import Any, TextIO
 
 import click
 import kwcoco
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import Rectangle
 from PIL import Image
 from smqtk_core.configuration import from_config_dict, make_default_config
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 
 from xaitk_saliency.interfaces.gen_object_detector_blackbox_sal import GenerateObjectDetectorBlackboxSaliency
-from xaitk_saliency.interop.maite.object_detection._dataset import COCOMAITEObjectDetectionDataset
+from xaitk_saliency.interop.maite.object_detection._coco_maite_object_detection_dataset import (
+    COCOMAITEObjectDetectionDataset,
+)
 from xaitk_saliency.interop.maite.utils._sal_on_dets import compute_sal_maps
-
-plt = None
-try:
-    import matplotlib.pyplot as plt
-    from matplotlib.patches import Rectangle
-except ImportError:
-    pass
 
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
@@ -177,28 +174,26 @@ def sal_on_coco_dets(  # noqa: C901
             sal_map = img_sal_maps[dset_idx][sal_idx]
             det_id = ann_ids[sal_idx]
 
-            if plt is not None:
-                fig = plt.figure()
-                plt.axis("off")
-                if overlay_image:
-                    gray_img = np.asarray(Image.fromarray(np.asarray(ref_img)).convert("L"))
-                    plt.imshow(gray_img, alpha=0.7, cmap="gray")
+            fig = plt.figure()
+            plt.axis("off")
+            if overlay_image:
+                gray_img = np.asarray(Image.fromarray(np.asarray(ref_img)).convert("L"))
+                plt.imshow(gray_img, alpha=0.7, cmap="gray")
 
-                    plt.gca().add_patch(
-                        # Non-None plt confirms Rectangle will be non-None.
-                        Rectangle(  # pyright: ignore[reportPossiblyUnboundVariable]
-                            (bbox[0], bbox[1]),
-                            bbox[2] - bbox[0],
-                            bbox[3] - bbox[1],
-                            linewidth=1,
-                            edgecolor="r",
-                            facecolor="none",
-                        ),
-                    )
-                    plt.imshow(sal_map, cmap="jet", alpha=0.3)
-                    plt.colorbar()
-                else:
-                    plt.imshow(sal_map, cmap="jet")
-                    plt.colorbar()
-                plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
-                plt.close(fig)
+                plt.gca().add_patch(
+                    Rectangle(
+                        (bbox[0], bbox[1]),
+                        bbox[2] - bbox[0],
+                        bbox[3] - bbox[1],
+                        linewidth=1,
+                        edgecolor="r",
+                        facecolor="none",
+                    ),
+                )
+                plt.imshow(sal_map, cmap="jet", alpha=0.3)
+                plt.colorbar()
+            else:
+                plt.imshow(sal_map, cmap="jet")
+                plt.colorbar()
+            plt.savefig(os.path.join(sub_dir, f"det_{det_id}.jpeg"), bbox_inches="tight")
+            plt.close(fig)

@@ -1,44 +1,44 @@
-"""MAITE compliant dataset and model objects for using XAITK for object detection.
+"""MAITE compliant dataset and model objects for using XAITK for object detection."""
 
-This module provides import guards for optional dependencies:
-- MAITEDetectionTarget, MAITEObjectDetectionDataset, MAITEDetector,
-  COCOMAITEObjectDetectionDataset: require ``maite`` extra
-"""
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
-from xaitk_saliency.exceptions import MaiteImportError
+from xaitk_saliency._guard import Group, guard
 
-_MAITE_CLASSES = [
-    "COCOMAITEObjectDetectionDataset",
-    "MAITEDetectionTarget",
-    "MAITEObjectDetectionDataset",
-    "MAITEDetector",
-]
-
-__all__: list[str] = []
-
-_import_error: ImportError | None = None
-
-try:
-    from xaitk_saliency.interop.maite.object_detection._dataset import (
+if TYPE_CHECKING:
+    from xaitk_saliency.interop.maite.object_detection._coco_maite_object_detection_dataset import (
         COCOMAITEObjectDetectionDataset as COCOMAITEObjectDetectionDataset,
     )
-    from xaitk_saliency.interop.maite.object_detection._dataset import (
+    from xaitk_saliency.interop.maite.object_detection._maite_object_detection_dataset import (
         MAITEDetectionTarget as MAITEDetectionTarget,
     )
-    from xaitk_saliency.interop.maite.object_detection._dataset import (
+    from xaitk_saliency.interop.maite.object_detection._maite_object_detection_dataset import (
         MAITEObjectDetectionDataset as MAITEObjectDetectionDataset,
     )
     from xaitk_saliency.interop.maite.object_detection._model import MAITEDetector as MAITEDetector
 
-    __all__ += _MAITE_CLASSES  # pyright: ignore[reportUnsupportedDunderAll]
-    # Re-home so Sphinx documents the public path, not the private leaf.
-    for _cls_name in _MAITE_CLASSES:
-        globals()[_cls_name].__module__ = __name__
-except ImportError as _ex:
-    _import_error = _ex
+_OBJECT_DETECTION = "xaitk_saliency.interop.maite.object_detection"
 
+__getattr__: Callable[[str], Any]
+__dir__: Callable[[], list[str]]
+__all__: list[str]
 
-def __getattr__(name: str) -> None:
-    if name in _MAITE_CLASSES:
-        raise MaiteImportError(name, import_error=_import_error)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+__getattr__, __dir__, __all__ = guard(
+    namespace=globals(),
+    groups=[
+        Group(
+            symbols={
+                "MAITEDetectionTarget": f"{_OBJECT_DETECTION}._maite_object_detection_dataset",
+                "MAITEObjectDetectionDataset": f"{_OBJECT_DETECTION}._maite_object_detection_dataset",
+                "MAITEDetector": f"{_OBJECT_DETECTION}._model",
+            },
+            extras=["maite"],
+        ),
+        Group(
+            symbols={
+                "COCOMAITEObjectDetectionDataset": f"{_OBJECT_DETECTION}._coco_maite_object_detection_dataset",
+            },
+            extras=["maite", "tools"],
+        ),
+    ],
+)

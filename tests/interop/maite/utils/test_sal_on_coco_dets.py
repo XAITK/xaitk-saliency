@@ -1,7 +1,6 @@
 import logging
 import os
 import unittest.mock as mock
-from importlib.util import find_spec
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -17,17 +16,12 @@ from xaitk_saliency.interop.maite.utils.bin import sal_on_coco_dets
 
 rng = np.random.default_rng()
 
-deps = ["kwcoco", "matplotlib"]
-specs = [find_spec(dep) for dep in deps]
-is_usable = all(spec is not None for spec in specs)
-
 dataset_dir_path = DATA_DIR
 config_file = os.path.join(DATA_DIR, "config.json")
 
 
 @pytest.mark.maite
 @pytest.mark.tools
-@pytest.mark.skipif(not is_usable, reason="Extra 'xaitk-saliency[tools]' not installed.")
 class TestSalOnCocoDets:
     """These tests make use of the `tmpdir` fixture from `pytest`.
 

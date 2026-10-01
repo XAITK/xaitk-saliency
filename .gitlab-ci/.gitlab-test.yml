@@ -31,6 +31,8 @@
         RUNNER_TAG: small-cpu
       - TOX_ENV: maite-tools
         RUNNER_TAG: medium-cpu
+      - TOX_ENV: optional
+        RUNNER_TAG: autoscaler
       - TOX_ENV: notebooks
         RUNNER_TAG: autoscaler
   rules:
