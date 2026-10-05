@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ["RISEStack"]
+
 from collections.abc import Sequence
 from typing import Any
 

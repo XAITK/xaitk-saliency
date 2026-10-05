@@ -1,5 +1,9 @@
 """This module defines the `SlidingWindow` class, which implements a sliding window perturbation on input images."""
 
+from __future__ import annotations
+
+__all__ = ["SlidingWindow"]
+
 from typing import Any
 
 import numpy as np

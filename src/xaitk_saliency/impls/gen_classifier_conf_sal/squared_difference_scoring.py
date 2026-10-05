@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["SquaredDifferenceScoring"]
+
 import numpy as np
 from typing_extensions import override
 

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+__all__ = [
+    "compute_ssd",
+    "compute_xcorr",
+    "compute_iou_coverage",
+    "compute_saliency_coverage",
+    "compute_ground_truth_coverage",
+]
+
 from typing import Any
 
 import numpy as np

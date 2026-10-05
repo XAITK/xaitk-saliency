@@ -24,6 +24,10 @@ RISE MIT License (https://github.com/eclique/RISE/blob/master/LICENSE):
     SOFTWARE.
 """
 
+from __future__ import annotations
+
+__all__ = ["RISEGrid"]
+
 from typing import Any, Dict, Optional
 
 import numpy as np

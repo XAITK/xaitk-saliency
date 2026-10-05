@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["SimilarityScoring"]
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale

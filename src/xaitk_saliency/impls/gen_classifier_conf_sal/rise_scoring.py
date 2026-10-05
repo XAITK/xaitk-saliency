@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["RISEScoring"]
+
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 from typing_extensions import override

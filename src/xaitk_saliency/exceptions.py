@@ -1,5 +1,7 @@
 """Implementation of custom exceptions."""
 
+__all__ = []
+
 
 class ShapeMismatchError(Exception):
     """Exception for when matrix shape expectations are violated."""

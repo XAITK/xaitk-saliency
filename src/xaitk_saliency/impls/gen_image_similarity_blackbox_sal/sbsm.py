@@ -6,6 +6,8 @@ scoring algorithms to generate similarity-based visual saliency maps.
 
 from __future__ import annotations
 
+__all__ = ["SBSMStack"]
+
 from collections.abc import Sequence
 from typing import Any
 

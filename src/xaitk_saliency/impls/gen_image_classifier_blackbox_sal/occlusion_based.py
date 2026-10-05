@@ -5,6 +5,8 @@ This class implements a generator composed of modular perturbation and occlusion
 
 from __future__ import annotations
 
+__all__ = ["PerturbationOcclusion"]
+
 from collections.abc import Sequence
 from typing import Any, TypeVar
 

@@ -1,5 +1,10 @@
 """This module provides the `GenerateDescriptorSimilaritySaliency` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
+__all__ = ["GenerateDescriptorSimilaritySaliency"]
+
+
 import abc
 from typing import Any
 

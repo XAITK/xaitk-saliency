@@ -1,5 +1,9 @@
 """This module provides the `GenerateImageSimilarityBlackboxSaliency` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
+__all__ = ["GenerateImageSimilarityBlackboxSaliency"]
+
 import abc
 from collections.abc import Sequence
 from typing import Any

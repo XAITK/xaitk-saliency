@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ["MCRISEStack"]
+
 import itertools
 from collections.abc import Generator, Iterable, Sequence
 from typing import Any

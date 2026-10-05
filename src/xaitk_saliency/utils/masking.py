@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ["occlude_image_batch", "occlude_image_streaming", "benchmark_occlude_image", "weight_regions_by_scalar"]
+
 import itertools
 import time
 from collections.abc import Callable, Generator, Iterable, Sequence

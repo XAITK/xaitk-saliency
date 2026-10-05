@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+__all__ = ["DRISEStack", "RandomGridStack"]
+
 import abc
 from collections.abc import Sequence
 from typing import Any

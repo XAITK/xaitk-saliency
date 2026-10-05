@@ -10,6 +10,10 @@ used to interpret the classifier's behavior, by showing how different parts of t
 confidence in each class.
 """
 
+from __future__ import annotations
+
+__all__ = ["GenerateImageClassifierBlackboxSaliency"]
+
 import abc
 from typing import Any
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+__all__ = ["RandomGrid"]
+
 from typing import Any, Dict, Optional, Tuple
 from typing_extensions import override
 

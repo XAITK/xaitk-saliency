@@ -1,5 +1,9 @@
 """This module provides the `PerturbImage` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
+__all__ = ["PerturbImage"]
+
 import abc
 from typing import Any
 
