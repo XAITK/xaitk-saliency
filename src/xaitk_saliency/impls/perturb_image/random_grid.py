@@ -1,23 +1,25 @@
+"""Implementation of Random Grid perturbation mask generation."""
+
 from __future__ import annotations
 
 __all__ = ["RandomGrid"]
 
-from typing import Any, Dict, Optional, Tuple
-from typing_extensions import override
+from typing import Any
 
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils.parallel import parallel_map
+from typing_extensions import override
 
 from xaitk_saliency import PerturbImage
 
 
 class RandomGrid(PerturbImage):
-    """
-    Generate masks using a random grid of set cell size. If the chosen cell
-    size does not divide an image evenly, then the grid is over-sized and
-    the resulting mask is centered and cropped. Each mask is also shifted
-    randomly by a maximum of half the cell size in both x and y.
+    """Generate masks using a random grid of set cell size.
+
+    If the chosen cell size does not divide an image evenly,
+    then the grid is over-sized and the resulting mask is centered and cropped.
+    Each mask is also shifted randomly by a maximum of half the cell size in both x and y.
 
     This method is based on RISE (http://bmvc2018.org/contents/papers/1064.pdf)
     but aims to address the changing cell size, given images of different
@@ -46,12 +48,14 @@ class RandomGrid(PerturbImage):
 
     def __init__(
         self,
+        *,
         n: int,
-        s: Tuple[int, int],
+        s: tuple[int, int],
         p1: float,
         seed: int | None = None,
         threads: int | None = None,
-    ):
+    ) -> None:
+        """Initialize the random grid mask generator."""
         self.n = n
         self.s = s
         self.p1 = p1
@@ -95,26 +99,16 @@ class RandomGrid(PerturbImage):
         # Expand index for efficiency
         img_h, img_w = img_shape
 
-        # ruff: noqa
         def work_func(_i: int) -> np.ndarray:
-            if max_shift_x != 0:
-                shift_x = shift_rng.integers(low=-max_shift_x, high=max_shift_x)
-            else:
-                shift_x = 0
-
-            if max_shift_y != 0:
-                shift_y = shift_rng.integers(low=-max_shift_y, high=max_shift_y)
-            else:
-                shift_y = 0
+            shift_x = shift_rng.integers(low=-max_shift_x, high=max_shift_x) if max_shift_x != 0 else 0
+            shift_y = shift_rng.integers(low=-max_shift_y, high=max_shift_y) if max_shift_y != 0 else 0
 
             # Total offset: offset to center + random shift
             offset_x = center_x + shift_x
             offset_y = center_y + shift_y
 
             mask = resize(image=grid[_i], output_shape=up_size, order=1)
-            mask = mask[offset_y : offset_y + img_h, offset_x : offset_x + img_w]
-
-            return mask
+            return mask[offset_y : offset_y + img_h, offset_x : offset_x + img_w]
 
         if threads is None or threads < 1:
             for i in range(num_masks):
@@ -126,7 +120,7 @@ class RandomGrid(PerturbImage):
         return masks
 
     @override
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         return {
             "n": self.n,
             "s": self.s,
