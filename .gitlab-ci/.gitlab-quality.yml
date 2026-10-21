@@ -10,5 +10,9 @@
 
 pre-commit:
   extends: .quality-setup
+  before_script:
+    - !reference [.quality-setup, before_script]
+    # Trust the Kubernetes checkout for Git commands inside tox.
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
   script:
     - tox -e pre-commit

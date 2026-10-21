@@ -11,7 +11,7 @@
   extends: .tox-setup
   stage: test
   tags:
-    - autoscaler
+    - k8s-large-cpu
   rules:
     - !reference [.shared-setup, rules]
   before_script:
@@ -24,17 +24,17 @@
   parallel:
     matrix:
       - TOX_ENV: core
-        RUNNER_TAG: small-cpu
+        RUNNER_TAG: k8s-small-cpu
       - TOX_ENV: tools
-        RUNNER_TAG: medium-cpu
+        RUNNER_TAG: k8s-medium-cpu
       - TOX_ENV: maite
-        RUNNER_TAG: small-cpu
+        RUNNER_TAG: k8s-small-cpu
       - TOX_ENV: maite-tools
-        RUNNER_TAG: medium-cpu
+        RUNNER_TAG: k8s-medium-cpu
       - TOX_ENV: optional
-        RUNNER_TAG: autoscaler
+        RUNNER_TAG: k8s-large-cpu
       - TOX_ENV: notebooks
-        RUNNER_TAG: autoscaler
+        RUNNER_TAG: k8s-large-cpu
   rules:
     # notebooks jobs are allowed to fail for now
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $TOX_ENV == "notebooks"'
@@ -95,7 +95,7 @@ tox:pytest:py3.14:
 tox:docs:
   extends: .test-setup
   tags:
-    - autoscaler
+    - k8s-medium-cpu
   image: python:$PYTHON_VERSION
   parallel:
     matrix:
@@ -107,7 +107,7 @@ tox:docs:
 .tox:coverage:version:
   extends: .test-setup
   tags:
-    - small-cpu
+    - k8s-small-cpu
   before_script:
     - !reference [.shared-setup, before_script]
     # Install dependencies (coverage is in the tests dependency group)
@@ -177,7 +177,7 @@ tox:coverage:py3.14:
 tox:coverage:
   extends: .test-setup
   tags:
-    - small-cpu
+    - k8s-small-cpu
   coverage: '/^TOTAL\s+\d+\s+\d+\s+(\d+(?:\.\d+)?%)/'
   dependencies:
     - tox:coverage:py3.10
@@ -247,4 +247,4 @@ tox:notebooks:examples:
           # Model comparison example is excluded due to computational complexity
           #"ModelComparisonWithSaliency.ipynb",
         ]
-        RUNNER_TAG: autoscaler
+        RUNNER_TAG: k8s-large-cpu
