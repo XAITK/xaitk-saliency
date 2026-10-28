@@ -1,1 +1,0 @@
-* Added doctests to ``impls/``
