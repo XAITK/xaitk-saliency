@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["SquaredDifferenceScoring"]
+
 import numpy as np
 from typing_extensions import override
 
@@ -70,6 +72,7 @@ class SquaredDifferenceScoring(GenerateClassifierConfidenceSaliency):
         sal -= sal.min()
         return sal / sal.max()
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the SquaredDifferenceScoring instance.
 

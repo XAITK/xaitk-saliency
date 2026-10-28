@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["DRISEScoring"]
+
 import numpy as np
 from scipy.spatial.distance import cdist
 from sklearn.preprocessing import maxabs_scale
@@ -132,8 +134,8 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
 
         # Compute similarity of class probabilities
         s2 = 1 - cdist(
-            perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
-            ref_dets[:, 5:],
+            XA=perturbed_dets[:, :, 5:].reshape(n_masks * n_props, -1),
+            XB=ref_dets[:, 5:],
             metric="cosine",
         ).reshape(n_masks, n_props, n_dets).astype(np.promote_types(perturbed_dets.dtype, ref_dets.dtype))
 
@@ -157,6 +159,7 @@ class DRISEScoring(GenerateDetectorProposalSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the DRISEScoring instance.
 

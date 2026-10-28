@@ -1,20 +1,22 @@
-"""Implementation of MC-RISE perturbation mask generation"""
+"""Implementation of MC-RISE perturbation mask generation."""
 
 from __future__ import annotations
 
-from typing import Any, Optional
-from typing_extensions import override
+__all__ = ["MCRISEGrid"]
+
+from typing import Any
 
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils.parallel import parallel_map
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 
 class MCRISEGrid(PerturbImage):
-    """
-    Based on Hatakeyama et. al:
+    """Generate MC-RISE masks based on Hatakeyama et al.
+
     https://openaccess.thecvf.com/content/ACCV2020/papers/Hatakeyama_Visualizing_Color-wise_Saliency_of_Black-Box_Image_Classification_Models_ACCV_2020_paper.pdf
 
     Example:
@@ -28,15 +30,15 @@ class MCRISEGrid(PerturbImage):
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
         k: int,
-        seed: Optional[int] = None,
-        threads: Optional[int] = 4,
+        seed: int | None = None,
+        threads: int | None = 4,
     ) -> None:
-        """
-        Generate a set of random binary masks
+        """Generate a set of random binary masks.
 
         :param n: int
             Number of random masks used in the algorithm. E.g. 1000.
@@ -82,10 +84,10 @@ class MCRISEGrid(PerturbImage):
         for g_idx, g in enumerate(grid):
             g_shape = g.shape
             # Randomly choose fill colors for each pixel
-            fill_mask = rng.integers(0, k, size=g_shape)
+            fill_mask = rng.integers(low=0, high=k, size=g_shape)
             for fill_idx in range(self.k):
                 # Keep the masked pixels where the current idx (color) was selected
-                indiv_color_mask = np.where(g == False, np.where(fill_mask == fill_idx, False, True), True)
+                indiv_color_mask = np.where(~g, np.where(fill_mask == fill_idx, False, True), True)
                 indiv_color_masks[fill_idx][g_idx] = indiv_color_mask
 
         self.grid = indiv_color_masks
@@ -93,7 +95,8 @@ class MCRISEGrid(PerturbImage):
 
     @override
     def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-        """
+        """Return MC-RISE masks, with one mask set per color.
+
         Warning: this implementation returns a different shape than typically expected by this interface.
         Instead of `[nMasks x Height x Width]`, masks of shape `[kColors x nMasks x Height x Width]`
         are returned.
@@ -116,28 +119,14 @@ class MCRISEGrid(PerturbImage):
 
         masks = np.empty((num_colors, num_masks, *input_size), dtype=grid.dtype)
 
-        # Expanding index accesses for repetition efficiency.
-        cell_h, cell_w = cell_size[:2]
-        input_h, input_w = input_size[:2]
-
-        # flake8: noqa
         def work_func(i_: int) -> np.ndarray:
-            # Random shifts
-            y = shift_rng.integers(0, cell_h)
-            x = shift_rng.integers(0, cell_w)
-            k_masks = np.empty((num_colors, input_h, input_w))
-            for k_ in range(num_colors):
-                k_masks[k_] = resize(
-                    grid[k_, i_, ...],
-                    up_size,
-                    order=1,
-                    mode="reflect",
-                    anti_aliasing=False,
-                )[
-                    y : y + input_h,
-                    x : x + input_w,
-                ]
-            return k_masks
+            return self._mask_for_index(
+                i_,
+                grid=grid,
+                input_size=input_size,
+                up_size=up_size,
+                shift_rng=shift_rng,
+            )
 
         threads = self.threads
         if threads is None or threads < 1:
@@ -145,7 +134,7 @@ class MCRISEGrid(PerturbImage):
                 masks[:, i, ...] = work_func(i)
         else:
             for i, m in enumerate(
-                parallel_map(
+                parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                     work_func,
                     range(num_masks),
                     cores=threads,
@@ -155,6 +144,31 @@ class MCRISEGrid(PerturbImage):
                 masks[:, i, ...] = m
 
         return masks
+
+    def _mask_for_index(
+        self,
+        index: int,
+        *,
+        grid: np.ndarray[Any, Any],
+        input_size: tuple[int, ...],
+        up_size: np.ndarray[Any, Any],
+        shift_rng: np.random.Generator,
+    ) -> np.ndarray[Any, Any]:
+        """Resize one MC-RISE grid across all colors and crop a random shift."""
+        cell_h, cell_w = np.ceil(np.array(input_size) / self.s)[:2]
+        input_h, input_w = input_size[:2]
+        y = shift_rng.integers(low=0, high=cell_h)
+        x = shift_rng.integers(low=0, high=cell_w)
+        k_masks = np.empty((self.k, input_h, input_w))
+        for color_idx in range(self.k):
+            k_masks[color_idx] = resize(
+                image=grid[color_idx, index, ...],
+                output_shape=up_size,
+                order=1,
+                mode="reflect",
+                anti_aliasing=False,
+            )[y : y + input_h, x : x + input_w]
+        return k_masks
 
     @override
     def get_config(self) -> dict[str, Any]:

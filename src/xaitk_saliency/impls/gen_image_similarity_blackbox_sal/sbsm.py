@@ -6,11 +6,14 @@ scoring algorithms to generate similarity-based visual saliency maps.
 
 from __future__ import annotations
 
+__all__ = ["SBSMStack"]
+
 from collections.abc import Sequence
 from typing import Any
 
 import numpy as np
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
+from typing_extensions import override
 
 from xaitk_saliency import GenerateImageSimilarityBlackboxSaliency
 from xaitk_saliency.impls.gen_descriptor_sim_sal.similarity_scoring import SimilarityScoring
@@ -85,6 +88,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
     def fill(self, v: int | Sequence[int] | np.ndarray[Any, Any] | None) -> None:
         self._po.fill = v
 
+    @override
     def _generate(
         self,
         *,
@@ -95,6 +99,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         return self._po.generate(ref_image=ref_image, query_images=query_images, blackbox=blackbox)
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the SBSMStack.
 
@@ -113,6 +118,7 @@ class SBSMStack(GenerateImageSimilarityBlackboxSaliency):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the SBSMStack instance.
 

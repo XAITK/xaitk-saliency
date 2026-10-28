@@ -9,7 +9,7 @@ class TestFormatDetection:
     def test_default_objectness_fill(self) -> None:
         """Test that when objectness scores are not provided the default is filled into the appropriate column."""
         rng = np.random.default_rng(seed=0)
-        test_bbox_mat = rng.integers(0, 255, (16, 4))
+        test_bbox_mat = rng.integers(low=0, high=255, size=(16, 4))
         test_class_mat = rng.standard_normal((16, 8))
         combined_mat = format_detection(bbox_mat=test_bbox_mat, classification_mat=test_class_mat)
         # The objectness scores should be in the index 4 column and they should
@@ -19,7 +19,7 @@ class TestFormatDetection:
     def test_explicit_objectness(self) -> None:
         """Test that input objectness vector is represented in the output."""
         rng = np.random.default_rng(seed=0)
-        test_bbox_mat = rng.integers(0, 255, (16, 4))
+        test_bbox_mat = rng.integers(low=0, high=255, size=(16, 4))
         test_class_mat = rng.standard_normal((16, 8))
         test_obj_v = np.tile([0.1, 0.2, 0.3, 0.4], 4)
         combined_mat = format_detection(
@@ -33,7 +33,7 @@ class TestFormatDetection:
     def test_explicit_objectness_2d(self) -> None:
         """Test that an input objectness vector that is of shape `[nDets x 1]` is treated fine."""
         rng = np.random.default_rng(seed=0)
-        test_bbox_mat = rng.integers(0, 255, (16, 4))
+        test_bbox_mat = rng.integers(low=0, high=255, size=(16, 4))
         test_class_mat = rng.standard_normal((16, 8))
         test_obj_v = np.tile([0.1, 0.2, 0.3, 0.4], 4).reshape(16, 1)
         combined_mat = format_detection(
@@ -73,7 +73,7 @@ class TestFormatDetection:
         """Test that an error is raised on `nDets` shape mismatch between input bbox and classification matrices."""
         # 16 boxes, 14 classifications.
         rng = np.random.default_rng(seed=0)
-        test_bbox_mat = rng.integers(0, 255, (16, 4))
+        test_bbox_mat = rng.integers(low=0, high=255, size=(16, 4))
         test_class_mat = rng.standard_normal((14, 8))
         with pytest.raises(
             ValueError,
@@ -84,7 +84,7 @@ class TestFormatDetection:
     def test_objectness_shape_mismatch(self) -> None:
         """Test that an error is raised when the explicitly input objectness array is not a matching size."""
         rng = np.random.default_rng(seed=0)
-        test_bbox_mat = rng.integers(0, 255, (16, 4))
+        test_bbox_mat = rng.integers(low=0, high=255, size=(16, 4))
         test_class_mat = rng.standard_normal((16, 8))
         test_objnes_v = rng.standard_normal(11)
         with pytest.raises(

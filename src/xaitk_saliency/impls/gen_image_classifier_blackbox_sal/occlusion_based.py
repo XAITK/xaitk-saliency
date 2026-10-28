@@ -5,6 +5,8 @@ This class implements a generator composed of modular perturbation and occlusion
 
 from __future__ import annotations
 
+__all__ = ["PerturbationOcclusion"]
+
 from collections.abc import Sequence
 from typing import Any, TypeVar
 
@@ -73,6 +75,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         # Optional fill color
         self.fill: int | Sequence[int] | None = None
 
+    @override
     def _generate(
         self,
         *,
@@ -105,6 +108,7 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
         )
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
         """Returns the default configuration for the PerturbationOcclusion.
 
@@ -133,13 +137,14 @@ class PerturbationOcclusion(GenerateImageClassifierBlackboxSaliency):
             PerturbationOcclusion: An instance of PerturbationOcclusion.
         """
         config_dict = dict(config_dict)  # shallow-copy
-        config_dict["perturber"] = from_config_dict(config_dict["perturber"], PerturbImage.get_impls())
+        config_dict["perturber"] = from_config_dict(config=config_dict["perturber"], type_iter=PerturbImage.get_impls())
         config_dict["generator"] = from_config_dict(
-            config_dict["generator"],
-            GenerateClassifierConfidenceSaliency.get_impls(),
+            config=config_dict["generator"],
+            type_iter=GenerateClassifierConfidenceSaliency.get_impls(),
         )
         return super().from_config(config_dict, merge_default=merge_default)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the PerturbationOcclusion instance.
 

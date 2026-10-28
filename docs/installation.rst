@@ -127,8 +127,9 @@ brief description of the extra.
     **example-deps**: installs various dependencies required for running any notebook in ``docs/examples``.
 
     **tools**: installs `click <https://click.palletsprojects.com/>`_,
-    `KWCOCO <https://github.com/Kitware/kwcoco>`_, and `matplotlib <https://matplotlib.org/>`_. Required for the
-    ``sal_on_coco_dets`` CLI.
+    `KWCOCO <https://github.com/Kitware/kwcoco>`_, `matplotlib <https://matplotlib.org/>`_, and
+    `datamaite <https://pypi.org/project/datamaite/>`_. Required for the ``sal_on_od_dets`` CLIs
+    (``xaitk_saliency.utils.bin`` and ``xaitk_saliency.interop.maite.utils.bin``).
 
     **maite**: installs `MAITE <https://mit-ll-ai-technology.github.io/maite/>`_. Required for
     ``xaitk_saliency.interop.maite``.

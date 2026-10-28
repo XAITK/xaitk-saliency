@@ -5,7 +5,7 @@ from .test_notebook_utils import list_error_messages, pyright_analyze
 
 @pytest.mark.notebooks
 # require_marker here is an execution gate (needs pyright; only run under -m notebooks),
-# not the dependency-canary use seen in the *_optional_deps.py files.
+# not the dependency-canary use in tests/test_guard_canaries.py.
 @pytest.mark.usefixtures("require_marker")
 @pytest.mark.parametrize(
     ("filepath", "expected_num_errors"),

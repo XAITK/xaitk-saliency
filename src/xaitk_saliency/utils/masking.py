@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ["occlude_image_batch", "occlude_image_streaming", "benchmark_occlude_image", "weight_regions_by_scalar"]
+
 import itertools
 import time
 from collections.abc import Callable, Generator, Iterable, Sequence
@@ -113,7 +115,7 @@ def occlude_image_batch(  # noqa: C901
             occ_img_mats[i] = work_func(i)
     else:
         for i, m in enumerate(
-            parallel_map(
+            parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                 work_func,
                 range(len(masks)),
                 cores=threads,
@@ -206,9 +208,9 @@ def occlude_image_streaming(  # noqa: C901
 
     if threads is None or threads < 1:
         for i, mask in enumerate(masks):
-            yield work_func(i, mask)
+            yield work_func(i_=i, m=mask)
     else:
-        yield from parallel_map(
+        yield from parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
             work_func,
             itertools.count(),
             masks,

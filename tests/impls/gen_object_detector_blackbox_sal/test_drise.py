@@ -5,6 +5,7 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, DRISEStack, RISEGrid
@@ -41,14 +42,21 @@ class TestBlackBoxDRISE:
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],
             ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((0, 0), (10, 15)), {"class0": 0.3, "class1": 0.7}),
-                        (AxisAlignedBoundingBox((5, 5), (20, 25)), {"class0": 0.9, "class1": 0.1}),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(10, 15)),
+                            {"class0": 0.3, "class1": 0.7},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(5, 5), max_vertex=(20, 25)),
+                            {"class0": 0.9, "class1": 0.1},
+                        ),
                     ]
 
             get_config = None  # type: ignore

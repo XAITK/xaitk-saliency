@@ -1,5 +1,9 @@
 """This module provides the `GenerateClassifierConfidenceSaliency` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
+__all__ = ["GenerateClassifierConfidenceSaliency"]
+
 import abc
 from typing import Any
 

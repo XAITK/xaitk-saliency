@@ -6,8 +6,8 @@ Utils
 Saliency Generation CLI Entrypoint
 ----------------------------------
 
-.. click:: xaitk_saliency.interop.maite.utils.bin:sal_on_coco_dets
-    :prog: sal-on-coco-dets
+.. click:: xaitk_saliency.interop.maite.utils.bin:sal_on_od_dets
+    :prog: sal-on-od-dets
     :nested: full
 
 -----------------------------

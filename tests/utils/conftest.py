@@ -5,7 +5,9 @@ from pathlib import Path
 
 # Mapping of test filenames to the extra modules they require beyond core
 _FILE_DEPENDENCIES: dict[str, list[str]] = {
-    "test_sal_on_coco_dets.py": ["click"],
+    "test_coco.py": ["kwcoco"],
+    "test_datamaite.py": ["datamaite"],
+    "test_sal_on_od_dets.py": ["click", "datamaite", "matplotlib"],
 }
 
 

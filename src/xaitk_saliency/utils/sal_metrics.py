@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+__all__ = [
+    "compute_ssd",
+    "compute_xcorr",
+    "compute_iou_coverage",
+    "compute_saliency_coverage",
+    "compute_ground_truth_coverage",
+]
+
 from typing import Any
 
 import numpy as np
@@ -98,7 +106,13 @@ def compute_iou_coverage(
         # scipy.zoom expects size as (width, height)
         x_zoom_factor = target_shape[1] / feature.shape[1]
         y_zoom_factor = target_shape[0] / feature.shape[0]
-        return zoom(feature.astype(np.uint8), (x_zoom_factor, y_zoom_factor), order=1, grid_mode=True, mode="nearest")
+        return zoom(
+            input=feature.astype(np.uint8),
+            zoom=(x_zoom_factor, y_zoom_factor),
+            order=1,
+            grid_mode=True,
+            mode="nearest",
+        )
 
     # Scale down if needed.
     if ground_truth_features.shape != target_shape:
@@ -141,8 +155,8 @@ def _downsample_to_target(
     anti_aliasing = not is_binary
     # Resize the image. Note: preserve_range keeps the original value scale.
     return resize(
-        arr,
-        (target_shape[0], target_shape[1]),
+        image=arr,
+        output_shape=(target_shape[0], target_shape[1]),
         preserve_range=True,
         anti_aliasing=anti_aliasing,
         order=order,

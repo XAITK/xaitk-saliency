@@ -2,8 +2,11 @@
 
 from typing import Any
 
+__all__ = ["OcclusionScoring"]
+
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
+from typing_extensions import override
 
 from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.utils.masking import weight_regions_by_scalar
@@ -34,6 +37,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         True
     """
 
+    @override
     def generate(
         self,
         *,
@@ -72,6 +76,7 @@ class OcclusionScoring(GenerateClassifierConfidenceSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the OcclusionScoring instance.
 

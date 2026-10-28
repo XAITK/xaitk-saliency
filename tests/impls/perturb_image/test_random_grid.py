@@ -53,7 +53,7 @@ class TestRandomGrid:
         impl2 = RandomGrid(n=3, s=(5, 4), p1=0.5)
 
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(20, 20), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(20, 20), dtype=np.uint8)
 
         masks1 = impl1(img)
         masks2 = impl2(img)
@@ -66,7 +66,7 @@ class TestRandomGrid:
         impl2 = RandomGrid(n=3, s=(2, 1), p1=0.6, seed=5)
 
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(10, 10), dtype=np.uint8)
 
         masks1 = impl1(img)
         masks2 = impl2(img)
@@ -76,7 +76,7 @@ class TestRandomGrid:
     def test_call_idempotency(self) -> None:
         """Test that perturbation generation is idempotent, at least when seeded and single-threaded."""
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(10, 10), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(10, 10), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(1, 2), p1=0.4, seed=1, threads=0)
 
@@ -91,7 +91,7 @@ class TestRandomGrid:
         Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
         actual_masks = impl(img)
@@ -104,7 +104,7 @@ class TestRandomGrid:
         Number of channels should not affect output masks.
         """
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(4, 6, 3), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(4, 6, 3), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=0)
         actual_masks = impl.perturb(img)
@@ -116,8 +116,8 @@ class TestRandomGrid:
         impl = RandomGrid(n=5, s=(3, 4), p1=0.2, seed=42, threads=0)
 
         rng = np.random.default_rng(seed=0)
-        img_small = rng.integers(0, 255, size=(5, 7), dtype=np.uint8)
-        img_large = rng.integers(0, 255, size=(55, 77), dtype=np.uint8)
+        img_small = rng.integers(low=0, high=255, size=(5, 7), dtype=np.uint8)
+        img_large = rng.integers(low=0, high=255, size=(55, 77), dtype=np.uint8)
 
         masks_small = impl(img_small)
         masks_large = impl(img_large)
@@ -131,7 +131,7 @@ class TestRandomGrid:
     def test_threading(self, snapshot_custom: SnapshotAssertion) -> None:
         """Test that using threading does not affect results."""
         rng = np.random.default_rng(seed=0)
-        img = rng.integers(0, 255, size=(4, 6), dtype=np.uint8)
+        img = rng.integers(low=0, high=255, size=(4, 6), dtype=np.uint8)
 
         impl = RandomGrid(n=2, s=(2, 2), p1=0.5, seed=123, threads=1)
 

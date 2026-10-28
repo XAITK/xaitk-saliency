@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__all__ = ["GenerateObjectDetectorBlackboxSaliency"]
+
 import abc
 import logging
 from typing import Any

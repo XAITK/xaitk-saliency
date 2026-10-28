@@ -1,5 +1,9 @@
 """This module provides the `GenerateDetectorProposalSaliency` interface for `xaitk-saliency`."""
 
+from __future__ import annotations
+
+__all__ = ["GenerateDetectorProposalSaliency"]
+
 import abc
 from typing import Any
 

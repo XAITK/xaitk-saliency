@@ -24,6 +24,8 @@ Example usage:
 
 from __future__ import annotations
 
+__all__ = ["SaliencyMetric"]
+
 import abc
 from typing import Any
 

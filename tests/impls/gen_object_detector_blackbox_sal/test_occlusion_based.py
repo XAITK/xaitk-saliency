@@ -8,6 +8,7 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from xaitk_saliency import GenerateDetectorProposalSaliency, PerturbImage
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -24,6 +25,7 @@ class StubPI(PerturbImage):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -34,6 +36,7 @@ class StubGen(GenerateDetectorProposalSaliency):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -69,7 +72,7 @@ class TestPerturbationOcclusion:
                 # test padding functinality
                 yield [
                     (
-                        AxisAlignedBoundingBox((0, 0), (1, 1)),
+                        AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(1, 1)),
                         {"class0": 0.0, "class1": 0.9},
                     )
                     for _ in range(i)

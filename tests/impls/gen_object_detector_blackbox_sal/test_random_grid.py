@@ -5,6 +5,7 @@ import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, RandomGrid, RandomGridStack
@@ -41,15 +42,25 @@ class TestBlackBoxRandomGrid:
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],
             ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((2, 2), (10, 15)), {"class0": 0.2, "class1": 0.8}),
-                        (AxisAlignedBoundingBox((7, 7), (20, 25)), {"class0": 0.7, "class1": 0.3}),
-                        (AxisAlignedBoundingBox((9, 9), (15, 20)), {"class0": 0.5, "class1": 0.5}),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(2, 2), max_vertex=(10, 15)),
+                            {"class0": 0.2, "class1": 0.8},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(7, 7), max_vertex=(20, 25)),
+                            {"class0": 0.7, "class1": 0.3},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(9, 9), max_vertex=(15, 20)),
+                            {"class0": 0.5, "class1": 0.5},
+                        ),
                     ]
 
             get_config = None  # type: ignore

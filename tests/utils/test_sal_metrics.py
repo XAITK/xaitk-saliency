@@ -27,13 +27,13 @@ predicted_saliency_map = rng_1.gumbel(loc=0, scale=0.1, size=(256, 256))
 reference_saliency_map = rng_2.gumbel(loc=0, scale=0.1, size=(256, 256))
 
 # Define binary image mask and binary/continuous saliency maps
-gt_binary_mask = rng_2.integers(0, 2, size=(256, 256))
-saliency_binary_map = rng_1.integers(0, 2, size=(256, 256))
+gt_binary_mask = rng_2.integers(low=0, high=2, size=(256, 256))
+saliency_binary_map = rng_1.integers(low=0, high=2, size=(256, 256))
 saliency_continous_map = predicted_saliency_map
 
 # Define downsized image mask and saliency maps to test the feature-scaling use-case
-gt_downsized_binary_mask = rng_2.integers(0, 2, size=(128, 128))
-saliency_downsized_binary_mask = rng_1.integers(0, 2, size=(128, 128))
+gt_downsized_binary_mask = rng_2.integers(low=0, high=2, size=(128, 128))
+saliency_downsized_binary_mask = rng_1.integers(low=0, high=2, size=(128, 128))
 saliency_downsized_continous_map = rng_1.gumbel(loc=0, scale=0.1, size=(128, 128))
 
 
@@ -50,12 +50,12 @@ def saliency_metric_assertions(
     """
     original_sal_map = copy.deepcopy(sal_map)
     original_ref_sal_map = copy.deepcopy(ref_sal_map)
-    original_metric_value = computation(original_sal_map, original_ref_sal_map)
+    original_metric_value = computation(sal=original_sal_map, ref=original_ref_sal_map)
 
     assert np.array_equal(original_sal_map, sal_map), "sal_map modified, data changed"
     assert np.array_equal(original_ref_sal_map, ref_sal_map), "ref_sal_map modified, data changed"
 
-    metric_value = computation(sal_map, ref_sal_map)
+    metric_value = computation(sal=sal_map, ref=ref_sal_map)
 
     assert original_metric_value == metric_value, "metric_value modified, data changed"
 

@@ -2,6 +2,8 @@
 
 from typing import Any
 
+__all__ = ["RISEScoring"]
+
 import numpy as np
 from sklearn.preprocessing import maxabs_scale
 from typing_extensions import override
@@ -91,6 +93,7 @@ class RISEScoring(GenerateClassifierConfidenceSaliency):
         # Ensure saliency map in range [-1, 1]
         return np.clip(sal, -1, 1)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         """Get the configuration dictionary of the RISEScoring instance.
 
