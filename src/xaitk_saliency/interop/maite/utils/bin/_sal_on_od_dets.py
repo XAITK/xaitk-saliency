@@ -170,7 +170,9 @@ def sal_on_od_dets(  # noqa: C901
 
     # Save saliency maps
     for dset_idx in range(len(input_dataset)):
-        ref_img, dets, md = input_dataset[dset_idx]
+        ref_img = input_dataset.get_input(dset_idx)
+        dets = input_dataset.get_target(dset_idx)
+        md = input_dataset.get_metadata(dset_idx)
         sample = input_dataset.samples[dset_idx]
         img_file = md.get("file_name", str(sample.image_id))
 

@@ -4,6 +4,7 @@ import unittest.mock as mock
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import datamaite
 import numpy as np
 import py
 import pytest
@@ -169,3 +170,65 @@ class TestSalOnOdDets:
                 [str(empty_dir), str(tmpdir.join(Path("out"))), str(config_file)],
                 catch_exceptions=False,
             )
+
+    @mock.patch(
+        "xaitk_saliency.interop.maite.utils.bin._sal_on_od_dets.datamaite.load_od",
+        wraps=datamaite.load_od,
+    )
+    @mock.patch(
+        "xaitk_saliency.interop.maite.utils.bin._sal_on_od_dets.compute_sal_maps",
+        return_value=mock_return_value,
+    )
+    def test_loader_options_forwarded(
+        self,
+        compute_sal_maps_patch: MagicMock,
+        load_od_patch: MagicMock,
+        tmpdir: py.path.local,
+    ) -> None:
+        """Valid loader options are parsed and forwarded."""
+        result = CliRunner().invoke(
+            cli=sal_on_od_dets,
+            args=[
+                str(dataset_dir_path),
+                str(tmpdir),
+                str(config_file),
+                "-o",
+                "annotation_file=annotations.json",
+                "--loader-option",
+                "images_dir=.",
+            ],
+            catch_exceptions=False,
+        )
+
+        assert result.exit_code == 0
+        load_od_patch.assert_called_once_with(
+            str(dataset_dir_path),
+            dataset_format=mock.ANY,
+            annotation_file="annotations.json",
+            images_dir=".",
+        )
+        compute_sal_maps_patch.assert_called_once()
+
+    @mock.patch(
+        "xaitk_saliency.interop.maite.utils.bin._sal_on_od_dets.datamaite.load_od",
+    )
+    def test_invalid_loader_option(
+        self,
+        load_od_patch: MagicMock,
+        tmpdir: py.path.local,
+    ) -> None:
+        """An option without '=' is rejected before loading the dataset."""
+        result = CliRunner().invoke(
+            cli=sal_on_od_dets,
+            args=[
+                str(dataset_dir_path),
+                str(tmpdir),
+                str(config_file),
+                "-o",
+                "missing_equals",
+            ],
+        )
+
+        assert result.exit_code == 2
+        assert "expected KEY=VALUE, got missing_equals" in result.output
+        load_od_patch.assert_not_called()
