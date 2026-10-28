@@ -1,42 +1,67 @@
 0.16.0
 ======
 
-* Added ``__all__`` to all python modules.
+This release contains the migration of ``xaitk-jatic`` code into ``xaitk-saliency``,
+improvements to the developer experience, and multiple steps to improve the code and
+test quality of ``xaitk-saliency``.
 
-* Added doctests to ``impls/``
+With the migration of ``xaitk-jatic``, users who are using ``xaitk-jatic`` in
+addition to ``xaitk-saliency`` can now solely use ``xaitk-saliency`` with the
+same functionality as using both. ``xaitk-jatic`` will be deprecated in the
+near future and all ``maite`` integration will be part of ``xaitk-saliency``.
 
-* Add optional dependency groups with tox environments, pytest markers, and import guards.
+Saliency and CLI updates
+------------------------
 
-* Updated ``MCRISEStack`` to stay consistent with ``seed`` assignment with other blackbox saliency generators
+* Migrated ``xaitk-jatic`` code into a ``xaitk-saliency`` submodule.
 
-* Added a developer requirement enabling ``@override`` enforcement via ``pyright``.
+* Updated ``MCRISEStack`` to stay consistent with ``seed`` assignment with other
+  blackbox saliency generators.
 
-* Applied the ``ruff`` config from ``nrtk`` and fixed any resulting errors
+* Migrated both ``sal_on_coco_dets`` CLIs in ``xaitk_saliency.utils.bin`` and
+  xaitk_saliency.interop.maite.utils.bin to load datasets using datamaite to
+  support multiple object detection dataset formats.
 
-* Marked tests as ``core`` and ``tools``
+* Renamed CLIs from ``sal_on_coco_dets`` to ``sal_on_od_dets``.
 
-* Updated GitHub actions to use ``tox``.
-
-* Migrate ``xaitk-jatic`` code into a ``xaitk-saliency`` submodule
+Optional dependencies and import guards
+---------------------------------------
 
 * Ported the new import guard structure over from ``nrtk``.
 
-* Migrated ``KWCocoUtils`` to use a new guard mechanism. Importing it without the ``tools`` extra now
+* Added optional dependency groups with tox environments, pytest markers, and
+  import guards.
 
 * Documented the import guard structure and conventions in ``docs/design.rst``.
 
 * Added import guard tests.
 
-* Added a ``tox -e optional`` environment that installs every extra and runs all non-notebook tests.
+Testing and CI
+--------------
 
-* Migrate over the NRTK CI.
+* Added ``tox.ini`` and updated CI to use ``tox``.
+
+* Added doctests to ``impls/``.
+
+* Marked tests as ``core``, ``tools`` and ``maite``.
+
+* Updated GitHub actions to use ``tox``.
+
+* Added a ``tox -e optional`` environment that installs every extra and runs
+  all non-notebook tests.
 
 * Raised the ``pytest`` version floor to 7.3.1.
 
+Code quality and typing
+-----------------------
+
+* Added ``__all__`` to all Python modules.
+
+* Added a developer requirement enabling ``@override`` enforcement via ``pyright``.
+
+* Applied the ``ruff`` config from ``nrtk`` and fixed any resulting errors.
+
 * Re-enabled the ``flake8`` keyword argument checks and fixed the resulting errors.
 
-* Re-enable the ``pyright-external`` type-completeness check and fix the resulting errors.
-
-* Migrated both ``sal_on_coco_dets`` CLIs in ``xaitk_saliency.utils.bin`` and
-
-* Renamed CLIs from ``sal_on_coco_dets`` to ``sal_on_od_dets``.
+* Re-enabled the ``pyright-external`` type-completeness check and fix the resulting
+  errors.
