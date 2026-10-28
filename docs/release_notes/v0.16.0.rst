@@ -1,0 +1,42 @@
+0.16.0
+======
+
+* Added ``__all__`` to all python modules.
+
+* Added doctests to ``impls/``
+
+* Add optional dependency groups with tox environments, pytest markers, and import guards.
+
+* Updated ``MCRISEStack`` to stay consistent with ``seed`` assignment with other blackbox saliency generators
+
+* Added a developer requirement enabling ``@override`` enforcement via ``pyright``.
+
+* Applied the ``ruff`` config from ``nrtk`` and fixed any resulting errors
+
+* Marked tests as ``core`` and ``tools``
+
+* Updated GitHub actions to use ``tox``.
+
+* Migrate ``xaitk-jatic`` code into a ``xaitk-saliency`` submodule
+
+* Ported the new import guard structure over from ``nrtk``.
+
+* Migrated ``KWCocoUtils`` to use a new guard mechanism. Importing it without the ``tools`` extra now
+
+* Documented the import guard structure and conventions in ``docs/design.rst``.
+
+* Added import guard tests.
+
+* Added a ``tox -e optional`` environment that installs every extra and runs all non-notebook tests.
+
+* Migrate over the NRTK CI.
+
+* Raised the ``pytest`` version floor to 7.3.1.
+
+* Re-enabled the ``flake8`` keyword argument checks and fixed the resulting errors.
+
+* Re-enable the ``pyright-external`` type-completeness check and fix the resulting errors.
+
+* Migrated both ``sal_on_coco_dets`` CLIs in ``xaitk_saliency.utils.bin`` and
+
+* Renamed CLIs from ``sal_on_coco_dets`` to ``sal_on_od_dets``.
