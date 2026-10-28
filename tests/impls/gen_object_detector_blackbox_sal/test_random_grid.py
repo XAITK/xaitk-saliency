@@ -1,18 +1,20 @@
 from collections.abc import Hashable, Iterable
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, RandomGrid, RandomGridStack
 
 
+@pytest.mark.core
 class TestBlackBoxRandomGrid:
     def test_configuration(self) -> None:
         """Test configuration suite."""
-
         inst = RandomGridStack(
             n=55,
             s=(15, 8),
@@ -40,15 +42,25 @@ class TestBlackBoxRandomGrid:
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],
             ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((2, 2), (10, 15)), {"class0": 0.2, "class1": 0.8}),
-                        (AxisAlignedBoundingBox((7, 7), (20, 25)), {"class0": 0.7, "class1": 0.3}),
-                        (AxisAlignedBoundingBox((9, 9), (15, 20)), {"class0": 0.5, "class1": 0.5}),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(2, 2), max_vertex=(10, 15)),
+                            {"class0": 0.2, "class1": 0.8},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(7, 7), max_vertex=(20, 25)),
+                            {"class0": 0.7, "class1": 0.3},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(9, 9), max_vertex=(15, 20)),
+                            {"class0": 0.5, "class1": 0.5},
+                        ),
                     ]
 
             get_config = None  # type: ignore
@@ -61,17 +73,17 @@ class TestBlackBoxRandomGrid:
         test_scores = np.array([[0.9, 0.1], [0.4, 0.6]])
 
         inst = RandomGridStack(n=5, s=(2, 8), p1=0.6, seed=42)
-        res = inst.generate(test_image, test_bboxes, test_scores, test_det)
+        res = inst.generate(ref_image=test_image, bboxes=test_bboxes, scores=test_scores, blackbox=test_det)
 
         exp_res = np.load(DATA_DIR / "exp_random_grid_stack_res.npy")
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
-        """
-        inst = RandomGridStack(3, (4, 5), 0.6, seed=7)
+        inst = RandomGridStack(n=3, s=(4, 5), p1=0.6, seed=7)
         assert inst._po.fill is None
         assert inst.fill is None
         inst.fill = 24

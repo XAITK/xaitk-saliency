@@ -27,13 +27,13 @@ predicted_saliency_map = rng_1.gumbel(loc=0, scale=0.1, size=(256, 256))
 reference_saliency_map = rng_2.gumbel(loc=0, scale=0.1, size=(256, 256))
 
 # Define binary image mask and binary/continuous saliency maps
-gt_binary_mask = rng_2.integers(0, 2, size=(256, 256))
-saliency_binary_map = rng_1.integers(0, 2, size=(256, 256))
+gt_binary_mask = rng_2.integers(low=0, high=2, size=(256, 256))
+saliency_binary_map = rng_1.integers(low=0, high=2, size=(256, 256))
 saliency_continous_map = predicted_saliency_map
 
 # Define downsized image mask and saliency maps to test the feature-scaling use-case
-gt_downsized_binary_mask = rng_2.integers(0, 2, size=(128, 128))
-saliency_downsized_binary_mask = rng_1.integers(0, 2, size=(128, 128))
+gt_downsized_binary_mask = rng_2.integers(low=0, high=2, size=(128, 128))
+saliency_downsized_binary_mask = rng_1.integers(low=0, high=2, size=(128, 128))
 saliency_downsized_continous_map = rng_1.gumbel(loc=0, scale=0.1, size=(128, 128))
 
 
@@ -50,12 +50,12 @@ def saliency_metric_assertions(
     """
     original_sal_map = copy.deepcopy(sal_map)
     original_ref_sal_map = copy.deepcopy(ref_sal_map)
-    original_metric_value = computation(original_sal_map, original_ref_sal_map)
+    original_metric_value = computation(sal=original_sal_map, ref=original_ref_sal_map)
 
     assert np.array_equal(original_sal_map, sal_map), "sal_map modified, data changed"
     assert np.array_equal(original_ref_sal_map, ref_sal_map), "ref_sal_map modified, data changed"
 
-    metric_value = computation(sal_map, ref_sal_map)
+    metric_value = computation(sal=sal_map, ref=ref_sal_map)
 
     assert original_metric_value == metric_value, "metric_value modified, data changed"
 
@@ -65,6 +65,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestComputeSSD:
     """This class contains the unit tests for the functionality of the SSD metric util function."""
 
@@ -79,9 +80,8 @@ class TestComputeSSD:
         ref_sal_map: np.ndarray,
     ) -> None:
         """Test SSD metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
-            computation=compute_ssd,
+            computation=lambda sal, ref: compute_ssd(sal_map=sal, ref_sal_map=ref),
             sal_map=sal_map,
             ref_sal_map=ref_sal_map,
         )
@@ -102,6 +102,7 @@ class TestComputeSSD:
         snapshot_custom.assert_match(ssd_metric_value)
 
 
+@pytest.mark.core
 class TestComputeXCorr:
     """This class contains the unit tests for the functionality of the XCorr metric util function."""
 
@@ -116,9 +117,8 @@ class TestComputeXCorr:
         ref_sal_map: np.ndarray,
     ) -> None:
         """Test XCorr metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
-            computation=compute_xcorr,
+            computation=lambda sal, ref: compute_xcorr(sal_map=sal, ref_sal_map=ref),
             sal_map=sal_map,
             ref_sal_map=ref_sal_map,
         )
@@ -139,6 +139,7 @@ class TestComputeXCorr:
         snapshot_custom.assert_match(xcorr_metric_value)
 
 
+@pytest.mark.core
 class TestComputeGroundTruthCoverage:
     """This class contains the unit tests for the functionality of the Ground Truth coverage metric util function."""
 
@@ -161,9 +162,11 @@ class TestComputeGroundTruthCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test Ground Truth Coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
-            computation=compute_ground_truth_coverage,
+            computation=lambda sal, ref: compute_ground_truth_coverage(
+                saliency_features=sal,
+                ground_truth_features=ref,
+            ),
             sal_map=saliency_features,
             ref_sal_map=ground_truth_features,
         )
@@ -195,6 +198,7 @@ class TestComputeGroundTruthCoverage:
         snapshot_custom.assert_match(gt_coverage_metric_value)
 
 
+@pytest.mark.core
 class TestComputeSaliencyCoverage:
     """This class contains the unit tests for the functionality of the Saliency coverage metric util function."""
 
@@ -223,9 +227,11 @@ class TestComputeSaliencyCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test Saliency coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
-            computation=compute_saliency_coverage,
+            computation=lambda sal, ref: compute_saliency_coverage(
+                saliency_features=sal,
+                ground_truth_features=ref,
+            ),
             sal_map=saliency_features,
             ref_sal_map=ground_truth_features,
         )
@@ -263,6 +269,7 @@ class TestComputeSaliencyCoverage:
         snapshot_custom.assert_match(saliency_coverage_metric_value)
 
 
+@pytest.mark.core
 class TestComputeIoUCoverage:
     """This class contains the unit tests for the functionality of the IoU coverage metric util function."""
 
@@ -285,9 +292,11 @@ class TestComputeIoUCoverage:
         ground_truth_features: np.ndarray,
     ) -> None:
         """Test IoU coverage metric util function with various random saliency map inputs."""
-
         saliency_metric_assertions(
-            computation=compute_iou_coverage,
+            computation=lambda sal, ref: compute_iou_coverage(
+                saliency_features=sal,
+                ground_truth_features=ref,
+            ),
             sal_map=saliency_features,
             ref_sal_map=ground_truth_features,
         )

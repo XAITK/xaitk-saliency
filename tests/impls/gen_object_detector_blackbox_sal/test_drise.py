@@ -1,18 +1,20 @@
 from collections.abc import Hashable, Iterable
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_detection.interfaces.detect_image_objects import DetectImageObjects
 from smqtk_image_io.bbox import AxisAlignedBoundingBox
+from typing_extensions import override
 
 from tests import DATA_DIR
 from xaitk_saliency.impls.gen_object_detector_blackbox_sal.drise import DRISEScoring, DRISEStack, RISEGrid
 
 
+@pytest.mark.core
 class TestBlackBoxDRISE:
     def test_configuration(self) -> None:
         """Test configuration suite."""
-
         inst = DRISEStack(
             n=123,
             s=8,
@@ -35,19 +37,26 @@ class TestBlackBoxDRISE:
             assert inst_g.get_config() == {}
 
     def test_generation_rgb(self) -> None:
-        """Test basic generation functionality with dummy inputs"""
+        """Test basic generation functionality with dummy inputs."""
 
         class TestDetector(DetectImageObjects):
             """Dummy detector that returns consant detections."""
 
+            @override
             def detect_objects(
                 self,
                 img_iter: Iterable[np.ndarray],
             ) -> Iterable[Iterable[tuple[AxisAlignedBoundingBox, dict[Hashable, float]]]]:
                 for _ in img_iter:
                     yield [
-                        (AxisAlignedBoundingBox((0, 0), (10, 15)), {"class0": 0.3, "class1": 0.7}),
-                        (AxisAlignedBoundingBox((5, 5), (20, 25)), {"class0": 0.9, "class1": 0.1}),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(0, 0), max_vertex=(10, 15)),
+                            {"class0": 0.3, "class1": 0.7},
+                        ),
+                        (
+                            AxisAlignedBoundingBox(min_vertex=(5, 5), max_vertex=(20, 25)),
+                            {"class0": 0.9, "class1": 0.1},
+                        ),
                     ]
 
             get_config = None  # type: ignore
@@ -60,17 +69,17 @@ class TestBlackBoxDRISE:
         test_scores = np.array([[0.1, 0.9], [0.5, 0.5]])
 
         inst = DRISEStack(n=5, s=8, p1=0.5, seed=0)
-        res = inst.generate(test_image, test_bboxes, test_scores, test_det)
+        res = inst.generate(ref_image=test_image, bboxes=test_bboxes, scores=test_scores, blackbox=test_det)
 
         exp_res = np.load(DATA_DIR / "exp_drise_stack_res.npy")
         assert np.allclose(exp_res, res)
 
     def test_fill_prop(self) -> None:
+        """Test the `fill` property's getter and setter.
+
+        Confirms it wraps the underlying `PerturbationOcclusion` instance fill instance attribute.
         """
-        Test that the `fill` property appropriately gets and sets the
-        underlying `PerturbationOcclusion` instance fill instance attribute.
-        """
-        inst = DRISEStack(5, 8, 0.5, seed=0)
+        inst = DRISEStack(n=5, s=8, p1=0.5, seed=0)
         assert inst._po.fill is None
         assert inst.fill is None
         inst.fill = 42

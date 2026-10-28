@@ -1,1 +1,1 @@
-"""Module for all implementations of the GenObjectDetectorBlackboxSal interface"""
+"""Module for all implementations of the GenObjectDetectorBlackboxSal interface."""

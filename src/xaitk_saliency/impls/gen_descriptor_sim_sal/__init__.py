@@ -1,1 +1,1 @@
-"""Module for all implementations of the GenDetectorSimSal interface"""
+"""Module for all implementations of the GenDetectorSimSal interface."""

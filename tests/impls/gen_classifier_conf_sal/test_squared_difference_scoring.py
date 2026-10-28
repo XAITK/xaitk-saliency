@@ -6,21 +6,17 @@ from xaitk_saliency import GenerateClassifierConfidenceSaliency
 from xaitk_saliency.impls.gen_classifier_conf_sal.squared_difference_scoring import SquaredDifferenceScoring
 
 
+@pytest.mark.core
 class TestSquaredDifferenceScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""
-
         impl = SquaredDifferenceScoring()
 
         assert impl.is_usable()
         assert isinstance(impl, GenerateClassifierConfidenceSaliency)
 
     def test_bad_alignment_confs(self) -> None:
-        """
-        Test that passing a different number of reference confidences and
-        perturbed confidences raises the expected exception.
-        """
-
+        """Test that passing a mismatched number of reference and perturbed confidences raises expected exception."""
         test_ref = np.ones(4)
         test_pert = np.ones((4, 3))
         test_masks = np.ones((4, 3, 3))
@@ -31,14 +27,10 @@ class TestSquaredDifferenceScoring:
             ValueError,
             match=r"Number of classes in original image and perturbed image do not match",
         ):
-            impl.generate(test_ref, test_pert, test_masks)
+            impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=test_masks)
 
     def test_bad_alignment_masks(self) -> None:
-        """
-        Test that passing a different number of perturbed confidences and masks
-        raises the expected exception.
-        """
-
+        """Test that passing a mismatched number of perturbed confidences and masks raises the expected exception."""
         test_ref = np.ones(4)
         test_pert = np.ones((4, 4))
         test_masks = np.ones((5, 3, 3))
@@ -49,11 +41,10 @@ class TestSquaredDifferenceScoring:
             ValueError,
             match=r"Number of perturbation masks and respective confidence lengths do not match.",
         ):
-            impl.generate(test_ref, test_pert, test_masks)
+            impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=test_masks)
 
     def test_scores(self) -> None:
-        """Test for expected output with known input using one class"""
-
+        """Test for expected output with known input using one class."""
         test_ref = np.array([0.9, 0.1])
         test_pert = np.array(
             [
@@ -67,7 +58,7 @@ class TestSquaredDifferenceScoring:
         )
 
         impl = SquaredDifferenceScoring()
-        sal = impl.generate(test_ref, test_pert, EXPECTED_MASKS_4x6)
+        sal = impl.generate(reference=test_ref, perturbed=test_pert, perturbed_masks=EXPECTED_MASKS_4x6)
 
         assert np.allclose(sal, EXPECTED_SAL)
 

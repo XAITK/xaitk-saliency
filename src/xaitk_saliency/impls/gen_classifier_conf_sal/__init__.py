@@ -1,1 +1,1 @@
-"""Module for all implementations of the GenClassifierConfSal interface"""
+"""Module for all implementations of the GenClassifierConfSal interface."""

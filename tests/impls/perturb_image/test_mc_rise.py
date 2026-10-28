@@ -12,6 +12,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(CustomFloatSnapshotExtension)
 
 
+@pytest.mark.core
 class TestMCRISEPerturbation:
     def test_init_valued(self) -> None:
         """Test that constructor values pass."""
@@ -28,13 +29,13 @@ class TestMCRISEPerturbation:
     def test_init_outofrange_p1(self) -> None:
         """Test catching an out of range p1 value."""
         with pytest.raises(ValueError, match=r"Input p1 value of -0\.3 is not within the expected \[0,1\] range\."):
-            MCRISEGrid(10, 8, p1=-0.3, k=1)
+            MCRISEGrid(n=10, s=8, p1=-0.3, k=1)
 
         with pytest.raises(ValueError, match=r"Input p1 value of 5 is not within the expected \[0,1\] range\."):
-            MCRISEGrid(10, 8, p1=5, k=1)
+            MCRISEGrid(n=10, s=8, p1=5, k=1)
 
         with pytest.raises(ValueError, match=r"Input k value of -1 is not within the expected >0 range\."):
-            MCRISEGrid(10, 8, p1=0.2, k=-1)
+            MCRISEGrid(n=10, s=8, p1=0.2, k=-1)
 
     def test_standard_config(self) -> None:
         ex_n = 1000
@@ -49,20 +50,20 @@ class TestMCRISEPerturbation:
             assert inst.k == k
 
     def test_if_random(self) -> None:
-        """Test that the perturbations are randomized"""
+        """Test that the perturbations are randomized."""
         impl1 = MCRISEGrid(n=1000, s=8, p1=0.5, k=2)
         impl2 = MCRISEGrid(n=1000, s=8, p1=0.5, k=2)
         assert not np.array_equal(impl1.grid, impl2.grid)
 
     def test_seed(self) -> None:
-        """Test that passing a seed generates equivalent masks"""
+        """Test that passing a seed generates equivalent masks."""
         impl1 = MCRISEGrid(n=1000, s=8, p1=0.5, k=2, seed=42)
         impl2 = MCRISEGrid(n=1000, s=8, p1=0.5, k=2, seed=42)
         assert np.array_equal(impl1.grid, impl2.grid)
 
     def test_perturb_1channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -76,10 +77,7 @@ class TestMCRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_call_idempotency(self) -> None:
-        """
-        Test that, at least when seeded and single-threaded, perturbation
-        generation is idempotent.
-        """
+        """Test that, at least when seeded and single-threaded, perturbation generation is idempotent."""
         # Image is slightly wide
         white_image = np.full((4, 6), fill_value=255, dtype=np.uint8)
         # Setting threads=0 for serialized processing for deterministic
@@ -97,8 +95,8 @@ class TestMCRISEPerturbation:
         )
 
     def test_perturb_3channel(self, snapshot_custom: SnapshotAssertion) -> None:
-        """
-        Test basic perturbation on a known image with even windowing + stride.
+        """Test basic perturbation on a known image with even windowing + stride.
+
         Input image mode should not impact the masks output.
         """
         # Image is slightly wide
@@ -112,10 +110,7 @@ class TestMCRISEPerturbation:
         snapshot_custom.assert_match(actual_masks)
 
     def test_multiple_image_sizes(self) -> None:
-        """
-        Test that once we initialize a RISEPerturbation we can call it on
-        images of varying sizes
-        """
+        """Test that once we initialize a RISEPerturbation we can call it on images of varying sizes."""
         impl = MCRISEGrid(n=2, s=2, p1=0.5, k=2, seed=42)
         white_image_small = np.full((4, 6), fill_value=255, dtype=np.uint8)
         white_image_large = np.full((41, 26), fill_value=255, dtype=np.uint8)

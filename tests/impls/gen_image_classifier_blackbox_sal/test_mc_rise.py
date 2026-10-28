@@ -6,6 +6,7 @@ from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DI
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
 from syrupy.assertion import SnapshotAssertion
+from typing_extensions import override
 
 from tests.test_utils import CustomFloatSnapshotExtension
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.mc_rise import (
@@ -20,6 +21,7 @@ def snapshot_custom(snapshot: SnapshotAssertion) -> SnapshotAssertion:
     return snapshot.use_extension(lambda: CustomFloatSnapshotExtension())  # type: ignore
 
 
+@pytest.mark.core
 class TestMCRise:
     def test_configuration(self) -> None:
         """Test standard config things."""
@@ -49,14 +51,16 @@ class TestMCRise:
             assert inst_i._fill_colors == fill_colors
 
     def test_generation_rgb(self, snapshot_custom: SnapshotAssertion) -> None:
-        """Test basic generation functionality with dummy image and blackbox"""
+        """Test basic generation functionality with dummy image and blackbox."""
 
         class TestBlackBox(ClassifyImage):
             """Dummy blackbox that yields a constant result."""
 
+            @override
             def get_labels(self) -> Sequence[Hashable]:
                 return [0]
 
+            @override
             def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:
                 for _ in img_iter:
                     yield {0: 1.0}
@@ -74,6 +78,6 @@ class TestMCRise:
         # Results may be sensitive to changes in scikit-image. Version 0.19
         # introduces some changes to the resize function. Difference is
         # expected to only be marginal.
-        res = inst.generate(test_image, test_bb)
+        res = inst.generate(ref_image=test_image, blackbox=test_bb)
 
         snapshot_custom.assert_match(res)

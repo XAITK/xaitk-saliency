@@ -1,13 +1,15 @@
-"""Encapsulation of the perturbation-occlusion method using specifically
-sliding windows and the occlusion-scoring method."""
+"""Encapsulation of the perturbation-occlusion method using sliding windows and the occlusion-scoring method."""
 
 from __future__ import annotations
+
+__all__ = ["SlidingWindowStack"]
 
 from collections.abc import Sequence
 from typing import Any
 
 import numpy as np
 from smqtk_classifier.interfaces.classify_image import ClassifyImage
+from typing_extensions import override
 
 from xaitk_saliency.impls.gen_classifier_conf_sal.occlusion_scoring import OcclusionScoring
 from xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based import PerturbationOcclusion
@@ -16,22 +18,29 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import Generate
 
 
 class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
-    """
-    Encapsulation of the perturbation-occlusion method using specifically
-    sliding windows and the occlusion-scoring method.
+    """Encapsulation of the perturbation-occlusion method using sliding windows and the occlusion-scoring method.
+
     See the :class:`SlidingWindow` and :class:`OcclusionScoring` documentation
     for more details.
+
+    Example:
+        >>> from xaitk_saliency._fakes import FakeClassifyImage
+        >>> n_classes, height, width = 1, 18, 24
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> gen = SlidingWindowStack(window_size=(8, 8), stride=(8, 8))
+        >>> sal = gen.generate(ref_image=ref_image, blackbox=FakeClassifyImage({0: 1.0}))
+        >>> sal.shape == (n_classes, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         window_size: tuple[int, int] = (50, 50),
         stride: tuple[int, int] = (20, 20),
         threads: int = 0,
     ) -> None:
-        """
-        Initialization of the perturbation-occlusion method using specifically
-        sliding windows and the occlusion-scoring method.
+        """Initialize the perturbation-occlusion method using sliding windows and the occlusion-scoring method.
 
         :param window_size: The block window size as a tuple with format
             `(height, width)`.
@@ -53,20 +62,21 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
 
     @property
     def fill(self) -> int | Sequence[int] | None:
-        """Gets the fill value"""
+        """Gets the fill value."""
         return self._po.fill
 
     @fill.setter
     def fill(self, v: int | Sequence[int] | None) -> None:
         self._po.fill = v
 
-    def _generate(self, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
-        return self._po.generate(ref_image, blackbox)
+    @override
+    def _generate(self, *, ref_image: np.ndarray, blackbox: ClassifyImage) -> np.ndarray:
+        return self._po.generate(ref_image=ref_image, blackbox=blackbox)
 
     @classmethod
+    @override
     def get_default_config(cls) -> dict[str, Any]:
-        """
-        Returns the default configuration for the SlidingWindowStack.
+        """Returns the default configuration for the SlidingWindowStack.
 
         This method provides a default configuration dictionary, specifying default
         values for key parameters in the factory. It can be used to create an instance
@@ -83,9 +93,9 @@ class SlidingWindowStack(GenerateImageClassifierBlackboxSaliency):
         cfg["stride"] = list(cfg["stride"])
         return cfg
 
+    @override
     def get_config(self) -> dict[str, Any]:
-        """
-        Get the configuration dictionary of the SlidingWindowStack instance.
+        """Get the configuration dictionary of the SlidingWindowStack instance.
 
         Returns:
             dict[str, Any]: Configuration dictionary.

@@ -1,0 +1,48 @@
+name: pytest (one Python version)
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  pytest:
+    name: ${{ matrix.tox-env }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        tox-env: ["core", "tools", "maite", "maite-tools", "notebooks"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: ./.github/actions/setup-tox
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Run tox
+        # notebooks jobs are allowed to fail for now
+        continue-on-error: ${{ matrix.tox-env == 'notebooks' }}
+        env:
+          PYTHON_VERSION: ${{ inputs.python-version }}
+          TOX_ENV: ${{ matrix.tox-env }}
+        # Convert PYTHON_VERSION (3.10) to tox factor (py310) and run specific env
+        run: tox -e "py${PYTHON_VERSION//./}-${TOX_ENV}"
+      - name: Upload coverage and junit reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-py${{ inputs.python-version }}-${{ matrix.tox-env }}
+          path: |
+            .coverage.*
+            .junit.*.xml
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 1

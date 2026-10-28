@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+__all__ = [
+    "compute_ssd",
+    "compute_xcorr",
+    "compute_iou_coverage",
+    "compute_saliency_coverage",
+    "compute_ground_truth_coverage",
+]
+
 from typing import Any
 
 import numpy as np
@@ -9,9 +17,8 @@ from scipy.ndimage import zoom
 from skimage.transform import resize
 
 
-def compute_ssd(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
-    """
-    Computes the Sum of Squared Differences (SSD) between two saliency maps.
+def compute_ssd(*, sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
+    """Computes the Sum of Squared Differences (SSD) between two saliency maps.
 
     Args:
         sal_map (np.ndarray): Predicted saliency map of shape (height, width).
@@ -27,9 +34,8 @@ def compute_ssd(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]
     return sum_sq_diff / norm
 
 
-def compute_xcorr(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
-    """
-    Computes the Normalized Cross-Correlation (NCC) between two saliency maps.
+def compute_xcorr(*, sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, Any]) -> float:
+    """Computes the Normalized Cross-Correlation (NCC) between two saliency maps.
 
     Args:
         sal_map (np.ndarray): Predicted saliency map of shape (height, width).
@@ -58,6 +64,7 @@ def compute_xcorr(sal_map: np.ndarray[Any, Any], ref_sal_map: np.ndarray[Any, An
 
 
 def compute_iou_coverage(
+    *,
     saliency_features: np.ndarray[Any, Any],
     ground_truth_features: np.ndarray[Any, Any],
 ) -> float:
@@ -77,13 +84,13 @@ def compute_iou_coverage(
     Returns:
         float: The computed IoU coverage metric.
     """
-
     # Determine the target dimensions (smallest among the two)
     target_h = min(ground_truth_features.shape[0], saliency_features.shape[0])
     target_w = min(ground_truth_features.shape[1], saliency_features.shape[1])
     target_shape = (target_h, target_w)
 
     def _scale_feature_to_target(
+        *,
         feature: np.ndarray[Any, Any],
         target_shape: tuple[int, int],
     ) -> np.ndarray[Any, Any]:
@@ -99,16 +106,22 @@ def compute_iou_coverage(
         # scipy.zoom expects size as (width, height)
         x_zoom_factor = target_shape[1] / feature.shape[1]
         y_zoom_factor = target_shape[0] / feature.shape[0]
-        return zoom(feature.astype(np.uint8), (x_zoom_factor, y_zoom_factor), order=1, grid_mode=True, mode="nearest")
+        return zoom(
+            input=feature.astype(np.uint8),
+            zoom=(x_zoom_factor, y_zoom_factor),
+            order=1,
+            grid_mode=True,
+            mode="nearest",
+        )
 
     # Scale down if needed.
     if ground_truth_features.shape != target_shape:
         ground_truth_features = _scale_feature_to_target(
-            ground_truth_features,
-            target_shape,
+            feature=ground_truth_features,
+            target_shape=target_shape,
         )
     if saliency_features.shape != target_shape:
-        saliency_features = _scale_feature_to_target(saliency_features, target_shape)
+        saliency_features = _scale_feature_to_target(feature=saliency_features, target_shape=target_shape)
 
     # Ensure the arrays are binary
     ground_truth_features = ground_truth_features.astype(bool)
@@ -120,6 +133,7 @@ def compute_iou_coverage(
 
 
 def _downsample_to_target(
+    *,
     arr: np.ndarray[Any, Any],
     target_shape: tuple[int, int],
     is_binary: bool = False,
@@ -141,8 +155,8 @@ def _downsample_to_target(
     anti_aliasing = not is_binary
     # Resize the image. Note: preserve_range keeps the original value scale.
     return resize(
-        arr,
-        (target_shape[0], target_shape[1]),
+        image=arr,
+        output_shape=(target_shape[0], target_shape[1]),
         preserve_range=True,
         anti_aliasing=anti_aliasing,
         order=order,
@@ -150,6 +164,7 @@ def _downsample_to_target(
 
 
 def compute_saliency_coverage(
+    *,
     saliency_features: np.ndarray[Any, Any],
     ground_truth_features: np.ndarray[Any, Any],
 ) -> np.float64:
@@ -177,14 +192,14 @@ def compute_saliency_coverage(
     # Assume ground_truth is binary and saliency_features may be continuous.
     if saliency_features.shape != target_shape:
         saliency_features = _downsample_to_target(
-            saliency_features,
-            target_shape,
+            arr=saliency_features,
+            target_shape=target_shape,
             is_binary=False,
         )
     if ground_truth_features.shape != target_shape:
         ground_truth_features = _downsample_to_target(
-            ground_truth_features,
-            target_shape,
+            arr=ground_truth_features,
+            target_shape=target_shape,
             is_binary=True,
         )
 
@@ -195,6 +210,7 @@ def compute_saliency_coverage(
 
 
 def compute_ground_truth_coverage(
+    *,
     saliency_features: np.ndarray[Any, Any],
     ground_truth_features: np.ndarray[Any, Any],
 ) -> np.float64:
@@ -220,14 +236,14 @@ def compute_ground_truth_coverage(
     # Both inputs are binary; use nearest neighbor resizing.
     if saliency_features.shape[1:] != target_shape:
         saliency_features = _downsample_to_target(
-            saliency_features,
-            target_shape,
+            arr=saliency_features,
+            target_shape=target_shape,
             is_binary=False,
         )
     if ground_truth_features.shape[1:] != target_shape:
         ground_truth_features = _downsample_to_target(
-            ground_truth_features,
-            target_shape,
+            arr=ground_truth_features,
+            target_shape=target_shape,
             is_binary=True,
         )
 

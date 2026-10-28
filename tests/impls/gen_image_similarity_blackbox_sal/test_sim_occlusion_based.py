@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from typing import Any
 
 import numpy as np
+import pytest
 from smqtk_core.configuration import configuration_test_helper
 from smqtk_descriptors.interfaces.image_descriptor_generator import ImageDescriptorGenerator
 from typing_extensions import override
@@ -21,6 +22,7 @@ class StubPI(PerturbImage):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -31,10 +33,12 @@ class StubGen(GenerateDescriptorSimilaritySaliency):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
 
+@pytest.mark.core
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
@@ -43,8 +47,7 @@ class TestPerturbationOcclusion:
 
     def test_configuration(self) -> None:
         """Test configuration suite using stub implementations."""
-
-        inst = PerturbationOcclusion(StubPI(4), StubGen(8), threads=27)
+        inst = PerturbationOcclusion(perturber=StubPI(4), generator=StubGen(8), threads=27)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == 27
             assert isinstance(inst_i._perturber, StubPI)
@@ -58,6 +61,7 @@ class TestPerturbationOcclusion:
         class StubPI(PerturbImage):
             """Stub perturber that returns masks of ones."""
 
+            @override
             def perturb(self, ref_image: np.ndarray) -> np.ndarray:
                 return np.ones((3, *ref_image.shape[:2]), dtype=bool)
 
@@ -69,6 +73,7 @@ class TestPerturbationOcclusion:
             @override
             def generate(
                 self,
+                *,
                 ref_descr: np.ndarray,
                 query_descrs: np.ndarray,
                 perturbed_descrs: np.ndarray,
@@ -81,6 +86,7 @@ class TestPerturbationOcclusion:
         class StubDescGen(ImageDescriptorGenerator):
             """Stub image descriptor generator that returns known feature vectors."""
 
+            @override
             def generate_arrays_from_images(self, img_mat_iter: Iterable[np.ndarray | None]) -> Iterable[np.ndarray]:
                 for _ in img_mat_iter:
                     yield np.ones(25)
@@ -99,8 +105,8 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
-            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
+            test_result = inst._generate(ref_image=test_ref_img, query_images=test_query_imgs, blackbox=test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match
@@ -117,9 +123,9 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_similarity_blackbox_sal.occlusion_based.occlude_image_batch",
             wraps=occlude_image_batch,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
             inst.fill = test_fill
-            test_result = inst._generate(test_ref_img, test_query_imgs, test_desc_gen)
+            test_result = inst._generate(ref_image=test_ref_img, query_images=test_query_imgs, blackbox=test_desc_gen)
 
             assert test_result.shape == (3, 51, 52)
             # The "fill" kwarg passed to occlude_image_batch should match

@@ -9,6 +9,7 @@ from xaitk_saliency import GenerateDetectorProposalSaliency
 from xaitk_saliency.impls.gen_detector_prop_sal.drise_scoring import DRISEScoring
 
 
+@pytest.mark.core
 class TestDRISEScoring:
     def test_init_(self) -> None:
         """Test if implementation is usable."""
@@ -23,7 +24,7 @@ class TestDRISEScoring:
         ref_dets = rng.standard_normal((2, 7))
         pert_dets = rng.standard_normal((10, 3, 7))
         pert_mask = rng.integers(low=0, high=2, size=(10, 15, 25), dtype="int")
-        sal = impl.generate(ref_dets, pert_dets, pert_mask)
+        sal = impl.generate(ref_dets=ref_dets, perturbed_dets=pert_dets, perturbed_masks=pert_mask)
         assert sal.shape == (2, 15, 25)
 
     def test_standard_detection(self) -> None:
@@ -40,7 +41,7 @@ class TestDRISEScoring:
                 [[1, 2, 6, 3, 0.07, 0.01, 0.99]],
             ],
         )
-        sal = impl.generate(ref_dets, pert_dets, EXPECTED_MASKS_4x6)
+        sal = impl.generate(ref_dets=ref_dets, perturbed_dets=pert_dets, perturbed_masks=EXPECTED_MASKS_4x6)
         standard_sal = np.load(os.path.join(DATA_DIR, "drisesal.npy"))
         assert sal.shape == (1, 4, 6)
         assert np.allclose(standard_sal, sal)
@@ -56,7 +57,7 @@ class TestDRISEScoring:
             ValueError,
             match=r"Number of perturbation masks and respective detections vector do not match.",
         ):
-            impl.generate(ref_dets, pert_dets, pert_mask)
+            impl.generate(ref_dets=ref_dets, perturbed_dets=pert_dets, perturbed_masks=pert_mask)
 
     def test_detections_classes_mismatch(self) -> None:
         """Test mismatch in number of classes between perturbed and reference detections."""
@@ -73,7 +74,7 @@ class TestDRISEScoring:
                 r"should be of dimension (n_classes + 4 + 1).",
             ),
         ):
-            impl.generate(ref_dets, pert_dets, pert_mask)
+            impl.generate(ref_dets=ref_dets, perturbed_dets=pert_dets, perturbed_masks=pert_mask)
 
     def test_config(self) -> None:
         impl = DRISEScoring()

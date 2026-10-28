@@ -4,6 +4,7 @@ from collections.abc import Hashable, Iterator, Sequence
 from typing import Any
 
 import numpy as np
+import pytest
 from smqtk_classifier.interfaces.classification_element import CLASSIFICATION_DICT_T
 from smqtk_classifier.interfaces.classify_image import IMAGE_ITER_T, ClassifyImage
 from smqtk_core.configuration import configuration_test_helper
@@ -20,9 +21,11 @@ class StubPI(PerturbImage):
     def __init__(self, stub_param: int) -> None:
         self.p = stub_param
 
+    @override
     def perturb(self, ref_image: np.ndarray) -> np.ndarray:
         return np.ones((6, *ref_image.shape[:2]), dtype=bool)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
@@ -34,16 +37,19 @@ class StubGen(GenerateClassifierConfidenceSaliency):
     @override
     def generate(
         self,
+        *,
         reference: np.ndarray,
         perturbed: np.ndarray,
         perturbed_masks: np.ndarray,
     ) -> np.ndarray:
         return np.zeros((reference.shape[0], *perturbed_masks.shape[1:]), dtype=np.float16)
 
+    @override
     def get_config(self) -> dict[str, Any]:
         return {"stub_param": self.p}
 
 
+@pytest.mark.core
 class TestPerturbationOcclusion:
     def teardown(self) -> None:
         # Collect any temporary implementations so they are not returned during
@@ -55,7 +61,7 @@ class TestPerturbationOcclusion:
         test_threads = 87
         test_spi_p = 0
         test_sgn_p = 1
-        inst = PerturbationOcclusion(StubPI(test_spi_p), StubGen(test_sgn_p), 87)
+        inst = PerturbationOcclusion(perturber=StubPI(test_spi_p), generator=StubGen(test_sgn_p), threads=87)
         for inst_i in configuration_test_helper(inst):
             assert inst_i._threads == test_threads
             assert isinstance(inst_i._perturber, StubPI)
@@ -64,15 +70,17 @@ class TestPerturbationOcclusion:
             assert inst_i._generator.p == test_sgn_p
 
     def test_generate_success(self) -> None:
-        """Test successfully invoking _generate"""
+        """Test successfully invoking _generate."""
 
         # Stub classifier blackbox that returns two class predictions.
         class StubClassifier(ClassifyImage):
             """Stub that returns a constant classification result."""
 
+            @override
             def get_labels(self) -> Sequence[Hashable]:
                 return ["a", "b"]
 
+            @override
             def classify_images(self, img_iter: IMAGE_ITER_T) -> Iterator[CLASSIFICATION_DICT_T]:
                 for _ in img_iter:
                     yield {"a": 1.0, "b": 0.1}
@@ -90,8 +98,8 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based.occlude_image_streaming",
             wraps=occlude_image_streaming,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
-            test_result = inst._generate(test_image, test_classifier)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
+            test_result = inst._generate(ref_image=test_image, blackbox=test_classifier)
 
             assert test_result.shape == (2, 64, 64)
             # The "fill" kwarg passed to occlude_image_streaming should match
@@ -108,9 +116,9 @@ class TestPerturbationOcclusion:
             "xaitk_saliency.impls.gen_image_classifier_blackbox_sal.occlusion_based.occlude_image_streaming",
             wraps=occlude_image_streaming,
         ) as m_occ_img:
-            inst = PerturbationOcclusion(test_pi, test_gen)
+            inst = PerturbationOcclusion(perturber=test_pi, generator=test_gen)
             inst.fill = test_fill
-            test_result = inst._generate(test_image, test_classifier)
+            test_result = inst._generate(ref_image=test_image, blackbox=test_classifier)
 
             assert test_result.shape == (2, 64, 64)
             # The "fill" kwarg passed to occlude_image_streaming should match

@@ -1,56 +1,71 @@
-"""
+"""Implementation of RISE perturbation mask generation.
+
 RISE MIT License (https://github.com/eclique/RISE/blob/master/LICENSE):
 
-    MIT License
+MIT License
 
-    Copyright (c) 2018 Vitali Petsiuk
+Copyright (c) 2018 Vitali Petsiuk
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 """
 
-from typing import Any, Dict, Optional
+from __future__ import annotations
+
+__all__ = ["RISEGrid"]
+
+from typing import Any
 
 import numpy as np
 from skimage.transform import resize
 from smqtk_descriptors.utils.parallel import parallel_map
+from typing_extensions import override
 
 from xaitk_saliency.interfaces.perturb_image import PerturbImage
 
 
 class RISEGrid(PerturbImage):
-    """
-    Based on Petsiuk et. al: http://bmvc2018.org/contents/papers/1064.pdf
+    """Generate RISE masks based on Petsiuk et al.
+
+    http://bmvc2018.org/contents/papers/1064.pdf
 
     Implementation is borrowed from the original authors:
     https://github.com/eclique/RISE/blob/master/explanations.py
+
+    Example:
+        >>> n_masks, height, width = 3, 24, 32
+        >>> ref_image = np.zeros((height, width, 3), dtype=np.uint8)
+        >>> perturber = RISEGrid(n=n_masks, s=8, p1=0.5, seed=0)
+        >>> masks = perturber(ref_image)
+        >>> masks.shape == (n_masks, height, width)
+        True
     """
 
     def __init__(
         self,
+        *,
         n: int,
         s: int,
         p1: float,
-        seed: Optional[int] = None,
-        threads: Optional[int] = 4,
-    ):
-        """
-        Generate a set of random binary masks
+        seed: int | None = None,
+        threads: int | None = 4,
+    ) -> None:
+        """Generate a set of random binary masks.
 
         :param n:
             Number of random masks used in the algorithm. E.g. 1000.
@@ -80,9 +95,10 @@ class RISEGrid(PerturbImage):
         grid: np.ndarray = np.random.default_rng(seed).random((n, s, s)) < p1
         grid = grid.astype("float32")
 
-        self.grid = grid
+        self.grid: np.ndarray[Any, Any] = grid
 
-    def perturb(self, ref_image: np.ndarray) -> np.ndarray:
+    @override
+    def perturb(self, ref_image: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         input_size = np.shape(ref_image)[:2]
         num_masks = self.n
         grid = self.grid
@@ -98,14 +114,13 @@ class RISEGrid(PerturbImage):
         cell_h, cell_w = cell_size[:2]
         input_h, input_w = input_size[:2]
 
-        # flake8: noqa
         def work_func(i_: int) -> np.ndarray:
             # Random shifts
-            y = shift_rng.integers(0, cell_h)
-            x = shift_rng.integers(0, cell_w)
-            mask = resize(
-                grid[i_],
-                up_size,
+            y = shift_rng.integers(low=0, high=cell_h)
+            x = shift_rng.integers(low=0, high=cell_w)
+            return resize(
+                image=grid[i_],
+                output_shape=up_size,
                 order=1,
                 mode="reflect",
                 anti_aliasing=False,
@@ -113,7 +128,6 @@ class RISEGrid(PerturbImage):
                 y : y + input_h,
                 x : x + input_w,
             ]
-            return mask
 
         threads = self.threads
         if threads is None or threads < 1:
@@ -121,7 +135,7 @@ class RISEGrid(PerturbImage):
                 masks[i, ...] = work_func(i)
         else:
             for i, m in enumerate(
-                parallel_map(
+                parallel_map(  # noqa: FKA100 - parallel_map takes *sequences, which cannot be passed by keyword
                     work_func,
                     range(num_masks),
                     cores=threads,
@@ -132,7 +146,8 @@ class RISEGrid(PerturbImage):
 
         return masks
 
-    def get_config(self) -> Dict[str, Any]:
+    @override
+    def get_config(self) -> dict[str, Any]:
         return {
             "n": self.n,
             "s": self.s,

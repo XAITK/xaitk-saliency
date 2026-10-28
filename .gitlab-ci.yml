@@ -1,17 +1,57 @@
-include:
-  - project: "jatic/kitware/devel-jatic"
-    ref: "main"
-    file: ".gitlab-ci.yml"
+default:
+  tags:
+    - k8s-small-cpu
 
-  # job overrides specific to this repo
+stages:
+  # trigger stages need to come first
+  - compliance
+
+  # Our CI/CD Jobs
+  - test
+  # - vcrm # does not exist yet for xaitk-saliency
+  - quality
+  - docs
+
+  # Containerization
+  # - container # currently no container to run with CI
+
+  # JATIC Required Stages
+  - security # this can be replaced with DevSecOps security job
+
+.unschedulable: &unschedulable
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+  - when: always
+
+.skippable: &skippable
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+  - when: always
+
+include:
+  - local: .gitlab-ci/.gitlab-shared.yml
+
   - local: .gitlab-ci/.gitlab-docs.yml
   - local: .gitlab-ci/.gitlab-quality.yml
   - local: .gitlab-ci/.gitlab-security.yml
-  - local: .gitlab-ci/.gitlab-shared.yml
   - local: .gitlab-ci/.gitlab-test.yml
+  # - local: .gitlab-ci/.gitlab-vcrm.yml
+  - local: .gitlab-ci/.gitlab-prod.yml
+  # - local: .gitlab-ci/.gitlab-container.yml
+
+# ###############################################################################
+# # Stage -- Trigger the DevSecOps components
+# ###############################################################################
+.trigger_compliance:
+  stage: compliance
+  trigger:
+    include: ".gitlab-ci/pipelines/.gitlab-compliance.yml"
+    strategy: depend
+  rules: !reference [.shared-setup, rules]
+  allow_failure: true
 
 trigger_compliance:
   extends: .trigger_compliance
   rules: !reference [.trigger_compliance, rules]
-  variables:
-    PACKAGE_NAME: "xaitk_saliency"

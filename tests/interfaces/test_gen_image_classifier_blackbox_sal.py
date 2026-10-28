@@ -10,6 +10,7 @@ from xaitk_saliency.interfaces.gen_image_classifier_blackbox_sal import (
 )
 
 
+@pytest.mark.core
 def test_generate_checks_success() -> None:
     """Test successful passage through the wrapper method."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
@@ -20,13 +21,14 @@ def test_generate_checks_success() -> None:
 
     # 2-channel image as just HxW should work
     test_image = np.ones((256, 256), dtype=np.uint8)
-    GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+    GenerateImageClassifierBlackboxSaliency.generate(m_impl, ref_image=test_image, blackbox=m_clfier)
 
     # multi-channel image should work with whatever channel dim size.
     test_image = np.ones((256, 256, 7), dtype=np.uint8)
-    GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+    GenerateImageClassifierBlackboxSaliency.generate(m_impl, ref_image=test_image, blackbox=m_clfier)
 
 
+@pytest.mark.core
 def test_generate_checks_image_shape() -> None:
     """Test that the input image shape conforms to our assumption."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
@@ -35,7 +37,7 @@ def test_generate_checks_image_shape() -> None:
     # A single vector is not being considered an image.
     test_image = np.ones((256,), dtype=np.uint8)
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 1$"):
-        GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+        GenerateImageClassifierBlackboxSaliency.generate(m_impl, ref_image=test_image, blackbox=m_clfier)
 
     # Way too many dimensions.
     test_image = np.ones(
@@ -49,12 +51,12 @@ def test_generate_checks_image_shape() -> None:
         dtype=np.uint8,
     )
     with pytest.raises(ValueError, match=r"^Input image matrix has an unexpected number of dimensions: 5$"):
-        GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+        GenerateImageClassifierBlackboxSaliency.generate(m_impl, ref_image=test_image, blackbox=m_clfier)
 
 
+@pytest.mark.core
 def test_generate_checks_output_mismatch() -> None:
-    """Test that the `_generate` output shape appropriately checks against the
-    input image shape and errors when not matching."""
+    """Test that `_generate`'s output shape is checked against the input image shape, erroring on mismatch."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
     m_clfier = mock.Mock(spec=ClassifyImage)
 
@@ -68,9 +70,10 @@ def test_generate_checks_output_mismatch() -> None:
         r"width shape components: \(ref\) \(256, 256\) != \(128, 128\) "
         r"\(output\)$",
     ):
-        GenerateImageClassifierBlackboxSaliency.generate(m_impl, test_image, m_clfier)
+        GenerateImageClassifierBlackboxSaliency.generate(m_impl, ref_image=test_image, blackbox=m_clfier)
 
 
+@pytest.mark.core
 def test_call_alias() -> None:
     """Test that __call__ is just an alias to the generate method."""
     m_impl = mock.Mock(spec=GenerateImageClassifierBlackboxSaliency)
@@ -80,6 +83,6 @@ def test_call_alias() -> None:
     expected_return = "expected return"
     m_impl.generate.return_value = expected_return
 
-    test_ret = GenerateImageClassifierBlackboxSaliency.__call__(m_impl, m_img, m_bbox)
-    m_impl.generate.assert_called_once_with(m_img, m_bbox)
+    test_ret = GenerateImageClassifierBlackboxSaliency.__call__(m_impl, ref_image=m_img, blackbox=m_bbox)
+    m_impl.generate.assert_called_once_with(ref_image=m_img, blackbox=m_bbox)
     assert test_ret == expected_return
